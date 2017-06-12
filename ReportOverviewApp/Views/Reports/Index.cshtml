@@ -1,0 +1,88 @@
+@model IEnumerable<ReportOverviewApp.Models.Report>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Reports Due By @DateTime.Today.AddDays(20)</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<form asp-controller="Movies" asp-action="Index">
+    <p>
+        Report Name: <input type="text" name="Search">
+        <input type="submit" value="Filter" />
+    </p>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DateDue)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DateDone)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DateClientNotified)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DateSent)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Done)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ClientNotified)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Sent)
+                </th>
+                
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+    @if (item.DateDue <= DateTime.Now.AddDays(20)  && item.DateDue >= DateTime.Now)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateDue)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateDone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateClientNotified)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateSent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Done)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ClientNotified)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Sent)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+            </td>
+        </tr>
+    }
+}
+    </tbody>
+</table>
