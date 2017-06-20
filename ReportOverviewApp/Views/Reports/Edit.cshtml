@@ -8,10 +8,10 @@
 
 <form asp-action="Edit">
     <div class="form-horizontal">
-        <h4>Report</h4>
+        <h4>@Model.Name</h4>
         <hr />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <input type="hidden" asp-for="ID" />
+        <input type="hidden" asp-for="ID" />
         <div class="form-group">
             <label asp-for="Name" class="col-md-2 control-label"></label>
             <div class="col-md-10">
@@ -20,11 +20,10 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <div class="checkbox">
-                    <input asp-for="Done" />
-                    <label asp-for="Done"></label>
-                </div>
+            <label asp-for="DateDue" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="DateDue" class="form-control" />
+                <span asp-validation-for="DateDue" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
@@ -51,6 +50,14 @@
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <div class="checkbox">
+                    <input asp-for="Done" />
+                    <label asp-for="Done"></label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <div class="checkbox">
                     <input asp-for="ClientNotified" />
                     <label asp-for="ClientNotified"></label>
                 </div>
@@ -64,13 +71,7 @@
                 </div>
             </div>
         </div>
-        <div class="form-group">
-            <label asp-for="DateDue" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="DateDue" class="form-control" />
-                <span asp-validation-for="DateDue" class="text-danger"></span>
-            </div>
-        </div>
+        
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Save" class="btn btn-default" />

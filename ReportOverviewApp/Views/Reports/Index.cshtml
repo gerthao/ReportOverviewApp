@@ -3,86 +3,122 @@
 @{
     ViewData["Title"] = "Index";
 }
+<style>
+    .form-control{
+        background-color:#444447;
+    }
+    .btn-default {
+        background-color: #444447;
+    }
+</style>
+<h3>Reports</h3>
 
-<h2>Reports Due By @DateTime.Today.AddDays(20)</h2>
-
-<p>
+@*<p>
     <a asp-action="Create">Create New</a>
-</p>
-
-<form asp-controller="Movies" asp-action="Index">
-    <p>
-        Report Name: <input type="text" name="Search">
-        <input type="submit" value="Filter" />
-    </p>
+</p>*@
+@*<div class="btn-group btn-group-justified" role="group" aria-label="...">
+    <div class="btn-group" role="group">
+        <button type="submit" class="btn btn-primary" name="item" aria-label="Left Align"><span class="glyphicon glyphicon-plus-sign"></span>Add Report</button>
+    </div>
+    <div class="btn-group" role="group">
+        <button type="submit" class="btn btn-success" name="item">Save Changes</button>
+    </div>
+    <div class="btn-group" role="group">
+        <form asp-controller="Reports" asp-action="Index">Report Name: <input type="text" class="form-control" name="Search"></form>
+    </div>
+</div>*@
+<form class="form-horizontal" asp-controller="Reports" asp-action="Index">
+    <div class="form-group">
+        <div class="col-sm-3">
+            <div class="input-group">
+                <input type="search" class="form-control" name="search" id="search" placeholder="Search For Reports" aria-describedby="mag-glass"/>
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" id="mag-glass"><span class="glyphicon glyphicon-search"></span></button>
+                </span>
+            </div>
+        </div>
+        <label class="col-sm-9 text-right">Showing 1-@Model.Count() Of @Model.Count()</label>
+    </div>
 </form>
 <table class="table">
     <thead>
         <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Name)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.DateDue)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.DateDone)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.DateClientNotified)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.DateSent)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Done)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ClientNotified)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Sent)
-                </th>
-                
-            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateDue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateDone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateClientNotified)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateSent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Done)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ClientNotified)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Sent)
+            </th>
+            <th>Options</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-    @if (item.DateDue <= DateTime.Now.AddDays(20)  && item.DateDue >= DateTime.Now)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateDue)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateDone)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateClientNotified)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateSent)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Done)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ClientNotified)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Sent)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-            </td>
-        </tr>
-    }
-}
+        @*<tr>
+            @using ReportOverviewApp.Models
+            <form>     
+                <td><div><input type="text" class="form-control" placeholder="Report Name" asp-fpr="Name" required /></div></td>
+                <td><input type="text" class="form-control" placeholder="Date Due" /></td>
+                <td><input type="text" class="form-control" placeholder="Date Done" /></td>
+                <td><input type="text" class="form-control" placeholder="Date Client Notified" /></td>
+                <td><input type="text" class="form-control" placeholder="Date Sent" /></td>
+                <td><input type="checkbox" /></td>
+                <td><input type="checkbox" /></td>
+                <td><input type="checkbox" /></td>
+                <td><button type="submit" class="btn btn-primary" name="item" aria-label="Left Align"  value="Create"><span class="glyphicon glyphicon-plus-sign"></span>Add Report</button></td>
+            </form>
+        </tr>*@
+        @foreach (var item in Model) {
+           
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateDue)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateDone)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateClientNotified)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateSent)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Done)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ClientNotified)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Sent)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                    </td>
+                </tr>
+
+        }
     </tbody>
 </table>

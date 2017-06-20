@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - ReportOverviewApp</title>
+    <title>@ViewData["Title"] - ReportOverview</title>
 
     <environment names="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -16,6 +16,22 @@
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
+    <style
+        h1, h2, h3 {
+            color: #BFBFBF
+        }
+        table {
+
+            color: #CFCFBD;
+        }
+        body {
+            background-color: #404040;
+        }
+        .navbar-custom{
+            background-color: #333333;
+            font-family: Rockwell
+        }
+    </style>
     @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
 <body>
@@ -28,24 +44,24 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">ReportOverviewApp</a>
+               
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
+                    <li><a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">ReportOverview</a><li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="About">Account</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Login</a></li>
                 </ul>
-                @await Html.PartialAsync("_LoginPartial")
             </div>
         </div>
     </nav>
     <div class="container body-content">
         @RenderBody()
         <hr />
-        <footer>
-            <p>&copy; 2017 - ReportOverviewApp</p>
-        </footer>
+        @*<footer>
+            <p>&copy; 2017 - ReportOverview</p>
+        </footer>*@
     </div>
 
     <environment names="Development">
@@ -72,3 +88,5 @@
     @RenderSection("Scripts", required: false)
 </body>
 </html>
+
+

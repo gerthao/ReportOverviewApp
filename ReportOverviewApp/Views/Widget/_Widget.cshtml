@@ -1,0 +1,18 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model ReportOverviewApp.Models.WidgetModels.IWidget
+
+<div class="widget">
+    <div class="@Model.ClassName">
+        <div class="page-header">
+            @Model.HeaderText
+        </div>
+        <div class="body">
+            @Html.Partial(string.Concat(new[]{"Widget", "/", "_SubWidget" }), Model.SubWidget)
+        </div>
+        <div class="footer">
+            @Model.FooterText
+        </div>
+    </div>
+</div>

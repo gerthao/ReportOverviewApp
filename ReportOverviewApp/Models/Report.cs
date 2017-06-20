@@ -12,6 +12,8 @@ namespace ReportOverviewApp.Models
         public string Name { get; set; }
         public bool Done { get; set; }
 
+        [Display(Name = "Due Date"), DataType(DataType.Date)]
+        public DateTime DateDue { get; set; }
         [Display(Name = "Report Finished"), DataType(DataType.DateTime)]
         public DateTime? DateDone { get; set; }
         [Display(Name = "Client Notified"), DataType(DataType.DateTime)]
@@ -21,7 +23,5 @@ namespace ReportOverviewApp.Models
         public bool ClientNotified { get; set; }
         public bool Sent { get; set; }
 
-        [Display(Name = "Due Date"), DataType(DataType.Date)]
-        public DateTime DateDue { get; set; }
     }
 }
