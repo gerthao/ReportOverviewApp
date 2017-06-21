@@ -9,33 +9,21 @@
     <environment names="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> 
     </environment>
     <environment names="Staging,Production">
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> 
     </environment>
-    <style
-        h1, h2, h3 {
-            color: #BFBFBF
-        }
-        table {
-
-            color: #CFCFBD;
-        }
-        body {
-            background-color: #404040;
-        }
-        .navbar-custom{
-            background-color: #333333;
-            font-family: Rockwell
-        }
+    <style>
     </style>
     @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+    <nav class="navbar w3-black navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -49,19 +37,42 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">ReportOverview</a><li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">Account</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Login</a></li>
+                    <li><a asp-area="" asp-controller="Reports" asp-action="Index">Reports</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Account<span class="caret"></span></a>
+                        
+                        <ul class="dropdown-menu">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <li><a href="#">Notifications</a></li>
+                                <li><a href="#">User Profile</a></li>
+                                <li><a asp-area="" asp-controller="Account" asp-action="Logout">Logout</a></li>
+                            }
+                            else
+                            {
+                                <li><a asp-area="" asp-controller="Account" asp-action="Login">Login</a></li>
+
+                            }
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
+    @*<div class="w3-sidebar w3-light-grey w3-bar-block" style="width:10%">
+        <h3 class="w3-bar-item">Menu</h3>
+        <a href="#" class="w3-bar-item w3-button">Link 1</a>
+        <a href="#" class="w3-bar-item w3-button">Link 2</a>
+        <a href="#" class="w3-bar-item w3-button">Link 3</a>
+    </div>*@
+
     <div class="container body-content">
         @RenderBody()
         <hr />
-        @*<footer>
-            <p>&copy; 2017 - ReportOverview</p>
-        </footer>*@
+        <footer>
+            <p>&copy; 2017 - Ger Thao</p>
+        </footer>
     </div>
 
     <environment names="Development">

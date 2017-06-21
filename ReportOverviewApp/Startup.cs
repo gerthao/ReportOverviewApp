@@ -81,7 +81,7 @@ namespace ReportOverviewApp
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Reports}/{action=Index}/{id?}");
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

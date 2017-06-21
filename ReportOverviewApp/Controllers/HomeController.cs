@@ -4,15 +4,25 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using ReportOverviewApp.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace ReportOverviewApp.Controllers
 {
     [Authorize]
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private readonly ApplicationDbContext _context;
+
+        public HomeController(ApplicationDbContext context)
         {
-            return View();
+            _context = context;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var reports = from r in _context.Reports select r;
+            return View(await reports.ToListAsync());
         }
 
         public IActionResult About()

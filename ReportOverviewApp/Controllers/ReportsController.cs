@@ -14,6 +14,12 @@ namespace ReportOverviewApp.Controllers
     public class ReportsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private static int ReportCount;
+
+        public static int GetReportCount()
+        {
+            return ReportCount;
+        }
 
         public ReportsController(ApplicationDbContext context)
         {
@@ -22,7 +28,8 @@ namespace ReportOverviewApp.Controllers
             //    Redirect("../AccessDenied");
             //    return;
             //}
-            _context = context;    
+            _context = context;
+            ReportCount = _context.Reports.Count();
         }
 
         // GET: Reports
