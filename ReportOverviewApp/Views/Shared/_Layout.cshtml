@@ -40,12 +40,12 @@
                     <li><a asp-area="" asp-controller="Reports" asp-action="Index">Reports</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Account<span class="caret"></span></a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Account <span class="glyphicon glyphicon-menu-down"></span></a>
                         
                         <ul class="dropdown-menu">
                             @if (User.Identity.IsAuthenticated)
                             {
-                                <li><a href="#">Notifications</a></li>
+                                <li><a href="#">Notifications <span class="badge" style="background-color: #FF5238;">0</span></a></li>
                                 <li><a href="#">User Profile</a></li>
                                 <li><a asp-area="" asp-controller="Account" asp-action="Logout">Logout</a></li>
                             }

@@ -5,36 +5,54 @@
 @model IEnumerable<ReportOverviewApp.Models.Report>
 
 <style>
-    .wigets-group{
+    .caption-widget{
         text-align: center;
     }
+    .widget-option-menu{
+        text-align: left;;
+    }
 </style>
-
-<h3>
+<h3 class="page-header">
     Overview (Home Page)
 </h3>
 
 <div class="wigets-group">
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-4">
             <div class="thumbnail">
-                <img src="..." alt="...">
-                <div class="caption">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true">
+                        <span class="glyphicon glyphicon-menu-hamburger widget-option-menu"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Edit Actions</a></li>
+                        <li><a href="#">Change Color</a></li>
+                        <li><a href="#">Copy Widget</a></li>
+                        <li><a href="#">Delete Widget</a></li>
+                    </ul>
+                </div>
+                <div class="caption caption-widget">
                     <h3>Report Approvals Pending</h3>
                     <h1>0</h1>
-                    <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
                 </div>
             </div>
         </div>
-
-
-        <div class="col-sm-6">
+        <div class="col-sm-4">
             <div class="thumbnail">
-                <img src="..." alt="...">
-                <div class="caption">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true">
+                        <span class="glyphicon glyphicon-menu-hamburger widget-option-menu"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Edit Actions</a></li>
+                        <li><a href="#">Change Color</a></li>
+                        <li><a href="#">Copy Widget</a></li>
+                        <li><a href="#">Delete Widget</a></li>
+                    </ul>
+                </div>
+                <div class="caption caption-widget">
                     <h3>Reports Due Within 20 Days</h3>
                     <h1>@Model?.ToList().FindAll(s => (s.DateDue <= DateTime.Now.AddDays(20) && s.DateDue >= DateTime.Now)).Count()</h1>
-                    <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
                 </div>
             </div>
         </div>

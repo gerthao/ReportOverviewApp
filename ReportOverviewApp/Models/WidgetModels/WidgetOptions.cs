@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace ReportOverviewApp.Models.WidgetModels
 {
-    public class SubWidget : ISubWidget
+    public class WidgetOptions
     {
-        public string Topic { get; set; }
-        public string Description { get; set; }
+       public List<String> Options { get; set; }
     }
 }

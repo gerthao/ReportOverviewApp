@@ -7,10 +7,11 @@ namespace ReportOverviewApp.Models.WidgetModels
 {
     interface IWidget
     {
-        int SortOrder { get; set; }
-        string ClassName { get; set; }
-        string FooterText { get; set; }
-        string HeaderText { get; set; }
-        ISubWidget SubWidget { get; set; }
+        int ID { get; set; }
+        
+        string color { get; set; }
+        string header { get; set; }
+        ISubWidget body { get; set; }
+        string footer { get; set; }
     }
 }

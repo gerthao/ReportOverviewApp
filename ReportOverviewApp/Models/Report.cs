@@ -23,5 +23,13 @@ namespace ReportOverviewApp.Models
         public bool ClientNotified { get; set; }
         public bool Sent { get; set; }
 
+        public bool IsPastDue() => DateDue != null && DateDue > DateTime.Now;
+        public bool IsPastDue(DateTime SelectedDate) => DateDue != null && SelectedDate != null && SelectedDate < DateDue;
+        public bool IsDue() => DateDue != null && DateDue <= DateTime.Now;
+        public bool IsDue(DateTime SelectedDate) => DateDue != null && SelectedDate != null && SelectedDate >= DateDue;
+        public bool IsDone() => DateDone != null;
+        public bool HasBeenSent() => DateSent != null;
+        public bool HasBeenDone() => DateDone != null;
+        public bool HasBeenNotified() => DateClientNotified != null;
     }
 }
