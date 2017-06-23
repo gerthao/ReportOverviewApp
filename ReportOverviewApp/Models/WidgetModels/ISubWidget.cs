@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 
 namespace ReportOverviewApp.Models.WidgetModels
 {
-    interface ISubWidget
+    public interface ISubWidget
     {
         string Topic { get; set; }
         string Description { get; set; }
+        Delegate Action { get; set; }
     }
 }

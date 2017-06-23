@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 
 namespace ReportOverviewApp.Models.WidgetModels
 {
-    interface IWidget
+    public interface IWidget
     {
         int ID { get; set; }
-        
-        string color { get; set; }
-        string header { get; set; }
-        ISubWidget body { get; set; }
-        string footer { get; set; }
+        WidgetOptions Options {get; set;}
+        string Color { get; set; }
+        string Header { get; set; }
+        ISubWidget Body { get; set; }
+        string Footer { get; set; }
     }
 }

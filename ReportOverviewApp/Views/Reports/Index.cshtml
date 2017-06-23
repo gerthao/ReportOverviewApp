@@ -16,11 +16,9 @@
     .report-table{
     }
 </style>
-<h3>Reports</h3>
+<h3 class="page-header">Reports</h3>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+@*<p><a asp-action="Create">Create New</a></p>*@
 
 <form class="form-horizontal" asp-controller="Reports" asp-action="Index">
     <div class="form-group">
@@ -34,36 +32,46 @@
         </div>
     </div>
 </form>
-<form class="form-horizontal asp-action=Create">
-    <button type="submit" asp-action="Create" class="btn btn-primary" name="item" aria-label="Left Align"><span class="glyphicon glyphicon-plus-sign"></span>Add Report</button>
-</form>
 
+<div class="report-top-content">
+        <ul class="nav nav-tabs col-sm-10">
+            <li role="presentation" class="active"><a href="#">All</a></li>
+            <li role="presentation"><a href="#">Quarterly</a></li>
+            <li role="presentation"><a href="#">Monthly</a></li>
+        </ul>
+        <form class="form-horizontal asp-action=Create col-sm-2" style="text-align:right;">
+            <button type="submit" asp-action="Create" class="btn btn-primary" name="item" aria-label="Left Align"><span class="glyphicon glyphicon-plus-sign"></span>Add Report</button>
+        </form>
+</div>
 <table class="table report-table table-bordered table-striped">
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.ID)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DateDue)
+                Deadline
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DateDone)
+                Finished On
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DateClientNotified)
+                Notified On
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DateSent)
+                Sent On
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Done)
+                Created
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ClientNotified)
+                Notified
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Sent)
+                Sent
             </th>
             <th>Options</th>
         </tr>
@@ -86,16 +94,19 @@
         @for(int i = 0; i < Model.Count(); i++) {
                 <tr>
                     <td>
+                        @Html.DisplayFor(modelItem => Model.ElementAt(i).ID)
+                    </td>
+                    <td>
                         @Html.DisplayFor(modelItem => Model.ElementAt(i).Name)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => Model.ElementAt(i).DateDue)
+                        @String.Format("{0:MM/dd}", Model.ElementAt(i).DateDue)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => Model.ElementAt(i).DateDone)
+                        @String.Format("{0:MM/dd}", Model.ElementAt(i).DateDone)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => Model.ElementAt(i).DateClientNotified)
+                        @String.Format("{0:MM/dd}", Model.ElementAt(i).DateClientNotified)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => Model.ElementAt(i).DateSent)
@@ -133,7 +144,7 @@
                 <li>
                     <span>@Model.Count()<span class="sr-only">(current)</span></span>
                 </li>
-
+                i = Model.Count() + 1;
             }
             else{
 

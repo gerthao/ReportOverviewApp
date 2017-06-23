@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 
 namespace ReportOverviewApp.Models.WidgetModels
 {
-    public class WidgetOptions
+    public interface IProduct
     {
-       public Dictionary<String, Delegate> Options { get; set; }
     }
 }
