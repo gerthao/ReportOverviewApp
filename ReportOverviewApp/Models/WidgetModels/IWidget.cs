@@ -13,5 +13,6 @@ namespace ReportOverviewApp.Models.WidgetModels
         string Header { get; set; }
         ISubWidget Body { get; set; }
         string Footer { get; set; }
+
     }
 }

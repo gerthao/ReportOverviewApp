@@ -23,23 +23,37 @@ namespace ReportOverviewApp.Controllers
 
         public ReportsController(ApplicationDbContext context)
         {
-            //if (User == null)
-            //{
-            //    Redirect("../AccessDenied");
-            //    return;
-            //}
+            ;
             _context = context;
             ReportCount = _context.Reports.Count();
         }
 
         // GET: Reports
         [Authorize]
-        public async Task<IActionResult> Index(string search)
+        public async Task<IActionResult> Index(string search, string column)
         {
             var reports = from r in _context.Reports select r;
             if (!String.IsNullOrEmpty(search))
             {
                 reports = reports.Where(report => report.Name.Contains(search));
+            }
+            if (!String.IsNullOrEmpty(column))
+            {
+                switch (column)
+                {
+                    case "ID":
+                        reports = reports.OrderBy(report => report.ID);
+                        break;
+                    case "Name":
+                        reports = reports.OrderBy(report => report.Name);
+                        break;
+                    case "Deadline":
+                        reports = reports.OrderBy(report => report.DateDue);
+                        break;
+                    default:
+                        reports = reports.OrderBy(report => report.ID);
+                        break;
+                }
             }
             return View(await reports.ToListAsync());
         }

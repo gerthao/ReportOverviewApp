@@ -7,11 +7,12 @@ namespace ReportOverviewApp.Models.WidgetModels
 {
     public class Widget : IWidget
     {
-        public int ID { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public WidgetOptions Options { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public string Color { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public string Header { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public ISubWidget Body { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public string Footer { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public int ID { get; set; }
+        public WidgetOptions Options { get; set; }
+        public string Color { get; set; }
+        public string Header { get; set; }
+        public ISubWidget Body { get; set; }
+        public string Footer { get; set; }
+
     }
 }

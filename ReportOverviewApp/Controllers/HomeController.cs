@@ -21,8 +21,13 @@ namespace ReportOverviewApp.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var reports = from r in _context.Reports select r;
-            return View(await reports.ToListAsync());
+            //IDictionary<string, object> blob = new Dictionary<string, object>();
+            //var reports = from r in _context.Reports select r;
+            //var users = from u in _context.Users select u;
+            //blob.Add("reports", reports);
+            //blob.Add("users", users);
+            //return View(blob);
+            return View(await (from r in _context.Reports select r).ToListAsync());
         }
 
         public IActionResult About()

@@ -9,21 +9,21 @@
     <environment names="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
-        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> 
+        @*<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">*@ 
     </environment>
     <environment names="Staging,Production">
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
-        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> 
+        @*<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">*@ 
     </environment>
     <style>
     </style>
     @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
 <body>
-    <nav class="navbar w3-black navbar-fixed-top">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -60,6 +60,9 @@
             </div>
         </div>
     </nav>
+    <nav class="navbar">
+
+    </nav>
     @*<div class="w3-sidebar w3-light-grey w3-bar-block" style="width:10%">
         <h3 class="w3-bar-item">Menu</h3>
         <a href="#" class="w3-bar-item w3-button">Link 1</a>
@@ -95,7 +98,7 @@
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
-
+    <script src="~/js/ModalFocus.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

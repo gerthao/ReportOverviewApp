@@ -24,7 +24,7 @@
     <div class="form-group">
         <div class="col-sm-3">
             <div class="input-group">
-                <input type="search" class="form-control" name="search" id="search" placeholder="Search For Reports" aria-describedby="mag-glass"/>
+                <input type="search" class="form-control" name="search" placeholder="Search For Reports" aria-describedby="mag-glass"/>
                 <span class="input-group-btn">
                     <button class="btn btn-default" type="button" id="mag-glass"><span class="glyphicon glyphicon-search"></span></button>
                 </span>
@@ -33,27 +33,49 @@
     </div>
 </form>
 
+
+
 <div class="report-top-content">
-        <ul class="nav nav-tabs col-sm-10">
-            <li role="presentation" class="active"><a href="#">All</a></li>
-            <li role="presentation"><a href="#">Quarterly</a></li>
-            <li role="presentation"><a href="#">Monthly</a></li>
-        </ul>
-        <form class="form-horizontal asp-action=Create col-sm-2" style="text-align:right;">
-            <button type="submit" asp-action="Create" class="btn btn-primary" name="item" aria-label="Left Align"><span class="glyphicon glyphicon-plus-sign"></span>Add Report</button>
-        </form>
+    <ul class="nav nav-tabs col-sm-10">
+        <li role="presentation" class="active"><a href="#">All</a></li>
+        <li role="presentation"><a href="#">Quarterly</a></li>
+        <li role="presentation"><a href="#">Monthly</a></li>
+    </ul>
+    @*<form class="form-horizontal asp-action=Create col-sm-2" style="text-align:right;">
+        <button type="submit" asp-action="Create" class="btn btn-primary" name="item" aria-label="Left Align"><span class="glyphicon glyphicon-plus-sign"></span>Add Report</button>
+    </form>*@
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#CreateReportModal" aria-label="Left Align"><span class="glyphicon glyphicon-plus-sign"></span>Add Report</button>
+</div>
+
+<div id="CreateReportModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                @Html.Partial("Create", new Report())
+            </div>
+        </div>
+    </div>
+</div>
+<div id="EditReportModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                @Html.Partial("Edit", Model.ElementAt(1))
+            </div>
+        </div>
+    </div>
 </div>
 <table class="table report-table table-bordered table-striped">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ID)
+                 @Html.ActionLink("ID", "Index", new {column = "ID"})
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.ActionLink("Name", "Index", new {column = "Name"})
             </th>
             <th>
-                Deadline
+                @Html.ActionLink("Deadline", "Index", new { column = "Deadline" })
             </th>
             <th>
                 Finished On
@@ -121,6 +143,7 @@
                         @Html.DisplayFor(modelItem => Model.ElementAt(i).Sent)
                     </td>
                     <td>
+                        @*<a onclick="EditReport(@i)" data-toggle="modal" data-target="#EditReportModal">Edit</a> |*@
                         <a asp-action="Edit" asp-route-id="@Model.ElementAt(i).ID">Edit</a> |
                         <a asp-action="Details" asp-route-id="@Model.ElementAt(i).ID">Details</a> |
                         <a asp-action="Delete" asp-route-id="@Model.ElementAt(i).ID">Delete</a>
