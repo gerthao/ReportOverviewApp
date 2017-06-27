@@ -8,6 +8,7 @@ function CreateReport(){
 
 function EditReport(id) {
     current = id;
+    alert(current);
     $('#EditReportModal').on('shown.bs.modal', function () {
         $('#EditOption').focus()
     });

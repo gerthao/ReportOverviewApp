@@ -24,7 +24,7 @@
 </head>
 <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
+        <div class="container-fluid">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="sr-only">Toggle navigation</span>
@@ -32,44 +32,29 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-               
             </div>
             <div class="navbar-collapse collapse">
+                @if (User.Identity.IsAuthenticated)
+                {
+                <ul class="nav navbar-bar navbar-left">
+                    <li>
+                        <button onclick="openCloseNav()" class="btn btn-link navbar-link"><span class="glyphicon glyphicon-tasks" style="padding-top:50%;"></span></button>
+                    </li>
+                </ul>
+                }
                 <ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">ReportOverview</a><li>
-                    <li><a asp-area="" asp-controller="Reports" asp-action="Index">Reports</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Account <span class="glyphicon glyphicon-menu-down"></span></a>
-                        
-                        <ul class="dropdown-menu">
-                            @if (User.Identity.IsAuthenticated)
-                            {
-                                <li><a href="#">Notifications <span class="badge" style="background-color: #FF5238;">0</span></a></li>
-                                <li><a href="#">User Profile</a></li>
-                                <li><a asp-area="" asp-controller="Account" asp-action="Logout">Logout</a></li>
-                            }
-                            else
-                            {
-                                <li><a asp-area="" asp-controller="Account" asp-action="Login">Login</a></li>
-
-                            }
-                        </ul>
-                    </li>
+                    @await Html.PartialAsync("_LoginPartial")
                 </ul>
             </div>
         </div>
     </nav>
-    <nav class="navbar">
-
-    </nav>
-    @*<div class="w3-sidebar w3-light-grey w3-bar-block" style="width:10%">
-        <h3 class="w3-bar-item">Menu</h3>
-        <a href="#" class="w3-bar-item w3-button">Link 1</a>
-        <a href="#" class="w3-bar-item w3-button">Link 2</a>
-        <a href="#" class="w3-bar-item w3-button">Link 3</a>
-    </div>*@
-
+    @if (User.Identity.IsAuthenticated)
+    {
+        @*<span onclick="openNav()">open</span>*@
+        @await Html.PartialAsync("_SideMenu")
+    }
     <div class="container body-content">
         @RenderBody()
         <hr />
@@ -99,6 +84,7 @@
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
     <script src="~/js/ModalFocus.js"></script>
+    @*<script src="~/js/LogoutHandler.js"></script>*@
     @RenderSection("Scripts", required: false)
 </body>
 </html>
