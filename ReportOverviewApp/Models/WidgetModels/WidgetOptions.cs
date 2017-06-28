@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace ReportOverviewApp.Models.WidgetModels
 {
-    public class WidgetOptions : IEnumerable<string>
+    public class WidgetOptions : IWidgetOptions
     {
-       //public Dictionary<String, Delegate> Options { get; set; }
-       public List<String> Options { get; set; }
+        //public Dictionary<String, Delegate> Options { get; set; }
+        public List<string> Options { get; set; }
 
         public IEnumerator<string> GetEnumerator()
         {

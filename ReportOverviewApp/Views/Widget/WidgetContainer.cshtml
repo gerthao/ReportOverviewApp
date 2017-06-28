@@ -1,0 +1,10 @@
+@model IEnumerable<ReportOverviewApp.Models.WidgetModels.IWidget>
+
+<div class="widget-container">
+    @foreach(var item in Model)
+    {
+        <div class="widget-item">
+            @await  Html.PartialAsync("_Widget")
+        </div>
+    }
+</div>

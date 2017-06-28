@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 
 namespace ReportOverviewApp.Models.WidgetModels
 {
-    public interface IProduct
+    public interface IWidgetOptions : IEnumerable<string>
     {
+        List<string> Options { get; set; }
     }
 }

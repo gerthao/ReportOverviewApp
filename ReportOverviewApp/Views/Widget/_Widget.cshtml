@@ -13,10 +13,8 @@
                 <li><a href="#">@option.ToString()</a></li>
             }
         </ul>
-        <div class="caption caption-widget subwidget">
-            @*@Html.Partial(string.Concat(new[] { "Widget", "/", "_SubWidget" }), Model.Body)*@
-            <h3>@Model.Body.Topic</h3>
-            <h1>@Model.Body.Description</h1>
+        <div class="caption">
+            @await  Html.PartialAsync("_SubWidget")
         </div>
     </div>
 </div>
