@@ -4,7 +4,7 @@
     @foreach(var item in Model)
     {
         <div class="widget-item">
-            @await  Html.PartialAsync("_Widget")
+            @await  Html.PartialAsync("_Widget", item)
         </div>
     }
 </div>

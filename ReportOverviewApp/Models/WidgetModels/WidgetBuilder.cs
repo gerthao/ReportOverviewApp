@@ -8,12 +8,6 @@ namespace ReportOverviewApp.Models.WidgetModels
     public class WidgetBuilder
     {
         Widget Product;
-        private static int ProductID;
-        public WidgetBuilder() { }
-        //private void GiveID() {
-        //    ProductID++;
-        //    Product.ID = ProductID;
-        //}
         public WidgetBuilder BuildID(int ID)
         {
             Product.ID = ID;
@@ -35,11 +29,19 @@ namespace ReportOverviewApp.Models.WidgetModels
         }
         public WidgetBuilder BuildOptions(IWidgetOptions options)
         {
+            if(Product.Options == null)
+            {
+                Product.Options = new WidgetOptions();
+            }
             Product.Options.Options.AddRange(options.Options);
             return this;
         }
         public WidgetBuilder BuildOption(string option)
         {
+            if (Product.Options == null)
+            {
+                Product.Options = new WidgetOptions();
+            }
             Product.Options.Options.Add(option);
             return this;
         }

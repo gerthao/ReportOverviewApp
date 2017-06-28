@@ -11,6 +11,10 @@ namespace ReportOverviewApp.Models.WidgetModels
         //public Dictionary<String, Delegate> Options { get; set; }
         public List<string> Options { get; set; }
 
+        public WidgetOptions()
+        {
+            Options = new List<String>();
+        }
         public IEnumerator<string> GetEnumerator()
         {
             return Options.GetEnumerator();

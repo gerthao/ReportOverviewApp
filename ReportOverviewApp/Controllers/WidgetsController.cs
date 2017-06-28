@@ -10,11 +10,11 @@ using ReportOverviewApp.Models.WidgetModels;
 
 namespace ReportOverviewApp.Controllers
 {
-    public class WidgetContainerController : Controller
+    public class WidgetsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public WidgetContainerController(ApplicationDbContext context)
+        public WidgetsController(ApplicationDbContext context)
         {
             _context = context;    
         }
@@ -38,23 +38,10 @@ namespace ReportOverviewApp.Controllers
             WidgetBuilder builder = new WidgetBuilder();
             var wigetContainer = new List<IWidget>
             {
-                new Widget()
-                {
-                    ID = 1,
-                    Header = "Widget 1",
-                    Body = new SubWidget()
-                    {
-                        Topic = "All Reports",
-                        Description = String.Format("{0}", _context.Reports.Count())
-                    },
-                    Footer = "Footer",
-                    Color = "Blue",
-                    Options = new WidgetOptions()
-                },
                 builder
                     .BuildProduct()
-                    .BuildID(2)
-                    .BuildHeader("Wiget 2")
+                    .BuildID(1)
+                    .BuildHeader("Wiget 1")
                     .BuildSubWidget(new SubWidget()
                     {
                         Topic = "Reports Due Today",
@@ -62,6 +49,7 @@ namespace ReportOverviewApp.Controllers
                     })
                     .BuildFooter("Footer")
                     .BuildColor("Red")
+                    .BuildOption("Edit This Widget")
                     .ReleaseProduct()
             };
             return wigetContainer;

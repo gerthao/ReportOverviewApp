@@ -199,6 +199,22 @@ namespace ReportOverviewApp.Migrations
                     b.ToTable("Report");
                 });
 
+            modelBuilder.Entity("ReportOverviewApp.Models.WidgetModels.Widget", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Color");
+
+                    b.Property<string>("Footer");
+
+                    b.Property<string>("Header");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Widget");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole")
