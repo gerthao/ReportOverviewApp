@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ReportOverviewApp.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,6 +10,6 @@ namespace ReportOverviewApp.Models.WidgetModels
     {
         string Topic { get; set; }
         string Description { get; set; }
-        Delegate Action { get; set; }
+        Func<ApplicationDbContext, int> Action { get; set; }
     }
 }

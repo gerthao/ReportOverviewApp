@@ -23,7 +23,6 @@ namespace ReportOverviewApp.Controllers
 
         public ReportsController(ApplicationDbContext context)
         {
-            ;
             _context = context;
             ReportCount = _context.Reports.Count();
         }

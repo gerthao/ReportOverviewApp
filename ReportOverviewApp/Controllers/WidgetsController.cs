@@ -42,11 +42,9 @@ namespace ReportOverviewApp.Controllers
                     .BuildProduct()
                     .BuildID(1)
                     .BuildHeader("Wiget 1")
-                    .BuildSubWidget(new SubWidget()
-                    {
-                        Topic = "Reports Due Today",
-                        Description = String.Format("{0}", _context.Reports.Where(r => r.DateDue == DateTime.Now).Count())
-                    })
+                    .BuildSubWidgetTopic("All Reports")
+                    .BuildSubWidgetAction(WidgetFunctions.ReportCount())
+                    
                     .BuildFooter("Footer")
                     .BuildColor("Red")
                     .BuildOption("Edit This Widget")
