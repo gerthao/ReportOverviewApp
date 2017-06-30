@@ -42,7 +42,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Views\Shared\_SideMenu.cshtml" />
-    <None Include="wwwroot\css\simple-sidebar.css" />
   </ItemGroup>
 
 </Project>

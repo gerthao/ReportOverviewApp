@@ -9,6 +9,5 @@ namespace ReportOverviewApp.Models.ReportViewModels
     public class ReportViewModel
     {
         public IEnumerable<Report> Reports { get; set; }
-        public Report ReportToken { get; set; }
     }
 }

@@ -44,10 +44,20 @@ namespace ReportOverviewApp.Controllers
                     .BuildHeader("Wiget 1")
                     .BuildSubWidgetTopic("All Reports")
                     .BuildSubWidgetAction(WidgetFunctions.ReportCount())
-                    
                     .BuildFooter("Footer")
                     .BuildColor("Red")
                     .BuildOption("Edit This Widget")
+                    .ReleaseProduct(),
+
+                builder
+                    .BuildProduct()
+                    .BuildID(2)
+                    .BuildHeader("Wiget 2")
+                    .BuildSubWidgetTopic("All Reports")
+                    .BuildSubWidgetAction(WidgetFunctions.ReportCount(DateTime.Now, DateTime.Now.AddDays(20)))
+                    .BuildFooter("Footer")
+                    .BuildColor("Black")
+                    .BuildOption("Edit This Widget").BuildOption("Delete This Widget")
                     .ReleaseProduct()
             };
             return wigetContainer;

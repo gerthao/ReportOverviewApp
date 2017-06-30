@@ -8,14 +8,24 @@ namespace ReportOverviewApp.Models
 {
     public class Report
     {
+        public enum Frequency
+        {
+            Weekly, Biweekly, Quarterly, Monthly, Semiannual, Annual
+        }
+
         public int ID { get; set; }
         public string Name { get; set; }
         public bool Done { get; set; }
+        [Required]
+        public Enum FrequencyType { get; set; }
 
-        [Display(Name = "Deadline"), DataType(DataType.Date)]
+        [DataType(DataType.Date), Required]
         public DateTime DateDue { get; set; }
+        [DataType(DataType.Date)]
         public DateTime? DateDone { get; set; }
+        [DataType(DataType.Date)]
         public DateTime? DateClientNotified { get; set; }
+        [DataType(DataType.Date)]
         public DateTime? DateSent { get; set; }
         public bool ClientNotified { get; set; }
         public bool Sent { get; set; }

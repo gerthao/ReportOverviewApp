@@ -3,7 +3,7 @@
 }
 
 @model IEnumerable<ReportOverviewApp.Models.Report>
-@inject ReportOverviewApp.Data.ApplicationDbContext data
+
 
 <style>
     .caption-widget{
@@ -59,6 +59,6 @@
         </div>
     </div>
 </div>
-<div class="wigdet-container">
+@*<div class="wigdet-container">
     @await Html.PartialAsync("..\\Widgets\\Index", data.Widget)
-</div>
+</div>*@

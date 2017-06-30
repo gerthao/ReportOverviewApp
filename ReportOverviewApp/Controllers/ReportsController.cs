@@ -8,53 +8,55 @@ using Microsoft.EntityFrameworkCore;
 using ReportOverviewApp.Data;
 using ReportOverviewApp.Models;
 using Microsoft.AspNetCore.Authorization;
+using ReportOverviewApp.Models.ReportViewModels;
 
 namespace ReportOverviewApp.Controllers
 {
     public class ReportsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private static int ReportCount;
 
-        public static int GetReportCount()
+        private ReportViewModel GetReportViewModel(string search, string column)
         {
-            return ReportCount;
-        }
-
-        public ReportsController(ApplicationDbContext context)
-        {
-            _context = context;
-            ReportCount = _context.Reports.Count();
-        }
-
-        // GET: Reports
-        [Authorize]
-        public async Task<IActionResult> Index(string search, string column)
-        {
-            var reports = from r in _context.Reports select r;
+            var viewModel = new ReportViewModel()
+            {
+                Reports = from r in _context.Reports select r
+            };
             if (!String.IsNullOrEmpty(search))
             {
-                reports = reports.Where(report => report.Name.Contains(search));
+                viewModel.Reports = viewModel.Reports.Where(r => r.Name.Contains(search));
             }
             if (!String.IsNullOrEmpty(column))
             {
                 switch (column)
                 {
                     case "ID":
-                        reports = reports.OrderBy(report => report.ID);
+                        viewModel.Reports = viewModel.Reports.OrderBy(report => report.ID);
                         break;
                     case "Name":
-                        reports = reports.OrderBy(report => report.Name);
+                        viewModel.Reports = viewModel.Reports.OrderBy(report => report.Name);
                         break;
                     case "Deadline":
-                        reports = reports.OrderBy(report => report.DateDue);
+                        viewModel.Reports = viewModel.Reports.OrderBy(report => report.DateDue);
                         break;
                     default:
-                        reports = reports.OrderBy(report => report.ID);
+                        viewModel.Reports = viewModel.Reports.OrderBy(report => report.ID);
                         break;
                 }
             }
-            return View(await reports.ToListAsync());
+            return viewModel;
+        }
+
+        public ReportsController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        // GET: Reports
+        [Authorize]
+        public ActionResult Index(string search, string column)
+        {
+            return View(GetReportViewModel(search, column));
         }
 
         // GET: Reports/Details/5
