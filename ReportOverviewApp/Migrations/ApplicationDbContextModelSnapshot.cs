@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using ReportOverviewApp.Data;
+using ReportOverviewApp.Models;
 
 namespace ReportOverviewApp.Migrations
 {
@@ -189,6 +190,8 @@ namespace ReportOverviewApp.Migrations
                     b.Property<DateTime?>("DateSent");
 
                     b.Property<bool>("Done");
+
+                    b.Property<int>("FrequencyType");
 
                     b.Property<string>("Name");
 

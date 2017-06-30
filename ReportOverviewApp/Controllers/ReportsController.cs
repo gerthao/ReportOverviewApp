@@ -16,12 +16,14 @@ namespace ReportOverviewApp.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        private ReportViewModel GetReportViewModel(string search, string column)
+        private ReportViewModel GetReportViewModel(string search, string column, int recordsPerPage)
         {
             var viewModel = new ReportViewModel()
             {
                 Reports = from r in _context.Reports select r
             };
+            viewModel.GeneratePages(recordsPerPage);
+
             if (!String.IsNullOrEmpty(search))
             {
                 viewModel.Reports = viewModel.Reports.Where(r => r.Name.Contains(search));
@@ -54,9 +56,9 @@ namespace ReportOverviewApp.Controllers
 
         // GET: Reports
         [Authorize]
-        public ActionResult Index(string search, string column)
+        public ActionResult Index(string search, string column, int entriesPerPage)
         {
-            return View(GetReportViewModel(search, column));
+            return View(GetReportViewModel(search, column, entriesPerPage));
         }
 
         // GET: Reports/Details/5
@@ -91,7 +93,7 @@ namespace ReportOverviewApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Create([Bind("ID,Name,Done,DateDone,DateClientNotified,DateSent,ClientNotified,Sent,DateDue")] Report report)
+        public async Task<IActionResult> Create([Bind("ID,Name,Frequency,Done,DateDone,DateClientNotified,DateSent,ClientNotified,Sent,DateDue")] Report report)
         {
             if (ModelState.IsValid)
             {

@@ -4,11 +4,12 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using ReportOverviewApp.Data;
+using ReportOverviewApp.Models;
 
 namespace ReportOverviewApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20170628204122_Initial")]
+    [Migration("20170630201056_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -190,6 +191,8 @@ namespace ReportOverviewApp.Migrations
                     b.Property<DateTime?>("DateSent");
 
                     b.Property<bool>("Done");
+
+                    b.Property<int>("FrequencyType");
 
                     b.Property<string>("Name");
 

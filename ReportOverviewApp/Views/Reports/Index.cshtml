@@ -74,9 +74,9 @@ else{
                 <tr>
                     <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).ID)</td>
                     <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Name)</td>
-                    <td>@String.Format("{0:MM/dd}", Model.Reports.ElementAt(i).DateDue)</td>
-                    <td>@String.Format("{0:MM/dd}", Model.Reports.ElementAt(i).DateDone)</td>
-                    <td>@String.Format("{0:MM/dd}", Model.Reports.ElementAt(i).DateClientNotified)</td>
+                    <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateDue)</td>
+                    <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateDone)</td>
+                    <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateClientNotified)</td>
                     <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateSent)</td>
                     <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Done)</td>
                     <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).ClientNotified)</td>
