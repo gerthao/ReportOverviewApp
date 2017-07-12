@@ -15,7 +15,7 @@ namespace ReportOverviewApp.Models
         }
 
         public int ID { get; set; }
-        public string Name { get; set; }
+        
         public bool Done { get; set; }
         [Required]
         public FrequencyType Frequency { get; set; }
@@ -30,6 +30,12 @@ namespace ReportOverviewApp.Models
         public DateTime? DateSent { get; set; }
         public bool ClientNotified { get; set; }
         public bool Sent { get; set; }
+
+
+        public string Name { get; set; }
+
+
+
 
         public bool IsPastDue() => DateDue != null && DateDue > DateTime.Now;
         public bool IsPastDue(DateTime SelectedDate) => DateDue != null && SelectedDate != null && SelectedDate < DateDue;
