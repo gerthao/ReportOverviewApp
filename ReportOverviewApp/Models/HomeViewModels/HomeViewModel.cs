@@ -7,6 +7,9 @@ using ReportOverviewApp.Models.WidgetModels;
 
 namespace ReportOverviewApp.Models.HomeViewModels
 {
+    /// <summary>
+    ///  This ViewModel class holds Report, Widget, and User data
+    /// </summary>
     public class HomeViewModel
     {
         public IEnumerable<Report> Reports { get;}

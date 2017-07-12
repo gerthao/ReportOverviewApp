@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace ReportOverviewApp.Models.WidgetModels
 {
+    /// <summary>
+    ///  TODO: Needs summary
+    /// </summary>
     public class Widget : IWidget
     {
         public int ID { get; set; }

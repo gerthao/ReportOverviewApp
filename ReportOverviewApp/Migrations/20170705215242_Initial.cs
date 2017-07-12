@@ -8,8 +8,12 @@ namespace ReportOverviewApp.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
+            migrationBuilder.DropColumn(
                 name: "FrequencyType",
+                table: "Report");
+
+            migrationBuilder.AddColumn<int>(
+                name: "Frequency",
                 table: "Report",
                 nullable: false,
                 defaultValue: 0);
@@ -18,8 +22,14 @@ namespace ReportOverviewApp.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "FrequencyType",
+                name: "Frequency",
                 table: "Report");
+
+            migrationBuilder.AddColumn<int>(
+                name: "FrequencyType",
+                table: "Report",
+                nullable: false,
+                defaultValue: 0);
         }
     }
 }

@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace ReportOverviewApp.Models.WidgetModels
 {
+    /// <summary>
+    ///  This class is used in the Widget class and
+    ///  determines the numerical data that is displayed.
+    /// </summary>
     public class SubWidget : ISubWidget
     {
         public string Topic { get; set; }

@@ -16,6 +16,23 @@ namespace ReportOverviewApp.Controllers
     {
         private readonly ApplicationDbContext _context;
 
+        /// <summary>
+        ///  This method creates a ViewModel to displays records from the Report class.
+        /// </summary>
+        /// <param name="search">
+        ///  This parameter determines the list of records retrieved containing the search.
+        ///  parameter's values
+        /// </param>
+        /// <param name="column">
+        ///  This parameter determines the sort order of the list of records by a certain Report field.
+        /// </param>
+        /// <param name="recordsPerPage">
+        ///  This parameter determines the number of records displayed on a page.
+        /// </param>
+        /// <returns>
+        ///  Returns a ReportViewModel which contains a IEnumberable<Report> based on the parameters given.
+        ///  The returned object is used for the Index method.
+        /// </returns>
         private ReportViewModel GetReportViewModel(string search, string column, int recordsPerPage)
         {
             var viewModel = new ReportViewModel()

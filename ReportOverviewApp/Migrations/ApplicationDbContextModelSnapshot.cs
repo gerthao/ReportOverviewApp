@@ -191,7 +191,7 @@ namespace ReportOverviewApp.Migrations
 
                     b.Property<bool>("Done");
 
-                    b.Property<int>("FrequencyType");
+                    b.Property<int>("Frequency");
 
                     b.Property<string>("Name");
 

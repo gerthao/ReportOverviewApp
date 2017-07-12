@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace ReportOverviewApp.Models.WidgetModels
 {
+    /// <summary>
+    ///  This class contains the options for the Widget
+    ///  class
+    /// </summary>
     public class WidgetOptions : IWidgetOptions
     {
         //public Dictionary<String, Delegate> Options { get; set; }

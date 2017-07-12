@@ -98,7 +98,7 @@ else{
                     <span aria-hidden="true">&laquo;</span>
                 </span>
             </li>
-            @for (int i = 1; i <= Model.Reports.Count(); i++)
+            @for (int i = 1; i <= Model.PagesCount(); i++)
             {
                 if (i > 5)
                 {
@@ -106,9 +106,9 @@ else{
                         <span>...<span class="sr-only">(current)</span></span>
                     </li>
                     <li>
-                        <span>@Model.Reports.Count()<span class="sr-only">(current)</span></span>
+                        <span>@Model.PagesCount()<span class="sr-only">(current)</span></span>
                     </li>
-                    i = Model.Reports.Count() + 1;
+                    i = Model.PagesCount() + 1;
                 }
                 else
                 {

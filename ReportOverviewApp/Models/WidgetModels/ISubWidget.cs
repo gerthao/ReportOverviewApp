@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace ReportOverviewApp.Models.WidgetModels
 {
+    /// <summary>
+    ///  Interface used in part of the IWidget interface to
+    ///  display numerical or statistical data
+    /// </summary>
     public interface ISubWidget
     {
         string Topic { get; set; }

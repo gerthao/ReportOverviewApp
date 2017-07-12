@@ -6,9 +6,20 @@ using System.Threading.Tasks;
 
 namespace ReportOverviewApp.Models.WidgetModels
 {
+    /// <summary>
+    ///  This class is responsible for building Widgets
+    /// </summary>
     public class WidgetBuilder
     {
         Widget Product;
+        /// <summary>
+        ///  This method checks to see if parameter (Widget)
+        ///  has any object data that is null, including
+        ///  the object itself.
+        /// </summary>
+        /// <param name="product">
+        ///  Parameter is passed by reference.
+        /// </param>
         private void CheckProduct(ref Widget product)
         {
             if(product == null)
@@ -84,6 +95,14 @@ namespace ReportOverviewApp.Models.WidgetModels
             Product.Body.Topic = topic;
             return this;
         }
+        /// <summary>
+        ///  This method builds a SubWidget.Action for the Product field.
+        /// </summary>
+        /// <param name="function">
+        ///  Parameter is a Func class that takes a ApplicationDbContext class and results
+        ///  into an int.
+        /// </param>
+        /// <returns></returns>
         public WidgetBuilder BuildSubWidgetAction(Func<ApplicationDbContext, int> function)
         {
             Product.Body.Action = function;

@@ -9,7 +9,7 @@ using ReportOverviewApp.Models;
 namespace ReportOverviewApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20170630201056_Initial")]
+    [Migration("20170705215242_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -192,7 +192,7 @@ namespace ReportOverviewApp.Migrations
 
                     b.Property<bool>("Done");
 
-                    b.Property<int>("FrequencyType");
+                    b.Property<int>("Frequency");
 
                     b.Property<string>("Name");
 
