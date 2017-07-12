@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 
 namespace ReportOverviewApp.Models
 {
-    /// <summary>
-    ///  This class models a report
-    /// </summary>
+
     public class Report
     {
         public enum FrequencyType

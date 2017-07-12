@@ -9,8 +9,8 @@ using ReportOverviewApp.Models;
 namespace ReportOverviewApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20170705215242_Initial")]
-    partial class Initial
+    [Migration("20170712213100_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
