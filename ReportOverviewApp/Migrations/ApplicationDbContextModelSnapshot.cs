@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using ReportOverviewApp.Data;
-using ReportOverviewApp.Models;
 
 namespace ReportOverviewApp.Migrations
 {
@@ -179,7 +178,13 @@ namespace ReportOverviewApp.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("BusinessContact");
+
+                    b.Property<string>("BusinessOwner");
+
                     b.Property<bool>("ClientNotified");
+
+                    b.Property<DateTime?>("DateAdded");
 
                     b.Property<DateTime?>("DateClientNotified");
 
@@ -189,13 +194,69 @@ namespace ReportOverviewApp.Migrations
 
                     b.Property<DateTime?>("DateSent");
 
+                    b.Property<string>("DayDue");
+
+                    b.Property<int?>("DaysAfterQuarter");
+
+                    b.Property<string>("DeliveryFunction");
+
+                    b.Property<string>("DeliveryMethod");
+
+                    b.Property<string>("DeliveryTo");
+
                     b.Property<bool>("Done");
 
-                    b.Property<int>("Frequency");
+                    b.Property<DateTime?>("DueDate1");
+
+                    b.Property<DateTime?>("DueDate2");
+
+                    b.Property<DateTime?>("DueDate3");
+
+                    b.Property<DateTime?>("DueDate4");
+
+                    b.Property<int?>("ERR_STATUS");
+
+                    b.Property<string>("ERSReportLocation");
+
+                    b.Property<string>("ERSReportName");
+
+                    b.Property<DateTime?>("EffectiveDate");
+
+                    b.Property<string>("FolderLocation");
+
+                    b.Property<string>("GroupName");
+
+                    b.Property<int?>("LegacyReportID");
+
+                    b.Property<int?>("LegacyReportIDR2");
 
                     b.Property<string>("Name");
 
+                    b.Property<string>("Notes");
+
+                    b.Property<string>("OtherDepartment");
+
+                    b.Property<string>("OtherReportLocation");
+
+                    b.Property<string>("OtherReportName");
+
+                    b.Property<string>("QualityIndicator");
+
+                    b.Property<string>("ReportPath");
+
+                    b.Property<string>("ReportType");
+
+                    b.Property<string>("RunWith");
+
                     b.Property<bool>("Sent");
+
+                    b.Property<string>("State");
+
+                    b.Property<DateTime?>("SystemRefreshDate");
+
+                    b.Property<DateTime?>("TerminationDate");
+
+                    b.Property<string>("WorkInstructions");
 
                     b.HasKey("ID");
 

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace ReportOverviewApp.Migrations
 {
-    public partial class Init : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -68,15 +68,46 @@ namespace ReportOverviewApp.Migrations
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    BusinessContact = table.Column<string>(nullable: true),
+                    BusinessOwner = table.Column<string>(nullable: true),
                     ClientNotified = table.Column<bool>(nullable: false),
+                    DateAdded = table.Column<DateTime>(nullable: true),
                     DateClientNotified = table.Column<DateTime>(nullable: true),
                     DateDone = table.Column<DateTime>(nullable: true),
                     DateDue = table.Column<DateTime>(nullable: false),
                     DateSent = table.Column<DateTime>(nullable: true),
+                    DayDue = table.Column<string>(nullable: true),
+                    DaysAfterQuarter = table.Column<int>(nullable: true),
+                    DeliveryFunction = table.Column<string>(nullable: true),
+                    DeliveryMethod = table.Column<string>(nullable: true),
+                    DeliveryTo = table.Column<string>(nullable: true),
                     Done = table.Column<bool>(nullable: false),
-                    Frequency = table.Column<int>(nullable: false),
+                    DueDate1 = table.Column<DateTime>(nullable: true),
+                    DueDate2 = table.Column<DateTime>(nullable: true),
+                    DueDate3 = table.Column<DateTime>(nullable: true),
+                    DueDate4 = table.Column<DateTime>(nullable: true),
+                    ERR_STATUS = table.Column<int>(nullable: true),
+                    ERSReportLocation = table.Column<string>(nullable: true),
+                    ERSReportName = table.Column<string>(nullable: true),
+                    EffectiveDate = table.Column<DateTime>(nullable: true),
+                    FolderLocation = table.Column<string>(nullable: true),
+                    GroupName = table.Column<string>(nullable: true),
+                    LegacyReportID = table.Column<int>(nullable: true),
+                    LegacyReportIDR2 = table.Column<int>(nullable: true),
                     Name = table.Column<string>(nullable: true),
-                    Sent = table.Column<bool>(nullable: false)
+                    Notes = table.Column<string>(nullable: true),
+                    OtherDepartment = table.Column<string>(nullable: true),
+                    OtherReportLocation = table.Column<string>(nullable: true),
+                    OtherReportName = table.Column<string>(nullable: true),
+                    QualityIndicator = table.Column<string>(nullable: true),
+                    ReportPath = table.Column<string>(nullable: true),
+                    ReportType = table.Column<string>(nullable: true),
+                    RunWith = table.Column<string>(nullable: true),
+                    Sent = table.Column<bool>(nullable: false),
+                    State = table.Column<string>(nullable: true),
+                    SystemRefreshDate = table.Column<DateTime>(nullable: true),
+                    TerminationDate = table.Column<DateTime>(nullable: true),
+                    WorkInstructions = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
