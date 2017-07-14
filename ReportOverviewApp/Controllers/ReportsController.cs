@@ -34,7 +34,7 @@ namespace ReportOverviewApp.Controllers
         ///  Returns a ReportViewModel which contains a IEnumberable<Report> based on the parameters given.
         ///  The returned object is used for the Index method.
         /// </returns>
-        private ReportViewModel GetReportViewModel(string search, string column, int recordsPerPage)
+        private ReportViewModel GetReportViewModel(string search, string column, int recordsPerPage, int pageIndex)
         {
             var viewModel = new ReportViewModel()
             {
@@ -64,7 +64,7 @@ namespace ReportOverviewApp.Controllers
                         break;
                 }
             }
-            viewModel.Reports = viewModel.Reports.Take(10);
+            viewModel.Reports = viewModel.DisplayPage(pageIndex);
             return viewModel;
         }
 
@@ -75,9 +75,9 @@ namespace ReportOverviewApp.Controllers
 
         // GET: Reports
         [Authorize]
-        public ActionResult Index(string search, string column, int entriesPerPage)
+        public ActionResult Index(string search, string column, int entriesPerPage, int pageIndex)
         {
-            return View(GetReportViewModel(search, column, entriesPerPage));
+            return View(GetReportViewModel(search, column, entriesPerPage, pageIndex));
         }
 
         // GET: Reports/Details/5

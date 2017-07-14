@@ -12,8 +12,9 @@ namespace ReportOverviewApp.Models.ReportViewModels
     public class ReportViewModel
     {
         public IEnumerable<Report> Reports { get; set; }
-        private int Pages;
-        private int PageSize;
+        private int Pages { get; set; }
+        private int PageSize { get; set; }
+        public int CurrentPage { get; private set; } = 1;
         public const int DEFAULT_PAGE_SIZE = 20;
 
 
@@ -28,10 +29,15 @@ namespace ReportOverviewApp.Models.ReportViewModels
         /// </param>
         public void GeneratePages(int mod)
         {
-            if (mod <= 0) mod = DEFAULT_PAGE_SIZE;
+            if (mod <= 0) {
+                mod = DEFAULT_PAGE_SIZE;
+            }
             PageSize = mod;
             int Pages = Reports.Count() / PageSize;
-            if (Reports.Count() % PageSize > 0) Pages++;
+            if (Reports.Count() % PageSize > 0)
+            {
+                Pages++;
+            }
         }
 
         public int PagesCount()
@@ -41,7 +47,13 @@ namespace ReportOverviewApp.Models.ReportViewModels
 
         public IEnumerable<Report> DisplayPage(int index)
         {
-            return Reports.Take(index);
+            if(index <= 0)
+            {
+                index = 1;
+            }
+            CurrentPage = index;
+
+            return Reports.Skip((CurrentPage - 1)*PageSize).Take(PageSize);
         }
         //public string DisplayMessage(DateTime? date)
         //{
