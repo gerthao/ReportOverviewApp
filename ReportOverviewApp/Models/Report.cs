@@ -10,10 +10,10 @@ namespace ReportOverviewApp.Models
 
     public class Report
     {
-        public enum FrequencyType
-        {
-            Weekly, Biweekly, Quarterly, Monthly, Semiannual, Annual
-        }
+        //public enum FrequencyType
+        //{
+        //    Weekly, Biweekly, Quarterly, Monthly, Semiannual, Annual
+        //}
 
         public int ID { get; set; }
         
@@ -38,14 +38,14 @@ namespace ReportOverviewApp.Models
         public string BusinessContact { get; set; }
         [JsonProperty("BUSINESS_OWNER")]
         public string BusinessOwner { get; set; }
-        [JsonProperty("DUE_DATE_1"), DataType(DataType.Date), DisplayFormat(DataFormatString ="{0:d}")]
-        public DateTime? DueDate1 { get; set; }
-        [JsonProperty("DUE_DATE_2"), DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}")]
-        public DateTime? DueDate2 { get; set; }
-        [JsonProperty("DUE_DATE_3"), DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}")]
-        public DateTime? DueDate3 { get; set; }
-        [JsonProperty("DUE_DATE_4"), DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}")]
-        public DateTime? DueDate4 { get; set; }
+        [JsonProperty("DUE_DATE_1")]
+        public string DueDate1 { get; set; }
+        [JsonProperty("DUE_DATE_2")]
+        public string DueDate2 { get; set; }
+        [JsonProperty("DUE_DATE_3")]
+        public string DueDate3 { get; set; }
+        [JsonProperty("DUE_DATE_4")]
+        public string DueDate4 { get; set; }
         [JsonProperty("DAY_DUE")]
         public string DayDue { get; set; }
         [JsonProperty("DELIVERY_FUNCTION")]
@@ -66,10 +66,10 @@ namespace ReportOverviewApp.Models
         public string DeliveryMethod { get; set; }
         [JsonProperty("DELIVERY_TO")]
         public string DeliveryTo { get; set; }
-        [JsonProperty("EFFECTIVE_DATE"), DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}")]
-        public DateTime? EffectiveDate { get; set; }
-        [JsonProperty("TERMINATION_DATE"), DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}")]
-        public DateTime? TerminationDate { get; set; }
+        [JsonProperty("EFFECTIVE_DATE")]
+        public string EffectiveDate { get; set; }
+        [JsonProperty("TERMINATION_DATE")]
+        public string TerminationDate { get; set; }
         [JsonProperty("GROUP_NAME")]
         public string GroupName { get; set; }
         [JsonProperty("STATE")]
@@ -84,10 +84,10 @@ namespace ReportOverviewApp.Models
         public string ERSReportLocation { get; set; }
         [JsonProperty("ERR_STATUS")]
         public int? ERR_STATUS { get; set; }
-        [JsonProperty("DATE_ADDED") , DataType(DataType.Date)]
-        public DateTime? DateAdded { get; set; }
-        [JsonProperty("SYSTEM_REFRESH_DATE"), DataType(DataType.Date)]
-        public DateTime? SystemRefreshDate { get; set; }
+        [JsonProperty("DATE_ADDED")]
+        public string DateAdded { get; set; }
+        [JsonProperty("SYSTEM_REFRESH_DATE")]
+        public string SystemRefreshDate { get; set; }
         [JsonProperty("LEGACY_REPORT_ID")]
         public int? LegacyReportID { get; set; }
         [JsonProperty("LEGACY_REPORT_ID_R2")]

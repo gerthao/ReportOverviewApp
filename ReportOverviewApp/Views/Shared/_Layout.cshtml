@@ -1,4 +1,5 @@
 ﻿@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -52,6 +53,9 @@
     {
         @*<span onclick="openNav()">open</span>*@
         @await Html.PartialAsync("_SideMenu")
+        @*<div>
+            @await Html.PartialAsync("_PlanSideMenu")
+        </div>*@
     }
     <div class="container body-content">
         @RenderBody()

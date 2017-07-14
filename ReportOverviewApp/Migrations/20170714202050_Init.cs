@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace ReportOverviewApp.Migrations
 {
-    public partial class Initial : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -71,7 +71,7 @@ namespace ReportOverviewApp.Migrations
                     BusinessContact = table.Column<string>(nullable: true),
                     BusinessOwner = table.Column<string>(nullable: true),
                     ClientNotified = table.Column<bool>(nullable: false),
-                    DateAdded = table.Column<DateTime>(nullable: true),
+                    DateAdded = table.Column<string>(nullable: true),
                     DateClientNotified = table.Column<DateTime>(nullable: true),
                     DateDone = table.Column<DateTime>(nullable: true),
                     DateDue = table.Column<DateTime>(nullable: false),
@@ -82,14 +82,14 @@ namespace ReportOverviewApp.Migrations
                     DeliveryMethod = table.Column<string>(nullable: true),
                     DeliveryTo = table.Column<string>(nullable: true),
                     Done = table.Column<bool>(nullable: false),
-                    DueDate1 = table.Column<DateTime>(nullable: true),
-                    DueDate2 = table.Column<DateTime>(nullable: true),
-                    DueDate3 = table.Column<DateTime>(nullable: true),
-                    DueDate4 = table.Column<DateTime>(nullable: true),
+                    DueDate1 = table.Column<string>(nullable: true),
+                    DueDate2 = table.Column<string>(nullable: true),
+                    DueDate3 = table.Column<string>(nullable: true),
+                    DueDate4 = table.Column<string>(nullable: true),
                     ERR_STATUS = table.Column<int>(nullable: true),
                     ERSReportLocation = table.Column<string>(nullable: true),
                     ERSReportName = table.Column<string>(nullable: true),
-                    EffectiveDate = table.Column<DateTime>(nullable: true),
+                    EffectiveDate = table.Column<string>(nullable: true),
                     FolderLocation = table.Column<string>(nullable: true),
                     GroupName = table.Column<string>(nullable: true),
                     LegacyReportID = table.Column<int>(nullable: true),
@@ -105,8 +105,8 @@ namespace ReportOverviewApp.Migrations
                     RunWith = table.Column<string>(nullable: true),
                     Sent = table.Column<bool>(nullable: false),
                     State = table.Column<string>(nullable: true),
-                    SystemRefreshDate = table.Column<DateTime>(nullable: true),
-                    TerminationDate = table.Column<DateTime>(nullable: true),
+                    SystemRefreshDate = table.Column<string>(nullable: true),
+                    TerminationDate = table.Column<string>(nullable: true),
                     WorkInstructions = table.Column<string>(nullable: true)
                 },
                 constraints: table =>

@@ -1,0 +1,37 @@
+﻿@model ReportOverviewApp.Models.ReportViewModels.ReportViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2 class="page-header">Select A Plan</h2>
+<div class="container">
+    <div class="row">
+        <h4 class="col-lg-6">Choose State</h4>
+        <h4 class="col-lg-6">Choose Plan</h4>
+    </div>
+    <div class="row">
+        <ul class="col-sm-6">
+            @foreach (var report in (Model.Reports.OrderBy(s => s.State)).Distinct())
+            {
+                <li>
+                    <a href="#">
+                        @report.State
+                    </a>
+                </li>
+            }
+        </ul>
+        <ul class="col-sm-6">
+            @foreach (var report in (Model.Reports.OrderBy(p => p.GroupName)).Distinct())
+            {
+                <li>
+                    <a href="#">
+                        @report.GroupName
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+
+</div>
+

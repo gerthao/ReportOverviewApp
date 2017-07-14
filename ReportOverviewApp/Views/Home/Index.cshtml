@@ -2,8 +2,7 @@
     ViewData["Title"] = "Home Page";
 }
 
-@model IEnumerable<ReportOverviewApp.Models.Report>
-
+@model ReportOverviewApp.Models.ReportViewModels.ReportViewModel
 
 <style>
     .caption-widget{
@@ -33,8 +32,8 @@
                     </ul>
                 </div>
                 <div class="caption caption-widget">
-                    <h3>Report Approvals Pending</h3>
-                    <h1>0</h1>
+                    <h3>Total Reports</h3>
+                    <h1>@Model?.Reports?.Count()</h1>
                 </div>
             </div>
         </div>
@@ -52,8 +51,8 @@
                     </ul>
                 </div>
                 <div class="caption caption-widget">
-                    <h3>Reports Due Within 20 Days</h3>
-                    <h1>@Model?.ToList().FindAll(s => (s.DateDue <= DateTime.Now.AddDays(20) && s.DateDue >= DateTime.Now)).Count()</h1>
+                    <h3>Upcoming Reports</h3>
+                    <h1>@Model?.Reports?.ToList().FindAll(s => (s.DateDue <= DateTime.Now.AddDays(20) && s.DateDue >= DateTime.Now)).Count()</h1>
                 </div>
             </div>
         </div>

@@ -1,4 +1,5 @@
 ﻿<style>
+    /*uses w3.school's tutorial*/
     /* The side navigation menu */
     .sidenav {
         height: 100%; /* 100% Full-height */
@@ -11,10 +12,11 @@
         overflow-x: hidden; /* Disable horizontal scroll */
         padding-top: 1%; /* Place content 60px from the top */
         transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+        transition-delay: 0.0s;
     }
 
         /* The navigation menu links */
-        .sidenav a {
+        .sidenav a, .sidenav button{
             padding: 8px 8px 8px 32px;
             text-decoration: none;
             font-size: 18px;
@@ -39,36 +41,52 @@
 <div id="mySidenav" class="sidenav">
     @*<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>*@
     <a asp-area="" asp-controller="Home" asp-action="Index">Overview</a>
-    <a asp-area="" asp-controller="Reports" asp-action="Index">Reports</a>
-    <a href="#">Clients</a>
-    <a href="#">Contact</a>
+    <a asp-area="" asp-controller="Reports" asp-action="Index">Upcoming Reports</a>
+    <a asp-area="" asp-controller="Reports" asp-action="SelectPlan">Select Plan</a>
+    <a asp-area="" asp-controller="Reports" asp-action="Index">Reporting Catalogue</a>
+
+    @*<button  onclick="openClosePlanNav()" class="btn btn-link navbar-link">
+        Select Plan
+    </button>*@
+    
 </div>
 
+
+
+
 <script>
-    var isOpen = !isHidden();
+    var isOpen = isHidden();
 
     function isHidden() {
         var value = document.getElementById("mySidenav");
         if (value != null && value.style != null) {
-            return document.getElementById("mySidenav").style.width == 0;
+            return document.getElementById("mySidenav").style.width == "0";
         } else return false;
     }
     /* Set the width of the side navigation to 250px */
     function openNav() {
         document.getElementById("mySidenav").style.width = "11%";
+
         isOpen = true;
     }
 
     /* Set the width of the side navigation to 0 */
     function closeNav() {
+        document.getElementById("PlanNav").style.width = "0";
         document.getElementById("mySidenav").style.width = "0";
         isOpen = false;
+
     }
 
     function openCloseNav() {
         if (isOpen) {
+            if(document.getElementById("PlanNav").style.width == "89%"){
+                document.getElementById("mySidenav").style.transitionDelay = "0.7s";
+            }
             closeNav();
+
         } else {
+            document.getElementById("mySidenav").style.transitionDelay = "0.0s";
             openNav();
         }
     }

@@ -62,9 +62,9 @@ else{
                 <th>Finished On</th>
                 <th>Notified On</th>
                 <th>Sent On</th>
-                <th>Created</th>
+                @*<th>Created</th>
                 <th>Notified</th>
-                <th>Sent</th>
+                <th>Sent</th>*@
                 <th>Options</th>
             </tr>
         </thead>
@@ -78,9 +78,6 @@ else{
                     <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateDone)</td>
                     <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateClientNotified)</td>
                     <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateSent)</td>
-                    <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Done)</td>
-                    <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).ClientNotified)</td>
-                    <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Sent)</td>
                     <td>
                         @*<a onclick="EditReport(@Model.Reports.ElementAt(i).ID)" data-toggle="modal" data-target="#EditReportModal">Edit</a> |*@
                         <a asp-action="Edit" asp-route-id="@Model.Reports.ElementAt(i).ID">Edit</a> |
@@ -91,14 +88,14 @@ else{
             }
         </tbody>
     </table>
-    <nav aria-label="...">
+    @*<nav aria-label="...">
         <ul class="pagination">
             <li class="disabled">
                 <span>
                     <span aria-hidden="true">&laquo;</span>
                 </span>
             </li>
-            @for (int i = 1; i <= Model.PagesCount(); i++)
+            @for (int i = 1; i <= Model.Reports.Count(); i++)
             {
                 if (i > 5)
                 {
@@ -124,7 +121,7 @@ else{
                 </span>
             </li>
         </ul>
-    </nav>
+    </nav>*@
 
 }
 

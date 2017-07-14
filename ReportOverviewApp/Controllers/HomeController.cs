@@ -19,7 +19,7 @@ namespace ReportOverviewApp.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public ActionResult Index()
         {
             //IDictionary<string, object> blob = new Dictionary<string, object>();
             //var reports = from r in _context.Reports select r;
@@ -27,7 +27,11 @@ namespace ReportOverviewApp.Controllers
             //blob.Add("reports", reports);
             //blob.Add("users", users);
             //return View(blob);
-            return View(await (from r in _context.Reports select r).ToListAsync());
+            var viewModel = new Models.ReportViewModels.ReportViewModel()
+            {
+                Reports = from r in _context.Reports select r
+            };
+            return View(viewModel);
         }
 
         public IActionResult About()

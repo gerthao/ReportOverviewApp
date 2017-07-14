@@ -1,0 +1,72 @@
+﻿<style>
+    /*uses w3.school's tutorial*/
+    /* The side navigation menu */
+    .plannav {
+        height: 100%; /* 100% Full-height */
+        width: 0; /* 0 width - change this with JavaScript */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Stay on top */
+        top: 4%;
+        left: 11%;
+        background-color: #111; /* Black*/
+        overflow-x: hidden; /* Disable horizontal scroll */
+        padding-top: 1%; /* Place content 60px from the top */
+        transition: 0.7s; /* 0.5 second transition effect to slide in the sidenav */
+    }
+
+        /* The navigation menu links */
+        .plannav a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #818181;
+            display: block;
+            transition: 0.3s
+        }
+
+            /* When you mouse over the navigation links, change their color */
+            .plannav a:hover, .offcanvas a:focus {
+                color: #f1f1f1;
+            }
+
+
+    /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+    #main {
+        transition: margin-left .5s;
+        padding: 20px;
+    }
+</style>
+
+<div id="PlanNav" class="plannav">
+    @await  Html.PartialAsync(@"..\Reports\SelectPlan")
+</div>
+
+<script>
+    var isPlanOpen = isPlanHidden();
+
+    function isPlanHidden() {
+        var value = document.getElementById("PlanNav");
+        if (value != null && value.style != null) {
+            return document.getElementById("PlanNav").style.width == "0";
+        } else return false;
+    }
+    /* Set the width of the side navigation to 250px */
+    function openPlanNav() {
+        document.getElementById("PlanNav").style.width = "89%";
+        isPlanOpen = true;
+    }
+
+    /* Set the width of the side navigation to 0 */
+    function closePlanNav() {
+        document.getElementById("PlanNav").style.width = "0";
+        isPlanOpen = false;
+    }
+
+    function openClosePlanNav() {
+        if (isPlanOpen) {
+            closePlanNav();
+        } else {
+            openPlanNav();
+        }
+    }
+</script>

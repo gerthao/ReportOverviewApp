@@ -8,8 +8,8 @@ using ReportOverviewApp.Data;
 namespace ReportOverviewApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20170713152642_Initial")]
-    partial class Initial
+    [Migration("20170714202050_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -185,7 +185,7 @@ namespace ReportOverviewApp.Migrations
 
                     b.Property<bool>("ClientNotified");
 
-                    b.Property<DateTime?>("DateAdded");
+                    b.Property<string>("DateAdded");
 
                     b.Property<DateTime?>("DateClientNotified");
 
@@ -207,13 +207,13 @@ namespace ReportOverviewApp.Migrations
 
                     b.Property<bool>("Done");
 
-                    b.Property<DateTime?>("DueDate1");
+                    b.Property<string>("DueDate1");
 
-                    b.Property<DateTime?>("DueDate2");
+                    b.Property<string>("DueDate2");
 
-                    b.Property<DateTime?>("DueDate3");
+                    b.Property<string>("DueDate3");
 
-                    b.Property<DateTime?>("DueDate4");
+                    b.Property<string>("DueDate4");
 
                     b.Property<int?>("ERR_STATUS");
 
@@ -221,7 +221,7 @@ namespace ReportOverviewApp.Migrations
 
                     b.Property<string>("ERSReportName");
 
-                    b.Property<DateTime?>("EffectiveDate");
+                    b.Property<string>("EffectiveDate");
 
                     b.Property<string>("FolderLocation");
 
@@ -253,9 +253,9 @@ namespace ReportOverviewApp.Migrations
 
                     b.Property<string>("State");
 
-                    b.Property<DateTime?>("SystemRefreshDate");
+                    b.Property<string>("SystemRefreshDate");
 
-                    b.Property<DateTime?>("TerminationDate");
+                    b.Property<string>("TerminationDate");
 
                     b.Property<string>("WorkInstructions");
 

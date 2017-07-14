@@ -9,6 +9,7 @@ using ReportOverviewApp.Data;
 using ReportOverviewApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using ReportOverviewApp.Models.ReportViewModels;
+using System.Reflection;
 
 namespace ReportOverviewApp.Controllers
 {
@@ -63,6 +64,7 @@ namespace ReportOverviewApp.Controllers
                         break;
                 }
             }
+            viewModel.Reports = viewModel.Reports.Take(10);
             return viewModel;
         }
 
@@ -95,6 +97,51 @@ namespace ReportOverviewApp.Controllers
             }
 
             return View(report);
+        }
+
+        public ActionResult SelectPlan()
+        {
+            
+            //var reports = from r in _context.Reports select r;
+            //var states = (from s in reports select s.State).Distinct();
+            //var plans = (from p in reports select p.GroupName).Distinct();
+            //return View(plans);
+            return View(GetReportViewModel());
+        }
+
+        private ReportViewModel GetReportViewModel()
+        {
+            var viewModel = new ReportViewModel()
+            {
+                Reports = from r in _context.Reports select r
+            };
+            return viewModel;
+        }
+
+        // GET: Reports/Details/5
+        [Authorize]
+        public async Task<IActionResult> MoreDetails(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            Report report = await _context.Reports
+                .SingleOrDefaultAsync(m => m.ID == id);
+            if (report == null)
+            {
+                return NotFound();
+            }
+
+            FieldInfo[] info = typeof(Report).GetFields(BindingFlags.Public);
+
+            //foreach(FieldInfo f in info)
+            //{
+
+            //}
+
+            return View(info);
         }
 
         // GET: Reports/Create
