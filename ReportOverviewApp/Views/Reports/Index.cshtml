@@ -90,34 +90,59 @@ else{
     </table>
     <nav aria-label="...">
         <ul class="pagination">
-            <li class="disabled">
-                <span>
-                    <span aria-hidden="true">&laquo;</span>
-                </span>
-            </li>
-            @for (int i = Model.CurrentPage; i < Model.Reports.Count() && i <= Model.CurrentPage+5; i++)
+            @if (Model.CurrentPage == 1)
             {
-                if (i > 5)
+                <li class="disabled">
+                    <span>
+                        <span aria-hidden="true">Prev</span>
+                    </span>
+                </li>
+            }
+            else
+            {
+                <li>
+                    <span>
+                        <span aria-hidden="true">@Html.ActionLink("Prev", "Index", new { pageIndex = Model.CurrentPage - 1 }) </span>
+                    </span>
+                </li>
+            }
+            
+            @for (int i = Model.CurrentPage; i <= Model.PagesCount() && i <= Model.CurrentPage+5; i++)
+            {
+                if (i == Model.CurrentPage + 5)
                 {
                     <li class="disabled">
                         <span>...<span class="sr-only">(current)</span></span>
                     </li>
                     <li>
-                        <span>@Html.ActionLink((Model.Reports.Count()-1).ToString(), "Index", new { pageIndex = Model.Reports.Count()-1 })<span class="sr-only">(current)</span></span>
+                        <span>@Html.ActionLink((Model.PagesCount()).ToString(), "Index", new { pageIndex = Model.PagesCount() })</span>
                     </li>
                 }
                 else
                 {
                     <li>
-                        <span>@i<span class="sr-only">(current)</span></span>
+                        <span>@Html.ActionLink(@i.ToString(), "Index", new { pageIndex = @i })</span>
                     </li>
                 }
             }
-            <li>
-                <span>
-                    <span aria-hidden="true">&raquo;</span>
-                </span>
-            </li>
+            @if (Model.CurrentPage == Model.PagesCount())
+            {
+                <li class="disabled">
+                    <span>
+                        <span aria-hidden="true">Next</span>
+                    </span>
+                </li>
+            }
+            else
+            {
+
+                <li>
+                    <span>
+                        <span aria-hidden="true">@Html.ActionLink("Next", "Index", new { pageIndex = Model.CurrentPage + 1}) </span>
+                    </span>
+                </li>
+            }
+            
         </ul>
     </nav>
 

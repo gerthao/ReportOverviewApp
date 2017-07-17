@@ -16,12 +16,12 @@ namespace ReportOverviewApp.Models
         //}
 
         public int ID { get; set; }
-        
+
         public bool Done { get; set; }
         //[JsonProperty("FREQUENCY")]
         //public FrequencyType Frequency { get; set; }
 
-        [DataType(DataType.Date), Required, DisplayFormat(DataFormatString ="{0:d}")]
+        [DataType(DataType.Date), Required, DisplayFormat(DataFormatString = "{0:d}")]
         public DateTime DateDue { get; set; }
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}")]
         public DateTime? DateDone { get; set; }
@@ -46,6 +46,8 @@ namespace ReportOverviewApp.Models
         public string DueDate3 { get; set; }
         [JsonProperty("DUE_DATE_4")]
         public string DueDate4 { get; set; }
+        [JsonProperty("FREQUENCY")]
+        public string Frequency { get; set;}
         [JsonProperty("DAY_DUE")]
         public string DayDue { get; set; }
         [JsonProperty("DELIVERY_FUNCTION")]
@@ -98,6 +100,31 @@ namespace ReportOverviewApp.Models
         public string OtherReportLocation { get; set; }
         [JsonProperty("OTHER_REPORT_NAME")]
         public string OtherReportName { get; set; }
+
+        public DateTime? Deadline()
+        {
+            DateTime? dateTime = null;
+            switch (Frequency)
+            {
+                case "Quarterly":
+                    string[] deadlines = new string[] { DueDate1, DueDate2, DueDate3, DueDate4 };
+                    foreach (string date in deadlines)
+                    {
+                        dateTime = new DateTime(DateTime.Now.Ticks);
+                        if (dateTime >= DateTime.Now) return dateTime;
+                    }
+                    break;
+                case "Monthly":
+                    dateTime = new DateTime(year: DateTime.Now.Year, month: DateTime.Now.Month, day: Int32.Parse(DayDue));
+                    break;
+                case "Weekly":
+                    break;
+                default:
+                    break;
+            }
+            return dateTime;
+        }
+
 
         public bool IsPastDue() => DateDue != null && DateDue > DateTime.Now;
         public bool IsPastDue(DateTime SelectedDate) => DateDue != null && SelectedDate != null && SelectedDate < DateDue;

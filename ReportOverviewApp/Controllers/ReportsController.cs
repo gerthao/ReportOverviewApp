@@ -34,17 +34,30 @@ namespace ReportOverviewApp.Controllers
         ///  Returns a ReportViewModel which contains a IEnumberable<Report> based on the parameters given.
         ///  The returned object is used for the Index method.
         /// </returns>
-        private ReportViewModel GetReportViewModel(string search, string column, int recordsPerPage, int pageIndex)
+        /// 
+        //public static class ReportViewModelBuilder
+        //{
+        //    private static ReportViewModel viewModel;
+
+        //}
+        private ReportViewModel viewModel;
+
+        private ReportViewModel GetReportViewModel(string search, string column, int recordsPerPage, int pageIndex, string plan)
         {
-            var viewModel = new ReportViewModel()
+            if(viewModel == null) viewModel = new ReportViewModel()
             {
                 Reports = from r in _context.Reports select r
             };
-            viewModel.GeneratePages(recordsPerPage);
-
+            if (!String.IsNullOrEmpty(plan))
+            {
+                viewModel.Reports = viewModel.Reports.Where(r => r.GroupName.Equals(plan));
+                viewModel.Plan = plan;
+            }
             if (!String.IsNullOrEmpty(search))
             {
+                
                 viewModel.Reports = viewModel.Reports.Where(r => r.Name.Contains(search));
+                viewModel.Search = search;
             }
             if (!String.IsNullOrEmpty(column))
             {
@@ -63,7 +76,9 @@ namespace ReportOverviewApp.Controllers
                         viewModel.Reports = viewModel.Reports.OrderBy(report => report.ID);
                         break;
                 }
+                viewModel.Column = column;
             }
+            viewModel.GeneratePages(recordsPerPage);
             viewModel.Reports = viewModel.DisplayPage(pageIndex);
             return viewModel;
         }
@@ -75,9 +90,9 @@ namespace ReportOverviewApp.Controllers
 
         // GET: Reports
         [Authorize]
-        public ActionResult Index(string search, string column, int entriesPerPage, int pageIndex)
+        public ActionResult Index(string search, string column, int entriesPerPage, int pageIndex, string plan)
         {
-            return View(GetReportViewModel(search, column, entriesPerPage, pageIndex));
+            return View(GetReportViewModel(search, column, entriesPerPage, pageIndex, plan));
         }
 
         // GET: Reports/Details/5
@@ -99,49 +114,30 @@ namespace ReportOverviewApp.Controllers
             return View(report);
         }
 
-        public ActionResult SelectPlan()
+        public ActionResult SelectPlan(string state, string plan)
         {
-            
-            //var reports = from r in _context.Reports select r;
-            //var states = (from s in reports select s.State).Distinct();
-            //var plans = (from p in reports select p.GroupName).Distinct();
-            //return View(plans);
-            return View(GetReportViewModel());
+            return View(GetReportViewModel(state, plan));
         }
 
-        private ReportViewModel GetReportViewModel()
+        private ReportViewModel GetReportViewModel(string state, string plan)
         {
-            var viewModel = new ReportViewModel()
+            if(viewModel == null) viewModel = new ReportViewModel()
             {
                 Reports = from r in _context.Reports select r
             };
+            if (!String.IsNullOrEmpty(state))
+            {
+                viewModel.State = state;
+                viewModel.Reports = viewModel.Reports.Where(r => r.State.Equals(state));
+            }
+            if (!String.IsNullOrEmpty(plan))
+            {
+                viewModel.Plan = plan;
+                viewModel.Reports = viewModel.Reports.Where(r => r.GroupName.Equals(plan));
+            }
+            viewModel.SetStates();
+            viewModel.SetPlans(state);
             return viewModel;
-        }
-
-        // GET: Reports/Details/5
-        [Authorize]
-        public async Task<IActionResult> MoreDetails(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            Report report = await _context.Reports
-                .SingleOrDefaultAsync(m => m.ID == id);
-            if (report == null)
-            {
-                return NotFound();
-            }
-
-            FieldInfo[] info = typeof(Report).GetFields(BindingFlags.Public);
-
-            //foreach(FieldInfo f in info)
-            //{
-
-            //}
-
-            return View(info);
         }
 
         // GET: Reports/Create

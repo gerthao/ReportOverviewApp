@@ -10,28 +10,31 @@
         <h4 class="col-lg-6">Choose State</h4>
         <h4 class="col-lg-6">Choose Plan</h4>
     </div>
-    <div class="row">
-        <ul class="col-sm-6">
-            @foreach (var report in (Model.Reports.OrderBy(s => s.State)).Distinct())
+    <form>
+        <div class="row">
+            <ul class="col-sm-6">
+                @foreach (var stateItem in Model.States)
             {
-                <li>
-                    <a href="#">
-                        @report.State
-                    </a>
-                </li>
-            }
-        </ul>
-        <ul class="col-sm-6">
-            @foreach (var report in (Model.Reports.OrderBy(p => p.GroupName)).Distinct())
+                    <li>
+                        <a href="#">
+                            @Html.ActionLink(stateItem, "SelectPlan", new { state = @stateItem})
+                        </a>
+                    </li>
+                }
+            </ul>
+            <ul class="col-sm-6">
+                @foreach (var planItem in Model.Plans)
             {
-                <li>
-                    <a href="#">
-                        @report.GroupName
-                    </a>
-                </li>
-            }
-        </ul>
-    </div>
+                    <li>
+                        <a href="#">
+                            @Html.ActionLink(planItem, "Index", new { plan = @planItem})
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </form>
+    
 
 </div>
 

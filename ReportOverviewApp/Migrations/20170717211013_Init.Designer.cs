@@ -8,7 +8,7 @@ using ReportOverviewApp.Data;
 namespace ReportOverviewApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20170714202050_Init")]
+    [Migration("20170717211013_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -224,6 +224,8 @@ namespace ReportOverviewApp.Migrations
                     b.Property<string>("EffectiveDate");
 
                     b.Property<string>("FolderLocation");
+
+                    b.Property<string>("Frequency");
 
                     b.Property<string>("GroupName");
 

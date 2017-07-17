@@ -91,6 +91,7 @@ namespace ReportOverviewApp.Migrations
                     ERSReportName = table.Column<string>(nullable: true),
                     EffectiveDate = table.Column<string>(nullable: true),
                     FolderLocation = table.Column<string>(nullable: true),
+                    Frequency = table.Column<string>(nullable: true),
                     GroupName = table.Column<string>(nullable: true),
                     LegacyReportID = table.Column<int>(nullable: true),
                     LegacyReportIDR2 = table.Column<int>(nullable: true),

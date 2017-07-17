@@ -52,7 +52,7 @@
                 </div>
                 <div class="caption caption-widget">
                     <h3>Upcoming Reports</h3>
-                    <h1>@Model?.Reports?.ToList().FindAll(s => (s.DateDue <= DateTime.Now.AddDays(20) && s.DateDue >= DateTime.Now)).Count()</h1>
+                    <h1>@Model?.Reports?.ToList().FindAll(s => (s.Deadline() <= DateTime.Now.AddDays(20) && s.Deadline() >= DateTime.Now)).Count()</h1>
                 </div>
             </div>
         </div>

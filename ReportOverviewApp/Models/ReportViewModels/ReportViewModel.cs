@@ -18,6 +18,14 @@ namespace ReportOverviewApp.Models.ReportViewModels
         public const int DEFAULT_PAGE_SIZE = 20;
 
 
+        public string Search { get; set; }
+        public string Column { get; set; }
+        public string State { get; set; }
+        public string Plan { get; set; }
+
+        public IEnumerable<string> Plans { get; private set; }
+        public IEnumerable<string> States { get; private set; }
+
         /// <summary>
         ///  GeneratePages method calculates the number of pages needed
         ///  for the number of reports the ReportViewModel contains based
@@ -33,7 +41,7 @@ namespace ReportOverviewApp.Models.ReportViewModels
                 mod = DEFAULT_PAGE_SIZE;
             }
             PageSize = mod;
-            int Pages = Reports.Count() / PageSize;
+            Pages = Reports.Count() / PageSize;
             if (Reports.Count() % PageSize > 0)
             {
                 Pages++;
@@ -43,6 +51,22 @@ namespace ReportOverviewApp.Models.ReportViewModels
         public int PagesCount()
         {
             return Pages;
+        }
+
+        public void SetPlans(string chosenState)
+        {
+            if (String.IsNullOrEmpty(chosenState))
+            {
+                Plans = (from r in Reports select r.GroupName).Distinct().OrderBy(p => p.ToString());
+            }
+            else
+            {
+                Plans = (from r in Reports where r.State.Equals(chosenState) select r.GroupName).Distinct().OrderBy(p => p.ToString());
+            }
+        }
+        public void SetStates()
+        {
+            States = (from r in Reports select r.State).Distinct().OrderBy(p => p.ToString());
         }
 
         public IEnumerable<Report> DisplayPage(int index)

@@ -80,7 +80,7 @@
 
     function openCloseNav() {
         if (isOpen) {
-            if(document.getElementById("PlanNav").style.width == "89%"){
+            if (document.getElementById("PlanNav") !== null && document.getElementById("PlanNav").style.width === "89%"){
                 document.getElementById("mySidenav").style.transitionDelay = "0.7s";
             }
             closeNav();

@@ -224,6 +224,8 @@ namespace ReportOverviewApp.Migrations
 
                     b.Property<string>("FolderLocation");
 
+                    b.Property<string>("Frequency");
+
                     b.Property<string>("GroupName");
 
                     b.Property<int?>("LegacyReportID");
