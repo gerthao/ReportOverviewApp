@@ -1,32 +1,20 @@
 @model ReportOverviewApp.Models.Report
 
-@{
-    ViewData["Title"] = "Details";
-}
-
-<h2>Details</h2>
-
 <div>
     <h4>Report</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayNameFor(model => model.Done)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Name)
+            @Html.DisplayFor(model => model.Done)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.DateDue)
         </dt>
         <dd>
             @Html.DisplayFor(model => model.DateDue)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Frequency)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Frequency)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.DateDone)
@@ -45,6 +33,222 @@
         </dt>
         <dd>
             @Html.DisplayFor(model => model.DateSent)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ClientNotified)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ClientNotified)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Sent)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Sent)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.BusinessContact)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.BusinessContact)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.BusinessOwner)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.BusinessOwner)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DueDate1)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DueDate1)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DueDate2)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DueDate2)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DueDate3)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DueDate3)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DueDate4)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DueDate4)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Frequency)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Frequency)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DayDue)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DayDue)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DeliveryFunction)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DeliveryFunction)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.WorkInstructions)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.WorkInstructions)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Notes)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Notes)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DaysAfterQuarter)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DaysAfterQuarter)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.FolderLocation)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.FolderLocation)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ReportType)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ReportType)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.RunWith)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.RunWith)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DeliveryMethod)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DeliveryMethod)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DeliveryTo)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DeliveryTo)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EffectiveDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EffectiveDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TerminationDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TerminationDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.GroupName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.GroupName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.State)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.State)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ReportPath)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ReportPath)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.OtherDepartment)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OtherDepartment)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.QualityIndicator)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.QualityIndicator)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ERSReportLocation)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ERSReportLocation)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ERR_STATUS)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ERR_STATUS)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DateAdded)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DateAdded)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SystemRefreshDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SystemRefreshDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.LegacyReportID)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LegacyReportID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.LegacyReportIDR2)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LegacyReportIDR2)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ERSReportName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ERSReportName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.OtherReportLocation)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OtherReportLocation)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.OtherReportName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OtherReportName)
         </dd>
     </dl>
 </div>

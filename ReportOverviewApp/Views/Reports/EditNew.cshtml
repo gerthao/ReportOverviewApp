@@ -1,10 +1,11 @@
 @model ReportOverviewApp.Models.Report
 
-<form asp-action="View">
+<form asp-action="EditNew">
     <div class="form-horizontal">
         <h4>Report</h4>
         <hr />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="ID" />
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <div class="checkbox">
@@ -226,6 +227,13 @@
             </div>
         </div>
         <div class="form-group">
+            <label asp-for="SourceDepartment" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="SourceDepartment" class="form-control" />
+                <span asp-validation-for="SourceDepartment" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
             <label asp-for="QualityIndicator" class="col-md-2 control-label"></label>
             <div class="col-md-10">
                 <input asp-for="QualityIndicator" class="form-control" />
@@ -297,7 +305,7 @@
         </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Save" class="btn btn-default" />
             </div>
         </div>
     </div>

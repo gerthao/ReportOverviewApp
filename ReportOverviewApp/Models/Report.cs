@@ -10,95 +10,62 @@ namespace ReportOverviewApp.Models
 
     public class Report
     {
-        //public enum FrequencyType
-        //{
-        //    Weekly, Biweekly, Quarterly, Monthly, Semiannual, Annual
-        //}
+        
 
         public int ID { get; set; }
 
-        public bool Done { get; set; }
+        [JsonProperty("REPORT_NAME")]
+        public string Name { get; set; }
+
         //[JsonProperty("FREQUENCY")]
         //public FrequencyType Frequency { get; set; }
 
-        [DataType(DataType.Date), Required, DisplayFormat(DataFormatString = "{0:d}")]
-        public DateTime DateDue { get; set; }
+        public bool Done { get; set; }
+        public bool ClientNotified { get; set; }
+        public bool Sent { get; set; }
+
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}")]
+        public DateTime? DateDue { get; set; }
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}")]
         public DateTime? DateDone { get; set; }
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}")]
         public DateTime? DateClientNotified { get; set; }
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}")]
         public DateTime? DateSent { get; set; }
-        public bool ClientNotified { get; set; }
-        public bool Sent { get; set; }
-
-        [JsonProperty("REPORT_NAME")]
-        public string Name { get; set; }
-        [JsonProperty("BUSINESS_CONTACT")]
+        
         public string BusinessContact { get; set; }
-        [JsonProperty("BUSINESS_OWNER")]
-        public string BusinessOwner { get; set; }
-        [JsonProperty("DUE_DATE_1")]
-        public string DueDate1 { get; set; }
-        [JsonProperty("DUE_DATE_2")]
-        public string DueDate2 { get; set; }
-        [JsonProperty("DUE_DATE_3")]
-        public string DueDate3 { get; set; }
-        [JsonProperty("DUE_DATE_4")]
-        public string DueDate4 { get; set; }
-        [JsonProperty("FREQUENCY")]
-        public string Frequency { get; set;}
-        [JsonProperty("DAY_DUE")]
+        public string BusinessOwner { get; set; }     
+        public DateTime? DueDate1 { get; set; }       
+        public DateTime? DueDate2 { get; set; }
+        public DateTime? DueDate3 { get; set; }
+        public DateTime? DueDate4 { get; set; }
+        public ReportEnum.FrequencyType Frequency { get; set;}
         public string DayDue { get; set; }
-        [JsonProperty("DELIVERY_FUNCTION")]
         public string DeliveryFunction { get; set; }
-        [JsonProperty("WORK_INSTRUCTIONS")]
         public string WorkInstructions { get; set; }
-        [JsonProperty("NOTES")]
         public string Notes{ get; set; }
-        [JsonProperty("DAYS_AFTER_QUARTER")]
         public int? DaysAfterQuarter { get; set; }
-        [JsonProperty("FOLDER_LOCATION")]
         public string FolderLocation { get; set; }
-        [JsonProperty("REPORT_TYPE")]
         public string ReportType { get; set; }
-        [JsonProperty("RUN_WITH")]
         public string RunWith { get; set; }
-        [JsonProperty("DELIVERY_METHOD")]
         public string DeliveryMethod { get; set; }
-        [JsonProperty("DELIVERY_TO")]
         public string DeliveryTo { get; set; }
-        [JsonProperty("EFFECTIVE_DATE")]
-        public string EffectiveDate { get; set; }
-        [JsonProperty("TERMINATION_DATE")]
-        public string TerminationDate { get; set; }
-        [JsonProperty("GROUP_NAME")]
+        public DateTime? EffectiveDate { get; set; }
+        public DateTime? TerminationDate { get; set; }
         public string GroupName { get; set; }
-        [JsonProperty("STATE")]
         public string State { get; set; }
-        [JsonProperty("REPORT_PATH")]
         public string ReportPath { get; set; }
-        [JsonProperty("Other Department")]
-        public string OtherDepartment { get; set; }
-        [JsonProperty("Quality Indicator")]
-        public string QualityIndicator { get; set; }
-        [JsonProperty("ERS_REPORT_LOCATION")]
+        public bool OtherDepartment { get; set; }
+        public string SourceDepartment { get; set; }
+        public bool QualityIndicator { get; set; }
         public string ERSReportLocation { get; set; }
-        [JsonProperty("ERR_STATUS")]
-        public int? ERR_STATUS { get; set; }
-        [JsonProperty("DATE_ADDED")]
-        public string DateAdded { get; set; }
-        [JsonProperty("SYSTEM_REFRESH_DATE")]
-        public string SystemRefreshDate { get; set; }
-        [JsonProperty("LEGACY_REPORT_ID")]
+        public int? ERRStatus { get; set; }
+        public DateTime? DateAdded { get; set; }
+        public DateTime? SystemRefreshDate { get; set; }
         public int? LegacyReportID { get; set; }
-        [JsonProperty("LEGACY_REPORT_ID_R2")]
         public int? LegacyReportIDR2 { get; set; }
-        [JsonProperty("ERS_REPORT_NAME")]
         public string ERSReportName { get; set; }
-        [JsonProperty("OTHER_REPORT_LOCATION")]
         public string OtherReportLocation { get; set; }
-        [JsonProperty("OTHER_REPORT_NAME")]
         public string OtherReportName { get; set; }
 
         public DateTime? Deadline()
@@ -106,26 +73,31 @@ namespace ReportOverviewApp.Models
             DateTime? dateTime = null;
             switch (Frequency)
             {
-                case "Quarterly":
-                    string[] deadlines = new string[] { DueDate1, DueDate2, DueDate3, DueDate4 };
-                    foreach (string date in deadlines)
+                case ReportEnum.FrequencyType.Quarterly:
+                    DateTime[] deadlines = new DateTime[] { DueDate1.Value, DueDate2.Value, DueDate3.Value, DueDate4.Value };
+                    for(int i = 0; i < deadlines.Count()-1; i++)
                     {
-                        dateTime = new DateTime(DateTime.Now.Ticks);
-                        if (dateTime >= DateTime.Now) return dateTime;
+                        DateTime d1 = deadlines[i];
+                        DateTime d2 = deadlines[i + 1];
+                        if(d1 >= DateTime.Now && d1 <= d2)
+                        {
+                            dateTime = d1;
+                        } if(d2 >= DateTime.Now && d2 <= d1)
+                        {
+                            dateTime = d2;
+                        }
                     }
                     break;
-                case "Monthly":
+                case ReportEnum.FrequencyType.Monthly:
                     dateTime = new DateTime(year: DateTime.Now.Year, month: DateTime.Now.Month, day: Int32.Parse(DayDue));
                     break;
-                case "Weekly":
+                case ReportEnum.FrequencyType.Weekly:
                     break;
                 default:
                     break;
             }
             return dateTime;
         }
-
-
         public bool IsPastDue() => DateDue != null && DateDue > DateTime.Now;
         public bool IsPastDue(DateTime SelectedDate) => DateDue != null && SelectedDate != null && SelectedDate < DateDue;
         public bool IsDue() => DateDue != null && DateDue <= DateTime.Now;

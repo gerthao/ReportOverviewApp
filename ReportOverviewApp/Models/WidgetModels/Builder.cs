@@ -8,9 +8,9 @@ namespace ReportOverviewApp.Models.WidgetModels
     /// <summary>
     /// An interface for the builder design pattern.
     /// </summary>
-    public interface IBuilder
+    public abstract class Builder<T>
     {
-        IBuilder BuildProduct();
-        object ReleaseProduct();
+        public abstract Builder<T> BuildProduct();
+        public abstract Product<T> ReleaseProduct();
     }
 }
