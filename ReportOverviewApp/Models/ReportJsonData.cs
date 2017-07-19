@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace ReportOverviewApp.Models
 {
@@ -15,14 +16,14 @@ namespace ReportOverviewApp.Models
         [JsonProperty("BUSINESS_OWNER")]
         public string BusinessOwner { get; set; }
         [JsonProperty("DUE_DATE_1")]
-        public string DueDate1 { get; set; }
+        public double? DueDate1 { get; set; }
         [JsonProperty("DUE_DATE_2")]
-        public string DueDate2 { get; set; }
+        public double? DueDate2 { get; set; }
         [JsonProperty("DUE_DATE_3")]
-        public string DueDate3 { get; set; }
+        public double? DueDate3 { get; set; }
         [JsonProperty("DUE_DATE_4")]
-        public string DueDate4 { get; set; }
-        [JsonProperty("FREQUENCY"), JsonConverter(typeof(ReportEnum.FrequencyType))]
+        public double? DueDate4 { get; set; }
+        [JsonProperty("FREQUENCY"), JsonConverter(typeof(StringEnumConverter))]
         public ReportEnum.FrequencyType Frequency { get; set; }
         [JsonProperty("DAY_DUE")]
         public string DayDue { get; set; }
@@ -45,9 +46,9 @@ namespace ReportOverviewApp.Models
         [JsonProperty("DELIVERY_TO")]
         public string DeliveryTo { get; set; }
         [JsonProperty("EFFECTIVE_DATE")]
-        public string EffectiveDate { get; set; }
+        public double? EffectiveDate { get; set; }
         [JsonProperty("TERMINATION_DATE")]
-        public string TerminationDate { get; set; }
+        public double? TerminationDate { get; set; }
         [JsonProperty("GROUP_NAME")]
         public string GroupName { get; set; }
         [JsonProperty("STATE")]
@@ -65,9 +66,9 @@ namespace ReportOverviewApp.Models
         [JsonProperty("ERR_STATUS")]
         public int? ERRStatus { get; set; }
         [JsonProperty("DATE_ADDED")]
-        public string DateAdded { get; set; }
+        public double? DateAdded { get; set; }
         [JsonProperty("SYSTEM_REFRESH_DATE")]
-        public string SystemRefreshDate { get; set; }
+        public double? SystemRefreshDate { get; set; }
         [JsonProperty("LEGACY_REPORT_ID")]
         public int? LegacyReportID { get; set; }
         [JsonProperty("LEGACY_REPORT_ID_R2")]
@@ -79,47 +80,31 @@ namespace ReportOverviewApp.Models
         [JsonProperty("OTHER_REPORT_NAME")]
         public string OtherReportName { get; set; }
 
-        public void Transfer(ref Report report)
+        private DateTime? ToDate(double? days)
         {
+            if (days == null) return null;
+            return new DateTime().AddDays(days.Value);
+        }
+
+        public Report ToReport()
+        {
+            Report report = new Report();
             if(report == null)
             {
                 report = new Report();
             }
+
             report.Name = Name;
             report.BusinessContact = BusinessContact;
             report.BusinessOwner = BusinessOwner;
-            if (!String.IsNullOrEmpty(DueDate1))
-            {
-                report.DueDate1 = new DateTime().AddDays(Double.Parse(DueDate1));
-            }
-            if (!String.IsNullOrEmpty(DueDate2))
-            {
-                report.DueDate2 = new DateTime().AddDays(Double.Parse(DueDate2));
-            }
-            if (!String.IsNullOrEmpty(DueDate3))
-            {
-                report.DueDate3 = new DateTime().AddDays(Double.Parse(DueDate3));
-            }
-            if (!String.IsNullOrEmpty(DueDate4))
-            {
-                report.DueDate4 = new DateTime().AddDays(Double.Parse(DueDate4));
-            }
-            if (!String.IsNullOrEmpty(DateAdded))
-            {
-                report.DateAdded = new DateTime().AddDays(Double.Parse(DateAdded));
-            }
-            if (!String.IsNullOrEmpty(EffectiveDate))
-            {
-                report.EffectiveDate = new DateTime().AddDays(Double.Parse(EffectiveDate));
-            }
-            if (!String.IsNullOrEmpty(TerminationDate))
-            {
-                report.TerminationDate = new DateTime().AddDays(Double.Parse(TerminationDate));
-            }
-            if (!String.IsNullOrEmpty(SystemRefreshDate))
-            {
-                report.SystemRefreshDate = new DateTime().AddDays(Double.Parse(DateAdded));
-            }
+            report.DueDate1 = ToDate(DueDate1);
+            report.DueDate2 = ToDate(DueDate2);
+            report.DueDate3 = ToDate(DueDate3);
+            report.DueDate4 = ToDate(DueDate4);
+            report.DateAdded = ToDate(DateAdded);
+            report.EffectiveDate = ToDate(EffectiveDate);
+            report.TerminationDate = ToDate(TerminationDate);
+            report.SystemRefreshDate = ToDate(SystemRefreshDate);
             report.Frequency = Frequency;
             report.DayDue = DayDue;
             report.DeliveryFunction = DeliveryFunction;
@@ -145,6 +130,8 @@ namespace ReportOverviewApp.Models
             report.ERSReportName = ERSReportName;
             report.OtherReportLocation = OtherReportLocation;
             report.OtherReportName = OtherReportName;
+
+            return report;
         }
     }
 }

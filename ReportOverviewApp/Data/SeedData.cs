@@ -26,15 +26,21 @@ namespace ReportOverviewApp.Data
 
 
 
-                    string jsonData = File.ReadAllText(@"C:\Users\gthao\Desktop\crc.json");
+                    //string jsonData = File.ReadAllText(@"C:\Users\gthao\Desktop\crc.json");
 
                     //byte[] bytes = Convert.FromBase64String(jsonData);
 
                     //string conversionData = Encoding.UTF8.GetString(bytes);
                     //List<Report> products = JsonConvert.DeserializeObject<List<Report>>(conversionData);
-                    List<Report> products = JsonConvert.DeserializeObject<List<Report>>(jsonData);
-                    context.Reports.AddRange(products);
-                    context.SaveChanges();
+                    //List<ReportJsonData> products = JsonConvert.DeserializeObject<List<ReportJsonData>>(jsonData);
+                    //List<Report> reports = new List<Report>();
+                    //foreach(ReportJsonData report in products)
+                    //{
+                    //    reports.Add(report.ToReport());
+                    //}
+                    //reports.AddRange(from r in products select r.ToReport());
+                    //context.Reports.AddRange(reports);
+                    //context.SaveChanges();
                     //}
                     //catch (Exception ex)
                     //{

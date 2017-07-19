@@ -5,10 +5,28 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
             @Html.DisplayNameFor(model => model.Done)
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Done)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ClientNotified)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ClientNotified)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Sent)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Sent)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.DateDue)
@@ -33,24 +51,6 @@
         </dt>
         <dd>
             @Html.DisplayFor(model => model.DateSent)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.ClientNotified)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.ClientNotified)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Sent)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Sent)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Name)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.BusinessContact)
@@ -191,6 +191,12 @@
             @Html.DisplayFor(model => model.OtherDepartment)
         </dd>
         <dt>
+            @Html.DisplayNameFor(model => model.SourceDepartment)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SourceDepartment)
+        </dd>
+        <dt>
             @Html.DisplayNameFor(model => model.QualityIndicator)
         </dt>
         <dd>
@@ -203,10 +209,10 @@
             @Html.DisplayFor(model => model.ERSReportLocation)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.ERR_STATUS)
+            @Html.DisplayNameFor(model => model.ERRStatus)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.ERR_STATUS)
+            @Html.DisplayFor(model => model.ERRStatus)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.DateAdded)

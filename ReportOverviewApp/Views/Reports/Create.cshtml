@@ -1,15 +1,38 @@
 @model ReportOverviewApp.Models.Report
 
-<form asp-action="View">
+<form asp-action="Create">
     <div class="form-horizontal">
         <h4>Report</h4>
         <hr />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
+            <label asp-for="Name" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <div class="checkbox">
                     <input asp-for="Done" />
                     <label asp-for="Done"></label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <div class="checkbox">
+                    <input asp-for="ClientNotified" />
+                    <label asp-for="ClientNotified"></label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <div class="checkbox">
+                    <input asp-for="Sent" />
+                    <label asp-for="Sent"></label>
                 </div>
             </div>
         </div>
@@ -39,29 +62,6 @@
             <div class="col-md-10">
                 <input asp-for="DateSent" class="form-control" />
                 <span asp-validation-for="DateSent" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <div class="checkbox">
-                    <input asp-for="ClientNotified" />
-                    <label asp-for="ClientNotified"></label>
-                </div>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <div class="checkbox">
-                    <input asp-for="Sent" />
-                    <label asp-for="Sent"></label>
-                </div>
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="Name" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
@@ -109,7 +109,7 @@
         <div class="form-group">
             <label asp-for="Frequency" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Frequency" class="form-control" />
+                <select asp-for="Frequency" class="form-control"></select>
                 <span asp-validation-for="Frequency" class="text-danger"></span>
             </div>
         </div>
@@ -219,17 +219,26 @@
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="OtherDepartment" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="OtherDepartment" class="form-control" />
-                <span asp-validation-for="OtherDepartment" class="text-danger"></span>
+            <div class="col-md-offset-2 col-md-10">
+                <div class="checkbox">
+                    <input asp-for="OtherDepartment" />
+                    <label asp-for="OtherDepartment"></label>
+                </div>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="QualityIndicator" class="col-md-2 control-label"></label>
+            <label asp-for="SourceDepartment" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="QualityIndicator" class="form-control" />
-                <span asp-validation-for="QualityIndicator" class="text-danger"></span>
+                <input asp-for="SourceDepartment" class="form-control" />
+                <span asp-validation-for="SourceDepartment" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <div class="checkbox">
+                    <input asp-for="QualityIndicator" />
+                    <label asp-for="QualityIndicator"></label>
+                </div>
             </div>
         </div>
         <div class="form-group">
@@ -240,10 +249,10 @@
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="ERR_STATUS" class="col-md-2 control-label"></label>
+            <label asp-for="ERRStatus" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="ERR_STATUS" class="form-control" />
-                <span asp-validation-for="ERR_STATUS" class="text-danger"></span>
+                <input asp-for="ERRStatus" class="form-control" />
+                <span asp-validation-for="ERRStatus" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">

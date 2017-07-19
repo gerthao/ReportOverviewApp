@@ -13,8 +13,6 @@ namespace ReportOverviewApp.Models
         
 
         public int ID { get; set; }
-
-        [JsonProperty("REPORT_NAME")]
         public string Name { get; set; }
 
         //[JsonProperty("FREQUENCY")]
