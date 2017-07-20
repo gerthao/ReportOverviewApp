@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReportOverviewApp.Models
 {
@@ -11,8 +12,9 @@ namespace ReportOverviewApp.Models
     public class Report
     {
         
-
+        [Key, Column(Order = 0)]
         public int ID { get; set; }
+        [Key, Column(Order = 1), StringLength(1000)]
         public string Name { get; set; }
 
         //[JsonProperty("FREQUENCY")]
@@ -31,11 +33,17 @@ namespace ReportOverviewApp.Models
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}")]
         public DateTime? DateSent { get; set; }
         
+        [StringLength(255)]
         public string BusinessContact { get; set; }
-        public string BusinessOwner { get; set; }     
-        public DateTime? DueDate1 { get; set; }       
+        [StringLength(255)]
+        public string BusinessOwner { get; set; }
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}")]
+        public DateTime? DueDate1 { get; set; }
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}")]
         public DateTime? DueDate2 { get; set; }
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}")]
         public DateTime? DueDate3 { get; set; }
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}")]
         public DateTime? DueDate4 { get; set; }
         public ReportEnum.FrequencyType Frequency { get; set;}
         public string DayDue { get; set; }

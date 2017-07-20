@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReportOverviewApp.Models
 {
+    [NotMapped]
     public class ReportJsonData
     {
         [JsonProperty("REPORT_NAME")]

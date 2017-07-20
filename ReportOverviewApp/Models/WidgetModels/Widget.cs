@@ -9,6 +9,8 @@ namespace ReportOverviewApp.Models.WidgetModels
     /// <summary>
     ///  TODO: Needs summary
     /// </summary>
+    ///
+    [NotMapped]
     public class Widget : IWidget
     {
         public int ID { get; set; }
