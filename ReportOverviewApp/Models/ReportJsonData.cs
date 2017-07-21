@@ -11,6 +11,8 @@ namespace ReportOverviewApp.Models
     [NotMapped]
     public class ReportJsonData
     {
+        public DateTime ExcelBaseDate = new DateTime(month: 12, day: 30, year: 1899);
+
         [JsonProperty("REPORT_NAME")]
         public string Name { get; set; }
         [JsonProperty("BUSINESS_CONTACT")]
@@ -85,7 +87,7 @@ namespace ReportOverviewApp.Models
         private DateTime? ToDate(double? days)
         {
             if (days == null) return null;
-            return new DateTime().AddDays(days.Value);
+            return ExcelBaseDate.AddDays(days.Value);
         }
 
         public Report ToReport()
