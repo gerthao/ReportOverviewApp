@@ -297,6 +297,8 @@ namespace ReportOverviewApp.Migrations
 
                     b.Property<string>("Header");
 
+                    b.Property<int>("SubWidgetID");
+
                     b.HasKey("ID");
 
                     b.ToTable("Widget");

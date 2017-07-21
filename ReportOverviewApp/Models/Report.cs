@@ -61,7 +61,9 @@ namespace ReportOverviewApp.Models
         [StringLength(260)]
         public string DeliveryMethod { get; set; }
         public string DeliveryTo { get; set; }
+        [DataType(DataType.Date)]
         public DateTime? EffectiveDate { get; set; }
+        [DataType(DataType.Date)]
         public DateTime? TerminationDate { get; set; }
         [StringLength(255)]
         public string GroupName { get; set; }
@@ -76,7 +78,9 @@ namespace ReportOverviewApp.Models
         [StringLength(4000)]
         public string ERSReportLocation { get; set; }
         public int? ERRStatus { get; set; }
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}")]
         public DateTime? DateAdded { get; set; }
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}")]
         public DateTime? SystemRefreshDate { get; set; }
         public int? LegacyReportID { get; set; }
         public int? LegacyReportIDR2 { get; set; }

@@ -1,0 +1,21 @@
+﻿@model ReportOverviewApp.Models.ReportViewModels.ReportViewModel
+
+<form>
+    <div class="form-horizontal">
+        <h4>Search For...</h4>
+        <hr />
+        <div class="form-group">
+            <div class="col-md-12">
+                <input type="text" id="SearchNameInput" class="form-control" name="search" placeholder="Enter Report Name" value="@Model.Search" />
+            </div>
+        </div>
+        <div class="row col-md-12">
+            <button class="btn btn-primary" id="ClearSearchForm" type="button">Clear</button>
+            <button class="btn btn-primary" id="ResetSearchForm" type="reset">Reset</button>
+            <button class="btn btn-primary" type="submit">Go</button>
+        </div>
+    </div>
+</form>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

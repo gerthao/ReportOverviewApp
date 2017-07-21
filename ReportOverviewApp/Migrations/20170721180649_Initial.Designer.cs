@@ -8,7 +8,7 @@ using ReportOverviewApp.Data;
 namespace ReportOverviewApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20170721150231_Initial")]
+    [Migration("20170721180649_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -297,6 +297,8 @@ namespace ReportOverviewApp.Migrations
                     b.Property<string>("Footer");
 
                     b.Property<string>("Header");
+
+                    b.Property<int>("SubWidgetID");
 
                     b.HasKey("ID");
 

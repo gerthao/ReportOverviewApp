@@ -8,8 +8,11 @@
         margin-left: auto;
     }
 </style>
-<h3 class="page-header">Reports</h3>
-<form class="form-horizontal" asp-controller="Reports" asp-action="Index">
+<h3 class="page-header">Reports 
+    <button class="btn btn-primary" type="button" id="mag-glass" data-toggle="modal" data-target="#SearchReportModal"><span class="glyphicon glyphicon-search"></span></button>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#CreateReportModal" aria-label="Left Align"><span class="glyphicon glyphicon-plus-sign"></span></button>
+</h3>
+@*<form class="form-horizontal col-sm-10" asp-controller="Reports" asp-action="Index">
     <div class="form-group">
         <div class="col-sm-3">
             <div class="input-group">
@@ -20,19 +23,27 @@
             </div>
         </div>
     </div>
-</form>
+</form>*@
+@*<form class="form-horizontal asp-action=Create col-sm-2" style="text-align:right;">
+    <button type="submit" asp-action="Create" class="btn btn-primary" name="item" aria-label="Left Align"><span class="glyphicon glyphicon-plus-sign"></span>Add Report</button>
+</form>*@
 <div class="report-top-content">
-    <ul class="nav nav-tabs col-sm-10">
-        <li role="presentation" class="active"><a href="#">All</a></li>
+    <ul class="nav nav-pills col-sm-12">
+        <li role="presentation"><a href="#">All</a></li>
         <li role="presentation"><a href="#">Quarterly</a></li>
         <li role="presentation"><a href="#">Monthly</a></li>
     </ul>
-    <form class="form-horizontal asp-action=Create col-sm-2" style="text-align:right;">
-        <button type="submit" asp-action="Create" class="btn btn-primary" name="item" aria-label="Left Align"><span class="glyphicon glyphicon-plus-sign"></span>Add Report</button>
-    </form>
-    @*<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#CreateReportModal" aria-label="Left Align"><span class="glyphicon glyphicon-plus-sign"></span>Add Report</button>*@
 </div>
-
+<div id="SearchReportModal" class="modal fade" tabindex="-1" rolde="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                @await Html.PartialAsync("Search")
+            </div>
+        </div>
+        
+    </div>
+</div>
 <div id="CreateReportModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">

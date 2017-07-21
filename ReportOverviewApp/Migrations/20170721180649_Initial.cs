@@ -124,7 +124,8 @@ namespace ReportOverviewApp.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Color = table.Column<string>(nullable: true),
                     Footer = table.Column<string>(nullable: true),
-                    Header = table.Column<string>(nullable: true)
+                    Header = table.Column<string>(nullable: true),
+                    SubWidgetID = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
