@@ -56,9 +56,9 @@ else{
     <table class="table report-table table-bordered table-striped">
         <thead>
             <tr>
-                <th>@Html.ActionLink("ID", "Index", new { column = "ID" })</th>
-                <th>@Html.ActionLink("Name", "Index", new { column = "Name" })</th>
-                <th>@Html.ActionLink("Deadline", "Index", new { column = "Deadline" })</th>
+                <th>@Html.ActionLink("ID", "Index", new {search = Model.Search, plan = Model.Plan, pageIndex = Model.CurrentPage, column = "ID" })</th>
+                <th>@Html.ActionLink("Name", "Index", new { search = Model.Search, plan = Model.Plan, pageIndex = Model.CurrentPage, column = "Name" })</th>
+                <th>@Html.ActionLink("Deadline", "Index", new { search = Model.Search, plan = Model.Plan, pageIndex = Model.CurrentPage, column = "Deadline" })</th>
                 <th>Finished On</th>
                 <th>Notified On</th>
                 <th>Sent On</th>
@@ -102,7 +102,7 @@ else{
             {
                 <li>
                     <span>
-                        <span aria-hidden="true">@Html.ActionLink("Prev", "Index", new { pageIndex = Model.CurrentPage - 1 }) </span>
+                        <span aria-hidden="true">@Html.ActionLink("Prev", "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = Model.CurrentPage - 1 }) </span>
                     </span>
                 </li>
             }
@@ -115,13 +115,13 @@ else{
                         <span>...<span class="sr-only">(current)</span></span>
                     </li>
                     <li>
-                        <span>@Html.ActionLink((Model.PagesCount()).ToString(), "Index", new { pageIndex = Model.PagesCount() })</span>
+                        <span>@Html.ActionLink((Model.PagesCount()).ToString(), "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = Model.PagesCount() })</span>
                     </li>
                 }
                 else
                 {
                     <li>
-                        <span>@Html.ActionLink(@i.ToString(), "Index", new { pageIndex = @i })</span>
+                        <span>@Html.ActionLink(@i.ToString(), "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = @i })</span>
                     </li>
                 }
             }
@@ -138,14 +138,13 @@ else{
 
                 <li>
                     <span>
-                        <span aria-hidden="true">@Html.ActionLink("Next", "Index", new { pageIndex = Model.CurrentPage + 1}) </span>
+                        <span aria-hidden="true">@Html.ActionLink("Next", "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = Model.CurrentPage + 1}) </span>
                     </span>
                 </li>
             }
             
         </ul>
     </nav>
-
 }
 
 @*<div class="col-sm-3">

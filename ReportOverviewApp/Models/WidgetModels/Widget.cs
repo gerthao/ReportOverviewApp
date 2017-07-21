@@ -20,6 +20,8 @@ namespace ReportOverviewApp.Models.WidgetModels
         public string Header { get; set; }
         [NotMapped]
         public ISubWidget Body { get; set; }
+        [ForeignKey("ISubWidget")]
+        public int SubWidgetID { get; set; }
         public string Footer { get; set; }
 
     }

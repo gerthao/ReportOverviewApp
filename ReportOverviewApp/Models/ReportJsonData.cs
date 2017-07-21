@@ -25,8 +25,8 @@ namespace ReportOverviewApp.Models
         public double? DueDate3 { get; set; }
         [JsonProperty("DUE_DATE_4")]
         public double? DueDate4 { get; set; }
-        [JsonProperty("FREQUENCY"), JsonConverter(typeof(StringEnumConverter))]
-        public ReportEnum.FrequencyType Frequency { get; set; }
+        [JsonProperty("FREQUENCY")]
+        public string Frequency { get; set; }
         [JsonProperty("DAY_DUE")]
         public string DayDue { get; set; }
         [JsonProperty("DELIVERY_FUNCTION")]

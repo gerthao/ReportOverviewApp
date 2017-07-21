@@ -37,6 +37,7 @@ namespace ReportOverviewApp.Models.ReportViewModels
         /// </param>
         public void GeneratePages(int mod)
         {
+            if (Reports == null) return;
             if (mod <= 0) {
                 mod = DEFAULT_PAGE_SIZE;
             }
@@ -57,20 +58,21 @@ namespace ReportOverviewApp.Models.ReportViewModels
         {
             if (String.IsNullOrEmpty(chosenState))
             {
-                Plans = (from r in Reports select r.GroupName).Distinct().OrderBy(p => p.ToString());
+                Plans = (from r in Reports where(r != null && r.GroupName != null) select r.GroupName).Distinct().OrderBy(p => p.ToString());
             }
             else
             {
-                Plans = (from r in Reports where r.State.Equals(chosenState) select r.GroupName).Distinct().OrderBy(p => p.ToString());
+                Plans = (from r in Reports where (r != null && r.GroupName != null && r.State != null) && r.State.Equals(chosenState) select r.GroupName).Distinct().OrderBy(p => p.ToString());
             }
         }
         public void SetStates()
         {
-            States = (from r in Reports select r.State).Distinct().OrderBy(p => p.ToString());
+            States = (from r in Reports where (r != null && r.State != null) select r.State).Distinct().OrderBy(p => p.ToString());
         }
 
         public IEnumerable<Report> DisplayPage(int index)
         {
+            if (Reports == null) return null;
             if(index <= 0)
             {
                 index = 1;

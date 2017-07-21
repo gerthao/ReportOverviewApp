@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace ReportOverviewApp.Migrations
 {
-    public partial class Init : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -68,18 +68,18 @@ namespace ReportOverviewApp.Migrations
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    BusinessContact = table.Column<string>(nullable: true),
-                    BusinessOwner = table.Column<string>(nullable: true),
+                    BusinessContact = table.Column<string>(maxLength: 255, nullable: true),
+                    BusinessOwner = table.Column<string>(maxLength: 255, nullable: true),
                     ClientNotified = table.Column<bool>(nullable: false),
                     DateAdded = table.Column<DateTime>(nullable: true),
                     DateClientNotified = table.Column<DateTime>(nullable: true),
                     DateDone = table.Column<DateTime>(nullable: true),
                     DateDue = table.Column<DateTime>(nullable: true),
                     DateSent = table.Column<DateTime>(nullable: true),
-                    DayDue = table.Column<string>(nullable: true),
-                    DaysAfterQuarter = table.Column<int>(nullable: true),
-                    DeliveryFunction = table.Column<string>(nullable: true),
-                    DeliveryMethod = table.Column<string>(nullable: true),
+                    DayDue = table.Column<string>(maxLength: 10, nullable: true),
+                    DaysAfterQuarter = table.Column<int>(maxLength: 20, nullable: true),
+                    DeliveryFunction = table.Column<string>(maxLength: 1000, nullable: true),
+                    DeliveryMethod = table.Column<string>(maxLength: 260, nullable: true),
                     DeliveryTo = table.Column<string>(nullable: true),
                     Done = table.Column<bool>(nullable: false),
                     DueDate1 = table.Column<DateTime>(nullable: true),
@@ -87,26 +87,26 @@ namespace ReportOverviewApp.Migrations
                     DueDate3 = table.Column<DateTime>(nullable: true),
                     DueDate4 = table.Column<DateTime>(nullable: true),
                     ERRStatus = table.Column<int>(nullable: true),
-                    ERSReportLocation = table.Column<string>(nullable: true),
-                    ERSReportName = table.Column<string>(nullable: true),
+                    ERSReportLocation = table.Column<string>(maxLength: 4000, nullable: true),
+                    ERSReportName = table.Column<string>(maxLength: 1000, nullable: true),
                     EffectiveDate = table.Column<DateTime>(nullable: true),
-                    FolderLocation = table.Column<string>(nullable: true),
-                    Frequency = table.Column<int>(nullable: false),
-                    GroupName = table.Column<string>(nullable: true),
+                    FolderLocation = table.Column<string>(maxLength: 2000, nullable: true),
+                    Frequency = table.Column<string>(maxLength: 50, nullable: true),
+                    GroupName = table.Column<string>(maxLength: 255, nullable: true),
                     LegacyReportID = table.Column<int>(nullable: true),
                     LegacyReportIDR2 = table.Column<int>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(maxLength: 1000, nullable: true),
                     Notes = table.Column<string>(nullable: true),
                     OtherDepartment = table.Column<bool>(nullable: false),
-                    OtherReportLocation = table.Column<string>(nullable: true),
-                    OtherReportName = table.Column<string>(nullable: true),
+                    OtherReportLocation = table.Column<string>(maxLength: 4000, nullable: true),
+                    OtherReportName = table.Column<string>(maxLength: 1000, nullable: true),
                     QualityIndicator = table.Column<bool>(nullable: false),
-                    ReportPath = table.Column<string>(nullable: true),
-                    ReportType = table.Column<string>(nullable: true),
-                    RunWith = table.Column<string>(nullable: true),
+                    ReportPath = table.Column<string>(maxLength: 2000, nullable: true),
+                    ReportType = table.Column<string>(maxLength: 50, nullable: true),
+                    RunWith = table.Column<string>(maxLength: 100, nullable: true),
                     Sent = table.Column<bool>(nullable: false),
-                    SourceDepartment = table.Column<string>(nullable: true),
-                    State = table.Column<string>(nullable: true),
+                    SourceDepartment = table.Column<string>(maxLength: 100, nullable: true),
+                    State = table.Column<string>(maxLength: 10, nullable: true),
                     SystemRefreshDate = table.Column<DateTime>(nullable: true),
                     TerminationDate = table.Column<DateTime>(nullable: true),
                     WorkInstructions = table.Column<string>(nullable: true)

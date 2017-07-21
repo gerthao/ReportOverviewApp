@@ -4,13 +4,12 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using ReportOverviewApp.Data;
-using ReportOverviewApp.Models;
 
 namespace ReportOverviewApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20170719145957_Init")]
-    partial class Init
+    [Migration("20170721150231_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -180,9 +179,11 @@ namespace ReportOverviewApp.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("BusinessContact");
+                    b.Property<string>("BusinessContact")
+                        .HasMaxLength(255);
 
-                    b.Property<string>("BusinessOwner");
+                    b.Property<string>("BusinessOwner")
+                        .HasMaxLength(255);
 
                     b.Property<bool>("ClientNotified");
 
@@ -196,13 +197,17 @@ namespace ReportOverviewApp.Migrations
 
                     b.Property<DateTime?>("DateSent");
 
-                    b.Property<string>("DayDue");
+                    b.Property<string>("DayDue")
+                        .HasMaxLength(10);
 
-                    b.Property<int?>("DaysAfterQuarter");
+                    b.Property<int?>("DaysAfterQuarter")
+                        .HasMaxLength(20);
 
-                    b.Property<string>("DeliveryFunction");
+                    b.Property<string>("DeliveryFunction")
+                        .HasMaxLength(1000);
 
-                    b.Property<string>("DeliveryMethod");
+                    b.Property<string>("DeliveryMethod")
+                        .HasMaxLength(260);
 
                     b.Property<string>("DeliveryTo");
 
@@ -218,45 +223,58 @@ namespace ReportOverviewApp.Migrations
 
                     b.Property<int?>("ERRStatus");
 
-                    b.Property<string>("ERSReportLocation");
+                    b.Property<string>("ERSReportLocation")
+                        .HasMaxLength(4000);
 
-                    b.Property<string>("ERSReportName");
+                    b.Property<string>("ERSReportName")
+                        .HasMaxLength(1000);
 
                     b.Property<DateTime?>("EffectiveDate");
 
-                    b.Property<string>("FolderLocation");
+                    b.Property<string>("FolderLocation")
+                        .HasMaxLength(2000);
 
-                    b.Property<int>("Frequency");
+                    b.Property<string>("Frequency")
+                        .HasMaxLength(50);
 
-                    b.Property<string>("GroupName");
+                    b.Property<string>("GroupName")
+                        .HasMaxLength(255);
 
                     b.Property<int?>("LegacyReportID");
 
                     b.Property<int?>("LegacyReportIDR2");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasMaxLength(1000);
 
                     b.Property<string>("Notes");
 
                     b.Property<bool>("OtherDepartment");
 
-                    b.Property<string>("OtherReportLocation");
+                    b.Property<string>("OtherReportLocation")
+                        .HasMaxLength(4000);
 
-                    b.Property<string>("OtherReportName");
+                    b.Property<string>("OtherReportName")
+                        .HasMaxLength(1000);
 
                     b.Property<bool>("QualityIndicator");
 
-                    b.Property<string>("ReportPath");
+                    b.Property<string>("ReportPath")
+                        .HasMaxLength(2000);
 
-                    b.Property<string>("ReportType");
+                    b.Property<string>("ReportType")
+                        .HasMaxLength(50);
 
-                    b.Property<string>("RunWith");
+                    b.Property<string>("RunWith")
+                        .HasMaxLength(100);
 
                     b.Property<bool>("Sent");
 
-                    b.Property<string>("SourceDepartment");
+                    b.Property<string>("SourceDepartment")
+                        .HasMaxLength(100);
 
-                    b.Property<string>("State");
+                    b.Property<string>("State")
+                        .HasMaxLength(10);
 
                     b.Property<DateTime?>("SystemRefreshDate");
 

@@ -37,7 +37,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-4">
+        @*<div class="col-sm-4">
             <div class="thumbnail">
                 <div class="btn-group">
                     <button type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true">
@@ -52,10 +52,10 @@
                 </div>
                 <div class="caption caption-widget">
                     <h3>Upcoming Reports</h3>
-                    <h1>@Model?.Reports?.ToList().FindAll(s => (s.Deadline() <= DateTime.Now.AddDays(20) && s.Deadline() >= DateTime.Now)).Count()</h1>
+                    <h1>@Model?.Reports?.ToList().FindAll(s => (s?.Deadline().Value <= DateTime.Now.AddDays(20) && s?.Deadline().Value >= DateTime.Now)).Count()</h1>
                 </div>
             </div>
-        </div>
+        </div>*@
     </div>
 </div>
 @*<div class="wigdet-container">

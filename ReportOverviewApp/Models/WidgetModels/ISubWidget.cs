@@ -12,6 +12,7 @@ namespace ReportOverviewApp.Models.WidgetModels
     /// </summary>
     public interface ISubWidget
     {
+        int ID { get; set; }
         string Topic { get; set; }
         string Description { get; set; }
         Func<ApplicationDbContext, int> Action { get; set; }

@@ -41,27 +41,37 @@ namespace ReportOverviewApp.Controllers
 
         //}
         private ReportViewModel viewModel;
+        private ReportViewModel GetReportViewModelFromModel(ReportViewModel viewModel)
+        {
+
+            return viewModel;
+        }
 
         private ReportViewModel GetReportViewModel(string search, string column, int recordsPerPage, int pageIndex, string plan)
         {
-            if(viewModel == null) viewModel = new ReportViewModel()
+            if(viewModel == null)
             {
-                Reports = from r in _context.Reports select r
-            };
+                viewModel = new ReportViewModel()
+                {
+                    Reports = from r in _context.Reports select r
+                };
+            }
             if (!String.IsNullOrEmpty(plan))
             {
-                viewModel.Reports = viewModel.Reports.Where(r => r.GroupName.Equals(plan));
                 viewModel.Plan = plan;
+                viewModel.Reports = viewModel.Reports.Where(r => r != null && r.GroupName != null && r.GroupName.Equals(viewModel.Plan));
             }
+            
             if (!String.IsNullOrEmpty(search))
             {
-                
-                viewModel.Reports = viewModel.Reports.Where(r => r.Name.Contains(search));
                 viewModel.Search = search;
+                viewModel.Reports = viewModel.Reports.Where(r => r != null && r.Name != null && r.Name.Contains(viewModel.Search));
             }
+            
             if (!String.IsNullOrEmpty(column))
             {
-                switch (column)
+                viewModel.Column = column;
+                switch (viewModel.Column)
                 {
                     case "ID":
                         viewModel.Reports = viewModel.Reports.OrderBy(report => report.ID);
@@ -76,8 +86,8 @@ namespace ReportOverviewApp.Controllers
                         viewModel.Reports = viewModel.Reports.OrderBy(report => report.ID);
                         break;
                 }
-                viewModel.Column = column;
             }
+            
             viewModel.GeneratePages(recordsPerPage);
             viewModel.Reports = viewModel.DisplayPage(pageIndex);
             return viewModel;
@@ -116,24 +126,27 @@ namespace ReportOverviewApp.Controllers
 
         public ActionResult SelectPlan(string state, string plan)
         {
-            return View(GetReportViewModel(state, plan));
+            return View(GetReportViewModelFromSelectPlan(state, plan));
         }
 
-        private ReportViewModel GetReportViewModel(string state, string plan)
+        private ReportViewModel GetReportViewModelFromSelectPlan(string state, string plan)
         {
-            if(viewModel == null) viewModel = new ReportViewModel()
+            if (viewModel == null)
             {
-                Reports = from r in _context.Reports select r
-            };
+                viewModel = new ReportViewModel()
+                {
+                    Reports = from r in _context.Reports select r
+                };
+            }
             if (!String.IsNullOrEmpty(state))
             {
                 viewModel.State = state;
-                viewModel.Reports = viewModel.Reports.Where(r => r.State.Equals(state));
+                viewModel.Reports = viewModel.Reports.Where(r => r != null && r.State != null && r.State.Equals(state));
             }
             if (!String.IsNullOrEmpty(plan))
             {
                 viewModel.Plan = plan;
-                viewModel.Reports = viewModel.Reports.Where(r => r.GroupName.Equals(plan));
+                viewModel.Reports = viewModel.Reports.Where(r => r != null && r.GroupName != null &&  r.GroupName.Equals(plan));
             }
             viewModel.SetStates();
             viewModel.SetPlans(state);

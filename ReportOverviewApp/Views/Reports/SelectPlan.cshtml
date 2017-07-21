@@ -1,7 +1,7 @@
 ﻿@model ReportOverviewApp.Models.ReportViewModels.ReportViewModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "SelectPlan";
 }
 
 <h2 class="page-header">Select A Plan</h2>
@@ -17,7 +17,7 @@
             {
                     <li>
                         <a href="#">
-                            @Html.ActionLink(stateItem, "SelectPlan", new { state = @stateItem})
+                            @Html.ActionLink(stateItem, "SelectPlan", new {viewModel = Model, state = @stateItem})
                         </a>
                     </li>
                 }
@@ -27,7 +27,7 @@
             {
                     <li>
                         <a href="#">
-                            @Html.ActionLink(planItem, "Index", new { plan = @planItem})
+                            @Html.ActionLink(planItem, "Index", new {viewModel = Model, plan = @planItem})
                         </a>
                     </li>
                 }

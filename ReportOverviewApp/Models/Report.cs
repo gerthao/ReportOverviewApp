@@ -12,13 +12,10 @@ namespace ReportOverviewApp.Models
     public class Report
     {
         
-        [Key, Column(Order = 0)]
+        [Column(Order = 0)]
         public int ID { get; set; }
-        [Key, Column(Order = 1), StringLength(1000)]
+        [StringLength(1000), Column(Order = 1)]
         public string Name { get; set; }
-
-        //[JsonProperty("FREQUENCY")]
-        //public FrequencyType Frequency { get; set; }
 
         public bool Done { get; set; }
         public bool ClientNotified { get; set; }
@@ -45,33 +42,49 @@ namespace ReportOverviewApp.Models
         public DateTime? DueDate3 { get; set; }
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}")]
         public DateTime? DueDate4 { get; set; }
-        public ReportEnum.FrequencyType Frequency { get; set;}
+        [StringLength(50)]
+        public string Frequency { get; set;}
+        [StringLength(10)]
         public string DayDue { get; set; }
+        [StringLength(1000)]
         public string DeliveryFunction { get; set; }
         public string WorkInstructions { get; set; }
         public string Notes{ get; set; }
+        [StringLength(20)]
         public int? DaysAfterQuarter { get; set; }
+        [StringLength(2000)]
         public string FolderLocation { get; set; }
+        [StringLength(50)]
         public string ReportType { get; set; }
+        [StringLength(100)]
         public string RunWith { get; set; }
+        [StringLength(260)]
         public string DeliveryMethod { get; set; }
         public string DeliveryTo { get; set; }
         public DateTime? EffectiveDate { get; set; }
         public DateTime? TerminationDate { get; set; }
+        [StringLength(255)]
         public string GroupName { get; set; }
+        [StringLength(10)]
         public string State { get; set; }
+        [StringLength(2000)]
         public string ReportPath { get; set; }
         public bool OtherDepartment { get; set; }
+        [StringLength(100)]
         public string SourceDepartment { get; set; }
         public bool QualityIndicator { get; set; }
+        [StringLength(4000)]
         public string ERSReportLocation { get; set; }
         public int? ERRStatus { get; set; }
         public DateTime? DateAdded { get; set; }
         public DateTime? SystemRefreshDate { get; set; }
         public int? LegacyReportID { get; set; }
         public int? LegacyReportIDR2 { get; set; }
+        [StringLength(1000)]
         public string ERSReportName { get; set; }
+        [StringLength(4000)]
         public string OtherReportLocation { get; set; }
+        [StringLength(1000)]
         public string OtherReportName { get; set; }
 
         public DateTime? Deadline()
@@ -79,7 +92,7 @@ namespace ReportOverviewApp.Models
             DateTime? dateTime = null;
             switch (Frequency)
             {
-                case ReportEnum.FrequencyType.Quarterly:
+                case "Quarterly":
                     DateTime[] deadlines = new DateTime[] { DueDate1.Value, DueDate2.Value, DueDate3.Value, DueDate4.Value };
                     for(int i = 0; i < deadlines.Count()-1; i++)
                     {
@@ -94,23 +107,29 @@ namespace ReportOverviewApp.Models
                         }
                     }
                     break;
-                case ReportEnum.FrequencyType.Monthly:
+                case "Monthly":
                     dateTime = new DateTime(year: DateTime.Now.Year, month: DateTime.Now.Month, day: Int32.Parse(DayDue));
                     break;
-                case ReportEnum.FrequencyType.Weekly:
+                case "Weekly":
+                    break;
+                case "Biweekly":
+                    break;
+                case "Annual":
+                    break;
+                case "Semiannual":
                     break;
                 default:
                     break;
             }
             return dateTime;
         }
-        public bool IsPastDue() => DateDue != null && DateDue > DateTime.Now;
-        public bool IsPastDue(DateTime SelectedDate) => DateDue != null && SelectedDate != null && SelectedDate < DateDue;
-        public bool IsDue() => DateDue != null && DateDue <= DateTime.Now;
-        public bool IsDue(DateTime SelectedDate) => DateDue != null && SelectedDate != null && SelectedDate >= DateDue;
-        public bool IsDone() => DateDone != null;
-        public bool HasBeenSent() => DateSent != null;
-        public bool HasBeenDone() => DateDone != null;
-        public bool HasBeenNotified() => DateClientNotified != null;
+        //public bool IsPastDue() => DateDue != null && DateDue > DateTime.Now;
+        //public bool IsPastDue(DateTime SelectedDate) => DateDue != null && SelectedDate != null && SelectedDate < DateDue;
+        //public bool IsDue() => DateDue != null && DateDue <= DateTime.Now;
+        //public bool IsDue(DateTime SelectedDate) => DateDue != null && SelectedDate != null && SelectedDate >= DateDue;
+        //public bool IsDone() => DateDone != null;
+        //public bool HasBeenSent() => DateSent != null;
+        //public bool HasBeenDone() => DateDone != null;
+        //public bool HasBeenNotified() => DateClientNotified != null;
     }
 }
