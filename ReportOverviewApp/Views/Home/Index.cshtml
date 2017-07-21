@@ -3,6 +3,7 @@
 }
 
 @model ReportOverviewApp.Models.ReportViewModels.ReportViewModel
+@*model of view needs to be changed to a bigger viewmodel*@
 
 <style>
     .caption-widget{
@@ -33,10 +34,11 @@
                 </div>
                 <div class="caption caption-widget">
                     <h3>Total Reports</h3>
-                    <h1>@Model?.Reports?.Count()</h1>
+                    <h1>@Html.ActionLink(@Model?.Reports?.Count().ToString(), "../Reports/Index", new { }) </h1>
                 </div>
             </div>
         </div>
+        @*@await Html.PartialAsync("_Widget")*@
         @*<div class="col-sm-4">
             <div class="thumbnail">
                 <div class="btn-group">
