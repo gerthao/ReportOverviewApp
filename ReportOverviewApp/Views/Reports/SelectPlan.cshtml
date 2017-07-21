@@ -17,7 +17,7 @@
             {
                     <li>
                         <a href="#">
-                            @Html.ActionLink(stateItem, "SelectPlan", new {viewModel = Model, state = @stateItem})
+                            @Html.ActionLink(stateItem, "SelectPlan", new {state = @stateItem})
                         </a>
                     </li>
                 }
@@ -27,7 +27,7 @@
             {
                     <li>
                         <a href="#">
-                            @Html.ActionLink(planItem, "Index", new {viewModel = Model, plan = @planItem})
+                            @Html.ActionLink(planItem, "Index", new {plan = @planItem})
                         </a>
                     </li>
                 }

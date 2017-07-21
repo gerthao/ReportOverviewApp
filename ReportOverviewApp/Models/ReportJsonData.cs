@@ -57,11 +57,11 @@ namespace ReportOverviewApp.Models
         public string State { get; set; }
         [JsonProperty("REPORT_PATH")]
         public string ReportPath { get; set; }
-        [JsonProperty("Other Department")]
+        [JsonProperty("OTHER_DEPARTMENT")]
         public bool OtherDepartment { get; set; }
-        [JsonProperty("Source Department")]
+        [JsonProperty("SOURCE_DEPARTMENT")]
         public string SourceDepartment { get; set; }
-        [JsonProperty("Quality Indicator")]
+        [JsonProperty("QUALITY_INDICATOR")]
         public bool QualityIndicator { get; set; }
         [JsonProperty("ERS_REPORT_LOCATION")]
         public string ERSReportLocation { get; set; }
