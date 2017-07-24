@@ -45,12 +45,23 @@
     <a asp-area="" asp-controller="Reports" asp-action="SelectPlan">Select Plan</a>
     <a asp-area="" asp-controller="Reports" asp-action="Index">Reporting Catalogue</a>
 
-    @*<button  onclick="openClosePlanNav()" class="btn btn-link navbar-link">
+    @*<button onclick="openClosePlanNav()" class="btn btn-link navbar-link">
         Select Plan
     </button>*@
     
 </div>
 
+@*<div id="SelectPlanModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                @await Html.PartialAsync("../Reports/SelectPlan", new ReportOverviewApp.Models.ReportViewModels.ReportViewModel() { Reports = Model.Reports })
+            </div>
+        </div>
+    </div>
+</div>*@
+
+@*@await Html.PartialAsync("../Reports/SelectPlan")*@
 
 
 
@@ -93,3 +104,6 @@
         }
     }
 </script>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

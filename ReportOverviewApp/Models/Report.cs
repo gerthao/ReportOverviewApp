@@ -127,6 +127,10 @@ namespace ReportOverviewApp.Models
             }
             return dateTime;
         }
+        public string ToJson()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
         //public bool IsPastDue() => DateDue != null && DateDue > DateTime.Now;
         //public bool IsPastDue(DateTime SelectedDate) => DateDue != null && SelectedDate != null && SelectedDate < DateDue;
         //public bool IsDue() => DateDue != null && DateDue <= DateTime.Now;

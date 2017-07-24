@@ -12,8 +12,8 @@ namespace ReportOverviewApp.Models.HomeViewModels
     /// </summary>
     public class HomeViewModel
     {
-        public IEnumerable<Report> Reports { get;}
-        public IEnumerable<Widget> Widgets { get;}
-        public IEnumerable<ApplicationUser> Users { get;}
+        public IEnumerable<Report> Reports { get; set; }
+        public IEnumerable<Widget> Widgets { get; set; }
+        public IEnumerable<ApplicationUser> Users { get; set; }
     }
 }

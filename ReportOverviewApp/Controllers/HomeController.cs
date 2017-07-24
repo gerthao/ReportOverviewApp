@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using ReportOverviewApp.Data;
 using Microsoft.EntityFrameworkCore;
+using ReportOverviewApp.Models.HomeViewModels;
 
 namespace ReportOverviewApp.Controllers
 {
@@ -27,7 +28,7 @@ namespace ReportOverviewApp.Controllers
             //blob.Add("reports", reports);
             //blob.Add("users", users);
             //return View(blob);
-            var viewModel = new Models.ReportViewModels.ReportViewModel()
+            var viewModel = new HomeViewModel()
             {
                 Reports = from r in _context.Reports select r
             };

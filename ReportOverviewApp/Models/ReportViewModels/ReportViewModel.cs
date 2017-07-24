@@ -16,6 +16,7 @@ namespace ReportOverviewApp.Models.ReportViewModels
         private int PageSize { get; set; }
         public int CurrentPage { get; private set; } = 1;
         public const int DEFAULT_PAGE_SIZE = 20;
+        public int CurrentReportID { get; set; }
 
 
         public string Search { get; set; }

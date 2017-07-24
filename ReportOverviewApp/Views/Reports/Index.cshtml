@@ -53,21 +53,12 @@
         </div>
     </div>
 </div>
-<div id="EditReportModal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                @await Html.PartialAsync("Edit", new Report())
-            </div>
-        </div>
-    </div>
-</div>
 @if (Model.Reports == null || Model.Reports.Count() == 0) { <br /><h4 style="text-align: center; padding-top: 30px">No Records To Display</h4> }
-else{
-    <table class="table report-table table-bordered table-striped">
+else {
+    <table class="table report-table table-condensed table-bordered table-striped table-hover">
         <thead>
             <tr>
-                <th>@Html.ActionLink("ID", "Index", new {search = Model.Search, plan = Model.Plan, pageIndex = Model.CurrentPage, column = "ID" })</th>
+                <th>@Html.ActionLink("ID", "Index", new { search = Model.Search, plan = Model.Plan, pageIndex = Model.CurrentPage, column = "ID" })</th>
                 <th>@Html.ActionLink("Name", "Index", new { search = Model.Search, plan = Model.Plan, pageIndex = Model.CurrentPage, column = "Name" })</th>
                 <th>@Html.ActionLink("Deadline", "Index", new { search = Model.Search, plan = Model.Plan, pageIndex = Model.CurrentPage, column = "Deadline" })</th>
                 <th>Finished On</th>
@@ -90,71 +81,113 @@ else{
                     <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateClientNotified)</td>
                     <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateSent)</td>
                     <td>
-                        @*<a onclick="EditReport(@Model.Reports.ElementAt(i).ID)" data-toggle="modal" data-target="#EditReportModal">Edit</a> |*@
-                        <a asp-action="Edit" asp-route-id="@Model.Reports.ElementAt(i).ID">Edit</a> |
+                        @{ string testing = Model.Reports.ElementAt(i).ToJson();}
+                        <a onclick="EditReport(@testing)" data-toggle="modal" data-target="#EditReportModal">Edit</a>
+                        
+                        @*<a asp-action="Edit" asp-route-id="@Model.Reports.ElementAt(i).ID">Edit</a> |
                         <a asp-action="Details" asp-route-id="@Model.Reports.ElementAt(i).ID">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@Model.Reports.ElementAt(i).ID">Delete</a>
+                        <a asp-action="Delete" asp-route-id="@Model.Reports.ElementAt(i).ID">Delete</a>*@
                     </td>
                 </tr>
             }
         </tbody>
     </table>
+    <textarea type="text" id="Tester" runat="server">
+
+    </textarea>
+    <div id="EditReportModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    @await Html.PartialAsync("Edit", Model.Reports.ElementAt(3))
+                </div>
+            </div>
+        </div>
+    </div>
     <nav aria-label="...">
-        <ul class="pagination">
-            @if (Model.CurrentPage == 1)
-            {
-                <li class="disabled">
-                    <span>
-                        <span aria-hidden="true">Prev</span>
-                    </span>
-                </li>
-            }
-            else
-            {
-                <li>
-                    <span>
-                        <span aria-hidden="true">@Html.ActionLink("Prev", "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = Model.CurrentPage - 1 }) </span>
-                    </span>
-                </li>
-            }
-            
-            @for (int i = Model.CurrentPage; i <= Model.PagesCount() && i <= Model.CurrentPage+5; i++)
-            {
-                if (i == Model.CurrentPage + 5)
+        <div class="row container">
+            <ul class="pagination col-sm-6">
+                @{int pagenavlimit = 3; }
+                @{ int pagelastlimit = 2;}
+                @if (Model.CurrentPage == 1 )
                 {
+                    pagenavlimit += 2;
                     <li class="disabled">
-                        <span>...<span class="sr-only">(current)</span></span>
-                    </li>
-                    <li>
-                        <span>@Html.ActionLink((Model.PagesCount()).ToString(), "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = Model.PagesCount() })</span>
+                        <span>
+                            <span aria-hidden="true">Prev</span>
+                        </span>
                     </li>
                 }
                 else
                 {
                     <li>
-                        <span>@Html.ActionLink(@i.ToString(), "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = @i })</span>
+                        <span>
+                            <span aria-hidden="true">@Html.ActionLink("Prev", "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = Model.CurrentPage - 1 }) </span>
+                        </span>
                     </li>
                 }
-            }
-            @if (Model.CurrentPage == Model.PagesCount())
-            {
-                <li class="disabled">
-                    <span>
-                        <span aria-hidden="true">Next</span>
-                    </span>
-                </li>
-            }
-            else
-            {
+                @if(Model.CurrentPage == 2)
+                {
+                    pagenavlimit += 1;
+                }
+                @if(Model.CurrentPage == Model.PagesCount())
+                {
+                    pagelastlimit += 2;
+                }
+                @if (Model.CurrentPage == Model.PagesCount()-1)
+                {
+                    pagelastlimit += 1;
+                }
+                @for (int i = Model.CurrentPage-pagelastlimit; i <= Model.PagesCount() && i <= Model.CurrentPage + pagenavlimit; i++)
+                {
+                    if (i < 1)
+                    {
+                        i = 1;
+                    }
+                    if (i == Model.CurrentPage + pagenavlimit)
+                    {
+                        <li class="disabled">
+                            <span>...<span class="sr-only">(current)</span></span>
+                        </li>
+                        <li>
+                            <span>@Html.ActionLink((Model.PagesCount()).ToString(), "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = Model.PagesCount() })</span>
+                        </li>
+                    }
+                    else
+                    {
+                        if (i == Model.CurrentPage)
+                        {
+                            <li class="active" style="color:white;">
+                                <span>@Html.ActionLink(@i.ToString(), "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = @i })</span>
+                            </li>
 
-                <li>
-                    <span>
-                        <span aria-hidden="true">@Html.ActionLink("Next", "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = Model.CurrentPage + 1}) </span>
-                    </span>
-                </li>
-            }
-            
-        </ul>
+                        }
+                        else
+                        {
+                            <li>
+                                <span>@Html.ActionLink(@i.ToString(), "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = @i })</span>
+                            </li>
+                        }
+                    }
+                }
+                @if (Model.CurrentPage == Model.PagesCount())
+                {
+                    <li class="disabled">
+                        <span>
+                            <span aria-hidden="true">Next</span>
+                        </span>
+                    </li>
+                }
+                else
+                {
+                    <li>
+                        <span>
+                            <span aria-hidden="true">@Html.ActionLink("Next", "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = Model.CurrentPage + 1 }) </span>
+                        </span>
+                    </li>
+                }
+            </ul>       
+        </div>
     </nav>
 }
 

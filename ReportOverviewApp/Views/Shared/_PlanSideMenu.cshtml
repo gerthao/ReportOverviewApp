@@ -37,6 +37,7 @@
     }
 </style>
 
+@model ReportOverviewApp.Models.ReportViewModels.ReportViewModel
 <div id="PlanNav" class="plannav">
     @await  Html.PartialAsync(@"..\Reports\SelectPlan")
 </div>
@@ -70,3 +71,6 @@
         }
     }
 </script>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

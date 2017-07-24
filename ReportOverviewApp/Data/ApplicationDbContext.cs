@@ -26,6 +26,6 @@ namespace ReportOverviewApp.Data
             // Add your customizations after calling base.OnModelCreating(builder);
         }
 
-        public DbSet<ReportOverviewApp.Models.WidgetModels.Widget> Widget { get; set; }
+        public DbSet<Widget> Widget { get; set; }
     }
 }
