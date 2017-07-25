@@ -217,7 +217,7 @@ namespace ReportOverviewApp.Models
                                                 year: DeadlineHasPassed(date.Value)?DateTime.Now.Year+1:DateTime.Now.Year, 
                                                 month: date.Value.Month, 
                                                 day: date.Value.Day));
-            return dates.First();
+            return dates.ElementAt(0);
         }
         private bool DeadlineHasPassed(DateTime deadline)
         {

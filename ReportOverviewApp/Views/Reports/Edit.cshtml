@@ -1,10 +1,9 @@
-@model ReportOverviewApp.Models.ReportViewModels.ReportViewModel.CurrentReport()
+@model ReportOverviewApp.Models.Report
 
 
 <form asp-action="Edit">
     <div class="form-horizontal">
-        <h4>Report</h4>
-        <hr />
+        <h4 class="page-header">Report: @Model.Name</h4>
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <input type="hidden" asp-for="ID" />
         <div class="form-group">
