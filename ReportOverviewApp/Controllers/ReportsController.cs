@@ -163,10 +163,8 @@ namespace ReportOverviewApp.Controllers
         // POST: Reports/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize]
-        public async Task<IActionResult> Create([Bind("ID,Name,Frequency,Done,DateDone,DateClientNotified,DateSent,ClientNotified,Sent,DateDue")] Report report)
+        [HttpPost, ValidateAntiForgeryToken, Authorize]
+        public async Task<IActionResult> Create([Bind("ID,Name,Done,ClientNotified,Sent,DateDue,DateDone,DateClientNotified,DateSent,BusinessContact,BusinessOwner,DueDate1,DueDate2,DueDate3,DueDate4,Frequency,DayDue,DeliveryFunction,WorkInstructions,Notes,DaysAfterQuarter,FolderLocation,ReportType,RunWith,DeliveryMethod,DeliveryTo,EffectiveDate,TerminationDate,GroupName,State,ReportPath,OtherDepartment,SourceDepartment,QualityIndicator,ERSReportLocation,ERRStatus,DateAdded,SystemRefreshDate,LegacyReportID,LegacyReportIDR2,ERSReportName,OtherReportLocation,OtherReportName")] Report report)
         {
             if (ModelState.IsValid)
             {
@@ -197,10 +195,8 @@ namespace ReportOverviewApp.Controllers
         // POST: Reports/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Done,DateDone,DateClientNotified,DateSent,ClientNotified,Sent,DateDue")] Report report)
+        [HttpPost, ValidateAntiForgeryToken, Authorize]
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Done,ClientNotified,Sent,DateDue,DateDone,DateClientNotified,DateSent,BusinessContact,BusinessOwner,DueDate1,DueDate2,DueDate3,DueDate4,Frequency,DayDue,DeliveryFunction,WorkInstructions,Notes,DaysAfterQuarter,FolderLocation,ReportType,RunWith,DeliveryMethod,DeliveryTo,EffectiveDate,TerminationDate,GroupName,State,ReportPath,OtherDepartment,SourceDepartment,QualityIndicator,ERSReportLocation,ERRStatus,DateAdded,SystemRefreshDate,LegacyReportID,LegacyReportIDR2,ERSReportName,OtherReportLocation,OtherReportName")] Report report)
         {
             if (id != report.ID)
             {
@@ -238,21 +234,17 @@ namespace ReportOverviewApp.Controllers
             {
                 return NotFound();
             }
-
             var report = await _context.Reports
                 .SingleOrDefaultAsync(m => m.ID == id);
             if (report == null)
             {
                 return NotFound();
             }
-
             return View(report);
         }
 
         // POST: Reports/Delete/5
-        [Authorize]
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [Authorize, HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var report = await _context.Reports.SingleOrDefaultAsync(m => m.ID == id);
