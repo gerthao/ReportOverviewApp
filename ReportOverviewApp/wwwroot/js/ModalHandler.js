@@ -19,12 +19,8 @@ function EditReport(input){
         function(){
             $('tr').click(function() {
                 var currentIndex = $(this).parent().children().index($(this));
-                //input = '{ "id" : 3 }';
-                alert(String(input.ToString()));
                 //var report = JSON.parse(input);
-                //$('#Tester').text(report.id);
-        
-                //report = '{ "id": ' + (current+1) + ' }';
+                $('#Tester').text(currentIndex);
             });
         }
     );

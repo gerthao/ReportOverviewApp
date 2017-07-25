@@ -97,39 +97,149 @@ namespace ReportOverviewApp.Models
             switch (Frequency)
             {
                 case "Quarterly":
-                    DateTime[] deadlines = new DateTime[] { DueDate1.Value, DueDate2.Value, DueDate3.Value, DueDate4.Value };
-                    for(int i = 0; i < deadlines.Count()-1; i++)
-                    {
-                        DateTime d1 = deadlines[i];
-                        DateTime d2 = deadlines[i + 1];
-                        if(d1 >= DateTime.Now && d1 <= d2)
-                        {
-                            dateTime = d1;
-                        } if(d2 >= DateTime.Now && d2 <= d1)
-                        {
-                            dateTime = d2;
-                        }
-                    }
-                    break;
+                    return GetDeadlineQuarterly();
                 case "Monthly":
-                    dateTime = new DateTime(year: DateTime.Now.Year, month: DateTime.Now.Month, day: Int32.Parse(DayDue));
-                    break;
+                    return GetDeadlineMonthly();
                 case "Weekly":
-                    break;
+                    return GetDeadlineWeekly();
                 case "Biweekly":
-                    break;
+                    return GetDeadlineBiweekly();
                 case "Annual":
-                    break;
+                    return GetDeadlineAnnual();
                 case "Semiannual":
-                    break;
+                    return GetDeadlineSemiannual();
                 default:
                     break;
             }
             return dateTime;
         }
+        private DateTime? GetDeadlineQuarterly()
+        {
+            DateTime[] deadlines = new DateTime[] { DueDate1.Value, DueDate2.Value, DueDate3.Value, DueDate4.Value };
+            for (int i = 0; i < deadlines.Count() - 1; i++)
+            {
+                DateTime d1 = deadlines[i];
+                DateTime d2 = deadlines[i + 1];
+                if (d1 != null && (d1.Year > DateTime.Now.Year + 1 || d1.Year < DateTime.Now.Year))
+                {
+                    d1 = new DateTime(year: DateTime.Now.Year, month: d1.Month, day: d1.Day);
+                }
+                if (d2 != null)
+                {
+                    d2 = new DateTime(year: d2.Month < d1.Month ? DateTime.Now.Year + 1 : DateTime.Now.Year, month: d2.Month, day: d2.Day);
+                }
+                deadlines[i] = d1;
+                deadlines[i + 1] = d2;
+            }
+            return deadlines.ToList()
+                            .Where(date => date >= DateTime.Now)
+                            .OrderBy(date => date)
+                            .ElementAt(0);
+        }
+        private DateTime? GetDeadlineMonthly()
+        {
+            DateTime? deadline = new DateTime(year: DateTime.Now.Year, month: DateTime.Now.Month, day: Int32.Parse(DayDue));
+            if (deadline < DateTime.Now)
+            {
+                deadline = deadline.Value.AddMonths(1);
+            }
+            return deadline;
+        }
+        private DateTime? GetDeadlineWeekly()
+        {
+            DayOfWeek weeklyDueDay = DayOfWeek.Sunday;
+            DateTime deadline = DateTime.Today;
+            const int daily = 1;
+            switch (DayDue)
+            {
+                case "SUN":
+                    weeklyDueDay = DayOfWeek.Sunday;
+                    break;
+                case "MON":
+                    weeklyDueDay = DayOfWeek.Monday;
+                    break;
+                case "TUE":
+                    weeklyDueDay = DayOfWeek.Tuesday;
+                    break;
+                case "WED":
+                    weeklyDueDay = DayOfWeek.Wednesday;
+                    break;
+                case "THU":
+                    weeklyDueDay = DayOfWeek.Thursday;
+                    break;
+                case "FRI":
+                    weeklyDueDay = DayOfWeek.Friday;
+                    break;
+                case "SAT":
+                    weeklyDueDay = DayOfWeek.Saturday;
+                    break;
+                default:
+                    return null;
+            }
+            while (deadline.DayOfWeek != weeklyDueDay)
+            {
+                deadline = deadline.AddDays(daily);
+            }
+            return deadline;
+        }
+        private DateTime? GetDeadlineBiweekly()
+        {
+            int biweeklyDay;
+            const int biweek = 14, firstBiweek = 15, secondBiweek = 29;
+            if (!Int32.TryParse(DayDue, out biweeklyDay))
+            {
+                return null;
+            }
+            DateTime deadline = new DateTime(year: DateTime.Today.Year, month: DateTime.Today.Month, day: biweeklyDay);
+            if(deadline < DateTime.Today)
+            {
+                switch (deadline.Day)
+                {
+                    case firstBiweek:
+                        deadline = deadline.AddDays(biweek);
+                        break;
+                    case secondBiweek:
+                        deadline = new DateTime(year: deadline.Year, month: deadline.Month+1, day: biweeklyDay);
+                        break;
+                    default:
+                        deadline = deadline.AddDays(biweek);
+                        break;
+                }
+            }
+            return deadline;
+        }
+        private DateTime? GetDeadlineAnnual()
+        {
+            List<DateTime?> dates = new List<DateTime?> { DueDate1.Value, DueDate2.Value, DueDate3.Value, DueDate4.Value };
+            dates = dates.Where(date => date != null).ToList();
+            if (dates.Count == 0) return null;
+            dates.ForEach(date => date = new DateTime(
+                                                year: DeadlineHasPassed(date.Value)?DateTime.Now.Year+1:DateTime.Now.Year, 
+                                                month: date.Value.Month, 
+                                                day: date.Value.Day));
+            return dates.First();
+        }
+        private bool DeadlineHasPassed(DateTime deadline)
+        {
+            deadline = new DateTime(year: DateTime.Today.Year, month: deadline.Month, day: deadline.Day);
+            return deadline < DateTime.Today;
+        }
+        private DateTime? GetDeadlineSemiannual()
+        {
+            List<DateTime?> dates = new List<DateTime?> { DueDate1.Value, DueDate2.Value, DueDate3.Value, DueDate4.Value };
+            dates = dates.Where(date => date != null).ToList();
+            if (dates.Count == 0) return null;
+            dates.ForEach(date => date = new DateTime(
+                                                year: DeadlineHasPassed(date.Value)?DateTime.Now.Year+1:DateTime.Now.Year,
+                                                month: date.Value.Month,
+                                                day: date.Value.Day));
+            return dates.Where(date => date.Value >= DateTime.Today)
+                        .OrderBy(date => date)
+                        .First();
+        }
         public string ToJson()
         {
-            return JsonConvert.SerializeObject(this);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
         //public bool IsPastDue() => DateDue != null && DateDue > DateTime.Now;
         //public bool IsPastDue(DateTime SelectedDate) => DateDue != null && SelectedDate != null && SelectedDate < DateDue;

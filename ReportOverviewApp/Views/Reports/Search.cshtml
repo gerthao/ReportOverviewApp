@@ -4,12 +4,24 @@
     <div class="form-horizontal">
         <h4>Search For...</h4>
         <hr />
-        <div class="form-group">
-            <div class="col-md-12">
+        <div class="row form-group">
+            <div class="col-md-4">
                 <input type="text" id="SearchNameInput" class="form-control" name="search" placeholder="Enter Report Name" value="@Model.Search" />
             </div>
+            <div class="col-md-4">
+                <input type="date" class="form-control" id="beginDatepicker" name="beginDate" placeholder="Enter Begin Date" />
+            </div>
+            <div class="col-md-4">
+                <input type="date" class="form-control" id="endDatepicker" name="endDate" placeholder="Enter End Date" />
+            </div>
+            @*<div class="col-md-4">
+                <input type="text" id="SearchPlanInput" class="form-control" name="state" placeholder="Enter State" value="@Model.State"/>
+            </div>
+            <div class="col-md-4">
+                <input type="text" id="SearchPlanInput" class="form-control" name="plan" placeholder="Enter Plan Name" value="@Model.Plan"/>
+            </div>*@
         </div>
-        <div class="row col-md-12">
+        <div class="row col-md-12 ">
             <button class="btn btn-primary" id="ClearSearchForm" type="button">Clear</button>
             <button class="btn btn-primary" id="ResetSearchForm" type="reset">Reset</button>
             <button class="btn btn-primary" type="submit">Go</button>

@@ -1,4 +1,5 @@
-@model ReportOverviewApp.Models.Report
+@model ReportOverviewApp.Models.ReportViewModels.ReportViewModel.CurrentReport()
+
 
 <form asp-action="Edit">
     <div class="form-horizontal">
@@ -110,7 +111,7 @@
         <div class="form-group">
             <label asp-for="Frequency" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <select asp-for="Frequency" class="form-control"></select>
+                <input asp-for="Frequency" class="form-control" />
                 <span asp-validation-for="Frequency" class="text-danger"></span>
             </div>
         </div>

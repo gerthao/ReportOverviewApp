@@ -76,17 +76,17 @@ else {
                 <tr>
                     <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).ID)</td>
                     <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Name)</td>
-                    <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateDue)</td>
+                    <td>@Model.Reports.ElementAt(i).Deadline()</td>
                     <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateDone)</td>
                     <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateClientNotified)</td>
                     <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateSent)</td>
                     <td>
-                        @{ string testing = Model.Reports.ElementAt(i).ToJson();}
-                        <a onclick="EditReport(@testing)" data-toggle="modal" data-target="#EditReportModal">Edit</a>
+                        @*@{ string testing = Model.Reports.ElementAt(i).ToJson();}
+                        <a onclick="EditReport(@testing)" data-toggle="modal" data-target="#EditReportModal">Edit</a>*@
                         
-                        @*<a asp-action="Edit" asp-route-id="@Model.Reports.ElementAt(i).ID">Edit</a> |
+                        <a asp-action="Edit" asp-route-id="@Model.Reports.ElementAt(i).ID">Edit</a> |
                         <a asp-action="Details" asp-route-id="@Model.Reports.ElementAt(i).ID">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@Model.Reports.ElementAt(i).ID">Delete</a>*@
+                        <a asp-action="Delete" asp-route-id="@Model.Reports.ElementAt(i).ID">Delete</a>
                     </td>
                 </tr>
             }

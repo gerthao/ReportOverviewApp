@@ -24,6 +24,8 @@ namespace ReportOverviewApp.Models.ReportViewModels
         public string State { get; set; }
         public string Plan { get; set; }
 
+        public Report CurrentReport { get; set; }
+
         public IEnumerable<string> Plans { get; private set; }
         public IEnumerable<string> States { get; private set; }
 
