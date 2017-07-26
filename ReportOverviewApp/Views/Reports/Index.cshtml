@@ -11,6 +11,7 @@
 <h3 class="page-header">Reports 
     <button class="btn btn-primary" type="button" id="mag-glass" data-toggle="modal" data-target="#SearchReportModal"><span class="glyphicon glyphicon-search"></span></button>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#CreateReportModal" aria-label="Left Align"><span class="glyphicon glyphicon-plus-sign"></span></button>
+    <button type="button" class="btn btn-primary" id="ViewTableButton" aria-label="Left Align"><span id="ViewTableButtonIcon" class="glyphicon glyphicon-resize-small"></span></button>
 </h3>
 @*<form class="form-horizontal col-sm-10" asp-controller="Reports" asp-action="Index">
     <div class="form-group">
@@ -53,9 +54,9 @@
         </div>
     </div>
 </div>
-@if (Model.Reports == null || Model.Reports.Count() == 0) { <br /><h4 style="text-align: center; padding-top: 30px">No Records To Display</h4> }
+@if (Model == null || Model.Reports == null || Model.Reports.Count() == 0) { <br /><h4 style="text-align: center; padding-top: 30px">No Records To Display</h4> }
 else {
-    <table class="table report-table table-condensed table-bordered table-striped table-hover">
+    <table id="ReportTable" class="table report-table table-bordered table-condensed table-striped table-hover">
         <thead>
             <tr>
                 <th>@Html.ActionLink("ID", "Index", new { search = Model.Search, plan = Model.Plan, pageIndex = Model.CurrentPage, column = "ID" })</th>
