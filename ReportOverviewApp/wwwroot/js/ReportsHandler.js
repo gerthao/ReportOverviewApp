@@ -28,6 +28,8 @@ $(document).ready(function () {
         $("#ReportTable").toggleClass("table-condensed");
         //$("#ViewTableButtonIcon").toggleClass("glyphicon glyphicon-resize-full");
     });
+    $('#QuickFilter').keyup(function () {
+    })
     //$('.checkbox').click(function () {
     //    var date = new Date();
     //    $(this).siblings("text").text((date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear());

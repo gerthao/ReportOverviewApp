@@ -38,7 +38,6 @@
                 </div>
             </div>
         </div>
-        @*@await Html.PartialAsync("_Widget")*@
         <div class="col-sm-4">
             <div class="thumbnail">
                 <div class="btn-group">
@@ -53,8 +52,8 @@
                     </ul>
                 </div>
                 <div class="caption caption-widget">
-                    <h3>Upcoming Reports</h3>
-                    <h1>@Html.ActionLink(@Model.Reports.Where(r => r.Deadline() != null).Where( r => r.Deadline() >= DateTime.Today).Where(r => r.Deadline() <= DateTime.Today.AddDays(20)).Count().ToString(), "../Reports/Index", new {begin=DateTime.Today, end=DateTime.Today.AddDays(20) })</h1>
+                    <h3>Upcoming Reports (1 Week)</h3>
+                    <h1>@Html.ActionLink(@Model.Reports.Where(r => r.Deadline() != null).Where( r => r.Deadline() >= DateTime.Today).Where(r => r.Deadline() <= DateTime.Today.AddDays(7)).Count().ToString(), "../Reports/Index", new {begin=DateTime.Today, end=DateTime.Today.AddDays(7) })</h1>
                 </div>
             </div>
         </div>
@@ -77,6 +76,10 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div>
+        @*@await Html.PartialAsync("_Widget")*@
+        @await Html.PartialAsync("..\\Widgets\\Index", new List<ReportOverviewApp.Models.WidgetModels.IWidget>().AsEnumerable())
     </div>
 </div>
 @*<div class="wigdet-container">

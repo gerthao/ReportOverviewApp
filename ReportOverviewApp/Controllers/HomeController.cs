@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using ReportOverviewApp.Data;
 using Microsoft.EntityFrameworkCore;
 using ReportOverviewApp.Models.HomeViewModels;
+using ReportOverviewApp.Models.WidgetModels;
 
 namespace ReportOverviewApp.Controllers
 {
@@ -19,7 +20,35 @@ namespace ReportOverviewApp.Controllers
         {
             _context = context;
         }
+        private List<Widget> DefaultWidgets()
+        {
+            WidgetBuilder builder = new WidgetBuilder();
+            var wigetContainer = new List<Widget>
+            {
+                builder
+                    .BuildProduct()
+                    .BuildID(1)
+                    .BuildHeader("Wiget 1")
+                    .BuildSubWidgetTopic("All Reports")
+                    .BuildSubWidgetAction(WidgetFunctions.ReportCount())
+                    .BuildFooter("Footer")
+                    .BuildColor("Red")
+                    .BuildOption("Edit This Widget")
+                    .ReleaseProduct(),
 
+                builder
+                    .BuildProduct()
+                    .BuildID(2)
+                    .BuildHeader("Wiget 2")
+                    .BuildSubWidgetTopic("All Reports")
+                    .BuildSubWidgetAction(WidgetFunctions.ReportCount(DateTime.Now, DateTime.Now.AddDays(20)))
+                    .BuildFooter("Footer")
+                    .BuildColor("Black")
+                    .BuildOption("Edit This Widget").BuildOption("Delete This Widget")
+                    .ReleaseProduct()
+            };
+            return wigetContainer;
+        }
         public ActionResult Index()
         {
             //IDictionary<string, object> blob = new Dictionary<string, object>();
@@ -28,9 +57,11 @@ namespace ReportOverviewApp.Controllers
             //blob.Add("reports", reports);
             //blob.Add("users", users);
             //return View(blob);
+            var wid = from w in DefaultWidgets() select w;
             var viewModel = new HomeViewModel()
             {
-                Reports = from r in _context.Reports select r
+                Reports = from r in _context.Reports select r,
+                Widgets = wid
             };
             return View(viewModel);
         }

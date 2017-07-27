@@ -54,7 +54,7 @@ else {
             {
                 <tr>
                     <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).ID)</td>
-                    <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Name)</td>
+                    <td class="ReportName">@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Name)</td>
                     <td>@Model.DisplayDateTimeAsDate(Model.Reports.ElementAt(i).Deadline())</td>
                     <td>
                         @*<input class="checkbox checkbox-inline" type="checkbox"/>*@
