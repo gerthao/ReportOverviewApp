@@ -9,10 +9,10 @@
                 <input type="text" id="SearchNameInput" class="form-control" name="search" placeholder="Enter Report Name" value="@Model.Search" />
             </div>
             <div class="col-md-4">
-                <input type="date" class="form-control" id="beginDatepicker" name="beginDate" placeholder="Enter Begin Date" />
+                <input type="date" class="form-control" id="beginDatepicker" name="begin" placeholder="Enter Begin Date" value="@Model.DisplayDateTimeAsDate(Model.Begin)"/>
             </div>
             <div class="col-md-4">
-                <input type="date" class="form-control" id="endDatepicker" name="endDate" placeholder="Enter End Date" />
+                <input type="date" class="form-control" id="endDatepicker" name="end" placeholder="Enter End Date" value="@Model.DisplayDateTimeAsDate(Model.End)"/>
             </div>
             @*<div class="col-md-4">
                 <input type="text" id="SearchPlanInput" class="form-control" name="state" placeholder="Enter State" value="@Model.State"/>

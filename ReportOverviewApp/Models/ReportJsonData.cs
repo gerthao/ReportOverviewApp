@@ -98,7 +98,7 @@ namespace ReportOverviewApp.Models
                 report = new Report();
             }
 
-            report.Name = Name;
+            report.Name = Name.Trim();
             report.BusinessContact = BusinessContact;
             report.BusinessOwner = BusinessOwner;
             report.DueDate1 = ToDate(DueDate1);

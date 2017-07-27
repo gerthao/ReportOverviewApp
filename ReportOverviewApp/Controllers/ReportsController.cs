@@ -41,38 +41,23 @@ namespace ReportOverviewApp.Controllers
 
         //}
         private ReportViewModel viewModel;
-        private ReportViewModel GetReportViewModelFromModel(ReportViewModel viewModel)
+        private ReportViewModel GetReportViewModel(string search, string column, int recordsPerPage, int pageIndex, string plan, DateTime? begin, DateTime? end)
         {
-
+            if (viewModel == null) viewModel = new ReportViewModel(){Reports = from r in _context.Reports select r};
+            HandlePlan(plan);
+            HandleSearch(search);
+            HandleSort(column);
+            HandleDates(begin, end);
+            viewModel.GeneratePages(recordsPerPage);
+            viewModel.Reports = viewModel.DisplayPage(pageIndex);
             return viewModel;
         }
 
-        private ReportViewModel GetReportViewModel(string search, string column, int recordsPerPage, int pageIndex, string plan)
+        private void HandleSort(string column)
         {
-            if(viewModel == null)
-            {
-                viewModel = new ReportViewModel()
-                {
-                    Reports = from r in _context.Reports select r
-                };
-            }
-            if (!String.IsNullOrEmpty(plan))
-            {
-                viewModel.Plan = plan;
-                viewModel.Reports = viewModel.Reports.Where(r => r != null && r.GroupName != null && r.GroupName.Equals(viewModel.Plan));
-            }
-            
-            if (!String.IsNullOrEmpty(search))
-            {
-                viewModel.Search = search;
-                viewModel.Reports = viewModel.Reports.Where(r => r != null && r.Name != null && r.Name.Contains(viewModel.Search));
-            }
-            
-            if (!String.IsNullOrEmpty(column))
-            {
+            if (!String.IsNullOrEmpty(column)){
                 viewModel.Column = column;
-                switch (viewModel.Column)
-                {
+                switch (viewModel.Column){
                     case "ID":
                         viewModel.Reports = viewModel.Reports.OrderBy(report => report.ID);
                         break;
@@ -87,64 +72,62 @@ namespace ReportOverviewApp.Controllers
                         break;
                 }
             }
-            
-            viewModel.GeneratePages(recordsPerPage);
-            viewModel.Reports = viewModel.DisplayPage(pageIndex);
-            return viewModel;
         }
 
-        public ReportsController(ApplicationDbContext context)
+        private void HandleDates(DateTime? begin, DateTime? end)
         {
-            _context = context;
+            if (begin != null){
+                viewModel.Begin = begin;
+                viewModel.Reports = viewModel.Reports.Where(r => r.Deadline() >= viewModel.Begin);
+            }
+            if (end != null){
+                viewModel.End = end;
+                viewModel.Reports = viewModel.Reports.Where(r => r.Deadline() <= viewModel.End);
+            }
         }
+        private void HandlePlan(string plan)
+        {
+            if (!String.IsNullOrEmpty(plan)){
+                viewModel.Plan = plan;
+                viewModel.Reports = viewModel.Reports.Where(r => r != null && r.GroupName != null && r.GroupName.Equals(viewModel.Plan));
+            }
+
+        }
+        private void HandleSearch(string search)
+        {
+            if (!String.IsNullOrEmpty(search)){
+                viewModel.Search = search;
+                viewModel.Reports = viewModel.Reports.Where(r => r != null && r.Name != null && r.Name.Contains(viewModel.Search));
+            }
+        }
+        public ReportsController(ApplicationDbContext context) => _context = context;
 
         // GET: Reports
         [Authorize]
-        public ActionResult Index(string search, string column, int entriesPerPage, int pageIndex, string plan)
-        {
-            return View(GetReportViewModel(search, column, entriesPerPage, pageIndex, plan));
-        }
+        public ActionResult Index(string search, string column, int entriesPerPage, int pageIndex, string plan, DateTime? begin = null, DateTime? end = null)
+            => View(GetReportViewModel(search, column, entriesPerPage, pageIndex, plan, begin, end));
 
         // GET: Reports/Details/5
         [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var report = await _context.Reports
-                .SingleOrDefaultAsync(m => m.ID == id);
-            if (report == null)
-            {
-                return NotFound();
-            }
-
+            if (id == null) return NotFound();
+            var report = await _context.Reports.SingleOrDefaultAsync(m => m.ID == id);
+            if (report == null) return NotFound();
             return View(report);
         }
 
         public ActionResult SelectPlan(string state, string plan)
-        {
-            return View(GetReportViewModelFromSelectPlan(state, plan));
-        }
+            => View(GetReportViewModelFromSelectPlan(state, plan));
 
         private ReportViewModel GetReportViewModelFromSelectPlan(string state, string plan)
         {
-            if (viewModel == null)
-            {
-                viewModel = new ReportViewModel()
-                {
-                    Reports = from r in _context.Reports select r
-                };
-            }
-            if (!String.IsNullOrEmpty(state))
-            {
+            if (viewModel == null) viewModel = new ReportViewModel(){Reports = from r in _context.Reports select r};
+            if (!String.IsNullOrEmpty(state)){
                 viewModel.State = state;
                 viewModel.Reports = viewModel.Reports.Where(r => r != null && r.State != null && r.State.Equals(state));
             }
-            if (!String.IsNullOrEmpty(plan))
-            {
+            if (!String.IsNullOrEmpty(plan)){
                 viewModel.Plan = plan;
                 viewModel.Reports = viewModel.Reports.Where(r => r != null && r.GroupName != null &&  r.GroupName.Equals(plan));
             }
@@ -155,10 +138,7 @@ namespace ReportOverviewApp.Controllers
 
         // GET: Reports/Create
         [Authorize]
-        public IActionResult Create()
-        {
-            return View();
-        }
+        public IActionResult Create() => View();
 
         // POST: Reports/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -166,8 +146,7 @@ namespace ReportOverviewApp.Controllers
         [HttpPost, ValidateAntiForgeryToken, Authorize]
         public async Task<IActionResult> Create([Bind("ID,Name,Done,ClientNotified,Sent,DateDue,DateDone,DateClientNotified,DateSent,BusinessContact,BusinessOwner,DueDate1,DueDate2,DueDate3,DueDate4,Frequency,DayDue,DeliveryFunction,WorkInstructions,Notes,DaysAfterQuarter,FolderLocation,ReportType,RunWith,DeliveryMethod,DeliveryTo,EffectiveDate,TerminationDate,GroupName,State,ReportPath,OtherDepartment,SourceDepartment,QualityIndicator,ERSReportLocation,ERRStatus,DateAdded,SystemRefreshDate,LegacyReportID,LegacyReportIDR2,ERSReportName,OtherReportLocation,OtherReportName")] Report report)
         {
-            if (ModelState.IsValid)
-            {
+            if (ModelState.IsValid){
                 _context.Add(report);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
@@ -179,16 +158,9 @@ namespace ReportOverviewApp.Controllers
         [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
+            if (id == null) return NotFound();
             var report = await _context.Reports.SingleOrDefaultAsync(m => m.ID == id);
-            if (report == null)
-            {
-                return NotFound();
-            }
+            if (report == null) return NotFound();
             return View(report);
         }
 
@@ -198,28 +170,15 @@ namespace ReportOverviewApp.Controllers
         [HttpPost, ValidateAntiForgeryToken, Authorize]
         public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Done,ClientNotified,Sent,DateDue,DateDone,DateClientNotified,DateSent,BusinessContact,BusinessOwner,DueDate1,DueDate2,DueDate3,DueDate4,Frequency,DayDue,DeliveryFunction,WorkInstructions,Notes,DaysAfterQuarter,FolderLocation,ReportType,RunWith,DeliveryMethod,DeliveryTo,EffectiveDate,TerminationDate,GroupName,State,ReportPath,OtherDepartment,SourceDepartment,QualityIndicator,ERSReportLocation,ERRStatus,DateAdded,SystemRefreshDate,LegacyReportID,LegacyReportIDR2,ERSReportName,OtherReportLocation,OtherReportName")] Report report)
         {
-            if (id != report.ID)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
+            if (id != report.ID) return NotFound();
+            if (ModelState.IsValid){
+                try{
                     _context.Update(report);
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ReportExists(report.ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                catch (DbUpdateConcurrencyException){
+                    if (!ReportExists(report.ID)) return NotFound();
+                    else throw;
                 }
                 return RedirectToAction("Index");
             }
@@ -230,16 +189,9 @@ namespace ReportOverviewApp.Controllers
         [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            var report = await _context.Reports
-                .SingleOrDefaultAsync(m => m.ID == id);
-            if (report == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
+            var report = await _context.Reports.SingleOrDefaultAsync(m => m.ID == id);
+            if (report == null) return NotFound();
             return View(report);
         }
 
@@ -253,9 +205,6 @@ namespace ReportOverviewApp.Controllers
             return RedirectToAction("Index");
         }
 
-        private bool ReportExists(int id)
-        {
-            return _context.Reports.Any(e => e.ID == id);
-        }
+        private bool ReportExists(int id) => _context.Reports.Any(e => e.ID == id);
     }
 }

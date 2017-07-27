@@ -13,28 +13,13 @@
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#CreateReportModal" aria-label="Left Align"><span class="glyphicon glyphicon-plus-sign"></span></button>
     <button type="button" class="btn btn-primary" id="ViewTableButton" aria-label="Left Align"><span id="ViewTableButtonIcon" class="glyphicon glyphicon-resize-small"></span></button>
 </h3>
-@*<form class="form-horizontal col-sm-10" asp-controller="Reports" asp-action="Index">
-    <div class="form-group">
-        <div class="col-sm-3">
-            <div class="input-group">
-                <input type="search" class="form-control" name="search" placeholder="Search For Reports" aria-describedby="mag-glass"/>
-                <span class="input-group-btn">
-                    <button class="btn btn-default" type="button" id="mag-glass"><span class="glyphicon glyphicon-search"></span></button>
-                </span>
-            </div>
-        </div>
-    </div>
-</form>*@
-@*<form class="form-horizontal asp-action=Create col-sm-2" style="text-align:right;">
-    <button type="submit" asp-action="Create" class="btn btn-primary" name="item" aria-label="Left Align"><span class="glyphicon glyphicon-plus-sign"></span>Add Report</button>
-</form>*@
-<div class="report-top-content">
+@*<div class="report-top-content">
     <ul class="nav nav-pills col-sm-12">
         <li role="presentation"><a href="#">All</a></li>
         <li role="presentation"><a href="#">Quarterly</a></li>
         <li role="presentation"><a href="#">Monthly</a></li>
     </ul>
-</div>
+</div>*@
 <div id="SearchReportModal" class="modal fade" tabindex="-1" rolde="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -77,7 +62,7 @@ else {
                 <tr>
                     <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).ID)</td>
                     <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Name)</td>
-                    <td>@Model.Reports.ElementAt(i).Deadline()</td>
+                    <td>@Model.DisplayDateTimeAsDate(Model.Reports.ElementAt(i).Deadline())</td>
                     <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateDone)</td>
                     <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateClientNotified)</td>
                     <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateSent)</td>

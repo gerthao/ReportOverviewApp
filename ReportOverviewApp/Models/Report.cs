@@ -91,6 +91,7 @@ namespace ReportOverviewApp.Models
         [StringLength(1000)]
         public string OtherReportName { get; set; }
 
+        [DataType(DataType.Date)]
         public DateTime? Deadline()
         {
             DateTime? dateTime = null;
@@ -115,34 +116,31 @@ namespace ReportOverviewApp.Models
         }
         private DateTime? GetDeadlineQuarterly()
         {
-            DateTime[] deadlines = new DateTime[] { DueDate1.Value, DueDate2.Value, DueDate3.Value, DueDate4.Value };
+            List<DateTime?> deadlines = GetAllDueDates();
+            if (deadlines.Count() == 0) return null;
             for (int i = 0; i < deadlines.Count() - 1; i++)
             {
-                DateTime d1 = deadlines[i];
-                DateTime d2 = deadlines[i + 1];
-                if (d1 != null && (d1.Year > DateTime.Now.Year + 1 || d1.Year < DateTime.Now.Year))
+                DateTime? d1 = deadlines[i];
+                DateTime? d2 = deadlines[i + 1];
+                if (d1 != null && (d1.Value.Year > DateTime.Now.Year + 1 || d1.Value.Year < DateTime.Now.Year))
                 {
-                    d1 = new DateTime(year: DateTime.Now.Year, month: d1.Month, day: d1.Day);
+                    d1 = new DateTime(year: DateTime.Now.Year, month: d1.Value.Month, day: d1.Value.Day);
                 }
                 if (d2 != null)
                 {
-                    d2 = new DateTime(year: d2.Month < d1.Month ? DateTime.Now.Year + 1 : DateTime.Now.Year, month: d2.Month, day: d2.Day);
+                    d2 = new DateTime(year: d2.Value.Month < d1.Value.Month ? DateTime.Now.Year + 1 : DateTime.Now.Year, month: d2.Value.Month, day: d2.Value.Day);
                 }
                 deadlines[i] = d1;
                 deadlines[i + 1] = d2;
             }
-            return deadlines.ToList()
-                            .Where(date => date >= DateTime.Now)
-                            .OrderBy(date => date)
-                            .ElementAt(0);
+            deadlines = deadlines.Where(date => date >= DateTime.Now).OrderBy(date => date).ToList();
+            if (deadlines.Count() == 0) return null;
+            return deadlines[0];
         }
         private DateTime? GetDeadlineMonthly()
         {
             DateTime? deadline = new DateTime(year: DateTime.Now.Year, month: DateTime.Now.Month, day: Int32.Parse(DayDue));
-            if (deadline < DateTime.Now)
-            {
-                deadline = deadline.Value.AddMonths(1);
-            }
+            if (deadline < DateTime.Now) deadline = deadline.Value.AddMonths(1);
             return deadline;
         }
         private DateTime? GetDeadlineWeekly()
@@ -208,10 +206,15 @@ namespace ReportOverviewApp.Models
             }
             return deadline;
         }
+        private List<DateTime?> GetAllDueDates()
+        {
+            List<DateTime?> dates = new List<DateTime?> { DueDate1, DueDate2, DueDate3, DueDate4 };
+            dates.RemoveAll(dueDate => dueDate == null);
+            return dates;
+        }
         private DateTime? GetDeadlineAnnual()
         {
-            List<DateTime?> dates = new List<DateTime?> { DueDate1.Value, DueDate2.Value, DueDate3.Value, DueDate4.Value };
-            dates = dates.Where(date => date != null).ToList();
+            List<DateTime?> dates = GetAllDueDates();
             if (dates.Count == 0) return null;
             dates.ForEach(date => date = new DateTime(
                                                 year: DeadlineHasPassed(date.Value)?DateTime.Now.Year+1:DateTime.Now.Year, 
@@ -226,8 +229,7 @@ namespace ReportOverviewApp.Models
         }
         private DateTime? GetDeadlineSemiannual()
         {
-            List<DateTime?> dates = new List<DateTime?> { DueDate1.Value, DueDate2.Value, DueDate3.Value, DueDate4.Value };
-            dates = dates.Where(date => date != null).ToList();
+            List<DateTime?> dates = GetAllDueDates();
             if (dates.Count == 0) return null;
             dates.ForEach(date => date = new DateTime(
                                                 year: DeadlineHasPassed(date.Value)?DateTime.Now.Year+1:DateTime.Now.Year,
