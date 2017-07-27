@@ -1,18 +1,22 @@
-﻿
+﻿var uri = 'Reports/Index';
+
 function EditReport(input) {
     $(document).ready(
         function(){
             $('tr').click(function() {
-                var currentIndex = $(this).parent().children().index($(this));
-                //var report = JSON.parse(input);
-                $('#Tester').text(currentIndex);
+                var currentIndex = $(this).parent().children().index($(this))+1;
+                var report;
+                try {
+                    report = JSON.parse(input);
+                } catch (err) {
+                    report = err + "\n\n" + input;
+                }
+                $('#Tester').text(report);
             });
         }
     );
 }
-$('#Tester').click(function(){
-    $('#Tester').text("Hello world.");
-});
+
 $(document).ready(function () {
     $("#ClearSearchForm").click(function () {
         //$("#SearchNameInput").val(null);
@@ -20,11 +24,12 @@ $(document).ready(function () {
     });
     $("#beginDatepicker").datepicker();
     $("#endDatepicker").datepicker();
-});
-
-$(document).ready(function () {
     $("#ViewTableButton").click(function () {
         $("#ReportTable").toggleClass("table-condensed");
         //$("#ViewTableButtonIcon").toggleClass("glyphicon glyphicon-resize-full");
     });
+    //$('.checkbox').click(function () {
+    //    var date = new Date();
+    //    $(this).siblings("text").text((date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear());
+    //});
 });

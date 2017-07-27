@@ -241,7 +241,7 @@ namespace ReportOverviewApp.Models
         }
         public string ToJson()
         {
-            return JsonConvert.SerializeObject(this, Formatting.Indented);
+            return JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
         }
         //public bool IsPastDue() => DateDue != null && DateDue > DateTime.Now;
         //public bool IsPastDue(DateTime SelectedDate) => DateDue != null && SelectedDate != null && SelectedDate < DateDue;

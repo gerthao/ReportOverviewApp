@@ -10,6 +10,7 @@ using ReportOverviewApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using ReportOverviewApp.Models.ReportViewModels;
 using System.Reflection;
+using ReportOverviewApp.Helpers;
 
 namespace ReportOverviewApp.Controllers
 {
@@ -41,6 +42,7 @@ namespace ReportOverviewApp.Controllers
 
         //}
         private ReportViewModel viewModel;
+        private SearchTokenizer tokenizer;
         private ReportViewModel GetReportViewModel(string search, string column, int recordsPerPage, int pageIndex, string plan, DateTime? begin, DateTime? end)
         {
             if (viewModel == null) viewModel = new ReportViewModel(){Reports = from r in _context.Reports select r};
@@ -97,7 +99,19 @@ namespace ReportOverviewApp.Controllers
         {
             if (!String.IsNullOrEmpty(search)){
                 viewModel.Search = search;
-                viewModel.Reports = viewModel.Reports.Where(r => r != null && r.Name != null && r.Name.Contains(viewModel.Search));
+                //tokenizer.Tokenize(search);
+                //Dictionary<string, SearchTokenizer.Mode> tokens = tokenizer.GetSearchTokens();
+                //KeyValuePair<string, SearchTokenizer.Mode> kv;
+                
+                //for(int i = 0; i < tokens.Count(); i++)
+                //{
+                //    kv = tokens.ElementAt(i);
+                //    switch (kv.Value)
+                //    {
+
+                //    }
+                //}
+                viewModel.Reports = viewModel.Reports.Where(r => r != null && r.Name != null && r.Name.ToLowerInvariant().Contains(viewModel.Search.ToLowerInvariant()));
             }
         }
         public ReportsController(ApplicationDbContext context) => _context = context;

@@ -54,7 +54,26 @@
                 </div>
                 <div class="caption caption-widget">
                     <h3>Upcoming Reports</h3>
-                    @*<h1>@Model.Reports.Where(r => r.Deadline() != null).Count()</h1>*@
+                    <h1>@Html.ActionLink(@Model.Reports.Where(r => r.Deadline() != null).Where( r => r.Deadline() >= DateTime.Today).Where(r => r.Deadline() <= DateTime.Today.AddDays(20)).Count().ToString(), "../Reports/Index", new {begin=DateTime.Today, end=DateTime.Today.AddDays(20) })</h1>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="thumbnail">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true">
+                        <span class="glyphicon glyphicon-menu-hamburger widget-option-menu"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Edit Actions</a></li>
+                        <li><a href="#">Change Color</a></li>
+                        <li><a href="#">Copy Widget</a></li>
+                        <li><a href="#">Delete Widget</a></li>
+                    </ul>
+                </div>
+                <div class="caption caption-widget">
+                    <h3>Reports Due Today</h3>
+                    <h1>@Html.ActionLink(@Model.Reports.Where(r => r.Deadline() != null).Where(r => r.Deadline() == DateTime.Today).Count().ToString(), "../Reports/Index", new { begin=DateTime.Today, end=DateTime.Today })</h1>
                 </div>
             </div>
         </div>

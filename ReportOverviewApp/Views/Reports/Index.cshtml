@@ -13,13 +13,6 @@
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#CreateReportModal" aria-label="Left Align"><span class="glyphicon glyphicon-plus-sign"></span></button>
     <button type="button" class="btn btn-primary" id="ViewTableButton" aria-label="Left Align"><span id="ViewTableButtonIcon" class="glyphicon glyphicon-resize-small"></span></button>
 </h3>
-@*<div class="report-top-content">
-    <ul class="nav nav-pills col-sm-12">
-        <li role="presentation"><a href="#">All</a></li>
-        <li role="presentation"><a href="#">Quarterly</a></li>
-        <li role="presentation"><a href="#">Monthly</a></li>
-    </ul>
-</div>*@
 <div id="SearchReportModal" class="modal fade" tabindex="-1" rolde="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -63,13 +56,21 @@ else {
                     <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).ID)</td>
                     <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Name)</td>
                     <td>@Model.DisplayDateTimeAsDate(Model.Reports.ElementAt(i).Deadline())</td>
-                    <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateDone)</td>
-                    <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateClientNotified)</td>
-                    <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateSent)</td>
                     <td>
-                        @*@{ string testing = Model.Reports.ElementAt(i).ToJson();}
-                        <a onclick="EditReport(@testing)" data-toggle="modal" data-target="#EditReportModal">Edit</a>*@
-                        
+                        @*<input class="checkbox checkbox-inline" type="checkbox"/>*@
+                        <text>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateDone)</text>
+                    </td>
+                    <td>
+                        @*<input class="checkbox checkbox-inline" type="checkbox" />*@
+                        <text>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateClientNotified)</text>
+                    </td>
+                    <td>
+                        @*<input class="checkbox checkbox-inline" type="checkbox" />*@
+                        <text>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateSent)</text>
+                    </td>
+                    <td>
+                        @{ var testing = $"\"id\" : {i}"; }
+                        <a id="EditReportLink" onclick="EditReport('@testing')" data-toggle="modal" data-target="#EditReportModal">Edit</a>
                         <a asp-action="Edit" asp-route-id="@Model.Reports.ElementAt(i).ID">Edit</a> |
                         <a asp-action="Details" asp-route-id="@Model.Reports.ElementAt(i).ID">Details</a> |
                         <a asp-action="Delete" asp-route-id="@Model.Reports.ElementAt(i).ID">Delete</a>
@@ -78,14 +79,14 @@ else {
             }
         </tbody>
     </table>
-    <textarea type="text" id="Tester" runat="server">
+    <textarea rows="10" cols="50" type="text" id="Tester" runat="server">
 
     </textarea>
     <div id="EditReportModal" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    @await Html.PartialAsync("Edit", Model.Reports.ElementAt(3))
+                    @await Html.PartialAsync("Edit", new Report())
                 </div>
             </div>
         </div>
