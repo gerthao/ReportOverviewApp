@@ -1,0 +1,30 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model ReportOverviewApp.Models.WidgetModels.IWidget
+
+<div class="widget">
+    <div class="thumbnail">
+        <div style="display: inline;">
+            <div class="dropdown">
+                <button type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" style="display:inline; text-align:left;">
+                    <span class="glyphicon glyphicon-menu-hamburger widget-option-menu"></span>
+                </button>
+                <ul class="dropdown-menu widget-menu">
+                    @foreach (var option in Model.Options)
+                    {
+                        <li><a href="#">@option</a></li>
+                    }
+                </ul>
+                <header class="page-header" style="display:inline; text-align:right; padding-left:70%;">@Model.Header</header>
+            </div>
+            
+        </div>
+        <div class="caption">
+            @await  Html.PartialAsync("_SubWidget", Model.Body)
+        </div>
+        <div class="panel-footer">
+            <footer>@Model.Footer</footer>
+        </div>
+    </div>
+</div>

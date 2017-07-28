@@ -9,6 +9,7 @@ using ReportOverviewApp.Data;
 using ReportOverviewApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using ReportOverviewApp.Models.ReportViewModels;
+using Newtonsoft.Json;
 using System.Reflection;
 using ReportOverviewApp.Helpers;
 
@@ -54,7 +55,12 @@ namespace ReportOverviewApp.Controllers
             viewModel.Reports = viewModel.DisplayPage(pageIndex);
             return viewModel;
         }
-
+        [HttpPost]
+        public ActionResult JsonInfo(int? id)
+        {
+            var report = from r in _context.Reports where r.ID == id select r;
+            return Json(report, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+        }
         private void HandleSort(string column)
         {
             if (!String.IsNullOrEmpty(column)){
