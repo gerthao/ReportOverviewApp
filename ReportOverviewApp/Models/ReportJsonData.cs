@@ -98,9 +98,9 @@ namespace ReportOverviewApp.Models
                 report = new Report();
             }
 
-            report.Name = Name.Trim();
-            report.BusinessContact = BusinessContact;
-            report.BusinessOwner = BusinessOwner;
+            report.Name = Name?.Trim();
+            report.BusinessContact = BusinessContact?.Trim();
+            report.BusinessOwner = BusinessOwner?.Trim();
             report.DueDate1 = ToDate(DueDate1);
             report.DueDate2 = ToDate(DueDate2);
             report.DueDate3 = ToDate(DueDate3);
@@ -109,31 +109,31 @@ namespace ReportOverviewApp.Models
             report.EffectiveDate = ToDate(EffectiveDate);
             report.TerminationDate = ToDate(TerminationDate);
             report.SystemRefreshDate = ToDate(SystemRefreshDate);
-            report.Frequency = Frequency;
+            report.Frequency = Frequency?.Trim();
             report.DayDue = DayDue;
             report.DeliveryFunction = DeliveryFunction;
             report.DeliveryMethod = DeliveryMethod;
             report.DeliveryTo = DeliveryTo;
-            report.WorkInstructions = WorkInstructions;
+            report.WorkInstructions = WorkInstructions?.Trim();
             report.DaysAfterQuarter = DaysAfterQuarter;
-            report.FolderLocation = FolderLocation;
+            report.FolderLocation = FolderLocation?.Trim();
             report.ReportType = ReportType;
             report.RunWith = RunWith;
-            report.Notes = Notes;
+            report.Notes = Notes?.Trim();
             report.DaysAfterQuarter = DaysAfterQuarter;
             report.GroupName = GroupName;
-            report.State = State;
-            report.ReportPath = ReportPath;
+            report.State = State?.Trim();
+            report.ReportPath = ReportPath?.Trim();
             report.OtherDepartment = OtherDepartment;
-            report.SourceDepartment = SourceDepartment;
+            report.SourceDepartment = SourceDepartment?.Trim();
             report.QualityIndicator = QualityIndicator;
-            report.ERSReportLocation = ERSReportLocation;
+            report.ERSReportLocation = ERSReportLocation?.Trim();
             report.ERRStatus = ERRStatus;
             report.LegacyReportID = LegacyReportID;
             report.LegacyReportIDR2 = LegacyReportIDR2;
-            report.ERSReportName = ERSReportName;
-            report.OtherReportLocation = OtherReportLocation;
-            report.OtherReportName = OtherReportName;
+            report.ERSReportName = ERSReportName?.Trim();
+            report.OtherReportLocation = OtherReportLocation?.Trim();
+            report.OtherReportName = OtherReportName?.Trim();
 
             return report;
         }

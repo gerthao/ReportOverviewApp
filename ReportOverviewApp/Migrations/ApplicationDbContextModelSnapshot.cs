@@ -192,8 +192,6 @@ namespace ReportOverviewApp.Migrations
 
                     b.Property<DateTime?>("DateDone");
 
-                    b.Property<DateTime?>("DateDue");
-
                     b.Property<DateTime?>("DateSent");
 
                     b.Property<string>("DayDue")

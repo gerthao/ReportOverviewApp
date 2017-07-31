@@ -8,7 +8,7 @@ using ReportOverviewApp.Data;
 namespace ReportOverviewApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20170726205941_Initial")]
+    [Migration("20170731172250_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -192,8 +192,6 @@ namespace ReportOverviewApp.Migrations
                     b.Property<DateTime?>("DateClientNotified");
 
                     b.Property<DateTime?>("DateDone");
-
-                    b.Property<DateTime?>("DateDue");
 
                     b.Property<DateTime?>("DateSent");
 

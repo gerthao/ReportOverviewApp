@@ -1,6 +1,10 @@
 @model ReportOverviewApp.Models.Report
 
-
+<style>
+    input, textarea {
+        max-width: none !important;
+    }
+</style>
 <form asp-action="Edit">
     <div class="form-horizontal">
         <h4 class="page-header">Report: @Model.Name</h4>
@@ -14,8 +18,38 @@
             </div>
         </div>
         <div class="form-group">
+            <label asp-for="DateDone" class="col-md-2 control-label"></label>
+            <div class="input-group col-md-10">
+                <span class="input-group-addon">
+                    <input type="checkbox" id="CheckboxDone" asp-for="Done"/>
+                </span>
+                <input id="InputDateDone" asp-for="DateDone" class="form-control" />
+                <span asp-validation-for="DateDone" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="DateClientNotified" class="col-md-2 control-label"></label>
+            <div class="input-group col-md-10">
+                <span class="input-group-addon">
+                    <input type="checkbox" id="CheckboxClientNotified" asp-for="ClientNotified" />
+                </span>
+                <input id="InputDateClientNotified" asp-for="DateClientNotified" class="form-control" />
+                <span asp-validation-for="DateClientNotified" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="DateSent" class="col-md-2 control-label"></label>
+            <div class="input-group col-md-10">
+                <span class="input-group-addon">
+                    <input type="checkbox" id="CheckboxSent" asp-for="Sent" />
+                </span>
+                <input id="InputDateSent" asp-for="DateSent" class="form-control" />
+                <span asp-validation-for="DateSent" class="text-danger"></span>
+            </div>
+        </div>
+        @*<div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <div  class="checkbox">
+                <div class="checkbox">
                     <input id="CheckboxDone" asp-for="Done" />
                     <label asp-for="Done"></label>
                 </div>
@@ -36,7 +70,7 @@
                     <label asp-for="Sent"></label>
                 </div>
             </div>
-        </div>
+        </div>*@
         @*<div class="form-group">
             <label asp-for="DateDue" class="col-md-2 control-label"></label>
             <div class="col-md-10">
@@ -44,14 +78,14 @@
                 <span asp-validation-for="DateDue" class="text-danger"></span>
             </div>
         </div>*@
-        <div class="form-group">
+        @*<div class="form-group">
             <label asp-for="DateDone" class="col-md-2 control-label"></label>
             <div class="col-md-10">
                 <input id="InputDateDone" asp-for="DateDone" class="form-control" />
                 <span asp-validation-for="DateDone" class="text-danger"></span>
             </div>
-        </div>
-        <div class="form-group">
+        </div>*@
+        @*<div class="form-group">
             <label asp-for="DateClientNotified" class="col-md-2 control-label"></label>
             <div class="col-md-10">
                 <input id="InputDateClientNotified" asp-for="DateClientNotified" class="form-control" />
@@ -64,7 +98,7 @@
                 <input id="InputDateSent" asp-for="DateSent" class="form-control" />
                 <span asp-validation-for="DateSent" class="text-danger"></span>
             </div>
-        </div>
+        </div>*@
         <div class="form-group">
             <label asp-for="BusinessContact" class="col-md-2 control-label"></label>
             <div class="col-md-10">
@@ -82,28 +116,28 @@
         <div class="form-group">
             <label asp-for="DueDate1" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="DueDate1" class="form-control" />
+                <input asp-for="DueDate1" id="DueDate1" class="form-control" />
                 <span asp-validation-for="DueDate1" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
             <label asp-for="DueDate2" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="DueDate2" class="form-control" />
+                <input asp-for="DueDate2" id="DueDate2" class="form-control" />
                 <span asp-validation-for="DueDate2" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
             <label asp-for="DueDate3" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="DueDate3" class="form-control" />
+                <input asp-for="DueDate3" id="DueDate3" class="form-control" />
                 <span asp-validation-for="DueDate3" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
             <label asp-for="DueDate4" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="DueDate4" class="form-control" />
+                <input asp-for="DueDate4" id="DueDate4" class="form-control" />
                 <span asp-validation-for="DueDate4" class="text-danger"></span>
             </div>
         </div>
@@ -131,14 +165,14 @@
         <div class="form-group">
             <label asp-for="WorkInstructions" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="WorkInstructions" class="form-control" />
+                <textarea asp-for="WorkInstructions" class="form-control" rows="10" id="WorkInstructions"></textarea>
                 <span asp-validation-for="WorkInstructions" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
             <label asp-for="Notes" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Notes" class="form-control" />
+                <textarea asp-for="Notes" class="form-control" rows="10" id="Notes"></textarea>
                 <span asp-validation-for="Notes" class="text-danger"></span>
             </div>
         </div>

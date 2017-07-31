@@ -8,8 +8,8 @@ namespace ReportOverviewApp.Models.WidgetModels
 {
     public static class WidgetFunctions
     {
-        private static Func<Report, bool> Before(DateTime date) => r => r.DateDue <= date;
-        private static Func<Report, bool> After(DateTime date) => r => r.DateDue >= date;
+        private static Func<Report, bool> Before(DateTime date) => r => r.Deadline() <= date;
+        private static Func<Report, bool> After(DateTime date) => r => r.Deadline() >= date;
         //private static Func<Report, Func<Report, bool>, Func<Report, bool>, bool> Between(DateTime beginning, DateTime end)
         //{
         //    return (r, a, b) => r => a => b;

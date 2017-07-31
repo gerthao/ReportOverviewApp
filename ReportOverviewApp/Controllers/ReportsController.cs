@@ -73,7 +73,7 @@ namespace ReportOverviewApp.Controllers
                         viewModel.Reports = viewModel.Reports.OrderBy(report => report.Name);
                         break;
                     case "Deadline":
-                        viewModel.Reports = viewModel.Reports.OrderBy(report => report.DateDue);
+                        viewModel.Reports = viewModel.Reports.OrderBy(report => report.Deadline());
                         break;
                     default:
                         viewModel.Reports = viewModel.Reports.OrderBy(report => report.ID);

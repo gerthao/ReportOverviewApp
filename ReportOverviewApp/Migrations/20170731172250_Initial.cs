@@ -74,7 +74,6 @@ namespace ReportOverviewApp.Migrations
                     DateAdded = table.Column<DateTime>(nullable: true),
                     DateClientNotified = table.Column<DateTime>(nullable: true),
                     DateDone = table.Column<DateTime>(nullable: true),
-                    DateDue = table.Column<DateTime>(nullable: true),
                     DateSent = table.Column<DateTime>(nullable: true),
                     DayDue = table.Column<string>(maxLength: 10, nullable: true),
                     DaysAfterQuarter = table.Column<int>(maxLength: 20, nullable: true),

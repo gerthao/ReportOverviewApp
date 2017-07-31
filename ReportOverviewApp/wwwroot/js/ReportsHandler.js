@@ -6,32 +6,40 @@ $(document).ready(function () {
     });
     $("#beginDatepicker").datepicker();
     $("#endDatepicker").datepicker();
+    $("#DueDate1").datepicker();
+    $("#DueDate2").datepicker();
+    $("#DueDate3").datepicker();
+    $("#DueDate4").datepicker();
     $("#ViewTableButton").click(function () {
         $("#ReportTable").toggleClass("table-condensed");
     });
     $('#QuickFilter').keyup(function () {
     });
     $('#CheckboxDone').click(function () {
-        if ($('#InputDateDone').val() === '') {
-            var date = new Date();
-            $('#InputDateDone').val((date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear());
-        } else {
+        if ($('#InputDateDone').val() === '' && $('#CheckboxDone:checked').val()) {
+                var date = new Date();
+                $('#InputDateDone').val((date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear());
+                return;
+        }
+        if ($('#InputDateDone').val() !== '' && !$('#CheckboxDone:checked').val()) {
             $('#InputDateDone').val('');
         }
     });
     $('#CheckboxClientNotified').click(function () {
-        if ($('#InputDateClientNotified').val() === '') {
+        if ($('#InputDateClientNotified').val() === '' && $('#CheckboxClientNotified:checked').val()) {
             var date = new Date();
             $('#InputDateClientNotified').val((date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear());
-        } else {
+            return;
+        } if ($('#InputDateClientNotifed').val() !== '' && !$('#CheckboxClientNotified:checked').val()){
             $('#InputDateClientNotified').val('');
         }
     });
     $('#CheckboxSent').click(function () {
-        if ($('#InputDateSent').val() === '') {
+        if ($('#InputDateSent').val() === '' && $('#CheckboxSent:checked').val()) {
             var date = new Date();
             $('#InputDateSent').val((date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear());
-        } else {
+            return;
+        } if ($('#InputDateSent').val() !== '' && !$('#CheckboxSent:checked').val()) {
             $('#InputDateSent').val('');
         }
     });
