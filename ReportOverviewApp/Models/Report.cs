@@ -22,8 +22,6 @@ namespace ReportOverviewApp.Models
         public bool Sent { get; set; }
 
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}")]
-        public DateTime? DateDue { get; set; }
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}")]
         public DateTime? DateDone { get; set; }
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}")]
         public DateTime? DateClientNotified { get; set; }

@@ -29,10 +29,10 @@
             @Html.DisplayFor(model => model.Sent)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.DateDue)
+            Upcoming Deadline
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.DateDue)
+            @Model.Deadline()
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.DateDone)
