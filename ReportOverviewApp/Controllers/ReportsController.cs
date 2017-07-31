@@ -46,7 +46,19 @@ namespace ReportOverviewApp.Controllers
         private SearchTokenizer tokenizer;
         private ReportViewModel GetReportViewModel(string search, string column, int recordsPerPage, int pageIndex, string plan, DateTime? begin, DateTime? end)
         {
-            if (viewModel == null) viewModel = new ReportViewModel(){Reports = from r in _context.Reports select r};
+            if (viewModel == null)
+            {
+                viewModel = new ReportViewModel()
+                {
+                    Reports = from r in _context.Reports select r,
+                    SortAscending = new Dictionary<string, bool>()
+                    {
+                        { "ID", true },
+                        { "Name", true },
+                        { "Deadline", true }
+                    }
+                };
+            }
             HandlePlan(plan);
             HandleSearch(search);
             HandleSort(column);
@@ -67,18 +79,22 @@ namespace ReportOverviewApp.Controllers
                 viewModel.Column = column;
                 switch (viewModel.Column){
                     case "ID":
-                        viewModel.Reports = viewModel.Reports.OrderBy(report => report.ID);
+                        viewModel.Reports = viewModel.SortAscending["ID"]? viewModel.Reports.OrderBy(report => report.ID) : viewModel.Reports.OrderByDescending(report => report.ID);
+                        viewModel.SortAscending["ID"] = !viewModel.SortAscending["ID"];
                         break;
                     case "Name":
-                        viewModel.Reports = viewModel.Reports.OrderBy(report => report.Name);
+                        viewModel.Reports = viewModel.SortAscending["Name"]? viewModel.Reports.OrderBy(report => report.Name) : viewModel.Reports.OrderByDescending(report => report.Name);
+                        viewModel.SortAscending["Name"] = !viewModel.SortAscending["Name"];
                         break;
                     case "Deadline":
-                        viewModel.Reports = viewModel.Reports.OrderBy(report => report.Deadline());
+                        viewModel.Reports = viewModel.SortAscending["Deadline"]? viewModel.Reports.OrderBy(report => report.NearestDeadline) : viewModel.Reports.OrderByDescending(report => report.NearestDeadline);
+                        viewModel.SortAscending["Deadline"] = !viewModel.SortAscending["Deadline"];
                         break;
                     default:
-                        viewModel.Reports = viewModel.Reports.OrderBy(report => report.ID);
+                        viewModel.Reports = viewModel.SortAscending["ID"]? viewModel.Reports.OrderBy(report => report.ID) : viewModel.Reports.OrderByDescending(report => report.ID);
                         break;
                 }
+                
             }
         }
 
@@ -86,11 +102,11 @@ namespace ReportOverviewApp.Controllers
         {
             if (begin != null){
                 viewModel.Begin = begin;
-                viewModel.Reports = viewModel.Reports.Where(r => r.Deadline() >= viewModel.Begin);
+                viewModel.Reports = viewModel.Reports.Where(r => r.NearestDeadline >= viewModel.Begin);
             }
             if (end != null){
                 viewModel.End = end;
-                viewModel.Reports = viewModel.Reports.Where(r => r.Deadline() <= viewModel.End);
+                viewModel.Reports = viewModel.Reports.Where(r => r.NearestDeadline <= viewModel.End);
             }
         }
         private void HandlePlan(string plan)

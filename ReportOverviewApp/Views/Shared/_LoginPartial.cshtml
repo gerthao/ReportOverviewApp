@@ -7,7 +7,10 @@
 <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right">
     <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Account <span class="glyphicon glyphicon-menu-down"></span></a>
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                 @(SignInManager.IsSignedIn(User)? $"{User.Identity.Name} " : "Account ")
+                <span class="glyphicon glyphicon-menu-down"></span>
+            </a>
             <ul class="dropdown-menu">
                 @if (SignInManager.IsSignedIn(User))
                 {

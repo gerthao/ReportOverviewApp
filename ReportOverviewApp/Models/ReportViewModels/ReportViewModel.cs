@@ -25,7 +25,7 @@ namespace ReportOverviewApp.Models.ReportViewModels
         public string Plan { get; set; }
         public DateTime? Begin { get; set; }
         public DateTime? End { get; set; }
-
+        public Dictionary<string, bool> SortAscending { get; set; }
 
         /// <summary>
         ///  GeneratePages method calculates the number of pages needed

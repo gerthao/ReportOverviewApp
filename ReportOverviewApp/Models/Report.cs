@@ -88,7 +88,8 @@ namespace ReportOverviewApp.Models
         public string OtherReportLocation { get; set; }
         [StringLength(1000)]
         public string OtherReportName { get; set; }
-
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}"), NotMapped]
+        public DateTime? NearestDeadline { get; set; }
         [DataType(DataType.Date)]
         public DateTime? Deadline()
         {

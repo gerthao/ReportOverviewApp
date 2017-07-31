@@ -34,6 +34,10 @@ namespace ReportOverviewApp.Data
                         throw ex;
                     }
                 }
+                if (context.Reports.Any())
+                {
+                    context.Reports.ForEachAsync(r => r.NearestDeadline = r.Deadline());
+                }
             }
         }
     }
