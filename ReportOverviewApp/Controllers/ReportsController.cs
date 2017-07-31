@@ -80,15 +80,12 @@ namespace ReportOverviewApp.Controllers
                 switch (viewModel.Column){
                     case "ID":
                         viewModel.Reports = viewModel.SortAscending["ID"]? viewModel.Reports.OrderBy(report => report.ID) : viewModel.Reports.OrderByDescending(report => report.ID);
-                        viewModel.SortAscending["ID"] = !viewModel.SortAscending["ID"];
                         break;
                     case "Name":
                         viewModel.Reports = viewModel.SortAscending["Name"]? viewModel.Reports.OrderBy(report => report.Name) : viewModel.Reports.OrderByDescending(report => report.Name);
-                        viewModel.SortAscending["Name"] = !viewModel.SortAscending["Name"];
                         break;
                     case "Deadline":
-                        viewModel.Reports = viewModel.SortAscending["Deadline"]? viewModel.Reports.OrderBy(report => report.NearestDeadline) : viewModel.Reports.OrderByDescending(report => report.NearestDeadline);
-                        viewModel.SortAscending["Deadline"] = !viewModel.SortAscending["Deadline"];
+                        viewModel.Reports = viewModel.SortAscending["Deadline"]? viewModel.Reports.OrderBy(report => report.Deadline()) : viewModel.Reports.OrderByDescending(report => report.Deadline());
                         break;
                     default:
                         viewModel.Reports = viewModel.SortAscending["ID"]? viewModel.Reports.OrderBy(report => report.ID) : viewModel.Reports.OrderByDescending(report => report.ID);
@@ -102,11 +99,11 @@ namespace ReportOverviewApp.Controllers
         {
             if (begin != null){
                 viewModel.Begin = begin;
-                viewModel.Reports = viewModel.Reports.Where(r => r.NearestDeadline >= viewModel.Begin);
+                viewModel.Reports = viewModel.Reports.Where(r => r.Deadline() >= viewModel.Begin);
             }
             if (end != null){
                 viewModel.End = end;
-                viewModel.Reports = viewModel.Reports.Where(r => r.NearestDeadline <= viewModel.End);
+                viewModel.Reports = viewModel.Reports.Where(r => r.Deadline() <= viewModel.End);
             }
         }
         private void HandlePlan(string plan)

@@ -88,8 +88,6 @@ namespace ReportOverviewApp.Models
         public string OtherReportLocation { get; set; }
         [StringLength(1000)]
         public string OtherReportName { get; set; }
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}"), NotMapped]
-        public DateTime? NearestDeadline { get; set; }
         [DataType(DataType.Date)]
         public DateTime? Deadline()
         {
@@ -121,12 +119,10 @@ namespace ReportOverviewApp.Models
             {
                 DateTime? d1 = deadlines[i];
                 DateTime? d2 = deadlines[i + 1];
-                if (d1 != null && (d1.Value.Year > DateTime.Now.Year + 1 || d1.Value.Year < DateTime.Now.Year))
-                {
+                if (d1 != null && (d1.Value.Year > DateTime.Now.Year + 1 || d1.Value.Year < DateTime.Now.Year)){
                     d1 = new DateTime(year: DateTime.Now.Year, month: d1.Value.Month, day: d1.Value.Day);
                 }
-                if (d2 != null)
-                {
+                if (d2 != null){
                     d2 = new DateTime(year: d2.Value.Month < d1.Value.Month ? DateTime.Now.Year + 1 : DateTime.Now.Year, month: d2.Value.Month, day: d2.Value.Day);
                 }
                 deadlines[i] = d1;
