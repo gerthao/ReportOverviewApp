@@ -83,7 +83,7 @@ else {
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    @await Html.PartialAsync("Edit", new Report())
+                    @await Html.PartialAsync("Check", new Report())
                 </div>
             </div>
         </div>
@@ -194,14 +194,18 @@ else {
                                         alert("there is no data");
                                     } else {
                                         var report = '';
-                                        //for (var i = 0; i < data[0].length; i++) {
-                                        //    alert(data[0]);
-                                        //}
-                                        //for (var i in data[0]) {
-                                        //    report += (data[0][i]);
-                                        //}
                                         report = JSON.stringify(data[0]);
                                         $('#Tester').text(report);
+                                        for (var i in data[0]) {
+                                            $('#' + i).val(data[0][i]);
+                                            if (i === "dateDone" && data[0][i] != null) {
+                                                $('#done').prop('checked', true);
+                                            } if (i === 'dateClientNotified' && data[0][i] != null) {
+                                                $('#clientNotified').prop('checked', true);
+                                            } if (i === 'dateSent' && data[0][i] != null) {
+                                                $('#sent').prop('checked', true);
+                                            }
+                                        }
                                     }
                                 },
                                 error: function () {

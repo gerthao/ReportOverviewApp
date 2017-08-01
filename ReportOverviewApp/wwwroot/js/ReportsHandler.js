@@ -15,53 +15,53 @@ $(document).ready(function () {
     });
     $('#QuickFilter').keyup(function () {
     });
-    $('#CheckboxDone').click(function () {
-        if ($('#InputDateDone').val() === '' && $('#CheckboxDone:checked').val()) {
+    $('#done').click(function () {
+        if ($('#dateDone').val() === '' && $('#done:checked').val()) {
                 var date = new Date();
-                $('#InputDateDone').val((date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear());
+                $('#dateDone').val((date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear());
                 return;
         }
-        if ($('#InputDateDone').val() !== '' && !$('#CheckboxDone:checked').val()) {
-            $('#InputDateDone').val('');
+        if ($('#dateDone').val() !== '' && !$('#done:checked').val()) {
+            $('#dateDone').val('');
         }
     });
-    $('#CheckboxClientNotified').click(function () {
-        if ($('#InputDateClientNotified').val() === '' && $('#CheckboxClientNotified:checked').val()) {
+    $('#clientNotified').click(function () {
+        if ($('#dateClientNotified').val() === '' && $('#clientNotified:checked').val()) {
             var date = new Date();
-            $('#InputDateClientNotified').val((date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear());
+            $('#dateClientNotified').val((date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear());
             return;
-        } if ($('#InputDateClientNotifed').val() !== '' && !$('#CheckboxClientNotified:checked').val()){
-            $('#InputDateClientNotified').val('');
+        } if ($('#dateClientNotifed').val() !== '' && !$('#clientNotified:checked').val()){
+            $('#dateClientNotified').val('');
         }
     });
-    $('#CheckboxSent').click(function () {
-        if ($('#InputDateSent').val() === '' && $('#CheckboxSent:checked').val()) {
+    $('#sent').click(function () {
+        if ($('#dateSent').val() === '' && $('#sent:checked').val()) {
             var date = new Date();
-            $('#InputDateSent').val((date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear());
+            $('#dateSent').val((date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear());
             return;
-        } if ($('#InputDateSent').val() !== '' && !$('#CheckboxSent:checked').val()) {
-            $('#InputDateSent').val('');
+        } if ($('#dateSent').val() !== '' && !$('#sent:checked').val()) {
+            $('#dateSent').val('');
         }
     });
-    $('#InputDateDone').on('input', function (e) {
+    $('#dateDone').on('input', function (e) {
         if ($(this).val() !== '') {
-            $('#CheckboxDone').prop('checked', true);
+            $('#done').prop('checked', true);
         } else {
-            $('#CheckboxDone').prop('checked', false);
+            $('#done').prop('checked', false);
         }
     });
-    $('#InputDateClientNotified').on('input', function (e) {
+    $('#dateClientNotified').on('input', function (e) {
         if ($(this).val() !== '') {
-            $('#CheckboxClientNotified').prop('checked', true);
+            $('#clientNotified').prop('checked', true);
         } else {
-            $('#CheckboxClientNotified').prop('checked', false);
+            $('#clientNotified').prop('checked', false);
         }
     });
-    $('#InputDateSent').on('input', function (e) {
+    $('#dateSent').on('input', function (e) {
         if ($(this).val() !== '') {
-            $('#CheckboxSent').prop('checked', true);
+            $('#sent').prop('checked', true);
         } else {
-            $('#CheckboxSent').prop('checked', false);
+            $('#sent').prop('checked', false);
         }
     });
 

@@ -197,6 +197,35 @@ namespace ReportOverviewApp.Controllers
             return View(report);
         }
 
+        [HttpPost, ValidateAntiForgeryToken, Authorize]
+        public async Task<IActionResult> Check(int? id, [Bind("Done,ClientNotified,Sent,DateDue,DateDone,DateClientNotified,DateSent")] Report report)
+        {
+            Report _report = (from r in _context.Reports where r.ID == id select r).Single();
+            if (id != report.ID) return NotFound();
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _report.Done = report.Done;
+                    _report.DateDone = report.DateDone;
+                    _report.ClientNotified = report.ClientNotified;
+                    _report.DateClientNotified = report.DateClientNotified;
+                    _report.Sent = report.Sent;
+                    _report.DateSent = report.DateSent;
+                    _context.Update(_report);
+                    await _context.SaveChangesAsync();
+                    //may have to use hidden inputs in the Check view//
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ReportExists(report.ID)) return NotFound();
+                    else throw;
+                }
+                return RedirectToAction("Index");
+            }
+            return View(_report);
+        }
+
         // POST: Reports/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
