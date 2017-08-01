@@ -67,11 +67,11 @@ namespace ReportOverviewApp.Controllers
             viewModel.Reports = viewModel.DisplayPage(pageIndex);
             return viewModel;
         }
-        [HttpPost]
-        public ActionResult JsonInfo(int? id)
+        
+        public JsonResult JsonInfo(int? id)
         {
             var report = from r in _context.Reports where r.ID == id select r;
-            return Json(report, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            return Json(report);
         }
         private void HandleSort(string column)
         {

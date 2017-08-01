@@ -66,8 +66,8 @@ else {
                         <text>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateSent)</text>
                     </td>
                     <td>
-                        @*@{ var testing = $"\"id\" : {i}"; }
-                        <a id="EditReportLink" onclick="EditReport('@testing')" data-toggle="modal" data-target="#EditReportModal">Edit</a>*@
+                        @{ var testing = $"\"id\" : {i}"; }
+                        <a id="EditReportLink" onclick="EditReport()" data-toggle="modal" data-target="#EditReportModal"><span class="glyphicon glyphicon-edit"></span></a>
                         <a asp-action="Edit" asp-route-id="@Model.Reports.ElementAt(i).ID">Edit</a> |
                         <a asp-action="Details" asp-route-id="@Model.Reports.ElementAt(i).ID">Details</a> |
                         <a asp-action="Delete" asp-route-id="@Model.Reports.ElementAt(i).ID">Delete</a>
@@ -182,22 +182,26 @@ else {
                 function () {
                     $('tr').click(function () {
                         var currentIndex = $(this).parent().children().index($(this)) + 1;
-                        var link = "JsonInfo/" + currentIndex; 
+                        var link = uri + "/JsonInfo/" + currentIndex; 
                         try {
                             $.ajax({
-                                url: '@Url.Action("JsonInfo/1", "Reports")',
-                                type: "POST",
+                                url: link,
+                                type: "GET",
                                 dataType: 'json',
                                 contentType: 'application/json; charset=utf-8',
                                 success: function (data) {
                                     if (data === null) {
                                         alert("there is no data");
-
                                     } else {
-                                        //var yesboy = JSON.parse(data);
-                                        alert(data[1]);
-                                        //$("#Tester").val(yesboy);
-
+                                        var report = '';
+                                        //for (var i = 0; i < data[0].length; i++) {
+                                        //    alert(data[0]);
+                                        //}
+                                        //for (var i in data[0]) {
+                                        //    report += (data[0][i]);
+                                        //}
+                                        report = JSON.stringify(data[0]);
+                                        $('#Tester').text(report);
                                     }
                                 },
                                 error: function () {
