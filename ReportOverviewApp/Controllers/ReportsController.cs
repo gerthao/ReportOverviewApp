@@ -44,6 +44,7 @@ namespace ReportOverviewApp.Controllers
         //}
         private ReportViewModel viewModel;
         private SearchTokenizer tokenizer;
+        private UserLogFactory userLogFactory;
         private ReportViewModel GetReportViewModel(string search, string column, int recordsPerPage, int pageIndex, string plan, DateTime? begin, DateTime? end)
         {
             if (viewModel == null)
@@ -133,7 +134,11 @@ namespace ReportOverviewApp.Controllers
                 viewModel.Reports = viewModel.Reports.Where(r => r != null && r.Name != null && r.Name.ToLowerInvariant().Contains(viewModel.Search.ToLowerInvariant()));
             }
         }
-        public ReportsController(ApplicationDbContext context) => _context = context;
+        public ReportsController(ApplicationDbContext context)
+        {
+            _context = context;
+            userLogFactory = new UserLogFactory();
+        }
 
         // GET: Reports
         [Authorize]
@@ -181,6 +186,7 @@ namespace ReportOverviewApp.Controllers
         {
             if (ModelState.IsValid){
                 _context.Add(report);
+                _context.Add(userLogFactory.Build(_context.Users.Where(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault().Id, $"Report {report.Name} has been created."));
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
@@ -197,34 +203,34 @@ namespace ReportOverviewApp.Controllers
             return View(report);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Authorize]
-        public async Task<IActionResult> Check(int? id, [Bind("Done,ClientNotified,Sent,DateDue,DateDone,DateClientNotified,DateSent")] Report report)
-        {
-            Report _report = (from r in _context.Reports where r.ID == id select r).Single();
-            if (id != report.ID) return NotFound();
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _report.Done = report.Done;
-                    _report.DateDone = report.DateDone;
-                    _report.ClientNotified = report.ClientNotified;
-                    _report.DateClientNotified = report.DateClientNotified;
-                    _report.Sent = report.Sent;
-                    _report.DateSent = report.DateSent;
-                    _context.Update(_report);
-                    await _context.SaveChangesAsync();
-                    //may have to use hidden inputs in the Check view//
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ReportExists(report.ID)) return NotFound();
-                    else throw;
-                }
-                return RedirectToAction("Index");
-            }
-            return View(_report);
-        }
+        //[HttpPost, ValidateAntiForgeryToken, Authorize]
+        //public async Task<IActionResult> Check(int? id, [Bind("Done,ClientNotified,Sent,DateDue,DateDone,DateClientNotified,DateSent")] Report report)
+        //{
+        //    Report _report = (from r in _context.Reports where r.ID == id select r).Single();
+        //    if (id != report.ID) return NotFound();
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            _report.Done = report.Done;
+        //            _report.DateDone = report.DateDone;
+        //            _report.ClientNotified = report.ClientNotified;
+        //            _report.DateClientNotified = report.DateClientNotified;
+        //            _report.Sent = report.Sent;
+        //            _report.DateSent = report.DateSent;
+        //            _context.Update(_report);
+        //            await _context.SaveChangesAsync();
+        //            //may have to use hidden inputs in the Check view//
+        //        }
+        //        catch (DbUpdateConcurrencyException)
+        //        {
+        //            if (!ReportExists(report.ID)) return NotFound();
+        //            else throw;
+        //        }
+        //        return RedirectToAction("Index");
+        //    }
+        //    return View(_report);
+        //}
 
         // POST: Reports/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -236,6 +242,7 @@ namespace ReportOverviewApp.Controllers
             if (ModelState.IsValid){
                 try{
                     _context.Update(report);
+                    _context.Add(userLogFactory.Build(_context.Users.Where(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault().Id, $"Report {report.Name} has been edited."));
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException){
@@ -263,6 +270,7 @@ namespace ReportOverviewApp.Controllers
         {
             var report = await _context.Reports.SingleOrDefaultAsync(m => m.ID == id);
             _context.Reports.Remove(report);
+            _context.Add(userLogFactory.Build(_context.Users.Where(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault().Id, $"Report {report.Name} has been deleted."));
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }

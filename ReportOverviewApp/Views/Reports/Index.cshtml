@@ -190,23 +190,7 @@ else {
                                 dataType: 'json',
                                 contentType: 'application/json; charset=utf-8',
                                 success: function (data) {
-                                    if (data === null) {
-                                        alert("there is no data");
-                                    } else {
-                                        var report = '';
-                                        report = JSON.stringify(data[0]);
-                                        $('#Tester').text(report);
-                                        for (var i in data[0]) {
-                                            $('#' + i).val(data[0][i]);
-                                            if (i === "dateDone" && data[0][i] != null) {
-                                                $('#done').prop('checked', true);
-                                            } if (i === 'dateClientNotified' && data[0][i] != null) {
-                                                $('#clientNotified').prop('checked', true);
-                                            } if (i === 'dateSent' && data[0][i] != null) {
-                                                $('#sent').prop('checked', true);
-                                            }
-                                        }
-                                    }
+                                    handleJSONReport(data);
                                 },
                                 error: function () {
                                     alert("failed: " + link);
@@ -218,6 +202,25 @@ else {
                     });
                 }
             );
+            function handleJSONReport(data) {
+                if (data === null) {
+                    alert("there is no data");
+                } else {
+                    var report = '';
+                    report = JSON.stringify(data[0]);
+                    $('#Tester').text(report);
+                    for (var i in data[0]) {
+                        $('#' + i).val(data[0][i]);
+                        if (i === "dateDone" && data[0][i] != null) {
+                            $('#done').prop('checked', true);
+                        } if (i === 'dateClientNotified' && data[0][i] != null) {
+                            $('#clientNotified').prop('checked', true);
+                        } if (i === 'dateSent' && data[0][i] != null) {
+                            $('#sent').prop('checked', true);
+                        }
+                    }
+                }
+            }
         }
     </script>
 }

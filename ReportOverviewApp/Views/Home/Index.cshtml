@@ -76,6 +76,39 @@
                 </div>
             </div>
         </div>
+        <div class="col-sm-12">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td>
+                            User Logs
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        @if (Model.UserLogs == null || Model.UserLogs.Count() == 0)
+                        {
+                            <td>
+                                No logs present
+                            </td>
+
+                        }
+                        else
+                        {
+                            @foreach(var log in Model.UserLogs)
+                            {
+                                <td>
+                                    @log.ToString()
+                                </td>
+
+                            }
+
+                        }
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
     <div>
         @*@await Html.PartialAsync("_Widget")*@

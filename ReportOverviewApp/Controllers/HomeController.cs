@@ -61,7 +61,8 @@ namespace ReportOverviewApp.Controllers
             var viewModel = new HomeViewModel()
             {
                 Reports = from r in _context.Reports select r,
-                Widgets = wid
+                Widgets = wid,
+                UserLogs = from u in _context.UserLogs select u
             };
             return View(viewModel);
         }
