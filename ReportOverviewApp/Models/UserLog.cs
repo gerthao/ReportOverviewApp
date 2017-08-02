@@ -12,7 +12,7 @@ namespace ReportOverviewApp.Models
         public string Message { get; set; }
         public DateTime? TimeStamp { get; set; }
 
-        public string ToString(string User)
+        public override string ToString()
         {
             return $"{TimeStamp.Value.ToString()}:  {Message}";
         }

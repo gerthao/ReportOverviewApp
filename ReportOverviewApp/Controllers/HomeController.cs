@@ -62,6 +62,7 @@ namespace ReportOverviewApp.Controllers
             {
                 Reports = from r in _context.Reports select r,
                 Widgets = wid,
+                Users = _context.Users.ToDictionary(usr => usr.Id, usr => usr.UserName),
                 UserLogs = from u in _context.UserLogs select u
             };
             return View(viewModel);

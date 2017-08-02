@@ -18,7 +18,7 @@ namespace ReportOverviewApp.Helpers
             {
                 UserID = _userId,
                 Message = _message,
-                TimeStamp = _timeStamp == null ? new DateTime() : _timeStamp
+                TimeStamp = _timeStamp == null ? DateTime.Now: _timeStamp
             };
             return item;
         }

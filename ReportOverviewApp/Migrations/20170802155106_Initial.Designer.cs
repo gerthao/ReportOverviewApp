@@ -8,7 +8,7 @@ using ReportOverviewApp.Data;
 namespace ReportOverviewApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20170801163411_Initial")]
+    [Migration("20170802155106_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -283,6 +283,22 @@ namespace ReportOverviewApp.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Report");
+                });
+
+            modelBuilder.Entity("ReportOverviewApp.Models.UserLog", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Message");
+
+                    b.Property<DateTime?>("TimeStamp");
+
+                    b.Property<string>("UserID");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("UserLog");
                 });
 
             modelBuilder.Entity("ReportOverviewApp.Models.WidgetModels.Widget", b =>

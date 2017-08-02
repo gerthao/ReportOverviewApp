@@ -116,6 +116,21 @@ namespace ReportOverviewApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserLog",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Message = table.Column<string>(nullable: true),
+                    TimeStamp = table.Column<DateTime>(nullable: true),
+                    UserID = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserLog", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Widget",
                 columns: table => new
                 {
@@ -274,6 +289,9 @@ namespace ReportOverviewApp.Migrations
 
             migrationBuilder.DropTable(
                 name: "Report");
+
+            migrationBuilder.DropTable(
+                name: "UserLog");
 
             migrationBuilder.DropTable(
                 name: "Widget");

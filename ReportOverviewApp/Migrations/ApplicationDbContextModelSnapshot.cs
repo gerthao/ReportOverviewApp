@@ -284,6 +284,22 @@ namespace ReportOverviewApp.Migrations
                     b.ToTable("Report");
                 });
 
+            modelBuilder.Entity("ReportOverviewApp.Models.UserLog", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Message");
+
+                    b.Property<DateTime?>("TimeStamp");
+
+                    b.Property<string>("UserID");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("UserLog");
+                });
+
             modelBuilder.Entity("ReportOverviewApp.Models.WidgetModels.Widget", b =>
                 {
                     b.Property<int>("ID")

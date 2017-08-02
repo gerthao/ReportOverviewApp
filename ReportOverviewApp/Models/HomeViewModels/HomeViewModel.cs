@@ -14,7 +14,16 @@ namespace ReportOverviewApp.Models.HomeViewModels
     {
         public IEnumerable<Report> Reports { get; set; }
         public IEnumerable<Widget> Widgets { get; set; }
-        public IEnumerable<ApplicationUser> Users { get; set; }
+        public Dictionary<string, string> Users { get; set; }
         public IEnumerable<UserLog> UserLogs { get; set; }
+
+        public string GetUserName(string userId)
+        {
+            foreach(var usr in Users)
+            {
+                if (usr.Key.Equals(userId)) return usr.Value;
+            }
+            return "No user";
+        }
     }
 }

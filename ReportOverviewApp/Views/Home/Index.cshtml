@@ -77,35 +77,38 @@
             </div>
         </div>
         <div class="col-sm-12">
-            <table class="table">
+            <h4>User Logs</h4>
+            <table class="table table-bordered">
                 <thead>
-                    <tr>
-                        <td>
-                            User Logs
-                        </td>
-                    </tr>
                 </thead>
                 <tbody>
-                    <tr>
                         @if (Model.UserLogs == null || Model.UserLogs.Count() == 0)
                         {
-                            <td>
-                                No logs present
-                            </td>
-
+                            <tr>                                
+                                <td>
+                                    No logs present
+                                </td>
+                            </tr>
                         }
                         else
                         {
-                            @foreach(var log in Model.UserLogs)
+                            @foreach (var log in Model.UserLogs.OrderByDescending(m => m.ID))
                             {
-                                <td>
-                                    @log.ToString()
-                                </td>
-
+                                <tr>
+                                    <td class="col-sm-8">
+                                        @log.Message
+                                    </td>
+                                    <td class="col-sm-2">
+                                        @log.TimeStamp
+                                    </td>
+                                    <td class="col-sm-2">
+                                        @Model.GetUserName(log.UserID)
+                                    </td>
+                                    
+                                    
+                                </tr>
                             }
-
                         }
-                    </tr>
                 </tbody>
             </table>
         </div>
