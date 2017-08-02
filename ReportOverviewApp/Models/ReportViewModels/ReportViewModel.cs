@@ -12,8 +12,10 @@ namespace ReportOverviewApp.Models.ReportViewModels
     public class ReportViewModel
     {
         public IEnumerable<Report> Reports { get; set; }
-        public IEnumerable<string> Plans { get; private set; }
-        public IEnumerable<string> States { get; private set; }
+        public IEnumerable<Report> AllReports { get; set; }
+        public IEnumerable<string> Plans { get; set; }
+        public IEnumerable<string> States { get; set; }
+        public string Frequency { get; set; }
         private int Pages { get; set; }
         private int PageSize { get; set; }
         public int CurrentPage { get; private set; } = 1;
@@ -68,7 +70,7 @@ namespace ReportOverviewApp.Models.ReportViewModels
             CurrentPage = index;
             return Reports.Skip((CurrentPage - 1)*PageSize).Take(PageSize);
         }
-
+        
         public string DisplayDateTimeAsDate(DateTime? date)
         {
             if (date == null || !date.HasValue) return null;

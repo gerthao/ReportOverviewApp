@@ -50,7 +50,7 @@ else {
             @for (int i = 0; i < Model.Reports.Count(); i++)
             {
                 <tr>
-                    <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).ID)</td>
+                    <td class="ReportID">@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).ID)</td>
                     <td class="ReportName">@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Name)</td>
                     <td>@Model.DisplayDateTimeAsDate(Model.Reports.ElementAt(i).Deadline())</td>
                     <td>
@@ -66,9 +66,8 @@ else {
                         <text>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateSent)</text>
                     </td>
                     <td>
-                        @{ var testing = $"\"id\" : {i}"; }
-                        <a id="EditReportLink" onclick="EditReport()" data-toggle="modal" data-target="#EditReportModal"><span class="glyphicon glyphicon-edit"></span></a>
-                        <a asp-action="Edit" asp-route-id="@Model.Reports.ElementAt(i).ID">Edit</a> |
+                        <a id="EditReportLink" data-toggle="modal" data-target="#EditReportModal"><span class="glyphicon glyphicon-edit"></span></a>
+                        @*<a asp-action="Edit" asp-route-id="@Model.Reports.ElementAt(i).ID">Edit</a>*@ |
                         <a asp-action="Details" asp-route-id="@Model.Reports.ElementAt(i).ID">Details</a> |
                         <a asp-action="Delete" asp-route-id="@Model.Reports.ElementAt(i).ID">Delete</a>
                     </td>
@@ -142,14 +141,14 @@ else {
                         if (i == Model.CurrentPage)
                         {
                             <li class="active" style="color:white;">
-                                <span>@Html.ActionLink(@i.ToString(), "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = @i })</span>
+                                <span>@Html.ActionLink(@i.ToString(), "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = @i, begin = Model.Begin, end = Model.End })</span>
                             </li>
 
                         }
                         else
                         {
                             <li>
-                                <span>@Html.ActionLink(@i.ToString(), "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = @i })</span>
+                                <span>@Html.ActionLink(@i.ToString(), "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = @i, begin = Model.Begin, end = Model.End })</span>
                             </li>
                         }
                     }
@@ -173,54 +172,4 @@ else {
             </ul>       
         </div>
     </nav>
-    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
-    <script type="text/javascript">
-        var uri = window.location.href;
-        function EditReport(input) {
-            $(document).ready(
-                function () {
-                    $('tr').click(function () {
-                        var currentIndex = $(this).parent().children().index($(this)) + 1;
-                        var link = uri + "/JsonInfo/" + currentIndex; 
-                        try {
-                            $.ajax({
-                                url: link,
-                                type: "GET",
-                                dataType: 'json',
-                                contentType: 'application/json; charset=utf-8',
-                                success: function (data) {
-                                    handleJSONReport(data);
-                                },
-                                error: function () {
-                                    alert("failed: " + link);
-                                }
-                            });
-                        } catch (err) {
-                            alert(err);
-                        }
-                    });
-                }
-            );
-            function handleJSONReport(data) {
-                if (data === null) {
-                    alert("there is no data");
-                } else {
-                    var report = '';
-                    report = JSON.stringify(data[0]);
-                    $('#Tester').text(report);
-                    for (var i in data[0]) {
-                        $('#' + i).val(data[0][i]);
-                        if (i === "dateDone" && data[0][i] != null) {
-                            $('#done').prop('checked', true);
-                        } if (i === 'dateClientNotified' && data[0][i] != null) {
-                            $('#clientNotified').prop('checked', true);
-                        } if (i === 'dateSent' && data[0][i] != null) {
-                            $('#sent').prop('checked', true);
-                        }
-                    }
-                }
-            }
-        }
-    </script>
 }

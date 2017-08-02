@@ -12,6 +12,10 @@
     .widget-option-menu{
         text-align: left;
     }
+    .table-scrollable{
+        max-height: 240px;
+        overflow: auto;
+    }
 </style>
 <h3 class="page-header">
     Overview (Home Page)
@@ -78,39 +82,52 @@
         </div>
         <div class="col-sm-12">
             <h4>User Logs</h4>
-            <table class="table table-bordered">
-                <thead>
-                </thead>
-                <tbody>
-                        @if (Model.UserLogs == null || Model.UserLogs.Count() == 0)
-                        {
-                            <tr>                                
-                                <td>
-                                    No logs present
-                                </td>
+            <div class="col-sm-12">
+                <div class="table-scrollable">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Message
+                                </th>
+                                <th>
+                                    Timestamp
+                                </th>
+                                <th>
+                                    User
+                                </th>
                             </tr>
-                        }
-                        else
-                        {
-                            @foreach (var log in Model.UserLogs.OrderByDescending(m => m.ID))
+                        </thead>
+                        <tbody>
+                            @if (Model.UserLogs == null || Model.UserLogs.Count() == 0)
                             {
                                 <tr>
-                                    <td class="col-sm-8">
-                                        @log.Message
+                                    <td>
+                                        No logs present
                                     </td>
-                                    <td class="col-sm-2">
-                                        @log.TimeStamp
-                                    </td>
-                                    <td class="col-sm-2">
-                                        @Model.GetUserName(log.UserID)
-                                    </td>
-                                    
-                                    
                                 </tr>
                             }
-                        }
-                </tbody>
-            </table>
+                            else
+                            {
+                                @foreach (var log in Model.UserLogs.OrderByDescending(m => m.ID))
+                                {
+                                    <tr>
+                                        <td class="col-sm-8">
+                                            @log.Message
+                                        </td>
+                                        <td class="col-sm-2">
+                                            @log.TimeStamp
+                                        </td>
+                                        <td class="col-sm-2">
+                                            @Model.GetUserName(log.UserID)
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
     <div>

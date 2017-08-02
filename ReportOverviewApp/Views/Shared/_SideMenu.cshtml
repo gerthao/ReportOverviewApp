@@ -6,7 +6,7 @@
         width: 0; /* 0 width - change this with JavaScript */
         position: fixed; /* Stay in place */
         z-index: 1; /* Stay on top */
-        top: 4%;
+        top: 35px;
         left: 0;
         background-color: #111; /* Black*/
         overflow-x: hidden; /* Disable horizontal scroll */
@@ -41,8 +41,9 @@
 <div id="mySidenav" class="sidenav">
     @*<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>*@
     <a asp-area="" asp-controller="Home" asp-action="Index">Overview</a>
-    <a asp-area="" asp-controller="Reports" asp-action="Index">Upcoming Reports</a>
+    @Html.ActionLink("Upcoming Reports", "..\\Reports", new { begin = DateTime.Today, end = DateTime.Today.AddDays(14)})
     <a asp-area="" asp-controller="Reports" asp-action="SelectPlan">Select Plan</a>
+    <a asp-area="" asp-controller="Reports" asp-action="Directory">Directory</a>
     <a asp-area="" asp-controller="Reports" asp-action="Index">Reporting Catalogue</a>
 
     @*<button onclick="openClosePlanNav()" class="btn btn-link navbar-link">
@@ -67,7 +68,6 @@
 
 <script>
     var isOpen = isHidden();
-
     function isHidden() {
         var value = document.getElementById("mySidenav");
         if (value != null && value.style != null) {
@@ -77,10 +77,8 @@
     /* Set the width of the side navigation to 250px */
     function openNav() {
         document.getElementById("mySidenav").style.width = "11%";
-
         isOpen = true;
     }
-
     /* Set the width of the side navigation to 0 */
     function closeNav() {
         if (document.getElementById("PlanNav") !== null) {
@@ -88,9 +86,7 @@
         }
         document.getElementById("mySidenav").style.width = "0";
         isOpen = false;
-
     }
-
     function openCloseNav() {
         if (isOpen) {
             if (document.getElementById("PlanNav") !== null && document.getElementById("PlanNav").style.width === "89%"){

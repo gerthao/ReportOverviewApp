@@ -4,16 +4,17 @@ $(document).ready(function () {
     $("#ClearSearchForm").click(function () {
         $('input').val(null);
     });
+    $('#frequencyList li a').click(function () {
+        $('#frequencyInput').val($(this).html());
+    });
     $("#beginDatepicker").datepicker();
     $("#endDatepicker").datepicker();
-    $("#DueDate1").datepicker();
-    $("#DueDate2").datepicker();
-    $("#DueDate3").datepicker();
-    $("#DueDate4").datepicker();
+    $("#dueDate1").datepicker();
+    $("#dueDate2").datepicker();
+    $("#dueDate3").datepicker();
+    $("#dueDate4").datepicker();
     $("#ViewTableButton").click(function () {
         $("#ReportTable").toggleClass("table-condensed");
-    });
-    $('#QuickFilter').keyup(function () {
     });
     $('#done').click(function () {
         if ($('#dateDone').val() === '' && $('#done:checked').val()) {
@@ -64,6 +65,49 @@ $(document).ready(function () {
             $('#sent').prop('checked', false);
         }
     });
-
-    
+    var root = window.location.origin;
+    $(document).ready(
+        function () {
+            $('#ReportTable tr').on("click", function () {
+                //var currentIndex = $(this).parent().children().index($(this)) + 1;
+                var retrievedID = $(this).find(".ReportID").html();
+                var link = root + "/Reports/JsonInfo/" + retrievedID;
+                try {
+                    $.ajax({
+                        url: link,
+                        type: "GET",
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+                            handleJSONReport(data);
+                        },
+                        error: function () {
+                            alert("failed: " + link);
+                        }
+                    });
+                } catch (err) {
+                    alert(err);
+                }
+            });
+        }
+    );
+    function handleJSONReport(data) {
+        if (data === null) {
+            alert("there is no data");
+        } else {
+            var report = '';
+            report = JSON.stringify(data[0]);
+            $('#Tester').text(report);
+            for (var i in data[0]) {
+                $('#' + i).val(data[0][i]);
+                if (i === "dateDone" && data[0][i] != null) {
+                    $('#done').prop('checked', true);
+                } if (i === 'dateClientNotified' && data[0][i] != null) {
+                    $('#clientNotified').prop('checked', true);
+                } if (i === 'dateSent' && data[0][i] != null) {
+                    $('#sent').prop('checked', true);
+                }
+            }
+        }
+    }
 });

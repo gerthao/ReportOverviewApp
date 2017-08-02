@@ -45,7 +45,7 @@ namespace ReportOverviewApp.Controllers
         private ReportViewModel viewModel;
         private SearchTokenizer tokenizer;
         private UserLogFactory userLogFactory;
-        private ReportViewModel GetReportViewModel(string search, string column, int recordsPerPage, int pageIndex, string plan, DateTime? begin, DateTime? end)
+        private ReportViewModel GetReportViewModel(string search, string column, int recordsPerPage, int pageIndex, string plan, DateTime? begin, DateTime? end, string frequency)
         {
             if (viewModel == null)
             {
@@ -59,11 +59,14 @@ namespace ReportOverviewApp.Controllers
                         { "Deadline", true }
                     }
                 };
+                viewModel.States = viewModel.Reports.Select(r => r.State).Distinct();
+                viewModel.Plans = viewModel.Reports.Select(r => r.GroupName).Distinct();
             }
             HandlePlan(plan);
             HandleSearch(search);
             HandleSort(column);
             HandleDates(begin, end);
+            HandleFrequency(frequency);
             viewModel.GeneratePages(recordsPerPage);
             viewModel.Reports = viewModel.DisplayPage(pageIndex);
             return viewModel;
@@ -73,6 +76,14 @@ namespace ReportOverviewApp.Controllers
         {
             var report = from r in _context.Reports where r.ID == id select r;
             return Json(report);
+        }
+        private void HandleFrequency(string frequency)
+        {
+            if (!String.IsNullOrEmpty(frequency))
+            {
+                viewModel.Frequency = frequency;
+                viewModel.Reports = viewModel.Reports.Where(r => r.Frequency.Equals(frequency));
+            }
         }
         private void HandleSort(string column)
         {
@@ -142,8 +153,8 @@ namespace ReportOverviewApp.Controllers
 
         // GET: Reports
         [Authorize]
-        public ActionResult Index(string search, string column, int entriesPerPage, int pageIndex, string plan, DateTime? begin = null, DateTime? end = null)
-            => View(GetReportViewModel(search, column, entriesPerPage, pageIndex, plan, begin, end));
+        public ActionResult Index(string search, string column, int entriesPerPage, int pageIndex, string plan, string frequency, DateTime? begin = null, DateTime? end = null)
+            => View(GetReportViewModel(search, column, entriesPerPage, pageIndex, plan, begin, end, frequency));
 
         // GET: Reports/Details/5
         [Authorize]
@@ -157,6 +168,9 @@ namespace ReportOverviewApp.Controllers
 
         public ActionResult SelectPlan(string state, string plan)
             => View(GetReportViewModelFromSelectPlan(state, plan));
+
+        //public ActionResult Directory(string state, string plan)
+        //    => View(GetReportViewModelFromSelectPlan(state, plan));
 
         private ReportViewModel GetReportViewModelFromSelectPlan(string state, string plan)
         {
@@ -186,7 +200,7 @@ namespace ReportOverviewApp.Controllers
         {
             if (ModelState.IsValid){
                 _context.Add(report);
-                _context.Add(userLogFactory.Build(_context.Users.Where(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault().Id, $"Report {report.Name} has been created."));
+                _context.Add(userLogFactory.Build(_context.Users.Where(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault().Id, $"\"{report.Name}\" has been created."));
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
@@ -242,7 +256,7 @@ namespace ReportOverviewApp.Controllers
             if (ModelState.IsValid){
                 try{
                     _context.Update(report);
-                    _context.Add(userLogFactory.Build(_context.Users.Where(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault().Id, $"Report {report.Name} has been edited."));
+                    _context.Add(userLogFactory.Build(_context.Users.Where(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault().Id, $"\"{report.Name}\" has been edited."));
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException){
@@ -270,7 +284,7 @@ namespace ReportOverviewApp.Controllers
         {
             var report = await _context.Reports.SingleOrDefaultAsync(m => m.ID == id);
             _context.Reports.Remove(report);
-            _context.Add(userLogFactory.Build(_context.Users.Where(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault().Id, $"Report {report.Name} has been deleted."));
+            _context.Add(userLogFactory.Build(_context.Users.Where(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault().Id, $"\"{report.Name}\" has been deleted."));
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
