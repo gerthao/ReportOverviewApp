@@ -1,37 +1,28 @@
 ﻿<style>
-    /*uses w3.school's tutorial*/
-    /* The side navigation menu */
     .sidenav {
-        height: 100%; /* 100% Full-height */
-        width: 0; /* 0 width - change this with JavaScript */
-        position: fixed; /* Stay in place */
-        z-index: 1; /* Stay on top */
+        height: 100%;
+        width: 0;
+        position: fixed;
+        z-index: 1;
         top: 35px;
         left: 0;
-        background-color: #111; /* Black*/
-        overflow-x: hidden; /* Disable horizontal scroll */
-        padding-top: 1%; /* Place content 60px from the top */
-        transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+        background-color: #111;
+        overflow-x: hidden;
+        padding-top: 1%;
+        transition: 0.5s;
         transition-delay: 0.0s;
     }
-
-        /* The navigation menu links */
-        .sidenav a, .sidenav button{
-            padding: 8px 8px 8px 32px;
-            text-decoration: none;
-            font-size: 18px;
-            color: #818181;
-            display: block;
-            transition: 0.3s
-        }
-
-            /* When you mouse over the navigation links, change their color */
-            .sidenav a:hover, .offcanvas a:focus {
-                color: #f1f1f1;
-            }
-
-
-    /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+    .sidenav a, .sidenav button{
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 18px;
+        color: #818181;
+        display: block;
+        transition: 0.3s
+    }
+    .sidenav a:hover, .offcanvas a:focus {
+        color: #f1f1f1;
+    }
     #main {
         transition: margin-left .5s;
         padding: 20px;
@@ -39,32 +30,11 @@
 </style>
 
 <div id="mySidenav" class="sidenav">
-    @*<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>*@
     <a asp-area="" asp-controller="Home" asp-action="Index">Overview</a>
     @Html.ActionLink("Upcoming Reports", "..\\Reports", new { begin = DateTime.Today, end = DateTime.Today.AddDays(14)})
     <a asp-area="" asp-controller="Reports" asp-action="SelectPlan">Select Plan</a>
-    <a asp-area="" asp-controller="Reports" asp-action="Directory">Directory</a>
     <a asp-area="" asp-controller="Reports" asp-action="Index">Reporting Catalogue</a>
-
-    @*<button onclick="openClosePlanNav()" class="btn btn-link navbar-link">
-        Select Plan
-    </button>*@
-    
 </div>
-
-@*<div id="SelectPlanModal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                @await Html.PartialAsync("../Reports/SelectPlan", new ReportOverviewApp.Models.ReportViewModels.ReportViewModel() { Reports = Model.Reports })
-            </div>
-        </div>
-    </div>
-</div>*@
-
-@*@await Html.PartialAsync("../Reports/SelectPlan")*@
-
-
 
 <script>
     var isOpen = isHidden();
@@ -74,12 +44,10 @@
             return document.getElementById("mySidenav").style.width == "0";
         } else return false;
     }
-    /* Set the width of the side navigation to 250px */
     function openNav() {
         document.getElementById("mySidenav").style.width = "11%";
         isOpen = true;
     }
-    /* Set the width of the side navigation to 0 */
     function closeNav() {
         if (document.getElementById("PlanNav") !== null) {
             document.getElementById("PlanNav").style.width = "0";

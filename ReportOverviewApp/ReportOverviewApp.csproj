@@ -53,5 +53,8 @@
   <ItemGroup>
     <None Include="Views\Shared\_SideMenu.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
 
 </Project>

@@ -10,6 +10,7 @@ namespace ReportOverviewApp.Models.AccountViewModels
     {
         [Required]
         [EmailAddress]
+        [RegularExpression(@"[a-zA-Z0-9._%=-]+(@greatdentalplans\.com)$")]
         public string Email { get; set; }
 
         [Required]

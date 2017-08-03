@@ -8,7 +8,7 @@ using ReportOverviewApp.Data;
 namespace ReportOverviewApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20170803051138_Initial")]
+    [Migration("20170803154652_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

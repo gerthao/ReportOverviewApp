@@ -57,7 +57,7 @@
                 </div>
                 <div class="caption caption-widget">
                     <h3>Upcoming Reports (1 Week)</h3>
-                    <h1>@Html.ActionLink(@Model.Reports.Where(r => r.Deadline() != null).Where( r => r.Deadline() >= DateTime.Today).Where(r => r.Deadline() <= DateTime.Today.AddDays(7)).Count().ToString(), "../Reports/Index", new {begin=DateTime.Today, end=DateTime.Today.AddDays(7) })</h1>
+                    <h1>@Html.ActionLink(@Model.Reports.Where(r => r.Deadline() != null).Where(r => r.Deadline() >= DateTime.Today).Where(r => r.Deadline() <= DateTime.Today.AddDays(7)).Count().ToString(), "../Reports/Index", new { begin = DateTime.Today, end = DateTime.Today.AddDays(7) })</h1>
                 </div>
             </div>
         </div>
@@ -76,7 +76,7 @@
                 </div>
                 <div class="caption caption-widget">
                     <h3>Reports Due Today</h3>
-                    <h1>@Html.ActionLink(@Model.Reports.Where(r => r.Deadline() != null).Where(r => r.Deadline() == DateTime.Today).Count().ToString(), "../Reports/Index", new { begin=DateTime.Today, end=DateTime.Today })</h1>
+                    <h1>@Html.ActionLink(@Model.Reports.Where(r => r.Deadline() != null).Where(r => r.Deadline() == DateTime.Today).Count().ToString(), "../Reports/Index", new { begin = DateTime.Today, end = DateTime.Today })</h1>
                 </div>
             </div>
         </div>
@@ -93,15 +93,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if (Model.UserLogs == null || Model.UserLogs.Count() == 0){
+                            @if (Model.UserLogs == null || Model.UserLogs.Count() == 0) {
                                 <tr>
                                     <td>No logs present</td>
                                     <td></td>
                                     <td></td>
                                 </tr>
                             }
-                            else{
-                                @foreach (var log in Model.UserLogs.OrderByDescending(m => m.ID)){
+                            else {
+                                @foreach (var log in Model.UserLogs.OrderByDescending(m => m.ID)) {
                                     <tr>
                                         <td class="col-sm-8">@log.Message</td>
                                         <td class="col-sm-2">@log.TimeStamp</td>
@@ -114,6 +114,29 @@
                 </div>
             </div>
         </div>
+        @*<div class="col-sm-6">
+            <div class="progress">
+                @{ int total = Model.Reports.Count(), upcoming = @Model.Reports.Where(r => r.Deadline() != null).Where(r => r.Deadline() >= DateTime.Today).Where(r => r.Deadline() <= DateTime.Today.AddDays(7)).Count(), error = Model.Reports.Where(r => r.Deadline() == null).Count(); }
+                @{ int done = Model.Reports.Where(r => r.Done && r.ClientNotified && r.Sent).Count(); }
+                @{ double sum = total; }
+                @{ string totalReports = $"{((total - upcoming - error - done) / sum * 100)}%"; }
+                @{ string upcomingReports = $"{upcoming / sum * 100}%"; }
+                @{ string errorReports = $"{error / sum * 100}%"; }
+                @{ string doneReports = $"{done / sum * 100}%"; }
+                <div class="progress-bar progress-bar-info" style="width: @totalReports">
+                    <span class="sr-only">@totalReports Complete (All)</span>
+                </div>
+                <div class="progress-bar progress-bar-success" style="width: @doneReports">
+                    <span class="sr-only">@totalReports Complete (All)</span>
+                </div>
+                <div class="progress-bar progress-bar-warning" style="width: @upcomingReports">
+                    <span class="sr-only">@upcomingReports (Upcoming)</span>
+                </div>
+                <div class="progress-bar progress-bar-danger" style="width: @errorReports">
+                    <span class="sr-only">@errorReports (No Deadline)</span>
+                </div>
+            </div>
+        </div>*@
     </div>
     <div>
         @*@await Html.PartialAsync("_Widget")*@
