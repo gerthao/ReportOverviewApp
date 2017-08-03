@@ -52,38 +52,23 @@ else {
                 <tr>
                     <td class="ReportID">@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).ID)</td>
                     <td class="ReportName">@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Name)</td>
-                    <td>@Model.DisplayDateTimeAsDate(Model.Reports.ElementAt(i).Deadline())</td>
-                    <td>
-                        @*<input class="checkbox checkbox-inline" type="checkbox"/>*@
-                        <text>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateDone)</text>
-                    </td>
-                    <td>
-                        @*<input class="checkbox checkbox-inline" type="checkbox" />*@
-                        <text>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateClientNotified)</text>
-                    </td>
-                    <td>
-                        @*<input class="checkbox checkbox-inline" type="checkbox" />*@
-                        <text>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateSent)</text>
-                    </td>
-                    <td>
-                        <a id="EditReportLink" data-toggle="modal" data-target="#EditReportModal"><span class="glyphicon glyphicon-edit"></span></a>
-                        @*<a asp-action="Edit" asp-route-id="@Model.Reports.ElementAt(i).ID">Edit</a>*@ |
-                        <a asp-action="Details" asp-route-id="@Model.Reports.ElementAt(i).ID">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@Model.Reports.ElementAt(i).ID">Delete</a>
+                    <td  class="col-sm-1">@Model.DisplayDateTimeAsDate(Model.Reports.ElementAt(i).Deadline())</td>
+                    <td class="col-sm-1"><text>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateDone)</text></td>
+                    <td  class="col-sm-1"><text>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateClientNotified)</text></td>
+                    <td  class="col-sm-1"><text>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateSent)</text></td>
+                    <td  class="col-sm-1" style="text-align: center;">
+                        <a id="EditReportLink" data-toggle="modal" data-target="#EditReportModal"><span class="glyphicon glyphicon-edit"></span></a> |
+                        <a asp-action="Details" asp-route-id="@Model.Reports.ElementAt(i).ID"><span class="glyphicon glyphicon-modal-window"></span></a> |
+                        <a asp-action="Delete" asp-route-id="@Model.Reports.ElementAt(i).ID"><span class="glyphicon glyphicon-remove-circle"></span></a>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
-    <textarea rows="10" cols="50" type="text" id="Tester" runat="server">
-
-    </textarea>
     <div id="EditReportModal" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    @await Html.PartialAsync("Check", new Report())
-                </div>
+                <div class="modal-header">@await Html.PartialAsync("Check", new Report())</div>
             </div>
         </div>
     </div>
@@ -92,82 +77,35 @@ else {
             <ul class="pagination col-sm-6">
                 @{int pagenavlimit = 3; }
                 @{ int pagelastlimit = 2;}
-                @if (Model.CurrentPage == 1 )
-                {
+                @if (Model.CurrentPage == 1 ){
                     pagenavlimit += 2;
-                    <li class="disabled">
-                        <span>
-                            <span aria-hidden="true">Prev</span>
-                        </span>
-                    </li>
+                    <li class="disabled"><span><span aria-hidden="true">Prev</span></span></li>
+                } else{
+                    <li><span><span aria-hidden="true">@Html.ActionLink("Prev", "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = Model.CurrentPage - 1, begin = Model.Begin, end = Model.End }) </span></span></li>
                 }
-                else
-                {
-                    <li>
-                        <span>
-                            <span aria-hidden="true">@Html.ActionLink("Prev", "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = Model.CurrentPage - 1, begin = Model.Begin, end = Model.End }) </span>
-                        </span>
-                    </li>
-                }
-                @if(Model.CurrentPage == 2)
-                {
+                @if(Model.CurrentPage == 2){
                     pagenavlimit += 1;
-                }
-                @if(Model.CurrentPage == Model.PagesCount())
-                {
+                } @if(Model.CurrentPage == Model.PagesCount()){
                     pagelastlimit += 2;
-                }
-                @if (Model.CurrentPage == Model.PagesCount()-1)
-                {
+                } @if (Model.CurrentPage == Model.PagesCount()-1){
                     pagelastlimit += 1;
-                }
-                @for (int i = Model.CurrentPage-pagelastlimit; i <= Model.PagesCount() && i <= Model.CurrentPage + pagenavlimit; i++)
-                {
-                    if (i < 1)
-                    {
-                        i = 1;
-                    }
-                    if (i == Model.CurrentPage + pagenavlimit)
-                    {
-                        <li class="disabled">
-                            <span>...<span class="sr-only">(current)</span></span>
-                        </li>
-                        <li>
-                            <span>@Html.ActionLink((Model.PagesCount()).ToString(), "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = Model.PagesCount(), begin = Model.Begin, end = Model.End })</span>
-                        </li>
-                    }
-                    else
-                    {
-                        if (i == Model.CurrentPage)
-                        {
-                            <li class="active" style="color:white;">
-                                <span>@Html.ActionLink(@i.ToString(), "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = @i, begin = Model.Begin, end = Model.End })</span>
-                            </li>
-
-                        }
-                        else
-                        {
-                            <li>
-                                <span>@Html.ActionLink(@i.ToString(), "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = @i, begin = Model.Begin, end = Model.End })</span>
-                            </li>
+                } @for (int i = Model.CurrentPage-pagelastlimit; i <= Model.PagesCount() && i <= Model.CurrentPage + pagenavlimit; i++){
+                    if (i < 1){ i = 1; }
+                    if (i == Model.CurrentPage + pagenavlimit){
+                        <li class="disabled"><span>...<span class="sr-only">(current)</span></span></li>
+                        <li><span>@Html.ActionLink((Model.PagesCount()).ToString(), "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = Model.PagesCount(), begin = Model.Begin, end = Model.End })</span></li>
+                    } else{
+                        if (i == Model.CurrentPage){
+                            <li class="active"><span>@Html.ActionLink(@i.ToString(), "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = @i, begin = Model.Begin, end = Model.End })</span></li>
+                        } else{
+                            <li><span>@Html.ActionLink(@i.ToString(), "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = @i, begin = Model.Begin, end = Model.End })</span></li>
                         }
                     }
                 }
-                @if (Model.CurrentPage == Model.PagesCount())
-                {
-                    <li class="disabled">
-                        <span>
-                            <span aria-hidden="true">Next</span>
-                        </span>
-                    </li>
-                }
-                else
-                {
-                    <li>
-                        <span>
-                            <span aria-hidden="true">@Html.ActionLink("Next", "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = Model.CurrentPage + 1 , begin = Model.Begin, end = Model.End }) </span>
-                        </span>
-                    </li>
+                @if (Model.CurrentPage == Model.PagesCount()){
+                    <li class="disabled"><span><span aria-hidden="true">Next</span></span></li>
+                } else{
+                    <li><span><span aria-hidden="true">@Html.ActionLink("Next", "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = Model.CurrentPage + 1 , begin = Model.Begin, end = Model.End }) </span></span></li>
                 }
             </ul>       
         </div>

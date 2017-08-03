@@ -9,28 +9,21 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace ReportOverviewApp.Data
-{
-    public static class SeedData
-    {
-        public static void Initialize(IServiceProvider serviceProvider)
-        {
+namespace ReportOverviewApp.Data{
+    public static class SeedData{
+        public static void Initialize(IServiceProvider serviceProvider){
             using (var context = new ApplicationDbContext(
-                serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
-            {
-                if (!context.Reports.Any())
-                {
-                    try
-                    {
-                        string jsonData = File.ReadAllText(@"C:\Users\gthao\Desktop\crc.json");
-                        List<ReportJsonData> products = JsonConvert.DeserializeObject<List<ReportJsonData>>(jsonData);
-                        List<Report> reports = new List<Report>();
-                        reports.AddRange(from r in products select r.ToReport());
+                serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>())){
+                if (!context.Reports.Any()){
+                    try{
+                        string jsonData;
+                        try { jsonData = File.ReadAllText(@"C:\Users\gthao\Desktop\crc.json"); }
+                        catch { jsonData = File.ReadAllText(@"C:\Users\Ger\Desktop\crc.json"); }
+                        List<Report> reports = JsonConvert.DeserializeObject<List<ReportJsonData>>(jsonData).Select(jsonReport => jsonReport.ToReport()).ToList();
                         context.Reports.AddRange(reports);
                         context.SaveChanges();
                     }
-                    catch (Exception ex)
-                    {
+                    catch (Exception ex){
                         throw ex;
                     }
                 }

@@ -87,40 +87,25 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th>
-                                    Message
-                                </th>
-                                <th>
-                                    Timestamp
-                                </th>
-                                <th>
-                                    User
-                                </th>
+                                <th>Message</th>
+                                <th>Timestamp</th>
+                                <th>User</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @if (Model.UserLogs == null || Model.UserLogs.Count() == 0)
-                            {
+                            @if (Model.UserLogs == null || Model.UserLogs.Count() == 0){
                                 <tr>
-                                    <td>
-                                        No logs present
-                                    </td>
+                                    <td>No logs present</td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                             }
-                            else
-                            {
-                                @foreach (var log in Model.UserLogs.OrderByDescending(m => m.ID))
-                                {
+                            else{
+                                @foreach (var log in Model.UserLogs.OrderByDescending(m => m.ID)){
                                     <tr>
-                                        <td class="col-sm-8">
-                                            @log.Message
-                                        </td>
-                                        <td class="col-sm-2">
-                                            @log.TimeStamp
-                                        </td>
-                                        <td class="col-sm-2">
-                                            @Model.GetUserName(log.UserID)
-                                        </td>
+                                        <td class="col-sm-8">@log.Message</td>
+                                        <td class="col-sm-2">@log.TimeStamp</td>
+                                        <td class="col-sm-2">@Model.GetUserName(log.UserID)</td>
                                     </tr>
                                 }
                             }

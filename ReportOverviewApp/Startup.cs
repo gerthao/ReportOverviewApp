@@ -40,8 +40,18 @@ namespace ReportOverviewApp
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
+            string connection = "HomeConnection";
+            //try
+            //{
+            //    services.AddDbContext<ApplicationDbContext>(options =>
+            //    options.UseSqlServer(Configuration.GetConnectionString(connection)));
+            //}
+            //catch
+            //{
+            //    connection = "HomeConnection";
+            //}
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString(connection)));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()

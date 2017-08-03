@@ -69,7 +69,6 @@ $(document).ready(function () {
     $(document).ready(
         function () {
             $('#ReportTable tr').on("click", function () {
-                //var currentIndex = $(this).parent().children().index($(this)) + 1;
                 var retrievedID = $(this).find(".ReportID").html();
                 var link = root + "/Reports/JsonInfo/" + retrievedID;
                 try {
@@ -97,7 +96,6 @@ $(document).ready(function () {
         } else {
             var report = '';
             report = JSON.stringify(data[0]);
-            $('#Tester').text(report);
             for (var i in data[0]) {
                 $('#' + i).val(data[0][i]);
                 if (i === "dateDone" && data[0][i] != null) {
