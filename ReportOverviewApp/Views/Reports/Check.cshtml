@@ -1,5 +1,6 @@
 @model ReportOverviewApp.Models.Report
 
+
 <style>
     input, textarea {
         max-width: 90%;
@@ -11,14 +12,14 @@
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <input class="hidden" type="number" id="id" asp-for="ID" />
         <div class="form-group">
-            <label asp-for="Name" class="col-md-2 control-label"></label>
+            <label asp-for="Name" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.Name)</label>
             <div class="col-md-10">
                 <input id="name" asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group ">
-            <label asp-for="DateDone" class="control-label col-md-2"></label>
+            <label asp-for="DateDone" class="control-label col-md-2">@Html.DisplayNameFor(e => Model.DateDone)</label>
             <div class="col-md-10">
                 <div class="input-group">
                     <span class="input-group-addon"><input type="checkbox" id="done" asp-for="Done" /></span>
@@ -31,7 +32,7 @@
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="DateClientNotified" class="col-md-2 control-label"></label>
+            <label asp-for="DateClientNotified" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.DateClientNotified)</label>
             <div class="col-md-10">
                 <div class="input-group">
                     <span class="input-group-addon"><input type="checkbox" id="clientNotified" asp-for="ClientNotified" /></span>
@@ -41,7 +42,7 @@
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="DateSent" class="col-md-2 control-label"></label>
+            <label asp-for="DateSent" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.DateSent)</label>
             <div class="col-md-10">
                 <div class="input-group">
                     <span class="input-group-addon"><input type="checkbox" id="sent" asp-for="Sent" /></span>
@@ -51,154 +52,154 @@
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="BusinessContact" class="col-md-2 control-label"></label>
+            <label asp-for="BusinessContact" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.BusinessContact)</label>
             <div class="col-md-10">
                 <input id="businessContact" asp-for="BusinessContact" class="form-control" />
                 <span asp-validation-for="BusinessContact" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="BusinessOwner" class="col-md-2 control-label"></label>
+            <label asp-for="BusinessOwner" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.BusinessOwner)</label>
             <div class="col-md-10">
                 <input id="businessOwner" asp-for="BusinessOwner" class="form-control" />
                 <span asp-validation-for="BusinessOwner" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="DueDate1" class="col-md-2 control-label"></label>
+            <label asp-for="DueDate1" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.DueDate1)</label>
             <div class="col-md-10">
-                <input asp-for="DueDate1" id="dueDate1" class="form-control" />
+                <input asp-for="DueDate1" id="dueDate1" class="form-control"/>
                 <span asp-validation-for="DueDate1" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="DueDate2" class="col-md-2 control-label"></label>
+            <label asp-for="DueDate2" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.DueDate2)</label>
             <div class="col-md-10">
                 <input asp-for="DueDate2" id="dueDate2" class="form-control" />
                 <span asp-validation-for="DueDate2" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="DueDate3" class="col-md-2 control-label"></label>
+            <label asp-for="DueDate3" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.DueDate3)</label>
             <div class="col-md-10">
                 <input asp-for="DueDate3" id="dueDate3" class="form-control" />
                 <span asp-validation-for="DueDate3" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="DueDate4" class="col-md-2 control-label"></label>
+            <label asp-for="DueDate4" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.DueDate4)</label>
             <div class="col-md-10">
                 <input asp-for="DueDate4" id="dueDate4" class="form-control" />
                 <span asp-validation-for="DueDate4" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="Frequency" class="col-md-2 control-label"></label>
+            <label asp-for="Frequency" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.Frequency)</label>
             <div class="col-md-10">
                 <input asp-for="Frequency" id="frequency" class="form-control" />
                 <span asp-validation-for="Frequency" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="DayDue" class="col-md-2 control-label"></label>
+            <label asp-for="DayDue" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.DayDue)</label>
             <div class="col-md-10">
                 <input id="dayDue" asp-for="DayDue" class="form-control" />
                 <span asp-validation-for="DayDue" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="DeliveryFunction" class="col-md-2 control-label"></label>
+            <label asp-for="DeliveryFunction" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.DeliveryFunction)</label>
             <div class="col-md-10">
                 <input id="deliveryFunction" asp-for="DeliveryFunction" class="form-control" />
                 <span asp-validation-for="DeliveryFunction" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="WorkInstructions" class="col-md-2 control-label"></label>
+            <label asp-for="WorkInstructions" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.WorkInstructions)</label>
             <div class="col-md-10">
                 <textarea asp-for="WorkInstructions" class="form-control" rows="10" id="workInstructions"></textarea>
                 <span asp-validation-for="WorkInstructions" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="Notes" class="col-md-2 control-label"></label>
+            <label asp-for="Notes" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.Notes)</label>
             <div class="col-md-10">
                 <textarea asp-for="Notes" class="form-control" rows="10" id="notes"></textarea>
                 <span asp-validation-for="Notes" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label id="daysAfterQuarter" asp-for="DaysAfterQuarter" class="col-md-2 control-label"></label>
+            <label id="daysAfterQuarter" asp-for="DaysAfterQuarter" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.DaysAfterQuarter)</label>
             <div class="col-md-10">
                 <input asp-for="DaysAfterQuarter" class="form-control" />
                 <span asp-validation-for="DaysAfterQuarter" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="FolderLocation" class="col-md-2 control-label"></label>
+            <label asp-for="FolderLocation" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.FolderLocation)</label>
             <div class="col-md-10">
                 <input id="folderLocation" asp-for="FolderLocation" class="form-control" />
                 <span asp-validation-for="FolderLocation" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="ReportType" class="col-md-2 control-label"></label>
+            <label asp-for="ReportType" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.ReportType)</label>
             <div class="col-md-10">
                 <input id="reportType" asp-for="ReportType" class="form-control" />
                 <span asp-validation-for="ReportType" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="RunWith" class="col-md-2 control-label"></label>
+            <label asp-for="RunWith" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.RunWith)</label>
             <div class="col-md-10">
                 <input id="runWith" asp-for="RunWith" class="form-control" />
                 <span asp-validation-for="RunWith" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="DeliveryMethod" class="col-md-2 control-label"></label>
+            <label asp-for="DeliveryMethod" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.DeliveryMethod)</label>
             <div class="col-md-10">
                 <input id="deliveryMethod" asp-for="DeliveryMethod" class="form-control" />
                 <span asp-validation-for="DeliveryMethod" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="DeliveryTo" class="col-md-2 control-label"></label>
+            <label asp-for="DeliveryTo" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.DeliveryTo)</label>
             <div class="col-md-10">
                 <input id="deliveryTo" asp-for="DeliveryTo" class="form-control" />
                 <span asp-validation-for="DeliveryTo" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="EffectiveDate" class="col-md-2 control-label"></label>
+            <label asp-for="EffectiveDate" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.EffectiveDate)</label>
             <div class="col-md-10">
                 <input id="effectiveDate" asp-for="EffectiveDate" class="form-control" />
                 <span asp-validation-for="EffectiveDate" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="TerminationDate" class="col-md-2 control-label"></label>
+            <label asp-for="TerminationDate" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.TerminationDate)</label>
             <div class="col-md-10">
                 <input id="terminationDate" asp-for="TerminationDate" class="form-control" />
                 <span asp-validation-for="TerminationDate" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="GroupName" class="col-md-2 control-label"></label>
+            <label asp-for="GroupName" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.GroupName)</label>
             <div class="col-md-10">
                 <input id="groupName" asp-for="GroupName" class="form-control" />
                 <span asp-validation-for="GroupName" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="State" class="col-md-2 control-label"></label>
+            <label asp-for="State" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.State)</label>
             <div class="col-md-10">
                 <input id="state" asp-for="State" class="form-control" />
                 <span asp-validation-for="State" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="ReportPath" class="col-md-2 control-label"></label>
+            <label asp-for="ReportPath" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.ReportPath)</label>
             <div class="col-md-10">
                 <input id="reportPath" asp-for="ReportPath" class="form-control" />
                 <span asp-validation-for="ReportPath" class="text-danger"></span>
@@ -208,12 +209,12 @@
             <div class="col-md-offset-2 col-md-10">
                 <div class="checkbox">
                     <input id="otherDepartment" asp-for="OtherDepartment" />
-                    <label asp-for="OtherDepartment"></label>
+                    <label asp-for="OtherDepartment">@Html.DisplayNameFor(e => Model.OtherDepartment)</label>
                 </div>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="SourceDepartment" class="col-md-2 control-label"></label>
+            <label asp-for="SourceDepartment" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.SourceDepartment)</label>
             <div class="col-md-10">
                 <input id="sourceDepartment" asp-for="SourceDepartment" class="form-control" />
                 <span asp-validation-for="SourceDepartment" class="text-danger"></span>
@@ -223,68 +224,68 @@
             <div class="col-md-offset-2 col-md-10">
                 <div class="checkbox">
                     <input id="qualityIndicator" asp-for="QualityIndicator" />
-                    <label asp-for="QualityIndicator"></label>
+                    <label asp-for="QualityIndicator">@Html.DisplayNameFor(e => Model.QualityIndicator)</label>
                 </div>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="ERSReportLocation" class="col-md-2 control-label"></label>
+            <label asp-for="ERSReportLocation" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.ERSReportLocation)</label>
             <div class="col-md-10">
                 <input id="ersReportLocation" asp-for="ERSReportLocation" class="form-control" />
                 <span asp-validation-for="ERSReportLocation" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="ERRStatus" class="col-md-2 control-label"></label>
+            <label asp-for="ERRStatus" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.ERRStatus)</label>
             <div class="col-md-10">
                 <input id="errStatus" asp-for="ERRStatus" class="form-control" />
                 <span asp-validation-for="ERRStatus" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="DateAdded" class="col-md-2 control-label"></label>
+            <label asp-for="DateAdded" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.DateAdded)</label>
             <div class="col-md-10">
                 <input id="dateAdded" asp-for="DateAdded" class="form-control" />
                 <span asp-validation-for="DateAdded" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="SystemRefreshDate" class="col-md-2 control-label"></label>
+            <label asp-for="SystemRefreshDate" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.SystemRefreshDate)</label>
             <div class="col-md-10">
                 <input id="systemRefreshDate" asp-for="SystemRefreshDate" class="form-control" />
                 <span asp-validation-for="SystemRefreshDate" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="LegacyReportID" class="col-md-2 control-label"></label>
+            <label asp-for="LegacyReportID" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.LegacyReportID)</label>
             <div class="col-md-10">
                 <input id="legacyReportID" asp-for="LegacyReportID" class="form-control" />
                 <span asp-validation-for="LegacyReportID" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="LegacyReportIDR2" class="col-md-2 control-label"></label>
+            <label asp-for="LegacyReportIDR2" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.LegacyReportIDR2)</label>
             <div class="col-md-10">
                 <input id="legacyReportIDR2" asp-for="LegacyReportIDR2" class="form-control" />
                 <span asp-validation-for="LegacyReportIDR2" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="ERSReportName" class="col-md-2 control-label"></label>
+            <label asp-for="ERSReportName" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.ERSReportName)</label>
             <div class="col-md-10">
                 <input id="ersReportName" asp-for="ERSReportName" class="form-control" />
                 <span asp-validation-for="ERSReportName" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="OtherReportLocation" class="col-md-2 control-label"></label>
+            <label asp-for="OtherReportLocation" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.OtherReportLocation)</label>
             <div class="col-md-10">
                 <input id="otherReportLocation" asp-for="OtherReportLocation" class="form-control" />
                 <span asp-validation-for="OtherReportLocation" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="OtherReportName" class="col-md-2 control-label"></label>
+            <label asp-for="OtherReportName" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.OtherReportName)</label>
             <div class="col-md-10">
                 <input id="otherReportName" asp-for="OtherReportName" class="form-control" />
                 <span asp-validation-for="OtherReportName" class="text-danger"></span>

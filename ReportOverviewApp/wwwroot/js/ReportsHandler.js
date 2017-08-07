@@ -18,9 +18,9 @@ $(document).ready(function () {
     });
     $('#done').click(function () {
         if ($('#dateDone').val() === '' && $('#done:checked').val()) {
-                var date = new Date();
-                $('#dateDone').val((date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear());
-                return;
+            var date = new Date();
+            $('#dateDone').val((date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear());
+            return;
         }
         if ($('#dateDone').val() !== '' && !$('#done:checked').val()) {
             $('#dateDone').val('');
@@ -31,7 +31,7 @@ $(document).ready(function () {
             var date = new Date();
             $('#dateClientNotified').val((date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear());
             return;
-        } if ($('#dateClientNotifed').val() !== '' && !$('#clientNotified:checked').val()){
+        } if ($('#dateClientNotifed').val() !== '' && !$('#clientNotified:checked').val()) {
             $('#dateClientNotified').val('');
         }
     });
@@ -66,32 +66,28 @@ $(document).ready(function () {
         }
     });
     var root = window.location.origin;
-    $(document).ready(
-        function () {
-            $('#ReportTable tr').on("click", function () {
-                var retrievedID = $(this).find(".ReportID").html();
-                var link = root + "/Reports/JsonInfo/" + retrievedID;
-                try {
-                    $.ajax({
-                        url: link,
-                        type: "GET",
-                        dataType: 'json',
-                        contentType: 'application/json; charset=utf-8',
-                        success: function (data) {
-                            handleJSONReport(data);
-                        },
-                        error: function () {
-                            alert("failed: " + link);
-                        }
-                    });
-                } catch (err) {
-                    alert(err);
+    $('#ReportTable tr').on("click", function () {
+        var retrievedID = $(this).find(".ReportID").html();
+        var link = root + "/Reports/JsonInfo/" + retrievedID;
+        try {
+            $.ajax({
+                url: link,
+                type: "GET",
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    handleJSONReport(data);
+                },
+                error: function () {
+                    alert("failed: " + link);
                 }
             });
+        } catch (err) {
+            alert(err);
         }
-    );
+    });
     function handleJSONReport(data) {
-        if (data === null) {
+        if (data == null) {
             alert("there is no data");
         } else {
             var report = '';
@@ -108,4 +104,38 @@ $(document).ready(function () {
             }
         }
     }
+    function updateFrequencyFields() {
+        switch ($('#frequency').val()) {
+            case 'Weekly':
+            case 'Biweekly':
+            case 'Monthly':
+                $('#dueDate1').parent().parent().hide();
+                $('#dueDate2').parent().parent().hide();
+                $('#dueDate3').parent().parent().hide();
+                $('#dueDate4').parent().parent().hide();
+                break;
+            case 'Quarterly':
+                $('#dueDate1').parent().parent().show();
+                $('#dueDate2').parent().parent().show();
+                $('#dueDate3').parent().parent().show();
+                $('#dueDate4').parent().parent().show();
+                break;
+            case 'Semiannual':
+                $('#dueDate1').parent().parent().show();
+                $('#dueDate2').parent().parent().show();
+                $('#dueDate3').parent().parent().hide();
+                $('#dueDate4').parent().parent().hide();
+                break;
+            case 'Annual':
+                $('#dueDate1').parent().parent().show();
+                $('#dueDate2').parent().parent().hide();
+                $('#dueDate3').parent().parent().hide();
+                $('#dueDate4').parent().parent().hide();
+                break;
+        }
+    };
+    updateFrequencyFields();
+    $('#frequency').on('input', function () {
+        updateFrequencyFields();
+    });
 });
