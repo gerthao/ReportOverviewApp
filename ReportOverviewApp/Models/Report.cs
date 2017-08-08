@@ -63,7 +63,7 @@ namespace ReportOverviewApp.Models
         [StringLength(260), Display(Name = "Delivery Method")]
         public string DeliveryMethod { get; set; }
         [Display(Name = "Deliver To")]
-        public string DeliveryTo { get; set; }
+        public string DeliverTo { get; set; }
         [DataType(DataType.Date), Display(Name = "Effective Date")]
         public DateTime? EffectiveDate { get; set; }
         [DataType(DataType.Date), Display(Name = "Termination Date")]
@@ -98,10 +98,16 @@ namespace ReportOverviewApp.Models
         public string OtherReportLocation { get; set; }
         [StringLength(1000), Display(Name = "Other Report Name")]
         public string OtherReportName { get; set; }
+
+        /// <summary>
+        ///  Gets the closest deadline for a report from the current date.
+        /// </summary>
+        /// <returns>
+        ///  Returns a Nullable DateTime object representating the current deadline of a report.
+        /// </returns>
         [DataType(DataType.Date)]
         public DateTime? Deadline()
         {
-            DateTime? dateTime = null;
             switch (Frequency)
             {
                 case "Quarterly":
@@ -117,9 +123,8 @@ namespace ReportOverviewApp.Models
                 case "Semiannual":
                     return GetDeadlineSemiannual();
                 default:
-                    break;
+                    return null;
             }
-            return dateTime;
         }
         private DateTime? GetDeadlineQuarterly()
         {
@@ -151,7 +156,7 @@ namespace ReportOverviewApp.Models
         private DateTime? GetDeadlineWeekly()
         {
             DayOfWeek weeklyDueDay = DayOfWeek.Sunday;
-            DateTime deadline = DateTime.Today;
+            DateTime deadline = DateTime.Now;
             const int daily = 1;
             switch (DayDue)
             {
@@ -193,7 +198,7 @@ namespace ReportOverviewApp.Models
             {
                 return null;
             }
-            DateTime deadline = new DateTime(year: DateTime.Today.Year, month: DateTime.Today.Month, day: biweeklyDay);
+            DateTime deadline = new DateTime(year: DateTime.Now.Year, month: DateTime.Now.Month, day: biweeklyDay);
             if(deadline < DateTime.Today)
             {
                 switch (deadline.Day)
@@ -244,17 +249,6 @@ namespace ReportOverviewApp.Models
                         .OrderBy(date => date)
                         .First();
         }
-        public string ToJson()
-        {
-            return JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-        }
-        //public bool IsPastDue() => DateDue != null && DateDue > DateTime.Now;
-        //public bool IsPastDue(DateTime SelectedDate) => DateDue != null && SelectedDate != null && SelectedDate < DateDue;
-        //public bool IsDue() => DateDue != null && DateDue <= DateTime.Now;
-        //public bool IsDue(DateTime SelectedDate) => DateDue != null && SelectedDate != null && SelectedDate >= DateDue;
-        //public bool IsDone() => DateDone != null;
-        //public bool HasBeenSent() => DateSent != null;
-        //public bool HasBeenDone() => DateDone != null;
-        //public bool HasBeenNotified() => DateClientNotified != null;
+        public string ToJson() => JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
     }
 }

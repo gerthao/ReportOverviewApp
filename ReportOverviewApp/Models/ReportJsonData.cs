@@ -47,8 +47,8 @@ namespace ReportOverviewApp.Models
         public string RunWith { get; set; }
         [JsonProperty("DELIVERY_METHOD")]
         public string DeliveryMethod { get; set; }
-        [JsonProperty("DELIVERY_TO")]
-        public string DeliveryTo { get; set; }
+        [JsonProperty("DELIVER_TO")]
+        public string DeliverTo { get; set; }
         [JsonProperty("EFFECTIVE_DATE")]
         public double? EffectiveDate { get; set; }
         [JsonProperty("TERMINATION_DATE")]
@@ -113,7 +113,7 @@ namespace ReportOverviewApp.Models
             report.DayDue = DayDue;
             report.DeliveryFunction = DeliveryFunction;
             report.DeliveryMethod = DeliveryMethod;
-            report.DeliveryTo = DeliveryTo;
+            report.DeliverTo = DeliverTo;
             report.WorkInstructions = WorkInstructions?.Trim();
             report.DaysAfterQuarter = DaysAfterQuarter;
             report.FolderLocation = FolderLocation?.Trim();

@@ -12,12 +12,16 @@ using ReportOverviewApp.Models.ReportViewModels;
 using Newtonsoft.Json;
 using System.Reflection;
 using ReportOverviewApp.Helpers;
+using System.Text;
 
 namespace ReportOverviewApp.Controllers
 {
     public class ReportsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private ReportViewModel viewModel;
+        private SearchTokenizer tokenizer;
+        private UserLogFactory userLogFactory;
 
         /// <summary>
         ///  This method creates a ViewModel to displays records from the Report class.
@@ -42,9 +46,6 @@ namespace ReportOverviewApp.Controllers
         //    private static ReportViewModel viewModel;
 
         //}
-        private ReportViewModel viewModel;
-        private SearchTokenizer tokenizer;
-        private UserLogFactory userLogFactory;
         private ReportViewModel GetReportViewModel(string search, string column, int recordsPerPage, int pageIndex, string plan, DateTime? begin, DateTime? end, string frequency)
         {
             if (viewModel == null)
@@ -72,6 +73,16 @@ namespace ReportOverviewApp.Controllers
             return viewModel;
         }
         
+        /// <summary>
+        ///  Gets a Report based on its ID in JSON format.
+        /// </summary>
+        /// <param name="id">
+        ///  "id" must be a positive integer.
+        /// </param>
+        /// <returns>
+        ///  Returns JsonResult containing a JSON-formatted report.
+        /// </returns>
+        [Authorize]
         public JsonResult JsonInfo(int? id)
         {
             var report = from r in _context.Reports where r.ID == id select r;
@@ -200,7 +211,7 @@ namespace ReportOverviewApp.Controllers
         {
             if (ModelState.IsValid){
                 _context.Add(report);
-                _context.Add(userLogFactory.Build(_context.Users.Where(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault().Id, $"\"{report.Name}\" has been created."));
+                _context.Add(userLogFactory.Build(GetCurrentUserID(), $"\"{report.Name}\" has been created."));
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
@@ -249,14 +260,18 @@ namespace ReportOverviewApp.Controllers
         // POST: Reports/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+
+        private string GetCurrentUserID() => _context.Users.Where(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault().Id;
+
         [HttpPost, ValidateAntiForgeryToken, Authorize]
         public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Done,ClientNotified,Sent,DateDue,DateDone,DateClientNotified,DateSent,BusinessContact,BusinessOwner,DueDate1,DueDate2,DueDate3,DueDate4,Frequency,DayDue,DeliveryFunction,WorkInstructions,Notes,DaysAfterQuarter,FolderLocation,ReportType,RunWith,DeliveryMethod,DeliveryTo,EffectiveDate,TerminationDate,GroupName,State,ReportPath,OtherDepartment,SourceDepartment,QualityIndicator,ERSReportLocation,ERRStatus,DateAdded,SystemRefreshDate,LegacyReportID,LegacyReportIDR2,ERSReportName,OtherReportLocation,OtherReportName")] Report report)
         {
             if (id != report.ID) return NotFound();
             if (ModelState.IsValid){
                 try{
+                    var old = (from r in _context.Reports where r.ID == id select r).Single();
                     _context.Update(report);
-                    _context.Add(userLogFactory.Build(_context.Users.Where(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault().Id, $"\"{report.Name}\" has been edited."));
+                    _context.Add(userLogFactory.Build(GetCurrentUserID(), $"\"{report.Name}\" has been edited.", CompareChanges(old, report)));
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException){
@@ -266,6 +281,60 @@ namespace ReportOverviewApp.Controllers
                 return RedirectToAction("Index");
             }
             return View(report);
+        }
+
+        private string CompareChanges(Report old, Report updated)
+        {
+            if (old.Equals(updated)) return "No Apparent Changes Made.";
+            StringBuilder messageBuilder = new StringBuilder();
+            messageBuilder
+                .Append(Compare("ID", old.ID, updated.ID))
+                .Append(Compare("Name", old.Name, updated.Name))
+                .Append(Compare("Report Finished", old.Done, updated.Done))
+                .Append(Compare("Report Client Notified", old.ClientNotified, updated.ClientNotified))
+                .Append(Compare("Report Sent", old.Sent, updated.Sent))
+                .Append(Compare("Date Finished", old.DateDone, updated.DateDone))
+                .Append(Compare("Date Notified", old.DateClientNotified, updated.DateClientNotified))
+                .Append(Compare("Date Sent", old.DateSent, updated.DateSent))
+                .Append(Compare("Business Contact", old.BusinessContact, updated.BusinessContact))
+                .Append(Compare("Business Owner", old.BusinessContact, updated.BusinessContact))
+                .Append(Compare("Due Date 1", old.DueDate1, updated.DueDate1))
+                .Append(Compare("Due Date 2", old.DueDate2, updated.DueDate2))
+                .Append(Compare("Due Date 3", old.DueDate3, updated.DueDate3))
+                .Append(Compare("Due Date 4", old.DueDate4, updated.DueDate4))
+                .Append(Compare("Frequency", old.Frequency, updated.Frequency))
+                .Append(Compare("Day Due", old.DayDue, updated.DayDue))
+                .Append(Compare("Delivery Function", old.DeliveryFunction, updated.DeliveryFunction))
+                .Append(Compare("Work Instructions", old.WorkInstructions, updated.WorkInstructions))
+                .Append(Compare("Notes", old.Notes, updated.Notes))
+                .Append(Compare("Days After Quarter", old.DaysAfterQuarter, updated.DaysAfterQuarter))
+                .Append(Compare("Folder Location", old.FolderLocation, updated.FolderLocation))
+                .Append(Compare("Report Type", old.ReportType, updated.ReportType))
+                .Append(Compare("Run With", old.RunWith, updated.RunWith))
+                .Append(Compare("Delivery Method", old.DeliveryMethod, updated.DeliveryMethod))
+                .Append(Compare("Delivery To", old.DeliverTo, updated.DeliverTo))
+                .Append(Compare("Effective Date", old.EffectiveDate, updated.EffectiveDate))
+                .Append(Compare("Termination Date", old.TerminationDate, updated.TerminationDate))
+                .Append(Compare("Plan", old.GroupName, updated.GroupName))
+                .Append(Compare("State", old.State, updated.State))
+                .Append(Compare("Report Path", old.ReportPath, updated.ReportPath))
+                .Append(Compare("Other Department", old.OtherDepartment, updated.OtherDepartment))
+                .Append(Compare("Source Department", old.SourceDepartment, updated.SourceDepartment))
+                .Append(Compare("Quality Indicator", old.QualityIndicator, updated.QualityIndicator))
+                .Append(Compare("ERS Report Location", old.ERSReportLocation, updated.ERSReportLocation))
+                .Append(Compare("ERR Status", old.ERRStatus, updated.ERRStatus))
+                .Append(Compare("Date Added", old.DateAdded, updated.DateAdded))
+                .Append(Compare("System Refresh Date", old.SystemRefreshDate, updated.SystemRefreshDate))
+                .Append(Compare("Legacy Report ID", old.LegacyReportID, updated.LegacyReportID))
+                .Append(Compare("Legacy Report ID R2", old.LegacyReportIDR2, updated.LegacyReportIDR2))
+                .Append(Compare("ERS Report Name", old.ERSReportName, updated.ERSReportName))
+                .Append(Compare("Other Report Location", old.OtherReportLocation, updated.OtherReportLocation))
+                .Append(Compare("Other Report Name", old.OtherReportName, updated.OtherReportName));
+
+            string Compare<T>(string header, T item1, T item2) =>
+                (!item1.Equals(item2)) ? ($"{header}: {(item1 != null ? item1.ToString() : "null")} => {(item2 != null ? item2.ToString() : "null")}\n") : (String.Empty);
+            
+            return messageBuilder.ToString();
         }
 
         // GET: Reports/Delete/5
@@ -284,7 +353,7 @@ namespace ReportOverviewApp.Controllers
         {
             var report = await _context.Reports.SingleOrDefaultAsync(m => m.ID == id);
             _context.Reports.Remove(report);
-            _context.Add(userLogFactory.Build(_context.Users.Where(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault().Id, $"\"{report.Name}\" has been deleted."));
+            _context.Add(userLogFactory.Build(GetCurrentUserID(), $"\"{report.Name}\" has been deleted."));
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }

@@ -6,21 +6,15 @@ using System.Threading.Tasks;
 
 namespace ReportOverviewApp.Helpers
 {
-    public class UserLogFactory : CustomFactory<UserLog>
+    public class UserLogFactory : AbstractFactory<UserLog>
     {
         public override UserLog Build()
         {
             return new UserLog();
         }
-        public UserLog Build(string _userId, string _message, DateTime? _timeStamp = null)
-        {
-            UserLog item = new UserLog()
-            {
-                UserID = _userId,
-                Message = _message,
-                TimeStamp = _timeStamp == null ? DateTime.Now: _timeStamp
-            };
-            return item;
+        public UserLog Build(string _userId, string _message, string _changes = null, DateTime? _timeStamp = null)
+        { 
+            return new UserLog(_userId, _message, _changes, _timeStamp == null ? DateTime.Now : _timeStamp);
         }
         public override bool HasProduct(UserLog item)
         {

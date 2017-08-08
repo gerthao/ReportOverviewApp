@@ -5,9 +5,15 @@ using System.Threading.Tasks;
 
 namespace ReportOverviewApp.Helpers
 {
-    public abstract class CustomFactory<T>
+    public abstract class AbstractFactory<T>
     {
         protected List<T> Products;
+        /// <summary>
+        ///  Gets an object of type T 
+        /// </summary>
+        /// <returns>
+        ///  Returns an object of type T
+        /// </returns>
         public abstract T Build();
         public abstract bool HasProduct(T item);
         protected abstract T Retrieve(T item);
