@@ -8,7 +8,7 @@ using ReportOverviewApp.Data;
 namespace ReportOverviewApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20170803154652_Initial")]
+    [Migration("20170809202832_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -201,13 +201,13 @@ namespace ReportOverviewApp.Migrations
                     b.Property<int?>("DaysAfterQuarter")
                         .HasMaxLength(20);
 
+                    b.Property<string>("DeliverTo");
+
                     b.Property<string>("DeliveryFunction")
                         .HasMaxLength(1000);
 
                     b.Property<string>("DeliveryMethod")
                         .HasMaxLength(260);
-
-                    b.Property<string>("DeliveryTo");
 
                     b.Property<bool>("Done");
 
@@ -289,6 +289,8 @@ namespace ReportOverviewApp.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Changes");
 
                     b.Property<string>("Message");
 

@@ -77,9 +77,9 @@ namespace ReportOverviewApp.Migrations
                     DateSent = table.Column<DateTime>(nullable: true),
                     DayDue = table.Column<string>(maxLength: 10, nullable: true),
                     DaysAfterQuarter = table.Column<int>(maxLength: 20, nullable: true),
+                    DeliverTo = table.Column<string>(nullable: true),
                     DeliveryFunction = table.Column<string>(maxLength: 1000, nullable: true),
                     DeliveryMethod = table.Column<string>(maxLength: 260, nullable: true),
-                    DeliveryTo = table.Column<string>(nullable: true),
                     Done = table.Column<bool>(nullable: false),
                     DueDate1 = table.Column<DateTime>(nullable: true),
                     DueDate2 = table.Column<DateTime>(nullable: true),
@@ -121,6 +121,7 @@ namespace ReportOverviewApp.Migrations
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Changes = table.Column<string>(nullable: true),
                     Message = table.Column<string>(nullable: true),
                     TimeStamp = table.Column<DateTime>(nullable: true),
                     UserID = table.Column<string>(nullable: true)

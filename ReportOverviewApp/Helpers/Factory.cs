@@ -5,7 +5,11 @@ using System.Threading.Tasks;
 
 namespace ReportOverviewApp.Helpers
 {
-    public abstract class AbstractFactory<T>
+    /// <summary>
+    ///  Abstract class to be used for other classes wanting to use the Factory Design Pattern.  Not fully implemented.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public abstract class Factory<T>
     {
         protected List<T> Products;
         /// <summary>

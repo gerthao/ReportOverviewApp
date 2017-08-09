@@ -269,9 +269,10 @@ namespace ReportOverviewApp.Controllers
             if (id != report.ID) return NotFound();
             if (ModelState.IsValid){
                 try{
-                    var old = (from r in _context.Reports where r.ID == id select r).Single();
+                    //Report old = _context.Reports.Where(r => r.ID == id).SingleOrDefault();
+                    _context.Add(userLogFactory.Build(GetCurrentUserID(), $"\"{report.Name}\" has been edited.", CompareChanges(null, report)));
                     _context.Update(report);
-                    _context.Add(userLogFactory.Build(GetCurrentUserID(), $"\"{report.Name}\" has been edited.", CompareChanges(old, report)));
+                   
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException){
@@ -285,6 +286,14 @@ namespace ReportOverviewApp.Controllers
 
         private string CompareChanges(Report old, Report updated)
         {
+            if(old == null)
+            {
+                old = new Report();
+            }
+            if(updated == null)
+            {
+                updated = new Report();
+            }
             if (old.Equals(updated)) return "No Apparent Changes Made.";
             StringBuilder messageBuilder = new StringBuilder();
             messageBuilder
@@ -331,8 +340,13 @@ namespace ReportOverviewApp.Controllers
                 .Append(Compare("Other Report Location", old.OtherReportLocation, updated.OtherReportLocation))
                 .Append(Compare("Other Report Name", old.OtherReportName, updated.OtherReportName));
 
-            string Compare<T>(string header, T item1, T item2) =>
-                (!item1.Equals(item2)) ? ($"{header}: {(item1 != null ? item1.ToString() : "null")} => {(item2 != null ? item2.ToString() : "null")}\n") : (String.Empty);
+            string Compare<T>(string header, T item1, T item2)
+            {
+                string item1Entry = item1 != null ? item1.ToString() : "null";
+                string item2Entry = item2 != null ? item2.ToString() : "null"; ;
+                return (!item1Entry.Equals(item2Entry)) ? ($"{header}: {item1Entry} => {item2Entry}\n") : (String.Empty);
+            }
+               
             
             return messageBuilder.ToString();
         }

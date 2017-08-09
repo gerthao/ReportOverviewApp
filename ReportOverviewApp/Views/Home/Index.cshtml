@@ -88,6 +88,7 @@
                         <thead>
                             <tr>
                                 <th>Message</th>
+                                <th>Changes</th>
                                 <th>Timestamp</th>
                                 <th>User</th>
                             </tr>
@@ -98,12 +99,14 @@
                                     <td>No logs present</td>
                                     <td></td>
                                     <td></td>
+                                    <td></td>
                                 </tr>
                             }
                             else {
                                 @foreach (var log in Model.UserLogs.OrderByDescending(m => m.ID)) {
                                     <tr>
-                                        <td class="col-sm-8">@log.Message</td>
+                                        <td class="col-sm-2">@log.Message</td>
+                                        <td class="col-sm-6">@log.Changes</td>
                                         <td class="col-sm-2">@log.TimeStamp</td>
                                         <td class="col-sm-2">@Model.GetUserName(log.UserID)</td>
                                     </tr>

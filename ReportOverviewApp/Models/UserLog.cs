@@ -14,12 +14,12 @@ namespace ReportOverviewApp.Models
         public DateTime? TimeStamp { get; private set; }
 
         public UserLog() { }
-        public UserLog(string _userID, string _message, string _changes=null, DateTime? _timeStamp)
+        public UserLog(string userId, string message, DateTime? timeStamp, string changes = null)
         {
-            UserID = _userID;
-            Message = _message;
-            Changes = _changes;
-            TimeStamp = _timeStamp;
+            UserID = userId;
+            Message = message;
+            Changes = changes;
+            TimeStamp = timeStamp;
         }
 
         public override string ToString()

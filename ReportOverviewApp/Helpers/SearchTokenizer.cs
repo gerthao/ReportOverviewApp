@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace ReportOverviewApp.Helpers
 {
+    /// <summary>
+    ///  Class used to tokenize the search input.  Not currently functional.
+    /// </summary>
     public class SearchTokenizer
     {
         private string entry;
