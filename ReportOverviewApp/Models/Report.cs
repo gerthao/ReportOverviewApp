@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.IO;
 
 namespace ReportOverviewApp.Models
 {
@@ -105,28 +106,33 @@ namespace ReportOverviewApp.Models
         /// <returns>
         ///  Returns a Nullable DateTime object representating the current deadline of a report.
         /// </returns>
-        [DataType(DataType.Date)]
-        public DateTime? Deadline()
+        public DateTime? Deadline(DateTime compareDate)
         {
+            if (compareDate == null) compareDate = DateTime.Today;
             switch (Frequency)
             {
                 case "Quarterly":
-                    return GetDeadlineQuarterly();
+                    return GetDeadlineQuarterly(compareDate);
                 case "Monthly":
-                    return GetDeadlineMonthly();
+                    return GetDeadlineMonthly(compareDate);
                 case "Weekly":
-                    return GetDeadlineWeekly();
+                    return GetDeadlineWeekly(compareDate);
                 case "Biweekly":
-                    return GetDeadlineBiweekly();
+                    return GetDeadlineBiweekly(compareDate);
                 case "Annual":
-                    return GetDeadlineAnnual();
+                    return GetDeadlineAnnual(compareDate);
                 case "Semiannual":
-                    return GetDeadlineSemiannual();
+                    return GetDeadlineSemiannual(compareDate);
                 default:
                     return null;
             }
         }
-        private DateTime? GetDeadlineQuarterly()
+        public DateTime? CurrentDeadline()
+        {
+            return Deadline(DateTime.Today);
+        }
+
+        private DateTime? GetDeadlineQuarterly(DateTime compareDate)
         {
             List<DateTime?> deadlines = GetAllDueDates();
             if (deadlines.Count() == 0) return null;
@@ -134,29 +140,29 @@ namespace ReportOverviewApp.Models
             {
                 DateTime? d1 = deadlines[i];
                 DateTime? d2 = deadlines[i + 1];
-                if (d1 != null && (d1.Value.Year > DateTime.Now.Year + 1 || d1.Value.Year < DateTime.Now.Year)){
-                    d1 = new DateTime(year: DateTime.Now.Year, month: d1.Value.Month, day: d1.Value.Day);
+                if (d1 != null && (d1.Value.Year > compareDate.Year + 1 || d1.Value.Year < compareDate.Year)){
+                    d1 = new DateTime(year: compareDate.Year, month: d1.Value.Month, day: d1.Value.Day);
                 }
                 if (d2 != null){
-                    d2 = new DateTime(year: d2.Value.Month < d1.Value.Month ? DateTime.Now.Year + 1 : DateTime.Now.Year, month: d2.Value.Month, day: d2.Value.Day);
+                    d2 = new DateTime(year: d2.Value.Month < d1.Value.Month ? compareDate.Year + 1 : compareDate.Year, month: d2.Value.Month, day: d2.Value.Day);
                 }
                 deadlines[i] = d1;
                 deadlines[i + 1] = d2;
             }
-            deadlines = deadlines.Where(date => date >= DateTime.Now).OrderBy(date => date).ToList();
+            deadlines = deadlines.Where(date => date >= compareDate).OrderBy(date => date).ToList();
             if (deadlines.Count() == 0) return null;
             return deadlines[0];
         }
-        private DateTime? GetDeadlineMonthly()
+        private DateTime? GetDeadlineMonthly(DateTime compareDate)
         {
-            DateTime? deadline = new DateTime(year: DateTime.Now.Year, month: DateTime.Now.Month, day: Int32.Parse(DayDue));
-            if (deadline < DateTime.Now) deadline = deadline.Value.AddMonths(1);
+            DateTime? deadline = new DateTime(year: compareDate.Year, month: compareDate.Month, day: Int32.Parse(DayDue));
+            if (deadline < compareDate) deadline = deadline.Value.AddMonths(1);
             return deadline;
         }
-        private DateTime? GetDeadlineWeekly()
+        private DateTime? GetDeadlineWeekly(DateTime compareDate)
         {
             DayOfWeek weeklyDueDay = DayOfWeek.Sunday;
-            DateTime deadline = DateTime.Now;
+            DateTime deadline = compareDate;
             const int daily = 1;
             switch (DayDue)
             {
@@ -190,7 +196,7 @@ namespace ReportOverviewApp.Models
             }
             return deadline;
         }
-        private DateTime? GetDeadlineBiweekly()
+        private DateTime? GetDeadlineBiweekly(DateTime compareDate)
         {
             int biweeklyDay;
             const int biweek = 14, firstBiweek = 15, secondBiweek = 29;
@@ -198,8 +204,8 @@ namespace ReportOverviewApp.Models
             {
                 return null;
             }
-            DateTime deadline = new DateTime(year: DateTime.Now.Year, month: DateTime.Now.Month, day: biweeklyDay);
-            if(deadline < DateTime.Today)
+            DateTime deadline = new DateTime(year: compareDate.Year, month: compareDate.Month, day: biweeklyDay);
+            if(deadline < compareDate)
             {
                 switch (deadline.Day)
                 {
@@ -222,12 +228,12 @@ namespace ReportOverviewApp.Models
             dates.RemoveAll(dueDate => dueDate == null);
             return dates;
         }
-        private DateTime? GetDeadlineAnnual()
+        private DateTime? GetDeadlineAnnual(DateTime compareDate)
         {
             List<DateTime?> dates = GetAllDueDates();
             if (dates.Count == 0) return null;
             dates.ForEach(date => date = new DateTime(
-                                                year: DeadlineHasPassed(date.Value)?DateTime.Now.Year+1:DateTime.Now.Year, 
+                                                year: DeadlineHasPassed(date.Value)?compareDate.Year+1:compareDate.Year, 
                                                 month: date.Value.Month, 
                                                 day: date.Value.Day));
             return dates.ElementAt(0);
@@ -237,12 +243,12 @@ namespace ReportOverviewApp.Models
             deadline = new DateTime(year: DateTime.Today.Year, month: deadline.Month, day: deadline.Day);
             return deadline < DateTime.Today;
         }
-        private DateTime? GetDeadlineSemiannual()
+        private DateTime? GetDeadlineSemiannual(DateTime compareDate)
         {
             List<DateTime?> dates = GetAllDueDates();
             if (dates.Count == 0) return null;
             dates.ForEach(date => date = new DateTime(
-                                                year: DeadlineHasPassed(date.Value)?DateTime.Now.Year+1:DateTime.Now.Year,
+                                                year: DeadlineHasPassed(date.Value)?compareDate.Year+1:compareDate.Year,
                                                 month: date.Value.Month,
                                                 day: date.Value.Day));
             return dates.Where(date => date.Value >= DateTime.Today)
@@ -250,5 +256,47 @@ namespace ReportOverviewApp.Models
                         .First();
         }
         public string ToJson() => JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+        public Report Copy()
+        {
+            Report report = new Report();
+            report.ID = ID;
+            report.Name = Name;
+            report.BusinessContact = BusinessContact;
+            report.BusinessOwner = BusinessOwner;
+            report.DueDate1 = DueDate1;
+            report.DueDate2 = DueDate2;
+            report.DueDate3 = DueDate3;
+            report.DueDate4 = DueDate4;
+            report.DateAdded = DateAdded;
+            report.EffectiveDate = EffectiveDate;
+            report.TerminationDate = TerminationDate;
+            report.SystemRefreshDate = SystemRefreshDate;
+            report.Frequency = Frequency;
+            report.DayDue = DayDue;
+            report.DeliveryFunction = DeliveryFunction;
+            report.DeliveryMethod = DeliveryMethod;
+            report.DeliverTo = DeliverTo;
+            report.WorkInstructions = WorkInstructions;
+            report.DaysAfterQuarter = DaysAfterQuarter;
+            report.FolderLocation = FolderLocation;
+            report.ReportType = ReportType;
+            report.RunWith = RunWith;
+            report.Notes = Notes;
+            report.DaysAfterQuarter = DaysAfterQuarter;
+            report.GroupName = GroupName;
+            report.State = State;
+            report.ReportPath = ReportPath;
+            report.OtherDepartment = OtherDepartment;
+            report.SourceDepartment = SourceDepartment;
+            report.QualityIndicator = QualityIndicator;
+            report.ERSReportLocation = ERSReportLocation;
+            report.ERRStatus = ERRStatus;
+            report.LegacyReportID = LegacyReportID;
+            report.LegacyReportIDR2 = LegacyReportIDR2;
+            report.ERSReportName = ERSReportName;
+            report.OtherReportLocation = OtherReportLocation;
+            report.OtherReportName = OtherReportName;
+            return report;
+        }
     }
 }

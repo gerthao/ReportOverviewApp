@@ -20,6 +20,10 @@ namespace ReportOverviewApp.Controllers
         {
             _context = context;
         }
+        public JsonResult GetUserLogs()
+        {
+            return Json(from ul in _context.UserLogs select ul);
+        }
         private List<Widget> DefaultWidgets()
         {
             WidgetBuilder builder = new WidgetBuilder();
@@ -51,12 +55,6 @@ namespace ReportOverviewApp.Controllers
         }
         public ActionResult Index()
         {
-            //IDictionary<string, object> blob = new Dictionary<string, object>();
-            //var reports = from r in _context.Reports select r;
-            //var users = from u in _context.Users select u;
-            //blob.Add("reports", reports);
-            //blob.Add("users", users);
-            //return View(blob);
             var wid = from w in DefaultWidgets() select w;
             var viewModel = new HomeViewModel()
             {

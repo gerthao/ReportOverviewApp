@@ -32,6 +32,7 @@
     <Content Include="wwwroot\fonts\FontAwesome.otf" />
     <Content Include="wwwroot\img\bootstrap-social.png" />
     <Content Include="wwwroot\js\docs.js" />
+    <Content Include="wwwroot\js\HomeHandler.js" />
     <Content Include="wwwroot\js\jquery.js">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>

@@ -1,4 +1,4 @@
-﻿
+﻿'use strict';
 
 $(document).ready(function () {
     $("#ClearSearchForm").click(function () {
@@ -16,10 +16,26 @@ $(document).ready(function () {
     $("#ViewTableButton").click(function () {
         $("#ReportTable").toggleClass("table-condensed");
     });
+    function checkLessThanTen(number) {
+        if (number < 10) {
+            number = '0' + number;
+        } return number;
+    }
+    function getDateTimeNow() {
+        var date = new Date();
+        var dateString;
+        var month = date.getMonth() + 1;
+        var day = date.getDay();
+        var year = date.getFullYear();
+        var hour = checkLessThanTen(date.getHours());
+        var minute = checkLessThanTen(date.getHours());
+        var second = checkLessThanTen(date.getSeconds());
+        dateString = month + '/' + day + '/' + year + ' ' + hour + ':' + minute + ':' + second;
+        return dateString;
+    }
     $('#done').click(function () {
         if ($('#dateDone').val() === '' && $('#done:checked').val()) {
-            var date = new Date();
-            $('#dateDone').val((date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear());
+            $('#dateDone').val(getDateTimeNow());
             return;
         }
         if ($('#dateDone').val() !== '' && !$('#done:checked').val()) {
@@ -28,8 +44,7 @@ $(document).ready(function () {
     });
     $('#clientNotified').click(function () {
         if ($('#dateClientNotified').val() === '' && $('#clientNotified:checked').val()) {
-            var date = new Date();
-            $('#dateClientNotified').val((date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear());
+            $('#dateClientNotified').val(getDateTimeNow());
             return;
         } if ($('#dateClientNotifed').val() !== '' && !$('#clientNotified:checked').val()) {
             $('#dateClientNotified').val('');
@@ -37,8 +52,7 @@ $(document).ready(function () {
     });
     $('#sent').click(function () {
         if ($('#dateSent').val() === '' && $('#sent:checked').val()) {
-            var date = new Date();
-            $('#dateSent').val((date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear());
+            $('#dateSent').val(getDateTimeNow());
             return;
         } if ($('#dateSent').val() !== '' && !$('#sent:checked').val()) {
             $('#dateSent').val('');
@@ -65,10 +79,13 @@ $(document).ready(function () {
             $('#sent').prop('checked', false);
         }
     });
+    $('.modal').on('hidden.bs.modal', function () {
+        $(this).find('form')[0].reset();
+    });
     var root = window.location.origin;
-    $('#ReportTable tr').on("click", function () {
+    $('#reportTable tr').on("click", function () {
         var retrievedID = $(this).find(".ReportID").html();
-        var link = root + "/Reports/JsonInfo/" + retrievedID;
+        var link = root + "/Reports/GetReport/" + retrievedID;
         try {
             $.ajax({
                 url: link,
@@ -87,18 +104,18 @@ $(document).ready(function () {
         }
     });
     function handleJSONReport(data) {
-        if (data == null) {
+        if (data === null) {
             alert("there is no data");
         } else {
             var report = '';
             report = JSON.stringify(data[0]);
             for (var i in data[0]) {
                 $('#' + i).val(data[0][i]);
-                if (i === "dateDone" && data[0][i] != null) {
+                if (i === "dateDone" && data[0][i] !== null) {
                     $('#done').prop('checked', true);
-                } if (i === 'dateClientNotified' && data[0][i] != null) {
+                } if (i === 'dateClientNotified' && data[0][i] !== null) {
                     $('#clientNotified').prop('checked', true);
-                } if (i === 'dateSent' && data[0][i] != null) {
+                } if (i === 'dateSent' && data[0][i] !== null) {
                     $('#sent').prop('checked', true);
                 }
             }
@@ -113,27 +130,31 @@ $(document).ready(function () {
                 $('#dueDate2').parent().parent().hide();
                 $('#dueDate3').parent().parent().hide();
                 $('#dueDate4').parent().parent().hide();
+                $('#daysAfterQuarter').parent().parent().hide();
                 break;
             case 'Quarterly':
                 $('#dueDate1').parent().parent().show();
                 $('#dueDate2').parent().parent().show();
                 $('#dueDate3').parent().parent().show();
                 $('#dueDate4').parent().parent().show();
+                $('#daysAfterQuarter').parent().parent().show();
                 break;
             case 'Semiannual':
                 $('#dueDate1').parent().parent().show();
                 $('#dueDate2').parent().parent().show();
                 $('#dueDate3').parent().parent().hide();
                 $('#dueDate4').parent().parent().hide();
+                $('#daysAfterQuarter').parent().parent().hide();
                 break;
             case 'Annual':
                 $('#dueDate1').parent().parent().show();
                 $('#dueDate2').parent().parent().hide();
                 $('#dueDate3').parent().parent().hide();
                 $('#dueDate4').parent().parent().hide();
+                $('#daysAfterQuarter').parent().parent().hide();
                 break;
         }
-    };
+    }
     updateFrequencyFields();
     $('#frequency').on('input', function () {
         updateFrequencyFields();

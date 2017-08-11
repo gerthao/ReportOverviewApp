@@ -7,6 +7,14 @@
     .report-index{
         margin-left: auto;
     }
+    .modal-xl {
+        width: 60%;
+    }
+    .modal-overflow {
+        max-height: 94%;
+        overflow: auto;
+    }
+    
 </style>
 <h3 class="page-header">Reports 
     <button class="btn btn-primary" type="button" id="mag-glass" data-toggle="modal" data-target="#SearchReportModal"><span class="glyphicon glyphicon-search"></span></button>
@@ -24,7 +32,7 @@
     </div>
 </div>
 <div id="CreateReportModal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-xl modal-overflow" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 @await Html.PartialAsync("Create", new Report())
@@ -34,7 +42,7 @@
 </div>
 @if (Model == null || Model.Reports == null || Model.Reports.Count() == 0) { <br /><h4 style="text-align: center; padding-top: 30px">No Records To Display</h4> }
 else {
-    <table id="ReportTable" class="table report-table table-bordered table-condensed table-striped table-hover">
+    <table id="reportTable" class="table report-table table-bordered table-condensed table-striped table-hover">
         <thead>
             <tr>
                 <th>@Html.ActionLink("ID", "Index", new { search = Model.Search, plan = Model.Plan, pageIndex = Model.CurrentPage, column = "ID" , begin=Model.Begin, end=Model.End})</th>
@@ -52,11 +60,11 @@ else {
                 <tr>
                     <td class="ReportID">@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).ID)</td>
                     <td class="ReportName">@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Name)</td>
-                    <td  class="col-sm-1">@Model.DisplayDateTimeAsDate(Model.Reports.ElementAt(i).Deadline())</td>
+                    <td class="col-sm-1">@Model.DisplayDateTimeAsDate(Model.Reports.ElementAt(i).CurrentDeadline())</td>
                     <td class="col-sm-2"><text>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateDone)</text></td>
-                    <td  class="col-sm-2"><text>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateClientNotified)</text></td>
-                    <td  class="col-sm-2"><text>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateSent)</text></td>
-                    <td  class="col-sm-1" style="text-align: center;">
+                    <td class="col-sm-2"><text>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateClientNotified)</text></td>
+                    <td class="col-sm-2"><text>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateSent)</text></td>
+                    <td class="col-sm-1" style="text-align: center;">
                         <a id="EditReportLink" data-toggle="modal" data-target="#EditReportModal"><span class="glyphicon glyphicon-edit"></span></a> |
                         <a asp-action="Details" asp-route-id="@Model.Reports.ElementAt(i).ID"><span class="glyphicon glyphicon-modal-window"></span></a> |
                         <a asp-action="Delete" asp-route-id="@Model.Reports.ElementAt(i).ID"><span class="glyphicon glyphicon-remove-circle"></span></a>
@@ -66,9 +74,9 @@ else {
         </tbody>
     </table>
     <div id="EditReportModal" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-xl modal-overflow" role="document">
             <div class="modal-content">
-                <div class="modal-header">@await Html.PartialAsync("Check", new Report())</div>
+                <div class="modal-header">@await Html.PartialAsync("Edit", new Report())</div>
             </div>
         </div>
     </div>

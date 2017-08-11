@@ -83,17 +83,27 @@ namespace ReportOverviewApp.Controllers
         ///  Returns JsonResult containing a JSON-formatted report.
         /// </returns>
         [Authorize]
-        public JsonResult JsonInfo(int? id)
+        public JsonResult GetReport(int? id)
         {
             var report = from r in _context.Reports where r.ID == id select r;
             return Json(report);
+        }
+        [Authorize]
+        public JsonResult GetReports(int? id_1, int? id_2)
+        {
+            return Json(from r in _context.Reports where r.ID >= id_1 && r.ID <= id_2 select r);
+        }
+        [Authorize]
+        public JsonResult GetAllReports()
+        {
+            return Json(_context.Reports);
         }
         private void HandleFrequency(string frequency)
         {
             if (!String.IsNullOrEmpty(frequency))
             {
                 viewModel.Frequency = frequency;
-                viewModel.Reports = viewModel.Reports.Where(r => r.Frequency.Equals(frequency));
+                viewModel.Reports = viewModel.Reports.Where(r => r != null && r.Frequency != null && r.Frequency.Equals(frequency));
             }
         }
         private void HandleSort(string column)
@@ -108,7 +118,7 @@ namespace ReportOverviewApp.Controllers
                         viewModel.Reports = viewModel.SortAscending["Name"]? viewModel.Reports.OrderBy(report => report.Name) : viewModel.Reports.OrderByDescending(report => report.Name);
                         break;
                     case "Deadline":
-                        viewModel.Reports = viewModel.SortAscending["Deadline"]? viewModel.Reports.OrderBy(report => report.Deadline()) : viewModel.Reports.OrderByDescending(report => report.Deadline());
+                        viewModel.Reports = viewModel.SortAscending["Deadline"]? viewModel.Reports.OrderBy(report => report.CurrentDeadline()) : viewModel.Reports.OrderByDescending(report => report.CurrentDeadline());
                         break;
                     default:
                         viewModel.Reports = viewModel.SortAscending["ID"]? viewModel.Reports.OrderBy(report => report.ID) : viewModel.Reports.OrderByDescending(report => report.ID);
@@ -122,11 +132,11 @@ namespace ReportOverviewApp.Controllers
         {
             if (begin != null){
                 viewModel.Begin = begin;
-                viewModel.Reports = viewModel.Reports.Where(r => r.Deadline() >= viewModel.Begin);
+                viewModel.Reports = viewModel.Reports.Where(r => r.CurrentDeadline() >= viewModel.Begin);
             }
             if (end != null){
                 viewModel.End = end;
-                viewModel.Reports = viewModel.Reports.Where(r => r.Deadline() <= viewModel.End);
+                viewModel.Reports = viewModel.Reports.Where(r => r.CurrentDeadline() <= viewModel.End);
             }
         }
         private void HandlePlan(string plan)
@@ -261,7 +271,7 @@ namespace ReportOverviewApp.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
 
-        private string GetCurrentUserID() => _context.Users.Where(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault().Id;
+        private string GetCurrentUserID() => _context.Users.Where(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault().UserName;
 
         [HttpPost, ValidateAntiForgeryToken, Authorize]
         public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Done,ClientNotified,Sent,DateDue,DateDone,DateClientNotified,DateSent,BusinessContact,BusinessOwner,DueDate1,DueDate2,DueDate3,DueDate4,Frequency,DayDue,DeliveryFunction,WorkInstructions,Notes,DaysAfterQuarter,FolderLocation,ReportType,RunWith,DeliveryMethod,DeliveryTo,EffectiveDate,TerminationDate,GroupName,State,ReportPath,OtherDepartment,SourceDepartment,QualityIndicator,ERSReportLocation,ERRStatus,DateAdded,SystemRefreshDate,LegacyReportID,LegacyReportIDR2,ERSReportName,OtherReportLocation,OtherReportName")] Report report)
@@ -269,10 +279,15 @@ namespace ReportOverviewApp.Controllers
             if (id != report.ID) return NotFound();
             if (ModelState.IsValid){
                 try{
-                    //Report old = _context.Reports.Where(r => r.ID == id).SingleOrDefault();
-                    _context.Add(userLogFactory.Build(GetCurrentUserID(), $"\"{report.Name}\" has been edited.", CompareChanges(null, report)));
+                    //Report old = (_context.Reports.Where(r => r.ID == id).SingleOrDefault()).Copy();
+                    //Report newer = report.Copy();
+                    _context.Add(userLogFactory.Build(GetCurrentUserID(), $"\"{report.Name}\" has been edited."/*, CompareChanges(null, newer)*/));
+                    //await _context.SaveChangesAsync();
+
+                    //old = null;
+                    //newer = null;
+
                     _context.Update(report);
-                   
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException){
