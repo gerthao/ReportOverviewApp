@@ -98,6 +98,12 @@ namespace ReportOverviewApp.Controllers
         {
             return Json(_context.Reports);
         }
+        [Authorize]
+        public JsonResult GetDeadlines(double? days)
+        {
+            if (days == null) return Json(from r in _context.Reports select r.CurrentDeadline());
+            else return Json(from r in _context.Reports where r.CurrentDeadline() == DateTime.Today.AddDays(days.Value) select r.CurrentDeadline());
+        }
         private void HandleFrequency(string frequency)
         {
             if (!String.IsNullOrEmpty(frequency))

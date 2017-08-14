@@ -25,7 +25,7 @@ $(document).ready(function () {
         var date = new Date();
         var dateString;
         var month = date.getMonth() + 1;
-        var day = date.getDay();
+        var day = date.getDate();
         var year = date.getFullYear();
         var hour = checkLessThanTen(date.getHours());
         var minute = checkLessThanTen(date.getHours());

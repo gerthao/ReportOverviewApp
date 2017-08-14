@@ -24,6 +24,10 @@ namespace ReportOverviewApp.Controllers
         {
             return Json(from ul in _context.UserLogs select ul);
         }
+        public IActionResult TimeViewComponent()
+        {
+            return ViewComponent("TimeViewComponent");
+        }
         private List<Widget> DefaultWidgets()
         {
             WidgetBuilder builder = new WidgetBuilder();
