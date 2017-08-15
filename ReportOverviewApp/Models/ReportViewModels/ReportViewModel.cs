@@ -19,7 +19,7 @@ namespace ReportOverviewApp.Models.ReportViewModels
         private int Pages { get; set; }
         private int PageSize { get; set; }
         public int CurrentPage { get; private set; } = 1;
-        public const int DEFAULT_PAGE_SIZE = 40;
+        public const int DEFAULT_PAGE_SIZE = 100;
         public int EndOfDays = 20;
         public string Search { get; set; }
         public string Column { get; set; }

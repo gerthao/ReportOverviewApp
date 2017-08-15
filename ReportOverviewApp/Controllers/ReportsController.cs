@@ -46,13 +46,13 @@ namespace ReportOverviewApp.Controllers
         //    private static ReportViewModel viewModel;
 
         //}
-        private ReportViewModel GetReportViewModel(string search, string column, int recordsPerPage, int pageIndex, string plan, DateTime? begin, DateTime? end, string frequency)
+        private async Task<ReportViewModel> GetReportViewModelAsync(string search, string column, int recordsPerPage, int pageIndex, string plan, DateTime? begin, DateTime? end, string frequency)
         {
             if (viewModel == null)
             {
                 viewModel = new ReportViewModel()
                 {
-                    Reports = from r in _context.Reports select r,
+                    Reports = await _context.Reports.ToListAsync(),
                     SortAscending = new Dictionary<string, bool>()
                     {
                         { "ID", true },
@@ -94,15 +94,18 @@ namespace ReportOverviewApp.Controllers
             return Json(from r in _context.Reports where r.ID >= id_1 && r.ID <= id_2 select r);
         }
         [Authorize]
-        public JsonResult GetAllReports()
+        public async Task<JsonResult> GetAllReportsAsync()
         {
-            return Json(_context.Reports);
+            return Json(await _context.Reports.ToListAsync());
         }
         [Authorize]
-        public JsonResult GetDeadlines(double? days)
+        public async Task<JsonResult> GetDeadlines(double? days)
         {
-            if (days == null) return Json(from r in _context.Reports select r.CurrentDeadline());
-            else return Json(from r in _context.Reports where r.CurrentDeadline() == DateTime.Today.AddDays(days.Value) select r.CurrentDeadline());
+            if (days == null)
+            {
+                return Json(await _context.Reports.Select(r => r.CurrentDeadline()).ToListAsync());
+            }
+            return Json(await _context.Reports.Select(r => r.CurrentDeadline()).Where(r => r == DateTime.Today.AddDays(days.Value)).ToListAsync());
         }
         private void HandleFrequency(string frequency)
         {
@@ -180,8 +183,8 @@ namespace ReportOverviewApp.Controllers
 
         // GET: Reports
         [Authorize]
-        public ActionResult Index(string search, string column, int entriesPerPage, int pageIndex, string plan, string frequency, DateTime? begin = null, DateTime? end = null)
-            => View(GetReportViewModel(search, column, entriesPerPage, pageIndex, plan, begin, end, frequency));
+        public async Task<IActionResult> Index(string search, string column, int entriesPerPage, int pageIndex, string plan, string frequency, DateTime? begin = null, DateTime? end = null)
+            => View(await GetReportViewModelAsync(search, column, entriesPerPage, pageIndex, plan, begin, end, frequency));
 
         // GET: Reports/Details/5
         [Authorize]

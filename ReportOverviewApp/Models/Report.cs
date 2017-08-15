@@ -3,9 +3,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.IO;
 
 namespace ReportOverviewApp.Models
 {

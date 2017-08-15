@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -18,50 +18,23 @@
     <OutputTypeEx>exe</OutputTypeEx>
     <StartupObject />
   </PropertyGroup>
-
-  <ItemGroup>
-    <Content Include="wwwroot\assets\css\bootstrap.css" />
-    <Content Include="wwwroot\assets\css\docs.css" />
-    <Content Include="wwwroot\assets\css\font-awesome.css" />
-    <Content Include="wwwroot\css\bootstrap-social.css" />
-    <Content Include="wwwroot\fonts\fontawesome-webfont.eot" />
-    <Content Include="wwwroot\fonts\fontawesome-webfont.svg" />
-    <Content Include="wwwroot\fonts\fontawesome-webfont.ttf" />
-    <Content Include="wwwroot\fonts\fontawesome-webfont.woff" />
-    <Content Include="wwwroot\fonts\fontawesome-webfont.woff2" />
-    <Content Include="wwwroot\fonts\FontAwesome.otf" />
-    <Content Include="wwwroot\img\bootstrap-social.png" />
-    <Content Include="wwwroot\js\docs.js" />
-    <Content Include="wwwroot\js\HomeHandler.js" />
-    <Content Include="wwwroot\js\jquery.js">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="wwwroot\js\LogoutHandler.js" />
-    <Content Include="wwwroot\js\ReportsHandler.js" />
-  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Angular.UI.Bootstrap" Version="2.5.0" />
     <PackageReference Include="AngularJS.Core" Version="1.6.5" />
-    <PackageReference Include="Font.Awesome" Version="4.7.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore" Version="1.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="1.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="1.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="1.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="1.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Cors" Version="1.1.3" />
-    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="1.1.2" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="1.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.2" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="1.1.1" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="1.1.2" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.2" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="1.1.1" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="1.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.0" />
+    <PackageReference Include="Microsoft.NETCore.Platforms" Version="2.0.0" />
+    <PackageReference Include="Microsoft.NETCore.Targets" Version="2.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
-    <PackageReference Include="System.ValueTuple" Version="4.3.1" />
+    <PackageReference Include="System.ValueTuple" Version="4.4.0" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.0.1" />
@@ -70,8 +43,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Views\Shared\_SideMenu.cshtml" />
+    <None Include="wwwroot\js\HomeHandler.js" />
+    <None Include="wwwroot\js\LogoutHandler.js" />
+    <None Include="wwwroot\js\ReportsHandler.js" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="JavaScript\" />
     <Folder Include="Migrations\" />
     <Folder Include="Migrations\" />
     <Folder Include="Views\Home\Components\TimeViewComponent\" />

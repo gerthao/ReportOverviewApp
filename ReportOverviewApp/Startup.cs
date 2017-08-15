@@ -12,6 +12,9 @@ using Microsoft.Extensions.Logging;
 using ReportOverviewApp.Data;
 using ReportOverviewApp.Models;
 using ReportOverviewApp.Services;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace ReportOverviewApp
 {
@@ -43,13 +46,17 @@ namespace ReportOverviewApp
             string connection = "DefaultConnection";
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString(connection)));
-
+            services.ConfigureApplicationCookie(options => options.LoginPath = "/Account/Login");
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                    .AddMicrosoftAccount(options =>
+                   {
+                       options.ClientId = Configuration["Authentication:Microsoft:ClientId"];
+                       options.ClientSecret = Configuration["Authentication:Microsoft:ClientSecret"];
+                   });
             services.AddMvc();
-
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
@@ -73,16 +80,16 @@ namespace ReportOverviewApp
             }
 
             app.UseStaticFiles();
-
-            app.UseIdentity();
+            app.UseAuthentication();
+            //app.UseIdentity();
 
             // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715
 
-            app.UseMicrosoftAccountAuthentication(new MicrosoftAccountOptions()
-            {
-                ClientId = Configuration["Authentication:Microsoft:ClientId"],
-                ClientSecret = Configuration["Authentication:Microsoft:ClientSecret"]
-            });
+            //app.UseMicrosoftAccountAuthentication(new MicrosoftAccountOptions()
+            //{
+            //    ClientId = Configuration["Authentication:Microsoft:ClientId"],
+            //    ClientSecret = Configuration["Authentication:Microsoft:ClientSecret"]
+            //});
 
             app.UseMvc(routes =>
             {
