@@ -4,7 +4,7 @@ var getCurrentTime = function () {
     $.get("/Home/TimeViewComponent", function (data) { $("#timeViewComponentContainer").html(data); });
 };
 var getUserLogs = function () {
-    var link = root + "/Home/GetUserLogs/";
+    var link = root + "/Data/GetUserLogs/";
     try {
         $.ajax({
             url: link,
@@ -23,7 +23,7 @@ var getUserLogs = function () {
     }
 };
 var getReportCount = function () {
-    var link = root + "/Reports/GetDeadlines/";
+    var link = root + "/Data/GetDeadlines/";
     try {
         $.ajax({
             url: link,

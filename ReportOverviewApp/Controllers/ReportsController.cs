@@ -41,11 +41,7 @@ namespace ReportOverviewApp.Controllers
         ///  The returned object is used for the Index method.
         /// </returns>
         /// 
-        //public static class ReportViewModelBuilder
-        //{
-        //    private static ReportViewModel viewModel;
 
-        //}
         private async Task<ReportViewModel> GetReportViewModelAsync(string search, string column, int recordsPerPage, int pageIndex, string plan, DateTime? begin, DateTime? end, string frequency)
         {
             if (viewModel == null)
@@ -73,40 +69,7 @@ namespace ReportOverviewApp.Controllers
             return viewModel;
         }
         
-        /// <summary>
-        ///  Gets a Report based on its ID in JSON format.
-        /// </summary>
-        /// <param name="id">
-        ///  "id" must be a positive integer.
-        /// </param>
-        /// <returns>
-        ///  Returns JsonResult containing a JSON-formatted report.
-        /// </returns>
-        [Authorize]
-        public JsonResult GetReport(int? id)
-        {
-            var report = from r in _context.Reports where r.ID == id select r;
-            return Json(report);
-        }
-        [Authorize]
-        public JsonResult GetReports(int? id_1, int? id_2)
-        {
-            return Json(from r in _context.Reports where r.ID >= id_1 && r.ID <= id_2 select r);
-        }
-        [Authorize]
-        public async Task<JsonResult> GetAllReportsAsync()
-        {
-            return Json(await _context.Reports.ToListAsync());
-        }
-        [Authorize]
-        public async Task<JsonResult> GetDeadlines(double? days)
-        {
-            if (days == null)
-            {
-                return Json(await _context.Reports.Select(r => r.CurrentDeadline()).ToListAsync());
-            }
-            return Json(await _context.Reports.Select(r => r.CurrentDeadline()).Where(r => r == DateTime.Today.AddDays(days.Value)).ToListAsync());
-        }
+       
         private void HandleFrequency(string frequency)
         {
             if (!String.IsNullOrEmpty(frequency))

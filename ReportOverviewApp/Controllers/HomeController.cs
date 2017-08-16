@@ -20,10 +20,7 @@ namespace ReportOverviewApp.Controllers
         {
             _context = context;
         }
-        public async Task<JsonResult> GetUserLogs()
-        {
-            return Json(await _context.UserLogs.ToListAsync());
-        }
+
         public IActionResult TimeViewComponent()
         {
             return ViewComponent("TimeViewComponent");

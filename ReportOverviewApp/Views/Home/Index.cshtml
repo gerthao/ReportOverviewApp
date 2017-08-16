@@ -65,7 +65,7 @@
                 <div class="caption caption-widget">
                     <h3>Upcoming Reports (1 Week)</h3>
                     <h1 id="weekReportCount">...</h1>
-                    <h1>@Html.ActionLink(@Model.Reports.Where(r => r.CurrentDeadline() != null).Where(r => r.CurrentDeadline() >= DateTime.Today).Where(r => r.CurrentDeadline() <= DateTime.Today.AddDays(7)).Count().ToString(), "../Reports/Index", new { begin = DateTime.Today, end = DateTime.Today.AddDays(7) })</h1>
+                    <h1>@Html.ActionLink(@Model.Reports.Where(r => r.Frequency != null).Where(r => r.Frequency.Equals("Monthly")).Count().ToString(), "../Reports/Index", new { begin = DateTime.Today, end = DateTime.Today.AddDays(7) })</h1>
                 </div>
             </div>
         </div>

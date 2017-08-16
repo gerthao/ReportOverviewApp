@@ -85,7 +85,7 @@ $(document).ready(function () {
     var root = window.location.origin;
     $('#reportTable tr').on("click", function () {
         var retrievedID = $(this).find(".ReportID").html();
-        var link = root + "/Reports/GetReport/" + retrievedID;
+        var link = root + "/Data/GetReport/" + retrievedID;
         try {
             $.ajax({
                 url: link,
