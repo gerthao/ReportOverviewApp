@@ -26,15 +26,15 @@ namespace ReportOverviewApp.Controllers
         ///  Returns JsonResult containing a JSON-formatted report.
         /// </returns>
         [Authorize]
-        public JsonResult GetReport(int? id)
+        public async Task<JsonResult> GetReport(int? id)
         {
-            var report = from r in _context.Reports where r.ID == id select r;
+            var report = await _context.Reports.Where(r => r.ID == id).ToListAsync();
             return Json(report);
         }
         [Authorize]
-        public JsonResult GetReports(int? id_1, int? id_2)
+        public async Task<JsonResult> GetReports(int? id_1, int? id_2)
         {
-            return Json(from r in _context.Reports where r.ID >= id_1 && r.ID <= id_2 select r);
+            return Json(await _context.Reports.Where(r => r.ID >= id_1 && r.ID <= id_2).ToListAsync());
         }
         [Authorize]
         public async Task<JsonResult> GetAllReportsAsync()

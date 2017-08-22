@@ -54,14 +54,14 @@ namespace ReportOverviewApp.Controllers
             };
             return wigetContainer;
         }
-        public ActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var wid = from w in DefaultWidgets() select w;
+            var wid = DefaultWidgets();
             var viewModel = new HomeViewModel()
             {
-                Reports = from r in _context.Reports select r,
+                Reports = await _context.Reports.ToListAsync(),
                 Widgets = wid,
-                Users = _context.Users.ToDictionary(usr => usr.Id, usr => usr.UserName),
+                Users = await _context.Users.ToDictionaryAsync(usr => usr.Id, usr => usr.UserName),
                 UserLogs = from u in _context.UserLogs select u
             };
             return View(viewModel);
