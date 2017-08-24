@@ -17,7 +17,7 @@ namespace ReportOverviewApp.Models.ReportViewModels
         public IEnumerable<string> States { get; set; }
         public string Frequency { get; set; }
         private int Pages { get; set; }
-        private int PageSize { get; set; }
+        public int PageSize { get; set; }
         public int CurrentPage { get; private set; } = 1;
         public const int DEFAULT_PAGE_SIZE = 100;
         public int EndOfDays = 20;

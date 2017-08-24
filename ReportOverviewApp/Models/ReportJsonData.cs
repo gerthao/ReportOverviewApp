@@ -121,7 +121,7 @@ namespace ReportOverviewApp.Models
             report.RunWith = RunWith;
             report.Notes = Notes?.Trim();
             report.DaysAfterQuarter = DaysAfterQuarter;
-            report.GroupName = GroupName;
+            report.GroupName = GroupName?.Trim();
             report.State = State?.Trim();
             report.ReportPath = ReportPath?.Trim();
             report.OtherDepartment = OtherDepartment;

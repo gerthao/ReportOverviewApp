@@ -15,11 +15,11 @@ var getUserLogs = function () {
                 handleJsonUserLogs(data);
             },
             error: function () {
-                alert("failed: " + link);
+                console.error("failed: " + link);
             }
         });
     } catch (err) {
-        alert(err);
+        console.error(err);
     }
 };
 var getReportCount = function () {
@@ -34,11 +34,11 @@ var getReportCount = function () {
                 deadlineCount(data);
             },
             error: function () {
-                alert("failed: " + link);
+                console.error("failed: " + link);
             }
         });
     } catch (err) {
-        alert(err);
+        console.error(err);
     }
 }
 function checkLessThanTen(number) {
@@ -96,7 +96,9 @@ $(document).ready(function () {
 function handleJsonUserLogs(data) {
     var body = '';
     if (data === null || data.length === 0) {
-        body = '<tr class="col-sm-12"><td class="col-sm-12">No Logs To Display</td></tr>';
+        body = '<tr><td class="col-sm-7">No Logs To Display</td>' +
+            '<td class="col-sm-2"></td>' +
+            '<td class="col-sm-3"></td></tr>';
     }
     else {
         data.sort(function (a, b) {

@@ -7,12 +7,18 @@ $(document).ready(function () {
     $('#frequencyList li a').click(function () {
         $('#frequencyInput').val($(this).html());
     });
-    $("#beginDatepicker").datepicker();
-    $("#endDatepicker").datepicker();
-    $("#dueDate1").datepicker();
-    $("#dueDate2").datepicker();
-    $("#dueDate3").datepicker();
-    $("#dueDate4").datepicker();
+    $('#stateList li a').click(function () {
+        $('#stateInput').val($(this).html());
+    });
+    $('#planList li a').click(function () {
+        $('#planInput').val($(this).html());
+    });
+    $('#beginDateInput').datepicker();
+    $("#endDateInput").datepicker();    
+    //$("#dueDate1").datepicker();
+    //$("#dueDate2").datepicker();
+    //$("#dueDate3").datepicker();
+    //$("#dueDate4").datepicker();
     $("#ViewTableButton").click(function () {
         $("#ReportTable").toggleClass("table-condensed");
     });

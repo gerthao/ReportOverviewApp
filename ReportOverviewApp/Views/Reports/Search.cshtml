@@ -25,13 +25,23 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-12">
+                        <div class="col-md-12">
                             <div class="form-group">
-                                <div class="col-sm-6">
-                                    <input type="date" class="form-control" id="beginDatepicker" name="begin" placeholder="Enter Begin Date" value="@Model.DisplayDateTimeAsDate(Model.Begin)" />
+                                <div class="col-md-6">
+                                    @*<div class="input-group">
+                                        <div class="input-group-btn">
+                                            <button type="button" class="btn btn-primary" id="beginDateButton"><span class="glyphicon glyphicon-calendar"></span></button>
+                                        </div>*@
+                                        <input type="date" class="form-control" id="beginDateInput" name="begin" placeholder="Enter Begin Date" value="@Model.DisplayDateTimeAsDate(Model.Begin)" />
+                                    @*</div>*@
                                 </div>
-                                <div class="col-sm-6">
-                                    <input type="date" class="form-control" id="endDatepicker" name="end" placeholder="Enter End Date" value="@Model.DisplayDateTimeAsDate(Model.End)" />
+                                <div class="col-md-6">
+                                    @*<div class="input-group date">
+                                        <div class="input-group-btn" >
+                                            <button type="button" class="btn btn-primary" id="endDateButton"><span class="glyphicon glyphicon-calendar"></span></button>
+                                        </div>*@
+                                        <input type="date" class="form-control" id="endDateInput" name="end" placeholder="Enter End Date" value="@Model.DisplayDateTimeAsDate(Model.End)" />
+                                    @*</div>*@
                                 </div>
                             </div>
                         </div>
@@ -64,7 +74,7 @@
                                         <div class="input-group-btn">
                                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">State<span class="caret"></span></button>
                                             <ul id="stateList" class="dropdown-menu dropdown-menu-scrollable">
-                                                @foreach(var stateItem in Model.States)
+                                                @foreach(var stateItem in Model.States.OrderBy(state => state))
                                                 {
                                                     <li><a>@stateItem</a></li>
                                                 }
@@ -82,13 +92,13 @@
                                         <div class="input-group-btn">
                                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Plan <span class="caret"></span></button>
                                             <ul id="planList" class="dropdown-menu dropdown-menu-scrollable">
-                                                @foreach (var planItem in Model.Plans)
+                                                @foreach (var planItem in Model.Plans.OrderBy(plan => plan))
                                                 {
                                                     <li><a>@planItem</a></li>
                                                 }
                                             </ul>
                                         </div>
-                                        <input id="stateInput" type="text" name="plan" class="form-control" aria-label="..." value="@Model.Plan"/>
+                                        <input id="planInput" type="text" name="plan" class="form-control" aria-label="..." value="@Model.Plan"/>
                                     </div>
                                 </div>
                             </div>

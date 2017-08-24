@@ -19,7 +19,6 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Angular.UI.Bootstrap" Version="2.5.0" />
     <PackageReference Include="AngularJS.Core" Version="1.6.5" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
@@ -27,6 +26,7 @@
     <PackageReference Include="Microsoft.NETCore.Platforms" Version="2.0.0" />
     <PackageReference Include="Microsoft.NETCore.Targets" Version="2.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.0" />
+    <PackageReference Include="Moment.js" Version="2.18.2" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
     <PackageReference Include="System.ValueTuple" Version="4.4.0" />
   </ItemGroup>
@@ -43,8 +43,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="JavaScript\" />
-    <Folder Include="Migrations\" />
-    <Folder Include="Migrations\" />
     <Folder Include="Views\Home\Components\TimeViewComponent\" />
   </ItemGroup>
 

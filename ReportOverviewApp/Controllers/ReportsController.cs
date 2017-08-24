@@ -20,7 +20,6 @@ namespace ReportOverviewApp.Controllers
     {
         private readonly ApplicationDbContext _context;
         private ReportViewModel viewModel;
-        private SearchTokenizer tokenizer;
         private UserLogFactory userLogFactory;
 
         /// <summary>
@@ -42,7 +41,7 @@ namespace ReportOverviewApp.Controllers
         /// </returns>
         /// 
 
-        private async Task<ReportViewModel> GetReportViewModelAsync(string search, string column, int recordsPerPage, int pageIndex, string plan, DateTime? begin, DateTime? end, string frequency)
+        private async Task<ReportViewModel> GetReportViewModelAsync(string search, string column, int recordsPerPage, int pageIndex, string state, string plan, DateTime? begin, DateTime? end, string frequency)
         {
             if (viewModel == null)
             {
@@ -56,10 +55,10 @@ namespace ReportOverviewApp.Controllers
                         { "Deadline", true }
                     }
                 };
-                viewModel.States = viewModel.Reports.Select(r => r.State).Distinct();
-                viewModel.Plans = viewModel.Reports.Select(r => r.GroupName).Distinct();
+                viewModel.States = viewModel.Reports.Select(r => r.State).OrderBy(s => s).Distinct();
+                viewModel.Plans = viewModel.Reports.Select(r => r.GroupName).OrderBy(p => p).Distinct();
             }
-            HandlePlan(plan);
+            HandleStateAndPlan(state, plan);
             HandleSearch(search);
             HandleSort(column);
             HandleDates(begin, end);
@@ -111,8 +110,13 @@ namespace ReportOverviewApp.Controllers
                 viewModel.Reports = viewModel.Reports.Where(r => r.CurrentDeadline() <= viewModel.End);
             }
         }
-        private void HandlePlan(string plan)
+        private void HandleStateAndPlan(string state, string plan)
         {
+            if (!String.IsNullOrEmpty(state))
+            {
+                viewModel.State = state;
+                viewModel.Reports = viewModel.Reports.Where(r => r != null && r.State != null && r.State.Equals(viewModel.State));
+            }
             if (!String.IsNullOrEmpty(plan)){
                 viewModel.Plan = plan;
                 viewModel.Reports = viewModel.Reports.Where(r => r != null && r.GroupName != null && r.GroupName.Equals(viewModel.Plan));
@@ -123,18 +127,6 @@ namespace ReportOverviewApp.Controllers
         {
             if (!String.IsNullOrEmpty(search)){
                 viewModel.Search = search;
-                //tokenizer.Tokenize(search);
-                //Dictionary<string, SearchTokenizer.Mode> tokens = tokenizer.GetSearchTokens();
-                //KeyValuePair<string, SearchTokenizer.Mode> kv;
-                
-                //for(int i = 0; i < tokens.Count(); i++)
-                //{
-                //    kv = tokens.ElementAt(i);
-                //    switch (kv.Value)
-                //    {
-
-                //    }
-                //}
                 viewModel.Reports = viewModel.Reports.Where(r => r != null && r.Name != null && r.Name.ToLowerInvariant().Contains(viewModel.Search.ToLowerInvariant()));
             }
         }
@@ -146,8 +138,8 @@ namespace ReportOverviewApp.Controllers
 
         // GET: Reports
         [Authorize]
-        public async Task<IActionResult> Index(string search, string column, int entriesPerPage, int pageIndex, string plan, string frequency, DateTime? begin = null, DateTime? end = null)
-            => View(await GetReportViewModelAsync(search, column, entriesPerPage, pageIndex, plan, begin, end, frequency));
+        public async Task<IActionResult> Index(string search, string column, int entriesPerPage, int pageIndex, string state, string plan, string frequency, DateTime? begin = null, DateTime? end = null)
+            => View(await GetReportViewModelAsync(search, column, entriesPerPage, pageIndex, state, plan, begin, end, frequency));
 
         // GET: Reports/Details/5
         [Authorize]
@@ -210,35 +202,6 @@ namespace ReportOverviewApp.Controllers
             return View(report);
         }
 
-        //[HttpPost, ValidateAntiForgeryToken, Authorize]
-        //public async Task<IActionResult> Check(int? id, [Bind("Done,ClientNotified,Sent,DateDue,DateDone,DateClientNotified,DateSent")] Report report)
-        //{
-        //    Report _report = (from r in _context.Reports where r.ID == id select r).Single();
-        //    if (id != report.ID) return NotFound();
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            _report.Done = report.Done;
-        //            _report.DateDone = report.DateDone;
-        //            _report.ClientNotified = report.ClientNotified;
-        //            _report.DateClientNotified = report.DateClientNotified;
-        //            _report.Sent = report.Sent;
-        //            _report.DateSent = report.DateSent;
-        //            _context.Update(_report);
-        //            await _context.SaveChangesAsync();
-        //            //may have to use hidden inputs in the Check view//
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!ReportExists(report.ID)) return NotFound();
-        //            else throw;
-        //        }
-        //        return RedirectToAction("Index");
-        //    }
-        //    return View(_report);
-        //}
-
         // POST: Reports/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -266,7 +229,7 @@ namespace ReportOverviewApp.Controllers
                     if (!ReportExists(report.ID)) return NotFound();
                     else throw;
                 }
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new {search = viewModel.Search, entriesPerPage = viewModel.PageSize, pageIndex = viewModel.CurrentPage, state = viewModel.State, plan = viewModel.Plan, begin = viewModel.Begin, end = viewModel.End, frequency = viewModel.Frequency});
             }
             return View(report);
         }
