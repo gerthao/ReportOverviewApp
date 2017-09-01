@@ -5,18 +5,20 @@
 @inject UserManager<ApplicationUser> UserManager
 
 <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right">
-    <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+    <ul class="navbar-nav mr-auto">
+        <li class="dropdown nav-item">
+            <a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#">
                  @(SignInManager.IsSignedIn(User)? $"{User.Identity.Name} " : "Account ")
-                <span class="glyphicon glyphicon-menu-down"></span>
             </a>
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu border-dark navbar-dark bg-dark">
                 @if (SignInManager.IsSignedIn(User))
                 {
-                    <li><a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">User Profile</a></li>
-                    <li><a href="#">Notifications <span class="badge" style="background-color: #FF5238;">0</span></a></li>
-                    
+                    <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">User Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Notifications <span class="badge" style="background-color: #FF5238;">0</span></a></li>
+                    <li class="nav-item">
+                        <button type="submit" class="btn btn-link nav-link">Log out</button>
+                    </li>
+
                     @*<li>
                         <button type="submit" class="btn btn-link navbar-btn navbar-link">Log out</button>
                     </li>*@
@@ -29,9 +31,7 @@
             </ul>
         </li>
         @if (SignInManager.IsSignedIn(User))
-        {<li>
-            <button type="submit" class="btn btn-link navbar-btn navbar-link">Log out</button>
-        </li>}
+        {}
     </ul>
     
 </form>
