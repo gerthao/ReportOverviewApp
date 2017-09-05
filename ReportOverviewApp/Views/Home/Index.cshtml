@@ -28,25 +28,42 @@
 </div>
 <div class="wigets-group">
     <div class="row">
-        <div class="col-md-offset-3 col-md-6">
-            <div class="thumbnail">
-                <div class="btn-group">
-                    <button type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true">
-                        <span class="glyphicon glyphicon-menu-hamburger widget-option-menu"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Edit Actions</a></li>
-                        <li><a href="#">Change Color</a></li>
-                        <li><a href="#">Copy Widget</a></li>
-                        <li><a href="#">Delete Widget</a></li>
-                    </ul>
-                </div>
-                <div class="caption">
-                    <h3>Total Reports</h3>
-                    <h2 id="totalReportCount">
-                        <i class="fa fa-refresh ld ld-spin"></i>
-                    </h2>
-                    @*<h1>@Html.ActionLink(@Model?.Reports?.Count().ToString(), "../Reports/Index", new { }) </h1>*@
+        <div class="col-md-6 col-md-offset-3">
+            <div class="card border-dark">
+                <div class="card-header">
+                    <div class="card-header-tabs">
+                        <ul class="nav nav-tabs card-header-tabs" id="widgetTabs">
+                            <li class="nav-item">
+                                <a id="todayTab" class="nav-link active">
+                                    Today
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a id="weeklyTab" class="nav-link">
+                                    One Week
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a id="totalTab" class="nav-link">
+                                    Total
+                                </a>
+                            </li>
+                            @*<li class="nav-item">
+                                <a class="nav-link">
+                                    <i class="fa fa-search"></i>
+                                </a>
+                            </li>*@
+                        </ul>
+                    </div>
+                </div> 
+                <div class="card-block">
+                    <div class="card-body">
+                        <h3 id="widgetTitle"class="card-title">Total Reports</h3>
+                        <h2 id="reportCount">
+                            <i class="fa fa-refresh ld ld-spin"></i>
+                        </h2>
+                        @*<h1>@Html.ActionLink(@Model?.Reports?.Count().ToString(), "../Reports/Index", new { }) </h1>*@
+                    </div>
                 </div>
             </div>
         </div>
@@ -98,7 +115,7 @@
             <h4>User Logs</h4>
             <div class="col-sm-12">
                 <div class="table-scrollable">
-                    <table class="table table-bordered" id="userLogsTable">
+                    <table class="table table-bordered table-primary " id="userLogsTable">
                         <thead>
                             <tr>
                                 <th>Message</th>

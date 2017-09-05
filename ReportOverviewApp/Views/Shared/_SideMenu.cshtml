@@ -31,7 +31,7 @@
 
 <div id="mySidenav" class="sidenav">
     <a asp-area="" asp-controller="Home" asp-action="Index">Overview</a>
-    @Html.ActionLink("Upcoming Reports", "..\\Reports", new { begin = DateTime.Today, end = DateTime.Today.AddDays(14)})
+    @Html.ActionLink("Upcoming Reports", "..\\Reports", new { begin = DateTime.Today, end = DateTime.Today.AddDays(14) })
     <a asp-area="" asp-controller="Reports" asp-action="SelectPlan">Select Plan</a>
     <a asp-area="" asp-controller="Reports" asp-action="Index">Reporting Catalogue</a>
 </div>

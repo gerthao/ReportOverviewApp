@@ -1,5 +1,6 @@
 ﻿'use strict';
 var root = window.location.origin;
+var countArray = [0, 0, 0];
 var getCurrentTime = function () {
     $.get("/Home/TimeViewComponent", function (data) { $("#timeViewComponentContainer").html(data); });
 };
@@ -68,7 +69,7 @@ function getTimestamp(date) {
 var deadlineCount = function (data) {
     var today = new Date();
     today = getDateTimeNow(today);
-    $('#totalReportCount').html(data.length);
+    $('#TotalReportCount').html(data.length);
     var daily = data.filter(function (n) {
         if (n == null) return false;
         return n.substring(0, 19) == today;
@@ -84,6 +85,29 @@ var deadlineCount = function (data) {
         return n.substring(0, 19) >= today && n.substring(0, 19) <= week;
     });
     $('#weekReportCount').html(weekly.length);
+    countArray[0] = data.length;
+    countArray[2] = daily.length;
+    countArray[1] = weekly.length;
+    $('#widgetTabs li a').each(function (index, value) {
+        if (value.className.indexOf("active") !== -1){
+            switch (value.id) {
+                case "totalTab":
+                    $("#reportCount").html(countArray[0]);
+                    $("#widgetTitle").html("Total Reports");
+                    break;
+                case "todayTab":
+                    $("#reportCount").html(countArray[2]);
+                    $("#widgetTitle").html("Reports Due Today");
+                    break;
+                case "weeklyTab":
+                    $("#reportCount").html(countArray[1]);
+                    $("#widgetTitle").html("Reports Due In 1 Week");
+                    break;
+                default:
+                    break;
+            }
+        }
+    });
 }
 var updateComponents = function () {
     getUserLogs();
@@ -92,6 +116,28 @@ var updateComponents = function () {
 $(document).ready(function () {
     updateComponents();
     $(function () { window.setInterval(updateComponents, 5000); });
+    $("#widgetTabs li a").on("click", function() {
+        $(this).parent("li").parent("ul").children("li").each(function (index, value) {
+            $(value.tagName + " a").removeClass("active");
+        });
+        $(this).addClass("active");
+        switch (this.id) {
+            case "totalTab":
+                $("#reportCount").html(countArray[0]);
+                $("#widgetTitle").html("Total Reports");
+                break;
+            case "todayTab":
+                $("#reportCount").html(countArray[2]);
+                $("#widgetTitle").html("Reports Due Today");
+                break;
+            case "weeklyTab":
+                $("#reportCount").html(countArray[1]);
+                $("#widgetTitle").html("Reports Due In 1 Week");
+                break;
+            default:
+                break;
+        }
+    });
 });
 function handleJsonUserLogs(data) {
     var body = '';

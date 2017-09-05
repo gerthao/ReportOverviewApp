@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>@ViewData["Title"] - Report Tracking</title>
 
-    <environment names="Development">
+    @*<environment names="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
@@ -16,7 +16,9 @@
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
-    </environment>
+    </environment>*@
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="~/lib/font-awesome-4.7.0/css/font-awesome.css" />
     <link rel="stylesheet" type="text/css" href="~/lib/loading/loading.css" />
@@ -25,9 +27,9 @@
             border-color: #555;
             border-width: 2px;
         }
-        body{
+        /*body{
             background-color: #EEE;
-        }
+        }*/
         .navbar{
             padding: 3px;
         }
@@ -42,6 +44,12 @@
                 @if (User.Identity.IsAuthenticated)
                 {
                     <button class="navbar-toggler navbar-toggler-up" type="button" style="padding: 2px 4px 2px 4px;"  data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                }
+                else
+                {
+                    <button class="text-hide" type="button" style="padding: 2px 4px 2px 4px;">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                 }
@@ -130,6 +138,7 @@
     </environment>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="~/js/ReportsHandler.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>
