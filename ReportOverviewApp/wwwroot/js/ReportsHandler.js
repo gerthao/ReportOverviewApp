@@ -4,10 +4,10 @@ $(document).ready(function () {
     $("#ClearSearchForm").click(function () {
         $('input').val(null);
     });
-    $('#frequencyList li a').click(function () {
+    $('#frequencyList a').click(function () {
         $('#frequencyInput').val($(this).html());
     });
-    $('#stateList li a').click(function () {
+    $('#stateList a').click(function () {
         $('#stateInput').val($(this).html());
     });
     $('#planList li a').click(function () {

@@ -7,32 +7,26 @@
     .report-index{
         margin-left: auto;
     }
-    .modal-xl {
-        width: 60%;
-    }
-    .modal-overflow {
-        max-height: 94%;
-        overflow: auto;
-    }
-    
 </style>
-<h3 class="page-header">Reports 
+<h3 class="page-header">Report Catalogue 
     <button class="btn btn-primary" type="button" id="mag-glass" data-toggle="modal" data-target="#SearchReportModal"><i class="fa fa-search"></i></button>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#CreateReportModal" aria-label="Left Align"><i class="fa fa-plus-square"></i></button>
     @*<button type="button" class="btn btn-primary" id="ViewTableButton" aria-label="Left Align"><span id="ViewTableButtonIcon" class="glyphicon glyphicon-resize-small"></span></button>*@
 </h3>
-<div id="SearchReportModal" class="modal fade" tabindex="-1" rolde="dialog">
+<div id="SearchReportModal" class="modal fade">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                @await Html.PartialAsync("Search")
+                <h4 class="modal-title">
+                    Search For...
+                </h4>
             </div>
+             @await Html.PartialAsync("Search")
         </div>
-        
     </div>
 </div>
 <div id="CreateReportModal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-xl modal-overflow" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 @await Html.PartialAsync("Create", new Report())
@@ -45,9 +39,9 @@ else {
     <table id="reportTable" class="table report-table table-bordered table-sm table-striped table-hover">
         <thead>
             <tr>
-                <th>@Html.ActionLink("ID", "Index", new { search = Model.Search, plan = Model.Plan, pageIndex = Model.CurrentPage, column = "ID" , begin=Model.Begin, end=Model.End})</th>
-                <th>@Html.ActionLink("Name", "Index", new { search = Model.Search, plan = Model.Plan, pageIndex = Model.CurrentPage, column = "Name", begin = Model.Begin, end = Model.End })</th>
-                <th>@Html.ActionLink("Deadline", "Index", new { search = Model.Search, plan = Model.Plan, pageIndex = Model.CurrentPage, column = "Deadline", begin = Model.Begin, end = Model.End })</th>
+                <th>@Html.ActionLink("ID", "Index", new { search = Model.Search, plan = Model.Plan, pageIndex = Model.CurrentPage, column = "ID" , begin=Model.Begin, end=Model.End}, new { @class = "text-dark" })</th>
+                <th>@Html.ActionLink("Name", "Index", new { search = Model.Search, plan = Model.Plan, pageIndex = Model.CurrentPage, column = "Name", begin = Model.Begin, end = Model.End }, new { @class = "text-dark" })</th>
+                <th>@Html.ActionLink("Deadline", "Index", new { search = Model.Search, plan = Model.Plan, pageIndex = Model.CurrentPage, column = "Deadline", begin = Model.Begin, end = Model.End }, new { @class = "text-dark" })</th>
                 <th>Finished On</th>
                 <th>Notified On</th>
                 <th>Sent On</th>
@@ -65,31 +59,39 @@ else {
                     <td><text>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateClientNotified)</text></td>
                     <td><text>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateSent)</text></td>
                     <td style="text-align: center;">
-                        <a id="EditReportLink" data-toggle="modal" data-target="#EditReportModal" style="color: black;"><i class="fa fa-edit"></i></a> |
-                        <a asp-action="Details" asp-route-id="@Model.Reports.ElementAt(i).ID" style="color: black;"><i class="fa fa-book"></i></a> |
-                        <a asp-action="Delete" asp-route-id="@Model.Reports.ElementAt(i).ID" style="color: black;"><i class="fa fa-remove"></i></a>
+                        <a id="EditReportLink" data-toggle="modal" data-target="#EditReportModal"><span class="fa fa-edit text-primary"></span></a> |
+                        <a asp-action="Details" asp-route-id="@Model.Reports.ElementAt(i).ID"><span class="fa fa-book text-primary"></span></a> |
+                        <a asp-action="Delete" asp-route-id="@Model.Reports.ElementAt(i).ID"><span class="fa fa-remove text-primary"></span></a>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
     <div id="EditReportModal" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-xl modal-overflow" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                <div class="modal-header">@await Html.PartialAsync("Edit", new Report())</div>
+                <form asp-action="Edit">
+                    <div class="modal-header"><h5 class="modal-title">Edit Report</h5></div>
+                    <div class="modal-body">@await Html.PartialAsync("Edit", new Report())</div>
+                    <div class="modal-footer">
+                        <div class="col-md-2">
+                            <input type="submit" value="Save" class="btn btn-primary border-dark" />
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-    <nav aria-label="...">
+    <nav aria-label="Pagination Bar">
         <div class="row container">
             <ul class="pagination col-sm-6">
                 @{int pagenavlimit = 3; }
                 @{ int pagelastlimit = 2;}
                 @if (Model.CurrentPage == 1 ){
                     pagenavlimit += 2;
-                    <li class="disabled"><span><span aria-hidden="true">Prev</span></span></li>
+                    <li class="page-item disabled"><span class="page-link"><span aria-hidden="true">Prev</span></span></li>
                 } else{
-                    <li><span><span aria-hidden="true">@Html.ActionLink("Prev", "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = Model.CurrentPage - 1, begin = Model.Begin, end = Model.End }) </span></span></li>
+                    <li><span><span aria-hidden="true">@Html.ActionLink("Prev", "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = Model.CurrentPage - 1, begin = Model.Begin, end = Model.End }, new { @class = "page-link" }) </span></span></li>
                 }
                 @if(Model.CurrentPage == 2){
                     pagenavlimit += 1;
@@ -100,20 +102,20 @@ else {
                 } @for (int i = Model.CurrentPage-pagelastlimit; i <= Model.PagesCount() && i <= Model.CurrentPage + pagenavlimit; i++){
                     if (i < 1){ i = 1; }
                     if (i == Model.CurrentPage + pagenavlimit){
-                        <li class="disabled"><span>...<span class="sr-only">(current)</span></span></li>
-                        <li><span>@Html.ActionLink((Model.PagesCount()).ToString(), "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = Model.PagesCount(), begin = Model.Begin, end = Model.End })</span></li>
+                        <li class="page-item disabled"><span class="page-link">...<span class="sr-only">(current)</span></span></li>
+                        <li class="page-item"><span>@Html.ActionLink((Model.PagesCount()).ToString(), "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = Model.PagesCount(), begin = Model.Begin, end = Model.End }, new { @class = "page-link" })</span></li>
                     } else{
                         if (i == Model.CurrentPage){
-                            <li class="active"><span>@Html.ActionLink(@i.ToString(), "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = @i, begin = Model.Begin, end = Model.End })</span></li>
+                            <li class="page-item active"><span>@Html.ActionLink(@i.ToString(), "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = @i, begin = Model.Begin, end = Model.End }, new { @class = "page-link" })</span></li>
                         } else{
-                            <li><span>@Html.ActionLink(@i.ToString(), "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = @i, begin = Model.Begin, end = Model.End })</span></li>
+                            <li class="page-item"><span>@Html.ActionLink(@i.ToString(), "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = @i, begin = Model.Begin, end = Model.End }, new { @class = "page-link" })</span></li>
                         }
                     }
                 }
                 @if (Model.CurrentPage == Model.PagesCount()){
-                    <li class="disabled"><span><span aria-hidden="true">Next</span></span></li>
+                    <li class="page-item disabled"><span class="page-link"><span aria-hidden="true">Next</span></span></li>
                 } else{
-                    <li><span><span aria-hidden="true">@Html.ActionLink("Next", "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = Model.CurrentPage + 1 , begin = Model.Begin, end = Model.End }) </span></span></li>
+                    <li class="page-item"><span><span aria-hidden="true">@Html.ActionLink("Next", "Index", new { search = Model.Search, column = Model.Column, plan = Model.Plan, pageIndex = Model.CurrentPage + 1 , begin = Model.Begin, end = Model.End }, new { @class = "page-link" }) </span></span></li>
                 }
             </ul>       
         </div>

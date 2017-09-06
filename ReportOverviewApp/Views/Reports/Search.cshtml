@@ -2,7 +2,7 @@
 
 <style>
     .dropdown-menu-scrollable{
-        max-height: 300px;
+        max-height: 30rem;
         overflow: auto;
     }
     input {
@@ -11,108 +11,92 @@
     }
 </style>
 
-<div class="col-sm-12">
-    <div>
         <form>
-            <div class="form-horizontal">
-                <h4>Search For...</h4>
-                <hr />
-                    <div class="row">
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <div class="form-group row">
                         <div class="col-sm-12">
-                            <div class="form-group">
-                                <div class="col-sm-12">
-                                    <input type="text" id="SearchNameInput" class="form-control" name="search" placeholder="Enter Report Name" value="@Model.Search" />
+                            <input type="text" id="SearchNameInput" class="form-control" name="search" placeholder="Enter Report Name" value="@Model.Search" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            <input type="date" class="form-control" id="beginDateInput" name="begin" placeholder="Enter Begin Date" value="@Model.DisplayDateTimeAsDate(Model.Begin)" />
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="date" class="form-control" id="endDateInput" name="end" placeholder="Enter End Date" value="@Model.DisplayDateTimeAsDate(Model.End)" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <div class="input-group-btn">
+                                    <div class="btn-group" style="min-width: 100%;">
+                                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Frequency<span class="caret"></span></button>
+                                        <div id="frequencyList" class="dropdown-menu dropdown-menu-scrollable">
+                                            <a class="dropdown-item">Weekly</a>
+                                            <a class="dropdown-item">Biweekly</a>
+                                            <a class="dropdown-item">Monthly</a>
+                                            <a class="dropdown-item">Quarterly</a>
+                                            <a class="dropdown-item">Semiannual</a>
+                                            <a class="dropdown-item">Annual</a>
+                                        </div>
+                                    </div>
                                 </div>
+                                <span class="input-group-btn" style="width: 100%;">
+                                    <input id="frequencyInput" type="text" name="frequency" class="form-control" aria-label="Text Input For Frequency" value="@Model.Frequency" />
+                                </span>
                             </div>
                         </div>
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <div class="col-md-6">
-                                    @*<div class="input-group">
-                                        <div class="input-group-btn">
-                                            <button type="button" class="btn btn-primary" id="beginDateButton"><span class="glyphicon glyphicon-calendar"></span></button>
-                                        </div>*@
-                                        <input type="date" class="form-control" id="beginDateInput" name="begin" placeholder="Enter Begin Date" value="@Model.DisplayDateTimeAsDate(Model.Begin)" />
-                                    @*</div>*@
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <div class="input-group-btn">
+                                    <div class="btn-group" style="min-width: 100%;">
+                                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">State<span class="caret"></span></button>
+                                        <div id="stateList" class="dropdown-menu dropdown-menu-scrollable">
+                                            @foreach (var stateItem in Model.States.OrderBy(state => state))
+                                            {
+                                                <a class="dropdown-item">@stateItem</a>
+                                            }
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-md-6">
-                                    @*<div class="input-group date">
-                                        <div class="input-group-btn" >
-                                            <button type="button" class="btn btn-primary" id="endDateButton"><span class="glyphicon glyphicon-calendar"></span></button>
-                                        </div>*@
-                                        <input type="date" class="form-control" id="endDateInput" name="end" placeholder="Enter End Date" value="@Model.DisplayDateTimeAsDate(Model.End)" />
-                                    @*</div>*@
-                                </div>
+                                <span class="input-group-btn" style="width: 100%;">
+                                    <input id="stateInput" type="text" name="state" class="form-control" aria-label="..." value="@Model.State" />
+                                </span>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <div class="col-sm-12">
-                                    <div class="input-group">
-                                        <div class="input-group-btn">
-                                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Frequency <span class="caret"></span></button>
-                                            <ul id="frequencyList" class="dropdown-menu dropdown-menu-scrollable">
-                                                <li><a>Weekly</a></li>
-                                                <li><a>Biweekly</a></li>
-                                                <li><a>Monthly</a></li>
-                                                <li><a>Quarterly</a></li>
-                                                <li><a>Semiannual</a></li>
-                                                <li><a>Annual</a></li>
-                                            </ul>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <div class="input-group-btn">
+                                    <div class="btn-group" style="min-width: 100%;">
+                                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Plan <span class="caret"></span></button>
+                                        <div id="planList" class="dropdown-menu dropdown-menu-scrollable">
+                                            @foreach (var planItem in Model.Plans.OrderBy(plan => plan))
+                                            {
+                                                <a class="dropdown-item">@planItem</a>
+                                            }
                                         </div>
-                                        <input id="frequencyInput" type="text" name="frequency" class="form-control" aria-label="..." value="@Model.Frequency"/>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <div class="col-sm-12">
-                                    <div class="input-group">
-                                        <div class="input-group-btn">
-                                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">State<span class="caret"></span></button>
-                                            <ul id="stateList" class="dropdown-menu dropdown-menu-scrollable">
-                                                @foreach(var stateItem in Model.States.OrderBy(state => state))
-                                                {
-                                                    <li><a>@stateItem</a></li>
-                                                }
-                                            </ul>
-                                        </div>
-                                        <input id="stateInput" type="text" name="state" class="form-control" aria-label="..." value="@Model.State" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <div class="col-sm-12">
-                                    <div class="input-group">
-                                        <div class="input-group-btn">
-                                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Plan <span class="caret"></span></button>
-                                            <ul id="planList" class="dropdown-menu dropdown-menu-scrollable">
-                                                @foreach (var planItem in Model.Plans.OrderBy(plan => plan))
-                                                {
-                                                    <li><a>@planItem</a></li>
-                                                }
-                                            </ul>
-                                        </div>
-                                        <input id="planInput" type="text" name="plan" class="form-control" aria-label="..." value="@Model.Plan"/>
-                                    </div>
-                                </div>
+                                <span class="input-group-btn" style="width: 100%;">
+                                    <input id="planInput" type="text" name="plan" class="form-control" aria-label="..." value="@Model.Plan" />
+                                </span>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer row col-md-12 ">
-                    <button class="btn btn-primary" id="ClearSearchForm" type="button">Clear</button>
-                    <button class="btn btn-primary" id="ResetSearchForm" type="reset">Reset</button>
-                    <button class="btn btn-primary" type="submit">Go</button>
                 </div>
-        </form>
-    </div>
-</div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="ClearSearchForm" type="button">Clear</button>
+                <button class="btn btn-primary" id="ResetSearchForm" type="reset">Reset</button>
+                <button class="btn btn-primary" type="submit">Go</button>
+            </div>
+               
+</form>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

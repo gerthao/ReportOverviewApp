@@ -90,22 +90,7 @@ var deadlineCount = function (data) {
     countArray[1] = weekly.length;
     $('#widgetTabs li a').each(function (index, value) {
         if (value.className.indexOf("active") !== -1){
-            switch (value.id) {
-                case "totalTab":
-                    $("#reportCount").html(countArray[0]);
-                    $("#widgetTitle").html("Total Reports");
-                    break;
-                case "todayTab":
-                    $("#reportCount").html(countArray[2]);
-                    $("#widgetTitle").html("Reports Due Today");
-                    break;
-                case "weeklyTab":
-                    $("#reportCount").html(countArray[1]);
-                    $("#widgetTitle").html("Reports Due In 1 Week");
-                    break;
-                default:
-                    break;
-            }
+            handleReportCount(value);
         }
     });
 }
@@ -121,7 +106,11 @@ $(document).ready(function () {
             $(value.tagName + " a").removeClass("active");
         });
         $(this).addClass("active");
-        switch (this.id) {
+        handleReportCount(this);
+    });
+});
+function handleReportCount(htmlElement) {
+    switch (htmlElement.id) {
             case "totalTab":
                 $("#reportCount").html(countArray[0]);
                 $("#widgetTitle").html("Total Reports");
@@ -132,13 +121,12 @@ $(document).ready(function () {
                 break;
             case "weeklyTab":
                 $("#reportCount").html(countArray[1]);
-                $("#widgetTitle").html("Reports Due In 1 Week");
+                $("#widgetTitle").html("Reports Due Within One Week");
                 break;
             default:
                 break;
         }
-    });
-});
+}
 function handleJsonUserLogs(data) {
     var body = '';
     if (data === null || data.length === 0) {

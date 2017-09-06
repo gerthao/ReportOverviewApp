@@ -56,9 +56,10 @@
                         </ul>
                     </div>
                 </div> 
+                @*<a asp-controller="Reports" asp-action="Index"></a>*@
                 <div class="card-block">
                     <div class="card-body">
-                        <h3 id="widgetTitle"class="card-title">Total Reports</h3>
+                        <h3 id="widgetTitle"class="card-title"><span class="fa fa-clock-o ld ld-float"></span></h3>
                         <h2 id="reportCount">
                             <i class="fa fa-refresh ld ld-spin"></i>
                         </h2>
@@ -67,7 +68,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-offset-3 col-md-6">
+        @*<div class="col-md-offset-3 col-md-6">
             <div class="thumbnail">
                 <div class="btn-group">
                     <button type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true">
@@ -85,7 +86,7 @@
                     <h2 id="weekReportCount">
                         <i class="fa fa-refresh ld ld-spin"></i>
                     </h2>
-                    @*<h1>@Html.ActionLink(@Model.Reports.Where(r => r.Frequency != null).Where(r => r.Frequency.Equals("Monthly")).Count().ToString(), "../Reports/Index", new { begin = DateTime.Today, end = DateTime.Today.AddDays(7) })</h1>*@
+                    <h1>@Html.ActionLink(@Model.Reports.Where(r => r.Frequency != null).Where(r => r.Frequency.Equals("Monthly")).Count().ToString(), "../Reports/Index", new { begin = DateTime.Today, end = DateTime.Today.AddDays(7) })</h1>
                 </div>
             </div>
         </div>
@@ -107,16 +108,17 @@
                     <h2 id="todayReportCount">
                         <i class="fa fa-refresh  ld ld-spin"></i>
                     </h2>
-                    @*<h1>@Html.ActionLink(@Model.Reports.Where(r => r.CurrentDeadline() != null).Where(r => r.CurrentDeadline() == DateTime.Today).Count().ToString(), "../Reports/Index", new { begin = DateTime.Today, end = DateTime.Today })</h1>*@
+                    <h1>@Html.ActionLink(@Model.Reports.Where(r => r.CurrentDeadline() != null).Where(r => r.CurrentDeadline() == DateTime.Today).Count().ToString(), "../Reports/Index", new { begin = DateTime.Today, end = DateTime.Today })</h1>
                 </div>
             </div>
-        </div>
-        <div class="col-sm-12">
+        </div>*@
+        
+        <div class="col-sm-12" style="padding-top: 3rem;">
             <h4>User Logs</h4>
             <div class="col-sm-12">
                 <div class="table-scrollable">
-                    <table class="table table-bordered table-primary " id="userLogsTable">
-                        <thead>
+                    <table class="table table-bordered border-dark" id="userLogsTable">
+                        <thead class="bg-secondary text-light">
                             <tr>
                                 <th>Message</th>
                                 @*<th>Changes</th>*@
@@ -125,6 +127,11 @@
                             </tr>
                         </thead>
                         <tbody id="userLogsBody">
+                            <tr>
+                                <td class="col-sm-7 text-center"><span class="fa fa-2x fa-refresh ld ld-spin"></span></td>
+                                <td class="col-sm-2 text-center"><span class="fa fa-2x fa-refresh ld ld-spin"></span></td>
+                                <td class="col-sm-3 text-center"><span class="fa fa-2x fa-refresh ld ld-spin"></span></td>
+                            </tr>
                             @*@if (Model.UserLogs == null || Model.UserLogs.Count() == 0) {
                                 <tr class="col-sm-12">
                                     <td>No logs present</td>
