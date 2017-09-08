@@ -67,12 +67,14 @@ function getTimestamp(date) {
     return dateString;
 }
 var deadlineCount = function (data) {
+    var reportCardString = "<ul>"
     var today = new Date();
     today = getDateTimeNow(today);
     $('#TotalReportCount').html(data.length);
     var daily = data.filter(function (n) {
         if (n == null) return false;
-        return n.substring(0, 19) == today;
+        if (n.reportDeadline == null) return false;
+        return n.reportDeadline.substring(0, 19) == today;
     });
     $('#todayReportCount').html(daily.length);
     var week = new Date();
@@ -82,7 +84,8 @@ var deadlineCount = function (data) {
         //alert(n + ", " + today + ", " + week);
         //alert(n >= today && n <= week);
         if (n == null) return false;
-        return n.substring(0, 19) >= today && n.substring(0, 19) <= week;
+        if (n.reportDeadline == null) return false;
+        return n.reportDeadline.substring(0, 19) >= today && n.reportDeadline.substring(0, 19) <= week;
     });
     $('#weekReportCount').html(weekly.length);
     countArray[0] = data.length;
@@ -93,6 +96,10 @@ var deadlineCount = function (data) {
             handleReportCount(value);
         }
     });
+    for (var i = 0; i < data.length; i++) {
+        reportCardString = reportCardString + "<li>" + data[i].reportName + "</li>";
+    } reportCardString = reportCardString + "</ul>";
+    $('#reportCard').html(reportCardString);
 }
 var updateComponents = function () {
     getUserLogs();

@@ -229,7 +229,7 @@ namespace ReportOverviewApp.Controllers
                     if (!ReportExists(report.ID)) return NotFound();
                     else throw;
                 }
-                return RedirectToAction("Index", new {search = viewModel.Search, entriesPerPage = viewModel.PageSize, pageIndex = viewModel.CurrentPage, state = viewModel.State, plan = viewModel.Plan, begin = viewModel.Begin, end = viewModel.End, frequency = viewModel.Frequency});
+                return RedirectToAction("Index"/*, new {search = viewModel.Search, entriesPerPage = viewModel.PageSize, pageIndex = viewModel.CurrentPage, state = viewModel.State, plan = viewModel.Plan, begin = viewModel.Begin, end = viewModel.End, frequency = viewModel.Frequency}*/);
             }
             return View(report);
         }

@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using ReportOverviewApp.Models;
 
 namespace ReportOverviewApp.Controllers
 {
@@ -46,7 +47,7 @@ namespace ReportOverviewApp.Controllers
         {
             if (days == null)
             {
-                return Json(await _context.Reports.Select(r => r.CurrentDeadline()).ToListAsync());
+                return Json(await _context.Reports.Select(r => new ReportChunk(r)).ToListAsync());
             }
             return Json(await _context.Reports.Select(r => r.CurrentDeadline()).Where(r => r == DateTime.Today.AddDays(days.Value)).ToListAsync());
         }
@@ -54,6 +55,16 @@ namespace ReportOverviewApp.Controllers
         public async Task<JsonResult> GetUserLogs()
         {
             return Json(await _context.UserLogs.ToListAsync());
+        }
+        public class ReportChunk
+        {
+            public string ReportName;
+            public DateTime? ReportDeadline;
+            public ReportChunk(Report report)
+            {
+                ReportName = report.Name;
+                ReportDeadline = report.CurrentDeadline();
+            }
         }
     }
 }
