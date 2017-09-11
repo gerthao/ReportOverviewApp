@@ -15,6 +15,11 @@
         max-height: 240px;
         overflow: auto;
     }
+    .card-scrollable {
+        min-height: 15rem;
+        max-height: 15rem;
+        overflow: auto;
+    }
 </style>
 <script src="~/lib/jquery/dist/jquery.js"></script>
 <script src="~/js/HomeHandler.js"></script>
@@ -29,7 +34,7 @@
 <div class="wigets-group">
     <div class="row">
         <div class="col-md-6">
-            <div class="card border-dark">
+            <div class="card border-dark card-scrollable">
                 <div class="card-header">
                     <div class="card-header-tabs">
                         <ul class="nav nav-tabs card-header-tabs" id="widgetTabs">
@@ -69,13 +74,11 @@
             </div>
         </div>
         <div class="col-md-6">
-            <div class="card border-dark">
+            <div class="card border-dark card-scrollable">
                 @*<a asp-controller="Reports" asp-action="Index"></a>*@
                 <div class="card-block">
-                    <div class="card-body">
-                        <h2 id="reportCard">
+                    <div class="card-body card-body-scrollable" id="reportCard">
                             <i class="fa fa-refresh ld ld-spin"></i>
-                        </h2>
                         @*<h1>@Html.ActionLink(@Model?.Reports?.Count().ToString(), "../Reports/Index", new { }) </h1>*@
                     </div>
                 </div>

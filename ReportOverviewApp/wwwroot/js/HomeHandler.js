@@ -1,6 +1,7 @@
 ﻿'use strict';
 var root = window.location.origin;
 var countArray = [0, 0, 0];
+var reportsArray = ["", "", ""];
 var getCurrentTime = function () {
     $.get("/Home/TimeViewComponent", function (data) { $("#timeViewComponentContainer").html(data); });
 };
@@ -67,7 +68,7 @@ function getTimestamp(date) {
     return dateString;
 }
 var deadlineCount = function (data) {
-    var reportCardString = "<ul>"
+    
     var today = new Date();
     today = getDateTimeNow(today);
     $('#TotalReportCount').html(data.length);
@@ -81,8 +82,6 @@ var deadlineCount = function (data) {
     week.setDate(week.getDate() + 7);
     week = getDateTimeNow(week);
     var weekly = data.filter(function (n) {
-        //alert(n + ", " + today + ", " + week);
-        //alert(n >= today && n <= week);
         if (n == null) return false;
         if (n.reportDeadline == null) return false;
         return n.reportDeadline.substring(0, 19) >= today && n.reportDeadline.substring(0, 19) <= week;
@@ -91,15 +90,42 @@ var deadlineCount = function (data) {
     countArray[0] = data.length;
     countArray[2] = daily.length;
     countArray[1] = weekly.length;
+    reportsArray[0] = '<ul class="list-group">'
+    for (var i = 0; i < data.length; i++) {
+        reportsArray[0] = reportsArray[0] + '<li class="list-group-item">' + data[i].reportName + "</li>";
+    } reportsArray[0] = reportsArray[0] + "</ul>";
+    reportsArray[1] = '<ul class="list-group">'
+    for (var i = 0; i < daily.length; i++) {
+        reportsArray[1] = reportsArray[1] + '<li class="list-group-item">' + daily[i].reportName + "</li>";
+    } reportsArray[1] = reportsArray[1] + "</ul>";
+    reportsArray[2] = '<ul class="list-group">'
+    for (var i = 0; i < weekly.length; i++) {
+        reportsArray[2] = reportsArray[2] + '<li class="list-group-item">' + weekly[i].reportName + "</li>";
+    } reportsArray[2] = reportsArray[2] + "</ul>";
     $('#widgetTabs li a').each(function (index, value) {
         if (value.className.indexOf("active") !== -1){
             handleReportCount(value);
+            handleReportsList(value);
         }
     });
-    for (var i = 0; i < data.length; i++) {
-        reportCardString = reportCardString + "<li>" + data[i].reportName + "</li>";
-    } reportCardString = reportCardString + "</ul>";
-    $('#reportCard').html(reportCardString);
+}
+var handleReportsList = function(htmlElement){
+    switch (htmlElement.id) {
+        case "totalTab":
+            $('#reportCard').html(reportsArray[0]);
+            break;
+        case "todayTab":
+            $('#reportCard').html(reportsArray[1]);
+            break;
+        case "weeklyTab":
+            $('#reportCard').html(reportsArray[2]);
+            break;
+        default:
+            break;
+    }
+    if ($('#reportCard').text() === "") {
+        $('#reportCard').html("<h5>No Reports To Display</h5>");
+    }
 }
 var updateComponents = function () {
     getUserLogs();
@@ -114,9 +140,10 @@ $(document).ready(function () {
         });
         $(this).addClass("active");
         handleReportCount(this);
+        handleReportsList(this);
     });
 });
-function handleReportCount(htmlElement) {
+function handleReportCount(htmlElement, reports) {
     switch (htmlElement.id) {
             case "totalTab":
                 $("#reportCount").html(countArray[0]);
