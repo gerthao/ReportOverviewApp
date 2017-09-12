@@ -19,9 +19,6 @@ $(document).ready(function () {
     //$("#dueDate2").datepicker();
     //$("#dueDate3").datepicker();
     //$("#dueDate4").datepicker();
-    $("#ViewTableButton").click(function () {
-        $("#ReportTable").toggleClass("table-condensed");
-    });
     function checkLessThanTen(number) {
         if (number < 10) {
             number = '0' + number;
@@ -88,9 +85,11 @@ $(document).ready(function () {
     $('.modal').on('hidden.bs.modal', function () {
         $(this).find('form')[0].reset();
     });
+    
     var root = window.location.origin;
-    $('#reportTable tr').on("click", function () {
-        var retrievedID = $(this).find(".ReportID").html();
+    $('#reportTable tr td a').on("click", function () {
+        var retrievedID = $(this).parent().parent().find(".ReportID").html();
+        //var retrievedName = $(this).parent().parent().find(".ReportName");
         var link = root + "/Data/GetReport/" + retrievedID;
         try {
             $.ajax({
@@ -108,6 +107,7 @@ $(document).ready(function () {
         } catch (err) {
             alert(err);
         }
+        updateFrequencyFields();
     });
     function handleJSONReport(data) {
         if (data === null) {

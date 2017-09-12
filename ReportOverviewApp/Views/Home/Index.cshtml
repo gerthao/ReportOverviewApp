@@ -21,8 +21,9 @@
         overflow: auto;
     }
 </style>
-<script src="~/lib/jquery/dist/jquery.js"></script>
-<script src="~/js/HomeHandler.js"></script>
+
+<script src="~/lib/jquery/dist/jquery.js" type="text/javascript"></script>
+<script src="~/js/HomeHandler.js" type="text/javascript"></script>
 <h3 class="page-header">
     Overview (Home Page)
 </h3>
@@ -53,11 +54,6 @@
                                     Total
                                 </a>
                             </li>
-                            @*<li class="nav-item">
-                                <a class="nav-link">
-                                    <i class="fa fa-search"></i>
-                                </a>
-                            </li>*@
                         </ul>
                     </div>
                 </div> 
@@ -68,7 +64,9 @@
                         <h2 id="reportCount">
                             <i class="fa fa-refresh ld ld-spin"></i>
                         </h2>
-                        @*<h1>@Html.ActionLink(@Model?.Reports?.Count().ToString(), "../Reports/Index", new { }) </h1>*@
+                        <div class="btn btn-outline-primary" id="reportLink">
+                            @Html.ActionLink("Go to reports", "../Reports/Index", new { begin=DateTime.Today, end=DateTime.Today})
+                        </div>
                     </div>
                 </div>
             </div>
@@ -78,8 +76,7 @@
                 @*<a asp-controller="Reports" asp-action="Index"></a>*@
                 <div class="card-block">
                     <div class="card-body card-body-scrollable" id="reportCard">
-                            <i class="fa fa-refresh ld ld-spin"></i>
-                        @*<h1>@Html.ActionLink(@Model?.Reports?.Count().ToString(), "../Reports/Index", new { }) </h1>*@
+                            <i class="fa fa-2x fa-refresh ld ld-spin"></i>
                     </div>
                 </div>
             </div>

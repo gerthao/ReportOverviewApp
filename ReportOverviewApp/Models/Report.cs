@@ -51,7 +51,7 @@ namespace ReportOverviewApp.Models
         [Display(Name = "Work Instructions")]
         public string WorkInstructions { get; set; }
         public string Notes{ get; set; }
-        [StringLength(20), Display(Name = "Days After Quarter")]
+        [Display(Name = "Days After Quarter")]
         public int? DaysAfterQuarter { get; set; }
         [StringLength(2000), Display(Name = "Folder Location")]
         public string FolderLocation { get; set; }
@@ -153,9 +153,16 @@ namespace ReportOverviewApp.Models
         }
         private DateTime? GetDeadlineMonthly(DateTime compareDate)
         {
-            DateTime? deadline = new DateTime(year: compareDate.Year, month: compareDate.Month, day: Int32.Parse(DayDue));
-            if (deadline < compareDate) deadline = deadline.Value.AddMonths(1);
-            return deadline;
+            try
+            {
+                DateTime? deadline = new DateTime(year: compareDate.Year, month: compareDate.Month, day: Int32.Parse(DayDue));
+                if (deadline < compareDate) deadline = deadline.Value.AddMonths(1);
+                return deadline;
+            } catch(Exception e)
+            {
+                Console.WriteLine("Error with GetDeadlineMonthy(DateTime compareDate): \"e.Message\"");
+                return null;
+            }
         }
         private DateTime? GetDeadlineWeekly(DateTime compareDate)
         {

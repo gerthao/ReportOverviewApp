@@ -13,12 +13,10 @@ var getUserLogs = function () {
             type: "POST",
             dataType: "json",
             contentType: "application/json; charset-utf-8",
-            success: function (data) {
+            success: function(data) {
                 handleJsonUserLogs(data);
             },
-            error: function () {
-                console.error("failed: " + link);
-            }
+            error: console.error("failed: " + link)
         });
     } catch (err) {
         console.error(err);
@@ -29,15 +27,13 @@ var getReportCount = function () {
     try {
         $.ajax({
             url: link,
-            type: "POST",
+            type: "GET",
             dataType: "json",
             contentType: "application/json; charset-utf-8",
-            success: function (data) {
+            success: function(data) {
                 deadlineCount(data);
             },
-            error: function () {
-                console.error("failed: " + link);
-            }
+            error: console.error("failed: " + link)
         });
     } catch (err) {
         console.error(err);
@@ -68,40 +64,29 @@ function getTimestamp(date) {
     return dateString;
 }
 var deadlineCount = function (data) {
-    
     var today = new Date();
     today = getDateTimeNow(today);
     $('#TotalReportCount').html(data.length);
     var daily = data.filter(function (n) {
-        if (n == null) return false;
-        if (n.reportDeadline == null) return false;
-        return n.reportDeadline.substring(0, 19) == today;
+        if (n === null || n.reportDeadline === null) return false;
+        return  n.reportDeadline === today
     });
     $('#todayReportCount').html(daily.length);
     var week = new Date();
     week.setDate(week.getDate() + 7);
     week = getDateTimeNow(week);
     var weekly = data.filter(function (n) {
-        if (n == null) return false;
-        if (n.reportDeadline == null) return false;
+        if (n === null || n.reportDeadline === null) return false;
+        if (n.reportDeadline === null) return false;
         return n.reportDeadline.substring(0, 19) >= today && n.reportDeadline.substring(0, 19) <= week;
     });
     $('#weekReportCount').html(weekly.length);
     countArray[0] = data.length;
     countArray[2] = daily.length;
     countArray[1] = weekly.length;
-    reportsArray[0] = '<ul class="list-group">'
-    for (var i = 0; i < data.length; i++) {
-        reportsArray[0] = reportsArray[0] + '<li class="list-group-item">' + data[i].reportName + "</li>";
-    } reportsArray[0] = reportsArray[0] + "</ul>";
-    reportsArray[1] = '<ul class="list-group">'
-    for (var i = 0; i < daily.length; i++) {
-        reportsArray[1] = reportsArray[1] + '<li class="list-group-item">' + daily[i].reportName + "</li>";
-    } reportsArray[1] = reportsArray[1] + "</ul>";
-    reportsArray[2] = '<ul class="list-group">'
-    for (var i = 0; i < weekly.length; i++) {
-        reportsArray[2] = reportsArray[2] + '<li class="list-group-item">' + weekly[i].reportName + "</li>";
-    } reportsArray[2] = reportsArray[2] + "</ul>";
+    reportsArray[0] = createReportListGroup(data);
+    reportsArray[1] = createReportListGroup(daily);
+    reportsArray[2] = createReportListGroup(weekly);
     $('#widgetTabs li a').each(function (index, value) {
         if (value.className.indexOf("active") !== -1){
             handleReportCount(value);
@@ -109,7 +94,19 @@ var deadlineCount = function (data) {
         }
     });
 }
-var handleReportsList = function(htmlElement){
+var createReportListGroup = function(jsonReportData){ 
+    const limit = 30;
+    var reportString = "";
+    for (var i = 0; i < jsonReportData.length && i < limit; i++) {
+        reportString += '<li class="list-group-item">' + jsonReportData[i].reportName + "</li>";
+    }
+    if (jsonReportData.length > limit) {
+        reportString += '<li class="list-group-item bg-primary">' + (jsonReportData.length - limit) + ' More Reports' + '</li>';
+    }
+    reportString += "</ul>";
+    return reportString;
+};
+var handleReportsList = function(htmlElement) {
     switch (htmlElement.id) {
         case "totalTab":
             $('#reportCard').html(reportsArray[0]);
@@ -127,15 +124,15 @@ var handleReportsList = function(htmlElement){
         $('#reportCard').html("<h5>No Reports To Display</h5>");
     }
 }
-var updateComponents = function () {
+var updateComponents = function() {
     getUserLogs();
     getReportCount();
 }
 $(document).ready(function () {
     updateComponents();
-    $(function () { window.setInterval(updateComponents, 5000); });
+    $(function(){ window.setInterval(updateComponents, 5000); });
     $("#widgetTabs li a").on("click", function() {
-        $(this).parent("li").parent("ul").children("li").each(function (index, value) {
+        $(this).parent("li").parent("ul").children("li").each(function(index, value) {
             $(value.tagName + " a").removeClass("active");
         });
         $(this).addClass("active");
@@ -144,22 +141,36 @@ $(document).ready(function () {
     });
 });
 function handleReportCount(htmlElement, reports) {
+    var today = new Date();
+    var nextWeek = new Date();
+    nextWeek.setDate(nextWeek.getDate() + 7);
     switch (htmlElement.id) {
-            case "totalTab":
-                $("#reportCount").html(countArray[0]);
-                $("#widgetTitle").html("Total Reports");
-                break;
-            case "todayTab":
-                $("#reportCount").html(countArray[2]);
-                $("#widgetTitle").html("Reports Due Today");
-                break;
-            case "weeklyTab":
-                $("#reportCount").html(countArray[1]);
-                $("#widgetTitle").html("Reports Due Within One Week");
-                break;
-            default:
-                break;
-        }
+        case "totalTab":
+            $("#reportCount").html(countArray[0]);
+            $("#widgetTitle").html("Total Reports");
+            $("#reportLink").html('<a href="../Reports/Index/">' +'Go to reports'+'</a>');
+            break;
+        case "todayTab":
+            $("#reportCount").html(countArray[2]);
+            $("#widgetTitle").html("Reports Due Today");
+            $("#reportLink").html('<a href="../Reports/Index/?' + getHtmlDate('begin', today) + getHtmlDate('&end', today) + '">' + 'Go to reports' + '</a>');
+            break;
+        case "weeklyTab":
+            $("#reportCount").html(countArray[1]);
+            $("#widgetTitle").html("Reports Due Within One Week");
+            $("#reportLink").html('<a href="../Reports/Index/?' + getHtmlDate('begin', today) + getHtmlDate('&end', nextWeek) + '">' + 'Go to reports' + '</a>');
+            break;
+        default:
+            break;
+    }
+}
+function getHtmlDate(name, date) {
+    var dateString;
+    var month = checkLessThanTen(date.getMonth() + 1);
+    var day = checkLessThanTen(date.getDate());
+    var year = date.getFullYear();
+    dateString = month + '%2F' + day + '%2F' + year;
+    return name + '=' + dateString;
 }
 function handleJsonUserLogs(data) {
     var body = '';
@@ -169,9 +180,9 @@ function handleJsonUserLogs(data) {
             '<td class="col-sm-3"></td></tr>';
     }
     else {
-        data.sort(function (a, b) {
+        data.sort(function(a, b){
             return b.timeStamp.localeCompare(a.timeStamp);
-        })
+        });
         for (var i = 0; i < data.length; i++) {
             var temp = new Date(data[i]["timeStamp"]);
             temp = getTimestamp(temp);
