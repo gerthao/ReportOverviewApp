@@ -132,24 +132,12 @@ namespace ReportOverviewApp.Models
 
         private DateTime? GetDeadlineQuarterly(DateTime compareDate)
         {
-            List<DateTime?> deadlines = GetAllDueDates();
+            List<DateTime?> deadlines = GetAllDueDates(compareDate);
+            const int quarterlyLimit = 4;
+            if (deadlines.Count() != quarterlyLimit) return null;
+            var current = deadlines.Where(e => e.Value >= compareDate).Take(1).Single();
             if (deadlines.Count() == 0) return null;
-            for (int i = 0; i < deadlines.Count() - 1; i++)
-            {
-                DateTime? d1 = deadlines[i];
-                DateTime? d2 = deadlines[i + 1];
-                if (d1 != null && (d1.Value.Year > compareDate.Year + 1 || d1.Value.Year < compareDate.Year)){
-                    d1 = new DateTime(year: compareDate.Year, month: d1.Value.Month, day: d1.Value.Day);
-                }
-                if (d2 != null){
-                    d2 = new DateTime(year: d2.Value.Month < d1.Value.Month ? compareDate.Year + 1 : compareDate.Year, month: d2.Value.Month, day: d2.Value.Day);
-                }
-                deadlines[i] = d1;
-                deadlines[i + 1] = d2;
-            }
-            deadlines = deadlines.Where(date => date >= compareDate).OrderBy(date => date).ToList();
-            if (deadlines.Count() == 0) return null;
-            return deadlines[0];
+            return current;
         }
         private DateTime? GetDeadlineMonthly(DateTime compareDate)
         {
@@ -160,7 +148,7 @@ namespace ReportOverviewApp.Models
                 return deadline;
             } catch(Exception e)
             {
-                Console.WriteLine("Error with GetDeadlineMonthy(DateTime compareDate): \"e.Message\"");
+                Console.WriteLine($"Error with GetDeadlineMonthy(DateTime compareDate): \"{e.Message}\"");
                 return null;
             }
         }
@@ -172,24 +160,31 @@ namespace ReportOverviewApp.Models
             switch (DayDue)
             {
                 case "SUN":
+                case "Sunday":
                     weeklyDueDay = DayOfWeek.Sunday;
                     break;
                 case "MON":
+                case "Monday":
                     weeklyDueDay = DayOfWeek.Monday;
                     break;
                 case "TUE":
+                case "Tuesday":
                     weeklyDueDay = DayOfWeek.Tuesday;
                     break;
                 case "WED":
+                case "Wednesday":
                     weeklyDueDay = DayOfWeek.Wednesday;
                     break;
                 case "THU":
+                case "Thursday":
                     weeklyDueDay = DayOfWeek.Thursday;
                     break;
                 case "FRI":
+                case "Friday":
                     weeklyDueDay = DayOfWeek.Friday;
                     break;
                 case "SAT":
+                case "Saturday":
                     weeklyDueDay = DayOfWeek.Saturday;
                     break;
                 default:
@@ -233,14 +228,25 @@ namespace ReportOverviewApp.Models
             dates.RemoveAll(dueDate => dueDate == null);
             return dates;
         }
-        private DateTime? GetDeadlineAnnual(DateTime compareDate)
+        private List<DateTime?> GetAllDueDates(DateTime date)
         {
             List<DateTime?> dates = GetAllDueDates();
-            if (dates.Count == 0) return null;
-            dates.ForEach(date => date = new DateTime(
-                                                year: DeadlineHasPassed(date.Value)?compareDate.Year+1:compareDate.Year, 
-                                                month: date.Value.Month, 
-                                                day: date.Value.Day));
+            for(int i = 0; i < dates.Count(); i++)
+            {
+                dates[i] = new DateTime(year: date.Year, month: dates[i].Value.Month, day: dates[i].Value.Day);
+                if(dates[i].Value < date)
+                {
+                    dates[i] = dates[i].Value.AddYears(1);
+                }
+            }
+            dates.Sort();
+            return dates;
+        }
+        private DateTime? GetDeadlineAnnual(DateTime compareDate)
+        {
+            const int annualLimit = 1;
+            List<DateTime?> dates = GetAllDueDates(compareDate);
+            if (dates.Count != annualLimit) return null;
             return dates.ElementAt(0);
         }
         private bool DeadlineHasPassed(DateTime deadline)
@@ -250,12 +256,9 @@ namespace ReportOverviewApp.Models
         }
         private DateTime? GetDeadlineSemiannual(DateTime compareDate)
         {
-            List<DateTime?> dates = GetAllDueDates();
-            if (dates.Count == 0) return null;
-            dates.ForEach(date => date = new DateTime(
-                                                year: DeadlineHasPassed(date.Value)?compareDate.Year+1:compareDate.Year,
-                                                month: date.Value.Month,
-                                                day: date.Value.Day));
+            const int semiannualLimit = 2;
+            List<DateTime?> dates = GetAllDueDates(compareDate);
+            if (dates.Count != semiannualLimit) return null;
             return dates.Where(date => date.Value >= DateTime.Today)
                         .OrderBy(date => date)
                         .First();

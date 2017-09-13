@@ -69,7 +69,7 @@ var deadlineCount = function (data) {
     $('#TotalReportCount').html(data.length);
     var daily = data.filter(function (n) {
         if (n === null || n.reportDeadline === null) return false;
-        return  n.reportDeadline === today
+        return n.reportDeadline.substring(0, 19) === today
     });
     $('#todayReportCount').html(daily.length);
     var week = new Date();

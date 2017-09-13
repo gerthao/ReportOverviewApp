@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.12
+VisualStudioVersion = 15.0.26730.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportOverviewApp", "ReportOverviewApp\ReportOverviewApp.csproj", "{8D5C31C4-C6E2-4F9F-931E-487B04679EF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReportOverviewApp", "ReportOverviewApp\ReportOverviewApp.csproj", "{8D5C31C4-C6E2-4F9F-931E-487B04679EF3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XUnitTestProjectReportOverviewApp", "XUnitTestProjectReportOverviewApp\XUnitTestProjectReportOverviewApp.csproj", "{9C369362-C3E5-44D3-A588-A414B71EA8B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +17,15 @@ Global
 		{8D5C31C4-C6E2-4F9F-931E-487B04679EF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D5C31C4-C6E2-4F9F-931E-487B04679EF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D5C31C4-C6E2-4F9F-931E-487B04679EF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C369362-C3E5-44D3-A588-A414B71EA8B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C369362-C3E5-44D3-A588-A414B71EA8B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C369362-C3E5-44D3-A588-A414B71EA8B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C369362-C3E5-44D3-A588-A414B71EA8B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8C927CDC-633E-428A-A691-26C2C88EACB0}
 	EndGlobalSection
 EndGlobal

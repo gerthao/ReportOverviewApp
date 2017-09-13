@@ -50,26 +50,22 @@
     </div>
     <form>
         <div class="row">
-            <ul class="col-sm-6">
+            <div class="col-sm-6 list-group">
                 @foreach (var stateItem in Model.States)
             {
-                    <li>
-                        <a href="#">
-                            @Html.ActionLink(stateItem, "SelectPlan", new {state = @stateItem})
-                        </a>
-                    </li>
+                    
+                            @Html.ActionLink(stateItem, "SelectPlan", new {state = @stateItem}, new { @class = "list-group-item list-group-item-action" })
+                    
                 }
-            </ul>
-            <ul class="col-sm-6">
+            </div>
+            <div class="col-sm-6 list-group">
                 @foreach (var planItem in Model.Plans)
             {
-                    <li>
-                        <a href="#">
-                            @Html.ActionLink(planItem, "Index", new {plan = @planItem})
-                        </a>
-                    </li>
+                    
+                            @Html.ActionLink(planItem, "Index", new {plan = @planItem}, new { @class = "list-group-item list-group-item-action" })
+                    
                 }
-            </ul>
+            </div>
         </div>
     </form>
 </div>
