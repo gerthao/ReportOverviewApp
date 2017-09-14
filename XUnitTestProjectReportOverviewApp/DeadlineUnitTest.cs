@@ -98,5 +98,11 @@ namespace XUnitTestProjectReportOverviewApp
             };
             Assert.Null(badReport.CurrentDeadline());
         }
+        [Fact]
+        public void ReportDeadlineTestBiweekly()
+        {
+            const int firstDueDate = 14, secondDueDate = 29;
+
+        }
     }
 }

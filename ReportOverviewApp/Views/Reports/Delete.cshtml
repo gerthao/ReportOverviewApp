@@ -10,8 +10,9 @@
 <div>
     <h4>Report</h4>
     <hr />
+    <input type="hidden" asp-for="ID" />
     <dl class="dl-horizontal">
-        <input type="hidden" asp-for="ID" />
+       
         <dt>
             @Html.DisplayNameFor(model => model.Name)
         </dt>

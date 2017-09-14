@@ -10,7 +10,7 @@ $(document).ready(function () {
     $('#stateList a').click(function () {
         $('#stateInput').val($(this).html());
     });
-    $('#planList li a').click(function () {
+    $('#planList a').click(function () {
         $('#planInput').val($(this).html());
     });
     $('#beginDateInput').datepicker();
@@ -31,7 +31,7 @@ $(document).ready(function () {
         var day = date.getDate();
         var year = date.getFullYear();
         var hour = checkLessThanTen(date.getHours());
-        var minute = checkLessThanTen(date.getHours());
+        var minute = checkLessThanTen(date.getMinutes());
         var second = checkLessThanTen(date.getSeconds());
         dateString = month + '/' + day + '/' + year + ' ' + hour + ':' + minute + ':' + second;
         return dateString;

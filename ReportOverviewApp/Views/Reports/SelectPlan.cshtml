@@ -39,18 +39,14 @@
         </div>
     </div>
 </div>*@
-
-
-
-
 <div class="container">
     <div class="row">
-        <h4 class="col-lg-6">Choose State</h4>
-        <h4 class="col-lg-6">Choose Plan</h4>
+        <h4 class="col-lg-3">Choose State</h4>
+        <h4 class="col-lg-9">Choose Plan</h4>
     </div>
     <form>
         <div class="row">
-            <div class="col-sm-6 list-group">
+            <div class="col-sm-3 list-group">
                 @foreach (var stateItem in Model.States)
             {
                     
@@ -58,7 +54,7 @@
                     
                 }
             </div>
-            <div class="col-sm-6 list-group">
+            <div class="col-sm-9 list-group">
                 @foreach (var planItem in Model.Plans)
             {
                     
