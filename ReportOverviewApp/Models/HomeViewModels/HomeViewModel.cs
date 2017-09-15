@@ -17,6 +17,13 @@ namespace ReportOverviewApp.Models.HomeViewModels
         public Dictionary<string, string> Users { get; set; }
         public IEnumerable<UserLog> UserLogs { get; set; }
 
+        /// <summary>
+        /// Returns a username based on the userId given.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns>
+        /// Returns a username as a string.  If not found, then returns "No user".
+        /// </returns>
         public string GetUserName(string userId)
         {
             foreach(var usr in Users)

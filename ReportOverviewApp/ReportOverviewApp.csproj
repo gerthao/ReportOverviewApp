@@ -39,13 +39,11 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Views\Shared\_SideMenu.cshtml" />
     <None Include="wwwroot\js\HomeHandler.js" />
     <None Include="wwwroot\js\LogoutHandler.js" />
     <None Include="wwwroot\js\ReportsHandler.js" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="JavaScript\" />
     <Folder Include="Views\Home\Components\TimeViewComponent\" />
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">

@@ -8,6 +8,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReportOverviewApp.Models
 {
+    /// <summary>
+    /// Class used to convert a specific excel document to JSON
+    /// </summary>
     [NotMapped]
     public class ReportJsonData
     {

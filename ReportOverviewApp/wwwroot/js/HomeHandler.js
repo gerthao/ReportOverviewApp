@@ -10,7 +10,7 @@ var getUserLogs = function () {
     try {
         $.ajax({
             url: link,
-            type: "POST",
+            type: "GET",
             dataType: "json",
             contentType: "application/json; charset-utf-8",
             success: function(data) {

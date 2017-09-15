@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace ReportOverviewApp.Models
 {
+    /// <summary>
+    /// Class describes what action has happened to a report by a user.
+    /// </summary>
     public class UserLog
     {
         public int ID {get; private set;}

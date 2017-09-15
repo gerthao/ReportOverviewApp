@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace ReportOverviewApp.Models.WidgetModels
 {
     /// <summary>
-    ///  TODO: Needs summary
+    ///  Class used to display numerical data, however it will most likely not be used.
     /// </summary>
     ///
     [NotMapped]

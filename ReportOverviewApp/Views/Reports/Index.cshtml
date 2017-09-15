@@ -10,7 +10,7 @@
 </style>
 <h3 class="page-header">Report Catalogue 
     <button class="btn btn-primary" type="button" id="mag-glass" data-toggle="modal" data-target="#SearchReportModal"><i class="fa fa-search"></i></button>
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#CreateReportModal" aria-label="Left Align"><i class="fa fa-plus-square"></i></button>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createReportModal" aria-label="Left Align"><i class="fa fa-plus-square"></i></button>
     @*<button type="button" class="btn btn-primary" id="ViewTableButton" aria-label="Left Align"><span id="ViewTableButtonIcon" class="glyphicon glyphicon-resize-small"></span></button>*@
 </h3>
 <div id="SearchReportModal" class="modal fade">
@@ -25,7 +25,7 @@
         </div>
     </div>
 </div>
-<div id="CreateReportModal" class="modal fade" tabindex="-1" role="dialog">
+<div id="createReportModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <form asp-action="Create">
@@ -65,15 +65,16 @@ else {
                     <td><text>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateClientNotified)</text></td>
                     <td><text>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateSent)</text></td>
                     <td style="text-align: center;">
-                        <a id="EditReportLink" data-toggle="modal" data-target="#EditReportModal"><span class="fa fa-edit text-primary"></span></a> |
+                        <a id="editReport" data-toggle="modal" data-target="#editReportModal"><span class="fa fa-edit text-primary"></span></a> |
                         <a asp-action="Details" asp-route-id="@Model.Reports.ElementAt(i).ID"><span class="fa fa-book text-primary"></span></a> |
-                        <a asp-action="Delete" asp-route-id="@Model.Reports.ElementAt(i).ID"><span class="fa fa-remove text-primary"></span></a>
+                        <a id="deleteReport" data-toggle="modal" data-target="#deleteReportModal"><span class="fa fa-remove text-primary"></span></a>
+                        @*<a asp-action="Delete" asp-route-id="@Model.Reports.ElementAt(i).ID"><span class="fa fa-remove text-primary"></span></a>*@
                     </td>
                 </tr>
             }
         </tbody>
     </table>
-    <div id="EditReportModal" class="modal fade" tabindex="-1" role="dialog">
+    <div id="editReportModal" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <form asp-action="Edit">
@@ -82,6 +83,21 @@ else {
                     <div class="modal-footer">
                         <div class="col-md-2">
                             <input type="submit" value="Save" class="btn btn-primary border-dark" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="deleteReportModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <form asp-action="Delete">
+                    <div class="modal-header"><h5 class="modal-title">Delete Report</h5></div>
+                    <div class="modal-body">@await Html.PartialAsync("Delete", new Report())</div>
+                    <div class="modal-footer">
+                        <div class="col-md-2">
+                            <input type="submit" class="btn btn-danger" value="Delete" />
                         </div>
                     </div>
                 </form>

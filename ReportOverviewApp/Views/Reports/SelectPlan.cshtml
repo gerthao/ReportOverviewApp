@@ -5,40 +5,6 @@
 }
 
 <h2 class="page-header">Select A Plan</h2>
-@*<div class="container">
-    <div class="row">
-        <div class="dropdown col-sm-6">
-            <button class="btn btn-default" dropdown-toggle" type="button" id="stateDropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                Select State
-            </button>
-            <ul class="dropdown-menu col-sm-12" aria-labelledby="stateDropdownMenu">
-                @foreach (var stateItem in Model.States)
-                {
-                    <li>
-                        <a>
-                            @Html.ActionLink(stateItem, "SelectPlan", new { state = @stateItem })
-                        </a>
-                    </li>
-                }
-            </ul>
-        </div>
-        <div class="dropdown col-sm-6">
-            <button class="btn btn-default" dropdown-toggle" type="button" id="planDropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                Select Plan
-            </button>
-            <ul class="dropdown-menu col-sm-12" aria-labelledby="planDropdownMenu">
-                @foreach (var planItem in Model.Plans)
-                        {
-                    <li>
-                        <a href="#">
-                            @Html.ActionLink(planItem, "Index", new { plan = @planItem })
-                        </a>
-                    </li>
-                }
-            </ul>
-        </div>
-    </div>
-</div>*@
 <div class="container">
     <div class="row">
         <h4 class="col-lg-3">Choose State</h4>
@@ -48,18 +14,14 @@
         <div class="row">
             <div class="col-sm-3 list-group">
                 @foreach (var stateItem in Model.States)
-            {
-                    
-                            @Html.ActionLink(stateItem, "SelectPlan", new {state = @stateItem}, new { @class = "list-group-item list-group-item-action" })
-                    
+                {
+                    @Html.ActionLink(stateItem, "SelectPlan", new {state = @stateItem}, new { @class = "list-group-item list-group-item-action" })   
                 }
             </div>
             <div class="col-sm-9 list-group">
                 @foreach (var planItem in Model.Plans)
-            {
-                    
-                            @Html.ActionLink(planItem, "Index", new {plan = @planItem}, new { @class = "list-group-item list-group-item-action" })
-                    
+                {
+                    @Html.ActionLink(planItem, "Index", new {plan = @planItem}, new { @class = "list-group-item list-group-item-action" })
                 }
             </div>
         </div>

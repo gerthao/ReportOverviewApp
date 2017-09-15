@@ -1,5 +1,5 @@
-﻿'use strict';
-
+﻿//Javascript file meant to handle the views for the Reports controller.//
+'use strict';
 $(document).ready(function () {
     $("#ClearSearchForm").click(function () {
         $('input').val(null);
@@ -15,10 +15,10 @@ $(document).ready(function () {
     });
     $('#beginDateInput').datepicker();
     $("#endDateInput").datepicker();    
-    //$("#dueDate1").datepicker();
-    //$("#dueDate2").datepicker();
-    //$("#dueDate3").datepicker();
-    //$("#dueDate4").datepicker();
+    $("#dueDate1").datepicker();
+    $("#dueDate2").datepicker();
+    $("#dueDate3").datepicker();
+    $("#dueDate4").datepicker();
     function checkLessThanTen(number) {
         if (number < 10) {
             number = '0' + number;
@@ -89,7 +89,7 @@ $(document).ready(function () {
     var root = window.location.origin;
     $('#reportTable tr td a').on("click", function () {
         var retrievedID = $(this).parent().parent().find(".ReportID").html();
-        //var retrievedName = $(this).parent().parent().find(".ReportName");
+        var action = $(this).attr('id');
         var link = root + "/Data/GetReport/" + retrievedID;
         try {
             $.ajax({
@@ -98,31 +98,39 @@ $(document).ready(function () {
                 dataType: 'json',
                 contentType: 'application/json; charset=utf-8',
                 success: function (data) {
-                    handleJSONReport(data);
+                    handleJSONReport(data, action);
                 },
                 error: function () {
-                    alert("failed: " + link);
+                    console.error("failed: " + link);
                 }
             });
         } catch (err) {
-            alert(err);
+            console.error(err);
         }
         updateFrequencyFields();
     });
-    function handleJSONReport(data) {
+    function handleJSONReport(data, action) {
         if (data === null) {
-            alert("there is no data");
+            console.log("there is no data");
         } else {
-            var report = '';
-            report = JSON.stringify(data[0]);
             for (var i in data[0]) {
-                $('#' + i).val(data[0][i]);
-                if (i === "dateDone" && data[0][i] !== null) {
-                    $('#done').prop('checked', true);
-                } if (i === 'dateClientNotified' && data[0][i] !== null) {
-                    $('#clientNotified').prop('checked', true);
-                } if (i === 'dateSent' && data[0][i] !== null) {
-                    $('#sent').prop('checked', true);
+                if (action === 'editReport') {
+                    $('#' + action + '_' + i).val(data[0][i]);
+                    if (i === "dateDone" && data[0][i] !== null) {
+                        $('#' + action + '_done').prop('checked', true);
+                    } if (i === 'dateClientNotified' && data[0][i] !== null) {
+                        $('#' + action + '_clientNotified').prop('checked', true);
+                    } if (i === 'dateSent' && data[0][i] !== null) {
+                        $('#' + action + '_sent').prop('checked', true);
+                    }
+                }
+                if (action === 'deleteReport') {
+                    if (i === 'id') {
+                        $('#' + action + '_' + i).val(data[0][i]);
+                    } else {
+                        $('#' + action + '_' + i).html(data[0][i]);
+                    }
+                    
                 }
             }
         }

@@ -99,32 +99,48 @@ namespace ReportOverviewApp.Models
         public string OtherReportName { get; set; }
 
         /// <summary>
-        ///  Gets the closest deadline for a report from the current date.
+        ///  Gets the closest deadline for a report based on the parameter and frequency type of the Report.
         /// </summary>
+        /// <param name="compareDate">
+        ///  Parameter compareDate is used to compared which day to look for deadlines.
+        ///  If null then compareDate becomes today's date.
+        /// </param>
         /// <returns>
         ///  Returns a Nullable DateTime object representating the current deadline of a report.
         /// </returns>
         public DateTime? Deadline(DateTime compareDate)
         {
-            if (compareDate == null) compareDate = DateTime.Today;
-            switch (Frequency)
+            try
             {
-                case "Quarterly":
-                    return GetDeadlineQuarterly(compareDate);
-                case "Monthly":
-                    return GetDeadlineMonthly(compareDate);
-                case "Weekly":
-                    return GetDeadlineWeekly(compareDate);
-                case "Biweekly":
-                    return GetDeadlineBiweekly(compareDate);
-                case "Annual":
-                    return GetDeadlineAnnual(compareDate);
-                case "Semiannual":
-                    return GetDeadlineSemiannual(compareDate);
-                default:
-                    return null;
+                if (compareDate == null) compareDate = DateTime.Today;
+                switch (Frequency)
+                {
+                    case "Quarterly":
+                        return GetDeadlineQuarterly(compareDate);
+                    case "Monthly":
+                        return GetDeadlineMonthly(compareDate);
+                    case "Weekly":
+                        return GetDeadlineWeekly(compareDate);
+                    case "Biweekly":
+                        return GetDeadlineBiweekly(compareDate);
+                    case "Annual":
+                        return GetDeadlineAnnual(compareDate);
+                    case "Semiannual":
+                        return GetDeadlineSemiannual(compareDate);
+                    default:
+                        return null;
+                }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Something went wrong: { e.ToString()}");
+            }
+            return null;
         }
+        /// <summary>
+        /// Gets the closest deadline for a report from today.
+        /// </summary>
+        /// <returns></returns>
         public DateTime? CurrentDeadline()
         {
             return Deadline(DateTime.Today);

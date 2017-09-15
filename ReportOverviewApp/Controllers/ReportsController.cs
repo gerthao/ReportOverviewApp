@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using System.Reflection;
 using ReportOverviewApp.Helpers;
 using System.Text;
+using System.Globalization;
 
 namespace ReportOverviewApp.Controllers
 {
@@ -41,7 +42,7 @@ namespace ReportOverviewApp.Controllers
         /// </returns>
         /// 
 
-        private async Task<ReportViewModel> GetReportViewModelAsync(string search, string column, int recordsPerPage, int pageIndex, string state, string plan, DateTime? begin, DateTime? end, string frequency)
+        private async Task<ReportViewModel> GetReportViewModelAsync(string search, string column, int recordsPerPage, int pageIndex, string state, string plan, string begin, string end, string frequency)
         {
             if (viewModel == null)
             {
@@ -67,8 +68,6 @@ namespace ReportOverviewApp.Controllers
             viewModel.Reports = viewModel.DisplayPage(pageIndex);
             return viewModel;
         }
-        
-       
         private void HandleFrequency(string frequency)
         {
             if (!String.IsNullOrEmpty(frequency))
@@ -99,15 +98,22 @@ namespace ReportOverviewApp.Controllers
             }
         }
 
-        private void HandleDates(DateTime? begin, DateTime? end)
+        private void HandleDates(string begin, string end)
         {
             if (begin != null){
-                viewModel.Begin = begin;
-                viewModel.Reports = viewModel.Reports.Where(r => r.CurrentDeadline() >= viewModel.Begin);
+                DateTime beginDate;
+                if(DateTime.TryParse(begin, out beginDate)){
+                    viewModel.Begin = beginDate;
+                    viewModel.Reports = viewModel.Reports.Where(r => r.CurrentDeadline() != null && r.CurrentDeadline().HasValue && r.CurrentDeadline().Value >= beginDate);
+                }
             }
             if (end != null){
-                viewModel.End = end;
-                viewModel.Reports = viewModel.Reports.Where(r => r.CurrentDeadline() <= viewModel.End);
+                DateTime endDate;
+                if(DateTime.TryParse(end, out endDate))
+                {
+                    viewModel.End = endDate;
+                    viewModel.Reports = viewModel.Reports.Where(r => DateTime.Today <= endDate);
+                }
             }
         }
         private void HandleStateAndPlan(string state, string plan)
@@ -121,7 +127,6 @@ namespace ReportOverviewApp.Controllers
                 viewModel.Plan = plan;
                 viewModel.Reports = viewModel.Reports.Where(r => r != null && r.GroupName != null && r.GroupName.Equals(viewModel.Plan));
             }
-
         }
         private void HandleSearch(string search)
         {
@@ -138,7 +143,7 @@ namespace ReportOverviewApp.Controllers
 
         // GET: Reports
         [Authorize]
-        public async Task<IActionResult> Index(string search, string column, int entriesPerPage, int pageIndex, string state, string plan, string frequency, DateTime? begin = null, DateTime? end = null)
+        public async Task<IActionResult> Index(string search, string column, int entriesPerPage, int pageIndex, string state, string plan, string frequency, string begin = null, string end = null)
             => View(await GetReportViewModelAsync(search, column, entriesPerPage, pageIndex, state, plan, begin, end, frequency));
 
         // GET: Reports/Details/5
