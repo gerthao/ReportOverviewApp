@@ -11,6 +11,7 @@ namespace ReportOverviewApp.Models.AccountViewModels
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
+        //[RegularExpression(@"[a-zA-Z0-9._%=-]+(@greatdentalplans\.com)$", ErrorMessage = "Email must be from greatdentalplans.com, example: \"user@greatdentalplans.com\"")]
         public string Email { get; set; }
 
         [Required]

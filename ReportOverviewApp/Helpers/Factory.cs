@@ -11,7 +11,6 @@ namespace ReportOverviewApp.Helpers
     /// <typeparam name="T"></typeparam>
     public abstract class Factory<T>
     {
-        protected List<T> Products;
         /// <summary>
         ///  Gets an object of type T 
         /// </summary>
@@ -19,8 +18,5 @@ namespace ReportOverviewApp.Helpers
         ///  Returns an object of type T
         /// </returns>
         public abstract T Build();
-        public abstract bool HasProduct(T item);
-        protected abstract T Retrieve(T item);
-        public abstract void Register(T item);
     }
 }

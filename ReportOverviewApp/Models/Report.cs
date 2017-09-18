@@ -10,7 +10,7 @@ namespace ReportOverviewApp.Models
 
     public class Report
     {
-        
+
         [Column(Order = 0)]
         public int ID { get; set; }
         [StringLength(1000), Column(Order = 1)]
@@ -25,11 +25,15 @@ namespace ReportOverviewApp.Models
 
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:g}", ApplyFormatInEditMode = true), Display(Name = "Finished On")]
         public DateTime? DateDone { get; set; }
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:g}", ApplyFormatInEditMode = true), Display(Name= "Notified On")]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:g}", ApplyFormatInEditMode = true), Display(Name = "Notified On")]
         public DateTime? DateClientNotified { get; set; }
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:g}", ApplyFormatInEditMode = true), Display(Name = "Sent On")]
         public DateTime? DateSent { get; set; }
-        
+
+        //public string UserDone {get; set;}
+        //public string UserClientNotified { get; set; }
+        //public string UserSent { get; set; }
+
         [StringLength(255), Display(Name = "Business Contact")]
         public string BusinessContact { get; set; }
         [StringLength(255), Display(Name = "Business Owner")]
@@ -267,48 +271,6 @@ namespace ReportOverviewApp.Models
                         .OrderBy(date => date)
                         .First();
         }
-        public string ToJson() => JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-        public Report Copy()
-        {
-            Report report = new Report();
-            report.ID = ID;
-            report.Name = Name;
-            report.BusinessContact = BusinessContact;
-            report.BusinessOwner = BusinessOwner;
-            report.DueDate1 = DueDate1;
-            report.DueDate2 = DueDate2;
-            report.DueDate3 = DueDate3;
-            report.DueDate4 = DueDate4;
-            report.DateAdded = DateAdded;
-            report.EffectiveDate = EffectiveDate;
-            report.TerminationDate = TerminationDate;
-            report.SystemRefreshDate = SystemRefreshDate;
-            report.Frequency = Frequency;
-            report.DayDue = DayDue;
-            report.DeliveryFunction = DeliveryFunction;
-            report.DeliveryMethod = DeliveryMethod;
-            report.DeliverTo = DeliverTo;
-            report.WorkInstructions = WorkInstructions;
-            report.DaysAfterQuarter = DaysAfterQuarter;
-            report.FolderLocation = FolderLocation;
-            report.ReportType = ReportType;
-            report.RunWith = RunWith;
-            report.Notes = Notes;
-            report.DaysAfterQuarter = DaysAfterQuarter;
-            report.GroupName = GroupName;
-            report.State = State;
-            report.ReportPath = ReportPath;
-            report.OtherDepartment = OtherDepartment;
-            report.SourceDepartment = SourceDepartment;
-            report.QualityIndicator = QualityIndicator;
-            report.ERSReportLocation = ERSReportLocation;
-            report.ERRStatus = ERRStatus;
-            report.LegacyReportID = LegacyReportID;
-            report.LegacyReportIDR2 = LegacyReportIDR2;
-            report.ERSReportName = ERSReportName;
-            report.OtherReportLocation = OtherReportLocation;
-            report.OtherReportName = OtherReportName;
-            return report;
-        }
+
     }
 }

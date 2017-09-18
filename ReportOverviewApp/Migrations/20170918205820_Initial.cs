@@ -62,7 +62,7 @@ namespace ReportOverviewApp.Migrations
                     DateDone = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateSent = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DayDue = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
-                    DaysAfterQuarter = table.Column<int>(type: "int", maxLength: 20, nullable: true),
+                    DaysAfterQuarter = table.Column<int>(type: "int", nullable: true),
                     DeliverTo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DeliveryFunction = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
                     DeliveryMethod = table.Column<string>(type: "nvarchar(260)", maxLength: 260, nullable: true),
@@ -109,28 +109,13 @@ namespace ReportOverviewApp.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Changes = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Message = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReportID = table.Column<int>(type: "int", nullable: false),
                     TimeStamp = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UserID = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserLog", x => x.ID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Widget",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Color = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Footer = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Header = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SubWidgetID = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Widget", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -301,9 +286,6 @@ namespace ReportOverviewApp.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserLog");
-
-            migrationBuilder.DropTable(
-                name: "Widget");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

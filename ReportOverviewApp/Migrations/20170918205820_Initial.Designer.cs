@@ -11,7 +11,7 @@ using System;
 namespace ReportOverviewApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20170822200225_Initial")]
+    [Migration("20170918205820_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -204,8 +204,7 @@ namespace ReportOverviewApp.Migrations
                     b.Property<string>("DayDue")
                         .HasMaxLength(10);
 
-                    b.Property<int?>("DaysAfterQuarter")
-                        .HasMaxLength(20);
+                    b.Property<int?>("DaysAfterQuarter");
 
                     b.Property<string>("DeliverTo");
 
@@ -300,6 +299,8 @@ namespace ReportOverviewApp.Migrations
 
                     b.Property<string>("Message");
 
+                    b.Property<int>("ReportID");
+
                     b.Property<DateTime?>("TimeStamp");
 
                     b.Property<string>("UserID");
@@ -307,24 +308,6 @@ namespace ReportOverviewApp.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("UserLog");
-                });
-
-            modelBuilder.Entity("ReportOverviewApp.Models.WidgetModels.Widget", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Color");
-
-                    b.Property<string>("Footer");
-
-                    b.Property<string>("Header");
-
-                    b.Property<int>("SubWidgetID");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Widget");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
