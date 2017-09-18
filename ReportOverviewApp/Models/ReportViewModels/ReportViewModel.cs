@@ -12,7 +12,6 @@ namespace ReportOverviewApp.Models.ReportViewModels
     public class ReportViewModel
     {
         public IEnumerable<Report> Reports { get; set; }
-        public IEnumerable<Report> AllReports { get; set; }
         public IEnumerable<string> Plans { get; set; }
         public IEnumerable<string> States { get; set; }
         public string Frequency { get; set; }
@@ -27,7 +26,6 @@ namespace ReportOverviewApp.Models.ReportViewModels
         public string Plan { get; set; }
         public DateTime? Begin { get; set; }
         public DateTime? End { get; set; }
-        public Dictionary<string, bool> SortAscending { get; set; }
 
         /// <summary>
         ///  GeneratePages method calculates the number of pages needed

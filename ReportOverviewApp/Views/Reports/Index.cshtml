@@ -11,7 +11,6 @@
 <h3 class="page-header">Report Catalogue 
     <button class="btn btn-primary" type="button" id="mag-glass" data-toggle="modal" data-target="#SearchReportModal"><i class="fa fa-search"></i></button>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createReportModal" aria-label="Left Align"><i class="fa fa-plus-square"></i></button>
-    @*<button type="button" class="btn btn-primary" id="ViewTableButton" aria-label="Left Align"><span id="ViewTableButtonIcon" class="glyphicon glyphicon-resize-small"></span></button>*@
 </h3>
 <div id="SearchReportModal" class="modal fade">
     <div class="modal-dialog modal-lg" role="document">
@@ -48,9 +47,9 @@ else {
                 <th>@Html.ActionLink("ID", "Index", new { search = Model.Search, plan = Model.Plan, pageIndex = Model.CurrentPage, column = "ID" , begin=Model.Begin, end=Model.End}, new { @class = "text-dark" })</th>
                 <th>@Html.ActionLink("Name", "Index", new { search = Model.Search, plan = Model.Plan, pageIndex = Model.CurrentPage, column = "Name", begin = Model.Begin, end = Model.End }, new { @class = "text-dark" })</th>
                 <th>@Html.ActionLink("Deadline", "Index", new { search = Model.Search, plan = Model.Plan, pageIndex = Model.CurrentPage, column = "Deadline", begin = Model.Begin, end = Model.End }, new { @class = "text-dark" })</th>
-                <th>Finished On</th>
-                <th>Notified On</th>
-                <th>Sent On</th>
+                <th>@Html.ActionLink("Finished On", "Index", new { search = Model.Search, plan = Model.Plan, pageIndex = Model.CurrentPage, column = "Finished On", begin = Model.Begin, end = Model.End }, new { @class = "text-dark" })</th>
+                <th>@Html.ActionLink("Finished On", "Index", new { search = Model.Search, plan = Model.Plan, pageIndex = Model.CurrentPage, column = "Notified On", begin = Model.Begin, end = Model.End }, new { @class = "text-dark" })</th>
+                <th>@Html.ActionLink("Finished On", "Index", new { search = Model.Search, plan = Model.Plan, pageIndex = Model.CurrentPage, column = "Sent On", begin = Model.Begin, end = Model.End }, new { @class = "text-dark" })</th>
                 <th>Options</th>
             </tr>
         </thead>

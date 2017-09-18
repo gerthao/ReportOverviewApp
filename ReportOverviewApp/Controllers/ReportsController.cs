@@ -48,13 +48,7 @@ namespace ReportOverviewApp.Controllers
             {
                 viewModel = new ReportViewModel()
                 {
-                    Reports = await _context.Reports.ToListAsync(),
-                    SortAscending = new Dictionary<string, bool>()
-                    {
-                        { "ID", true },
-                        { "Name", true },
-                        { "Deadline", true }
-                    }
+                    Reports = await _context.Reports.ToListAsync()
                 };
                 viewModel.States = viewModel.Reports.Select(r => r.State).OrderBy(s => s).Distinct();
                 viewModel.Plans = viewModel.Reports.Select(r => r.GroupName).OrderBy(p => p).Distinct();
@@ -82,16 +76,25 @@ namespace ReportOverviewApp.Controllers
                 viewModel.Column = column;
                 switch (viewModel.Column){
                     case "ID":
-                        viewModel.Reports = viewModel.SortAscending["ID"]? viewModel.Reports.OrderBy(report => report.ID) : viewModel.Reports.OrderByDescending(report => report.ID);
+                        viewModel.Reports = viewModel.Reports.OrderBy(report => report.ID);
                         break;
                     case "Name":
-                        viewModel.Reports = viewModel.SortAscending["Name"]? viewModel.Reports.OrderBy(report => report.Name) : viewModel.Reports.OrderByDescending(report => report.Name);
+                        viewModel.Reports = viewModel.Reports.OrderBy(report => report.Name);
                         break;
                     case "Deadline":
-                        viewModel.Reports = viewModel.SortAscending["Deadline"]? viewModel.Reports.OrderBy(report => report.CurrentDeadline()) : viewModel.Reports.OrderByDescending(report => report.CurrentDeadline());
+                        viewModel.Reports = viewModel.Reports.OrderBy(report => report.CurrentDeadline());
+                        break;
+                    case "Finished On":
+                        viewModel.Reports = viewModel.Reports.OrderBy(report => report.DateDone);
+                        break;
+                    case "Notified On":
+                        viewModel.Reports = viewModel.Reports.OrderBy(report => report.DateClientNotified);
+                        break;
+                    case "Sent On":
+                        viewModel.Reports = viewModel.Reports.OrderBy(report => report.DateSent);
                         break;
                     default:
-                        viewModel.Reports = viewModel.SortAscending["ID"]? viewModel.Reports.OrderBy(report => report.ID) : viewModel.Reports.OrderByDescending(report => report.ID);
+                        viewModel.Reports = viewModel.Reports.OrderBy(report => report.ID);
                         break;
                 }
                 
