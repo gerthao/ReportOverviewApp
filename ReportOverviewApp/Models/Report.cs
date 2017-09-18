@@ -215,28 +215,19 @@ namespace ReportOverviewApp.Models
         private DateTime? GetDeadlineBiweekly(DateTime compareDate)
         {
             int biweeklyDay;
-            const int biweek = 14, firstBiweek = 15, secondBiweek = 29;
-            if (!Int32.TryParse(DayDue, out biweeklyDay))
+            const int biweek = 14, biweekLimit = 15;
+            if (!Int32.TryParse(DayDue, out biweeklyDay)) return null;
+            if(biweeklyDay > biweekLimit)
             {
-                return null;
+                biweeklyDay = biweeklyDay % biweek;
+                DayDue = biweeklyDay.ToString();
             }
-            DateTime deadline = new DateTime(year: compareDate.Year, month: compareDate.Month, day: biweeklyDay);
-            if(deadline < compareDate)
-            {
-                switch (deadline.Day)
-                {
-                    case firstBiweek:
-                        deadline = deadline.AddDays(biweek);
-                        break;
-                    case secondBiweek:
-                        deadline = new DateTime(year: deadline.Year, month: deadline.Month+1, day: biweeklyDay);
-                        break;
-                    default:
-                        deadline = deadline.AddDays(biweek);
-                        break;
-                }
-            }
-            return deadline;
+            DateTime firstDeadline = new DateTime(year: compareDate.Year, month: compareDate.Month, day: biweeklyDay);
+            DateTime secondDeadline = firstDeadline.AddDays(biweek);
+            if (compareDate <= firstDeadline) return firstDeadline;
+            else if (compareDate <= secondDeadline && compareDate > firstDeadline) return secondDeadline;
+            else if(compareDate > secondDeadline) return (firstDeadline.AddMonths(1));
+            else return null;
         }
         private List<DateTime?> GetAllDueDates()
         {
@@ -250,10 +241,7 @@ namespace ReportOverviewApp.Models
             for(int i = 0; i < dates.Count(); i++)
             {
                 dates[i] = new DateTime(year: date.Year, month: dates[i].Value.Month, day: dates[i].Value.Day);
-                if(dates[i].Value < date)
-                {
-                    dates[i] = dates[i].Value.AddYears(1);
-                }
+                if(dates[i].Value < date) dates[i] = dates[i].Value.AddYears(1);
             }
             dates.Sort();
             return dates;
