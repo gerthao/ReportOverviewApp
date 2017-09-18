@@ -100,11 +100,13 @@ namespace ReportOverviewApp.Controllers
 
         private void HandleDates(string begin, string end)
         {
+            IEnumerable<(Report report, DateTime? deadline)> list = viewModel.Reports.Select(r => (r, r.CurrentDeadline()));
+            list = list.Where(r => r.deadline.HasValue);
             if (begin != null){
                 DateTime beginDate;
                 if(DateTime.TryParse(begin, out beginDate)){
                     viewModel.Begin = beginDate;
-                    viewModel.Reports = viewModel.Reports.Where(r => r.CurrentDeadline() != null && r.CurrentDeadline().HasValue && r.CurrentDeadline().Value >= beginDate);
+                    list = list.Where(r => r.deadline.Value >= beginDate);
                 }
             }
             if (end != null){
@@ -112,9 +114,10 @@ namespace ReportOverviewApp.Controllers
                 if(DateTime.TryParse(end, out endDate))
                 {
                     viewModel.End = endDate;
-                    viewModel.Reports = viewModel.Reports.Where(r => DateTime.Today <= endDate);
+                    list = list.Where(r => r.deadline.Value <= endDate);
                 }
             }
+            viewModel.Reports = list.Select(r => r.report);
         }
         private void HandleStateAndPlan(string state, string plan)
         {
@@ -158,9 +161,6 @@ namespace ReportOverviewApp.Controllers
 
         public ActionResult SelectPlan(string state, string plan)
             => View(GetReportViewModelFromSelectPlan(state, plan));
-
-        //public ActionResult Directory(string state, string plan)
-        //    => View(GetReportViewModelFromSelectPlan(state, plan));
 
         private ReportViewModel GetReportViewModelFromSelectPlan(string state, string plan)
         {
