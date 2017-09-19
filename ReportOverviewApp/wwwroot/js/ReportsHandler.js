@@ -15,18 +15,7 @@ $(document).ready(function () {
     });
     if (navigator.userAgent.indexOf('Trident/') != -1) {
         $(".input-datepicker").datepicker();
-        $('#beginDateInput').datepicker();
-        $("#endDateInput").datepicker();
-        //$("#editReport_dueDate1").datepicker();
-        //$("#editReport_dueDate2").datepicker();
-        //$("#editReport_dueDate3").datepicker();
-        //$("#editReport_dueDate4").datepicker();
-        //$("#editReport_effectiveDate").datepicker();
-        //$("#editReport_terminationDate").datepicker();
-        //$("#editReport_dateAdded").datepicker();
-        //$("#editReport_systemRefreshDate").datepicker();
     }
-    
     function checkLessThanTen(number) {
         if (number < 10) {
             number = '0' + number;
@@ -43,6 +32,28 @@ $(document).ready(function () {
         var second = checkLessThanTen(date.getSeconds());
         dateString = month + '/' + day + '/' + year + ' ' + hour + ':' + minute + ':' + second;
         return dateString;
+    }
+    //not implemented yet//
+    function handleCheckboxDateTimeOnClick(checkboxInput, dateInput) {
+        $(checkboxInput).click(function () {
+            if ($(dateInput).val() === '' && $(checkboxInput + ':checked').val()) {
+                $(dateInput).val(getDateTimeNow());
+                return;
+            }
+            if ($(dateInput).val() !== '' && !$(checkboxInput + ':checked').val()) {
+                $(dateInput).val('');
+            }
+        });
+    }
+    //not implemented yet//
+    function handleCheckboxDateTimeOnInput(checkboxInput, dateInput) {
+        $(dateInput).on('input', function (e) {
+            if ($(this).val() !== '') {
+                $(checkboxInput).prop('checked', true);
+            } else {
+                $(checkboxInput).prop('checked', false);
+            }
+        });
     }
     $('#editReport_done').click(function () {
         if ($('#editReport_dateDone').val() === '' && $('#editReport_done:checked').val()) {

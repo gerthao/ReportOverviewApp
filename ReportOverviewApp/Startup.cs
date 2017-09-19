@@ -43,7 +43,7 @@ namespace ReportOverviewApp
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            string connection = "HomeConnection";
+            string connection = "DefaultConnection";
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString(connection)));
             services.ConfigureApplicationCookie(options => options.LoginPath = "/Account/Login");
