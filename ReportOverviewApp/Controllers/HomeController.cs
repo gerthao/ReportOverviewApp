@@ -25,42 +25,11 @@ namespace ReportOverviewApp.Controllers
         {
             return ViewComponent("TimeViewComponent");
         }
-        private List<Widget> DefaultWidgets()
-        {
-            WidgetBuilder builder = new WidgetBuilder();
-            var wigetContainer = new List<Widget>
-            {
-                builder
-                    .BuildProduct()
-                    .BuildID(1)
-                    .BuildHeader("Wiget 1")
-                    .BuildSubWidgetTopic("All Reports")
-                    .BuildSubWidgetAction(WidgetFunctions.ReportCount())
-                    .BuildFooter("Footer")
-                    .BuildColor("Red")
-                    .BuildOption("Edit This Widget")
-                    .ReleaseProduct(),
-
-                builder
-                    .BuildProduct()
-                    .BuildID(2)
-                    .BuildHeader("Wiget 2")
-                    .BuildSubWidgetTopic("All Reports")
-                    .BuildSubWidgetAction(WidgetFunctions.ReportCount(DateTime.Now, DateTime.Now.AddDays(20)))
-                    .BuildFooter("Footer")
-                    .BuildColor("Black")
-                    .BuildOption("Edit This Widget").BuildOption("Delete This Widget")
-                    .ReleaseProduct()
-            };
-            return wigetContainer;
-        }
         public async Task<IActionResult> Index()
         {
-            var wid = DefaultWidgets();
             var viewModel = new HomeViewModel()
             {
                 Reports = await _context.Reports.ToListAsync(),
-                Widgets = wid,
                 Users = await _context.Users.ToDictionaryAsync(usr => usr.Id, usr => usr.UserName),
                 UserLogs = from u in _context.UserLogs select u
             };

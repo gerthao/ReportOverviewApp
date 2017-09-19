@@ -13,7 +13,6 @@ namespace ReportOverviewApp.Models.HomeViewModels
     public class HomeViewModel
     {
         public IEnumerable<Report> Reports { get; set; }
-        public IEnumerable<Widget> Widgets { get; set; }
         public Dictionary<string, string> Users { get; set; }
         public IEnumerable<UserLog> UserLogs { get; set; }
 
