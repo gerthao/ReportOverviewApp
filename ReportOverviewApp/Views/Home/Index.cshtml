@@ -57,15 +57,14 @@
                         </ul>
                     </div>
                 </div> 
-                @*<a asp-controller="Reports" asp-action="Index"></a>*@
                 <div class="card-block">
                     <div class="card-body">
                         <h3 id="widgetTitle"class="card-title"><span class="fa fa-clock-o ld ld-float"></span></h3>
                         <h2 id="reportCount">
                             <i class="fa fa-refresh ld ld-spin"></i>
                         </h2>
-                        <div class="btn btn-outline-primary" id="reportLink">
-                            @Html.ActionLink("Go to reports", "../Reports/Index", new { begin=DateTime.Today, end=DateTime.Today})
+                        <div id="reportLink">
+                            @Html.ActionLink(linkText: "Go to reports", controllerName: "Reports", actionName: "Index", routeValues: new { begin=DateTime.Today, end=DateTime.Today}, htmlAttributes: new { @class = "btn btn-outline-primary" })
                         </div>
                     </div>
                 </div>
@@ -73,59 +72,13 @@
         </div>
         <div class="col-md-6">
             <div class="card border-dark card-scrollable">
-                @*<a asp-controller="Reports" asp-action="Index"></a>*@
                 <div class="card-block">
                     <div class="card-body card-body-scrollable" id="reportCard">
                             <i class="fa fa-2x fa-refresh ld ld-spin"></i>
                     </div>
                 </div>
             </div>
-        </div>
-        @*<div class="col-md-offset-3 col-md-6">
-            <div class="thumbnail">
-                <div class="btn-group">
-                    <button type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true">
-                        <span class="glyphicon glyphicon-menu-hamburger widget-option-menu"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Edit Actions</a></li>
-                        <li><a href="#">Change Color</a></li>
-                        <li><a href="#">Copy Widget</a></li>
-                        <li><a href="#">Delete Widget</a></li>
-                    </ul>
-                </div>
-                <div class="caption">
-                    <h3>Upcoming Reports (1 Week)</h3>
-                    <h2 id="weekReportCount">
-                        <i class="fa fa-refresh ld ld-spin"></i>
-                    </h2>
-                    <h1>@Html.ActionLink(@Model.Reports.Where(r => r.Frequency != null).Where(r => r.Frequency.Equals("Monthly")).Count().ToString(), "../Reports/Index", new { begin = DateTime.Today, end = DateTime.Today.AddDays(7) })</h1>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-offset-3 col-md-6">
-            <div class="thumbnail">
-                <div class="btn-group">
-                    <button type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true">
-                        <span class="glyphicon glyphicon-menu-hamburger widget-option-menu"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Edit Actions</a></li>
-                        <li><a href="#">Change Color</a></li>
-                        <li><a href="#">Copy Widget</a></li>
-                        <li><a href="#">Delete Widget</a></li>
-                    </ul>
-                </div>
-                <div class="caption">
-                    <h3>Reports Due Today</h3>
-                    <h2 id="todayReportCount">
-                        <i class="fa fa-refresh  ld ld-spin"></i>
-                    </h2>
-                    <h1>@Html.ActionLink(@Model.Reports.Where(r => r.CurrentDeadline() != null).Where(r => r.CurrentDeadline() == DateTime.Today).Count().ToString(), "../Reports/Index", new { begin = DateTime.Today, end = DateTime.Today })</h1>
-                </div>
-            </div>
-        </div>*@
-        
+        </div>   
         <div class="col-sm-12" style="padding-top: 3rem;">
             <h4>User Logs</h4>
             <div class="col-sm-12">

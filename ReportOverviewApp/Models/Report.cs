@@ -219,13 +219,8 @@ namespace ReportOverviewApp.Models
         private DateTime? GetDeadlineBiweekly(DateTime compareDate)
         {
             int biweeklyDay;
-            const int biweek = 14, biweekLimit = 15;
+            const int biweek = 14;
             if (!Int32.TryParse(DayDue, out biweeklyDay)) return null;
-            if(biweeklyDay > biweekLimit)
-            {
-                biweeklyDay = biweeklyDay % biweek;
-                DayDue = biweeklyDay.ToString();
-            }
             DateTime firstDeadline = new DateTime(year: compareDate.Year, month: compareDate.Month, day: biweeklyDay);
             DateTime secondDeadline = firstDeadline.AddDays(biweek);
             if (compareDate <= firstDeadline) return firstDeadline;

@@ -106,6 +106,8 @@ namespace XUnitTestProjectReportOverviewApp
             DateTime date3 = new DateTime(year: 2013, month: 3, day: 17);
             DateTime date4 = new DateTime(year: 2013, month: 3, day: 29);
             DateTime date5 = new DateTime(year: 2013, month: 3, day: 30);
+            DateTime date6 = new DateTime(year: 2013, month: 3, day: 31);
+            DateTime date7 = new DateTime(year: 2013, month: 4, day: 15);
             Report report1 = new Report()
             {
                 Frequency = "Biweekly", DayDue = "15"
@@ -119,7 +121,10 @@ namespace XUnitTestProjectReportOverviewApp
             Assert.True(report1.Deadline(date2) == new DateTime(year: 2013, month: 3, day: 15));
             Assert.True(report1.Deadline(date3) == new DateTime(year: 2013, month: 3, day: 29));
             Assert.True(report1.Deadline(date4) == new DateTime(year: 2013, month: 3, day: 29));
-            Assert.True(report2.Deadline(date1) == new DateTime(year: 2013, month: 4, day: 30));
+            Assert.True(report2.Deadline(date1) == new DateTime(year: 2013, month: 3, day: 30));
+            Assert.True(report2.Deadline(date5) == new DateTime(year: 2013, month: 3, day: 30));
+            Assert.True(report2.Deadline(date6) == new DateTime(year: 2013, month: 4, day: 13));
+            Assert.True(report2.Deadline(date7) == new DateTime(year: 2013, month: 4, day: 30));
         }
     }
 }

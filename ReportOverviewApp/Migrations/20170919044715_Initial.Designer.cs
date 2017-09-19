@@ -11,7 +11,7 @@ using System;
 namespace ReportOverviewApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20170918205820_Initial")]
+    [Migration("20170919044715_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

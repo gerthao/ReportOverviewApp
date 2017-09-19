@@ -121,7 +121,7 @@ var handleReportsList = function(htmlElement) {
             break;
     }
     if ($('#reportCard').text() === "") {
-        $('#reportCard').html("<h5>No Reports To Display</h5>");
+        $('#reportCard').html("<h5>No reports to display</h5>");
     }
 }
 var updateComponents = function() {
@@ -148,17 +148,17 @@ function handleReportCount(htmlElement, reports) {
         case "totalTab":
             $("#reportCount").html(countArray[0]);
             $("#widgetTitle").html("Total Reports");
-            $("#reportLink").html('<a href="../Reports/Index/">' +'Go to reports'+'</a>');
+            $("#reportLink").html('<a class="btn btn-outline-primary" href="../Reports/Index/">' +'Go to reports'+'</a>');
             break;
         case "todayTab":
             $("#reportCount").html(countArray[2]);
             $("#widgetTitle").html("Reports Due Today");
-            $("#reportLink").html('<a href="../Reports/Index/?' + getHtmlDate('begin', today) + getHtmlDate('&end', today) + '">' + 'Go to reports' + '</a>');
+            $("#reportLink").html('<a class="btn btn-outline-primary" href="../Reports/Index/?' + getHtmlDate('begin', today) + getHtmlDate('&end', today) + '">' + 'Go to reports' + '</a>');
             break;
         case "weeklyTab":
             $("#reportCount").html(countArray[1]);
             $("#widgetTitle").html("Reports Due Within One Week");
-            $("#reportLink").html('<a href="../Reports/Index/?' + getHtmlDate('begin', today) + getHtmlDate('&end', nextWeek) + '">' + 'Go to reports' + '</a>');
+            $("#reportLink").html('<a class="btn btn-outline-primary" href="../Reports/Index/?' + getHtmlDate('begin', today) + getHtmlDate('&end', nextWeek) + '">' + 'Go to reports' + '</a>');
             break;
         default:
             break;
@@ -175,7 +175,7 @@ function getHtmlDate(name, date) {
 function handleJsonUserLogs(data) {
     var body = '';
     if (data === null || data.length === 0) {
-        body = '<tr><td class="col-sm-7">No Logs To Display</td>' +
+        body = '<tr><td class="col-sm-7">No logs to display</td>' +
             '<td class="col-sm-2"></td>' +
             '<td class="col-sm-3"></td></tr>';
     }

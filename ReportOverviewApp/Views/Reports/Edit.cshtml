@@ -21,7 +21,7 @@
             <label asp-for="DateDone" class="control-label col-md-4">@Html.DisplayNameFor(e => Model.DateDone)</label>
             <div class="col-md-12">
                 <div class="input-group">
-                    <span class="input-group-addon"><input type="checkbox" id="done" asp-for="Done" /></span>
+                    <span class="input-group-addon"><input type="checkbox" id="editReport_done" asp-for="Done" /></span>
                     <input id="editReport_dateDone"  asp-for="DateDone" class="form-control" />
                     <span asp-validation-for="DateDone" class="text-danger"></span>
                 </div>
@@ -31,7 +31,7 @@
             <label asp-for="DateClientNotified" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.DateClientNotified)</label>
             <div class="col-md-12">
                 <div class="input-group">
-                    <span class="input-group-addon"><input type="checkbox" id="clientNotified" asp-for="ClientNotified" /></span>
+                    <span class="input-group-addon"><input type="checkbox" id="editReport_clientNotified" asp-for="ClientNotified" /></span>
                     <input id="editReport_dateClientNotified"  asp-for="DateClientNotified" class="form-control" />
                     <span asp-validation-for="DateClientNotified" class="text-danger"></span>
                 </div>
@@ -41,7 +41,7 @@
             <label asp-for="DateSent" class="col-md-4 control-label">@Html.DisplayNameFor(e => Model.DateSent)</label>
             <div class="col-md-12">
                 <div class="input-group">
-                    <span class="input-group-addon"><input type="checkbox" id="sent" asp-for="Sent" /></span>
+                    <span class="input-group-addon"><input type="checkbox" id="editReport_sent" asp-for="Sent" /></span>
                     <input id="editReport_dateSent" asp-for="DateSent"  class="form-control" />
                     <span asp-validation-for="DateSent" class="text-danger"></span>
                 </div>
@@ -64,28 +64,28 @@
         <div class="form-group">
             <label asp-for="DueDate1" class="col-md-4 control-label">@Html.DisplayNameFor(e => Model.DueDate1)</label>
             <div class="col-md-12">
-                <input asp-for="DueDate1" id="editReport_dueDate1" class="form-control"/>
+                <input asp-for="DueDate1" id="editReport_dueDate1" class="form-control input-datepicker"/>
                 <span asp-validation-for="DueDate1" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
             <label asp-for="DueDate2" class="col-md-4 control-label">@Html.DisplayNameFor(e => Model.DueDate2)</label>
             <div class="col-md-12">
-                <input asp-for="DueDate2" id="editReport_dueDate2" class="form-control" />
+                <input asp-for="DueDate2" id="editReport_dueDate2" class="form-control input-datepicker" />
                 <span asp-validation-for="DueDate2" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
             <label asp-for="DueDate3" class="col-md-4 control-label">@Html.DisplayNameFor(e => Model.DueDate3)</label>
             <div class="col-md-12">
-                <input asp-for="DueDate3" id="editReport_dueDate3" class="form-control" />
+                <input asp-for="DueDate3" id="editReport_dueDate3" class="form-control input-datepicker" />
                 <span asp-validation-for="DueDate3" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
             <label asp-for="DueDate4" class="col-md-4 control-label">@Html.DisplayNameFor(e => Model.DueDate4)</label>
             <div class="col-md-12">
-                <input asp-for="DueDate4" id="editReport_dueDate4" class="form-control" />
+                <input asp-for="DueDate4" id="editReport_dueDate4" class="form-control input-datepicker" />
                 <span asp-validation-for="DueDate4" class="text-danger"></span>
             </div>
         </div>
@@ -169,14 +169,14 @@
         <div class="form-group">
             <label asp-for="EffectiveDate" class="col-md-4 control-label">@Html.DisplayNameFor(e => Model.EffectiveDate)</label>
             <div class="col-md-12">
-                <input id="editReport_effectiveDate" asp-for="EffectiveDate" class="form-control" />
+                <input id="editReport_effectiveDate" asp-for="EffectiveDate" class="form-control input-datepicker" />
                 <span asp-validation-for="EffectiveDate" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
             <label asp-for="TerminationDate" class="col-md-4 control-label">@Html.DisplayNameFor(e => Model.TerminationDate)</label>
             <div class="col-md-12">
-                <input id="editReport_terminationDate" asp-for="TerminationDate" class="form-control" />
+                <input id="editReport_terminationDate" asp-for="TerminationDate" class="form-control input-datepicker" />
                 <span asp-validation-for="TerminationDate" class="text-danger"></span>
             </div>
         </div>
@@ -242,14 +242,14 @@
         <div class="form-group">
             <label asp-for="DateAdded" class="col-md-4 control-label">@Html.DisplayNameFor(e => Model.DateAdded)</label>
             <div class="col-md-12">
-                <input id="editReport_dateAdded" asp-for="DateAdded" class="form-control" />
+                <input id="editReport_dateAdded" asp-for="DateAdded" class="form-control input-datepicker" />
                 <span asp-validation-for="DateAdded" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
             <label asp-for="SystemRefreshDate" class="col-md-4 control-label">@Html.DisplayNameFor(e => Model.SystemRefreshDate)</label>
             <div class="col-md-12">
-                <input id="editReport_systemRefreshDate" asp-for="SystemRefreshDate" class="form-control" />
+                <input id="editReport_systemRefreshDate" asp-for="SystemRefreshDate" class="form-control input-datepicker" />
                 <span asp-validation-for="SystemRefreshDate" class="text-danger"></span>
             </div>
         </div>
