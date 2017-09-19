@@ -1,7 +1,0 @@
-﻿@model ReportOverviewApp.Models.WidgetModels.SubWidget
-@inject ReportOverviewApp.Data.ApplicationDbContext data
-
-<div class="subwidget">
-    <h3>@Model.Topic</h3>
-    <h1>@Model.Action.Invoke(data)</h1>
-</div>

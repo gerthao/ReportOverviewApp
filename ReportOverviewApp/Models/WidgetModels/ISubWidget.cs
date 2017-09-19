@@ -15,6 +15,5 @@ namespace ReportOverviewApp.Models.WidgetModels
         int ID { get; set; }
         string Topic { get; set; }
         string Description { get; set; }
-        Func<ApplicationDbContext, int> Action { get; set; }
     }
 }

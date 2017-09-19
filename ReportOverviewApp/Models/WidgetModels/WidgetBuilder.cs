@@ -95,24 +95,6 @@ namespace ReportOverviewApp.Models.WidgetModels
             Product.Body.Topic = topic;
             return this;
         }
-        /// <summary>
-        ///  This method builds a SubWidget.Action for the Product field.
-        /// </summary>
-        /// <param name="function">
-        ///  Parameter is a Func class that takes a ApplicationDbContext class and results
-        ///  into an int.
-        /// </param>
-        /// <returns></returns>
-        public WidgetBuilder BuildSubWidgetAction(Func<ApplicationDbContext, int> function)
-        {
-            Product.Body.Action = function;
-            return this;
-        }
-        //public WidgetBuilder BuildSubWidgetAction(Func<ApplicationDbContext, List<string>> function)
-        //{
-        //    Product.Body.Action = function;
-        //    return this;
-        //}
         public WidgetBuilder BuildSubWidgetDescription(string description)
         {
             Product.Body.Description = description;
