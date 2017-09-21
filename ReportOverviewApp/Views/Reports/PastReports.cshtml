@@ -1,0 +1,26 @@
+﻿@model ReportOverviewApp.Models.ReportViewModels.ReportViewModel
+<h3>
+    Past Reports Done, Notified, And/Or Sent
+</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Finished On</th>
+            <th>Notified On</th>
+            <th>Sent On</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+        @for (int i = 0; i < Model.Reports.Count(); i++)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Name)</td>
+                <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateDone)</td>
+                <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateClientNotified)</td>
+                <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateSent)</td>
+            </tr>
+        }
+    </tbody>
+</table>

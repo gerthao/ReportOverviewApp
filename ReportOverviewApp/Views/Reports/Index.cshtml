@@ -48,8 +48,8 @@ else {
                 <th>@Html.ActionLink("Name", "Index", new { search = Model.Search, plan = Model.Plan, pageIndex = Model.CurrentPage, column = "Name", begin = Model.Begin, end = Model.End }, new { @class = "text-dark" })</th>
                 <th>@Html.ActionLink("Deadline", "Index", new { search = Model.Search, plan = Model.Plan, pageIndex = Model.CurrentPage, column = "Deadline", begin = Model.Begin, end = Model.End }, new { @class = "text-dark" })</th>
                 <th>@Html.ActionLink("Finished On", "Index", new { search = Model.Search, plan = Model.Plan, pageIndex = Model.CurrentPage, column = "Finished On", begin = Model.Begin, end = Model.End }, new { @class = "text-dark" })</th>
-                <th>@Html.ActionLink("Finished On", "Index", new { search = Model.Search, plan = Model.Plan, pageIndex = Model.CurrentPage, column = "Notified On", begin = Model.Begin, end = Model.End }, new { @class = "text-dark" })</th>
-                <th>@Html.ActionLink("Finished On", "Index", new { search = Model.Search, plan = Model.Plan, pageIndex = Model.CurrentPage, column = "Sent On", begin = Model.Begin, end = Model.End }, new { @class = "text-dark" })</th>
+                <th>@Html.ActionLink("Notified On", "Index", new { search = Model.Search, plan = Model.Plan, pageIndex = Model.CurrentPage, column = "Notified On", begin = Model.Begin, end = Model.End }, new { @class = "text-dark" })</th>
+                <th>@Html.ActionLink("Sent On", "Index", new { search = Model.Search, plan = Model.Plan, pageIndex = Model.CurrentPage, column = "Sent On", begin = Model.Begin, end = Model.End }, new { @class = "text-dark" })</th>
                 <th>Options</th>
             </tr>
         </thead>
@@ -64,7 +64,7 @@ else {
                     <td><text>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateClientNotified)</text></td>
                     <td><text>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateSent)</text></td>
                     <td style="text-align: center;">
-                        <a id="editReport" data-toggle="modal" data-target="#editReportModal"><span class="fa fa-edit text-primary"></span></a> |
+                        <a id="editReport" data-toggle="modal" data-target="#editReportModal"><span class="fa fa-edit text-primary" ></span></a> |
                         <a asp-action="Details" asp-route-id="@Model.Reports.ElementAt(i).ID"><span class="fa fa-book text-primary"></span></a> |
                         <a id="deleteReport" data-toggle="modal" data-target="#deleteReportModal"><span class="fa fa-remove text-primary"></span></a>
                     </td>

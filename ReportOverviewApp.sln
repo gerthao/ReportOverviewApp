@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.3
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReportOverviewApp", "ReportOverviewApp\ReportOverviewApp.csproj", "{8D5C31C4-C6E2-4F9F-931E-487B04679EF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XUnitTestProjectReportOverviewApp", "XUnitTestProjectReportOverviewApp\XUnitTestProjectReportOverviewApp.csproj", "{9C369362-C3E5-44D3-A588-A414B71EA8B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XUnitTestProjectReportOverviewApp", "XUnitTestProjectReportOverviewApp\XUnitTestProjectReportOverviewApp.csproj", "{9C369362-C3E5-44D3-A588-A414B71EA8B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
