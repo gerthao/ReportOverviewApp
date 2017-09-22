@@ -262,7 +262,7 @@ namespace ReportOverviewApp.Models
             const int semiannualLimit = 2;
             List<DateTime?> dates = GetAllDueDates(compareDate);
             if (dates.Count != semiannualLimit) return null;
-            return dates.Where(date => date.Value >= DateTime.Today)
+            return dates.Where(date => date.Value >= compareDate)
                         .OrderBy(date => date)
                         .First();
         }
