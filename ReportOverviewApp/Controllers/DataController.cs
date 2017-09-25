@@ -38,7 +38,7 @@ namespace ReportOverviewApp.Controllers
             return Json(await _context.Reports.Where(r => r.ID >= id_1 && r.ID <= id_2).ToListAsync());
         }
         [Authorize]
-        public async Task<JsonResult> GetAllReportsAsync()
+        public async Task<JsonResult> GetAllReports()
         {
             return Json(await _context.Reports.ToListAsync());
         }

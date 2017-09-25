@@ -12,8 +12,15 @@ namespace ReportOverviewApp.Models.ReportViewModels
     public class ReportViewModel
     {
         public IEnumerable<Report> Reports { get; set; }
+        public IEnumerable<string> Frequencies { get; set; }
+        public IEnumerable<string> BusinessContacts { get; set; }
+        public IEnumerable<string> BusinessOwners { get; set; }
+        public IEnumerable<string> SourceDepartments { get; set; }
         public IEnumerable<string> Plans { get; set; }
         public IEnumerable<string> States { get; set; }
+        public string BusinessContact { get; set; }
+        public string BusinessOwner { get; set; }
+        public string SourceDepartment { get; set; }
         public string Frequency { get; set; }
         private int Pages { get; set; }
         public int PageSize { get; set; }
@@ -23,6 +30,12 @@ namespace ReportOverviewApp.Models.ReportViewModels
         public string Column { get; set; }
         public string State { get; set; }
         public string Plan { get; set; }
+        public DateTime? DoneBegin { get; set; }
+        public DateTime? DoneEnd { get; set; }
+        public DateTime? NotifiedBegin { get; set; }
+        public DateTime? NotifiedEnd { get; set; }
+        public DateTime? SentBegin { get; set; }
+        public DateTime? SentEnd { get; set; }
         public DateTime? Begin { get; set; }
         public DateTime? End { get; set; }
 
@@ -44,21 +57,6 @@ namespace ReportOverviewApp.Models.ReportViewModels
             if (Reports.Count() % PageSize > 0) Pages++;
         }
         public int PagesCount() => Pages;
-        public void SetPlans(string chosenState)
-        {
-            if (String.IsNullOrEmpty(chosenState))
-                Plans = (from r in Reports
-                         where (r != null && r.GroupName != null)
-                         select r.GroupName).Distinct().OrderBy(p => p.ToString());
-            else
-                Plans = (from r in Reports
-                         where (r != null && r.GroupName != null && r.State != null) && r.State.Equals(chosenState)
-                         select r.GroupName).Distinct().OrderBy(p => p.ToString());
-        }
-        public void SetStates() =>
-            States = (from r in Reports
-                      where (r != null && r.State != null)
-                      select r.State).Distinct().OrderBy(p => p.ToString());
 
         public IEnumerable<Report> DisplayPage(int index)
         {

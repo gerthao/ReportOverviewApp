@@ -30,7 +30,7 @@ var getReportCount = function () {
             type: "GET",
             dataType: "json",
             contentType: "application/json; charset-utf-8",
-            success: function(data) {
+            success: function (data) {
                 deadlineCount(data);
             },
             error: console.error("failed: " + link)
@@ -38,7 +38,7 @@ var getReportCount = function () {
     } catch (err) {
         console.error(err);
     }
-}
+};
 function checkLessThanTen(number) {
     if (number < 10) {
         number = '0' + number;
@@ -54,11 +54,11 @@ function getDateTimeNow(date) {
 }
 function getTimestamp(date) {
     var dateString;
-    var month = date.getMonth() + 1;
-    var day = date.getDate();
+    var month = checkLessThanTen(date.getMonth() + 1);
+    var day = checkLessThanTen(date.getDate());
     var year = date.getFullYear();
     var hour = checkLessThanTen(date.getHours());
-    var minute = checkLessThanTen(date.getHours());
+    var minute = checkLessThanTen(date.getMinutes());
     var second = checkLessThanTen(date.getSeconds());
     dateString = month + '/' + day + '/' + year + ' ' + hour + ':' + minute + ':' + second;
     return dateString;
@@ -69,7 +69,7 @@ var deadlineCount = function (data) {
     $('#TotalReportCount').html(data.length);
     var daily = data.filter(function (n) {
         if (n === null || n.reportDeadline === null) return false;
-        return n.reportDeadline.substring(0, 19) === today
+        return n.reportDeadline.substring(0, 19) === today;
     });
     $('#todayReportCount').html(daily.length);
     var week = new Date();
@@ -88,12 +88,12 @@ var deadlineCount = function (data) {
     reportsArray[1] = createReportListGroup(daily);
     reportsArray[2] = createReportListGroup(weekly);
     $('#widgetTabs li a').each(function (index, value) {
-        if (value.className.indexOf("active") !== -1){
+        if (value.className.indexOf("active") !== -1) {
             handleReportCount(value);
             handleReportsList(value);
         }
     });
-}
+};
 var createReportListGroup = function(jsonReportData){ 
     const limit = 30;
     var reportString = "";
@@ -101,12 +101,12 @@ var createReportListGroup = function(jsonReportData){
         reportString += '<li class="list-group-item">' + jsonReportData[i].reportName + "</li>";
     }
     if (jsonReportData.length > limit) {
-        reportString += '<li class="list-group-item bg-primary">' + (jsonReportData.length - limit) + ' More Reports' + '</li>';
+        reportString += '<li class="list-group-item"><strong>' + (jsonReportData.length - limit) + ' More Reports' + '</strong></li>';
     }
     reportString += "</ul>";
     return reportString;
 };
-var handleReportsList = function(htmlElement) {
+var handleReportsList = function (htmlElement) {
     switch (htmlElement.id) {
         case "totalTab":
             $('#reportCard').html(reportsArray[0]);
@@ -123,11 +123,11 @@ var handleReportsList = function(htmlElement) {
     if ($('#reportCard').text() === "") {
         $('#reportCard').html("<h5>No reports to display</h5>");
     }
-}
-var updateComponents = function() {
+};
+var updateComponents = function () {
     getUserLogs();
     getReportCount();
-}
+};
 $(document).ready(function () {
     updateComponents();
     $(function(){ window.setInterval(updateComponents, 5000); });
@@ -175,9 +175,9 @@ function getHtmlDate(name, date) {
 function handleJsonUserLogs(data) {
     var body = '';
     if (data === null || data.length === 0) {
-        body = '<tr><td class="col-sm-7">No logs to display</td>' +
-            '<td class="col-sm-2"></td>' +
-            '<td class="col-sm-3"></td></tr>';
+        body = '<tr><td class="col-md-6">No logs to display</td>' +
+            '<td class="col-md-3"></td>' +
+            '<td class="col-md-3"></td></tr>';
     }
     else {
         data.sort(function(a, b){
@@ -186,10 +186,10 @@ function handleJsonUserLogs(data) {
         for (var i = 0; i < data.length; i++) {
             var temp = new Date(data[i]["timeStamp"]);
             temp = getTimestamp(temp);
-            var msg = '<td class="col-sm-7">' + data[i]["message"] + '</td>';
-            var usrID = '<td class="col-sm-2">' + data[i]["userID"] + '</td>';
-            var tmStmp = '<td class="col-sm-3">' + temp + '</td>';
-            body += ('<tr>' + msg + tmStmp + usrID + '</tr>');
+            var msg = '<td class="col-md-6">' + data[i]["message"] + '</td>';
+            var usrID = '<td class="col-md-3">' + data[i]["userID"] + '</td>';
+            var tmStmp = '<td class="col-md-3">' + temp + '</td>';
+            body += '<tr>' + msg + tmStmp + usrID + '</tr>';
         }
     }
     $('#userLogsBody').html(body);

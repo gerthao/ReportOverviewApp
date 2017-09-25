@@ -32,14 +32,50 @@
                             <div class="input-group">
                                 <div class="input-group-btn">
                                     <div class="btn-group" style="min-width: 100%;">
+                                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Business Contact<span class="caret"></span></button>
+                                        <div id="businessContactList" class="dropdown-menu dropdown-menu-scrollable">
+                                            @foreach (var businessContactItem in Model.BusinessContacts.OrderBy(buinessContact => buinessContact))
+                                            {
+                                                <a class="dropdown-item">@businessContactItem</a>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="input-group-btn" style="width: 100%;">
+                                    <input id="businessContactInput" type="text" name="businessContact" class="form-control" aria-label="" value="@Model.BusinessContact" />
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <div class="input-group-btn">
+                                    <div class="btn-group" style="min-width: 100%;">
+                                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Business owner<span class="caret"></span></button>
+                                        <div id="businessOwnerList" class="dropdown-menu dropdown-menu-scrollable">
+                                            @foreach (var buinessOwnerItem in Model.BusinessOwners.OrderBy(buinessOwner => buinessOwner))
+                                            {
+                                                <a class="dropdown-item">@buinessOwnerItem</a>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="input-group-btn" style="width: 100%;">
+                                    <input id="businessOwnerInput" type="text" name="buisnessOwner" class="form-control" aria-label="" value="@Model.BusinessOwner" />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <div class="input-group-btn">
+                                    <div class="btn-group" style="min-width: 100%;">
                                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Frequency<span class="caret"></span></button>
                                         <div id="frequencyList" class="dropdown-menu dropdown-menu-scrollable">
-                                            <a class="dropdown-item">Weekly</a>
-                                            <a class="dropdown-item">Biweekly</a>
-                                            <a class="dropdown-item">Monthly</a>
-                                            <a class="dropdown-item">Quarterly</a>
-                                            <a class="dropdown-item">Semiannual</a>
-                                            <a class="dropdown-item">Annual</a>
+                                            @foreach (var frequencyItem in Model.Frequencies.OrderBy(frequency => frequency))
+                                            {
+                                                <a class="dropdown-item">@frequencyItem</a>
+                                            }
                                         </div>
                                     </div>
                                 </div>
@@ -87,13 +123,33 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <div class="input-group-btn">
+                                    <div class="btn-group" style="min-width: 100%;">
+                                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Source Department<span class="caret"></span></button>
+                                        <div id="sourceDepartmentList" class="dropdown-menu dropdown-menu-scrollable">
+                                            @foreach (var sourceDepartmentItem in Model.SourceDepartments.OrderBy(sourceDepartment => sourceDepartment))
+                                            {
+                                                <a class="dropdown-item">@sourceDepartmentItem</a>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="input-group-btn" style="width: 100%;">
+                                    <input id="sourceDepartmentInput" type="text" name="sourceDepartment" class="form-control" aria-label="" value="@Model.SourceDepartment" />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" id="ClearSearchForm" type="button">Clear</button>
-                <button class="btn btn-primary" id="ResetSearchForm" type="reset">Reset</button>
-                <button class="btn btn-primary" type="submit">Go</button>
             </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" id="ClearSearchForm" type="button">Clear</button>
+            <button class="btn btn-primary" id="ResetSearchForm" type="reset">Reset</button>
+            <button class="btn btn-primary" type="submit">Go</button>
+        </div>
                
 </form>
 

@@ -13,7 +13,16 @@ $(document).ready(function () {
     $('#planList a').click(function () {
         $('#planInput').val($(this).html());
     });
-    if (navigator.userAgent.indexOf('Trident/') != -1) {
+    $('#sourceDepartmentList a').click(function () {
+        $('#sourceDepartmentInput').val($(this).html());
+    });
+    $('#businessContactList a').click(function () {
+        $('#businessContactInput').val($(this).html());
+    });
+    $('#businessOwnerList a').click(function () {
+        $('#businessOwnerInput').val($(this).html());
+    });
+    if (navigator.userAgent.indexOf('Trident/') !== -1) {
         $(".input-datepicker").datepicker();
     }
     function checkLessThanTen(number) {

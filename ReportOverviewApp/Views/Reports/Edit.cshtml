@@ -6,8 +6,9 @@
         max-width: 90%;
     }
 </style>
-
-    <div class="form-horizontal">
+<form asp-action="Edit">
+    <div class="modal-header"><h5 class="modal-title">Edit Report</h5></div>
+    <div class="form-horizontal modal-body">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <input class="sr-only" type="number" id="editReport_id" asp-for="ID" />
         <div class="form-group">
@@ -22,7 +23,7 @@
             <div class="col-md-12">
                 <div class="input-group">
                     <span class="input-group-addon"><input type="checkbox" id="editReport_done" asp-for="Done" /></span>
-                    <input id="editReport_dateDone"  asp-for="DateDone" class="form-control" />
+                    <input id="editReport_dateDone" asp-for="DateDone" class="form-control" />
                     <span asp-validation-for="DateDone" class="text-danger"></span>
                 </div>
             </div>
@@ -32,7 +33,7 @@
             <div class="col-md-12">
                 <div class="input-group">
                     <span class="input-group-addon"><input type="checkbox" id="editReport_clientNotified" asp-for="ClientNotified" /></span>
-                    <input id="editReport_dateClientNotified"  asp-for="DateClientNotified" class="form-control" />
+                    <input id="editReport_dateClientNotified" asp-for="DateClientNotified" class="form-control" />
                     <span asp-validation-for="DateClientNotified" class="text-danger"></span>
                 </div>
             </div>
@@ -42,7 +43,7 @@
             <div class="col-md-12">
                 <div class="input-group">
                     <span class="input-group-addon"><input type="checkbox" id="editReport_sent" asp-for="Sent" /></span>
-                    <input id="editReport_dateSent" asp-for="DateSent"  class="form-control" />
+                    <input id="editReport_dateSent" asp-for="DateSent" class="form-control" />
                     <span asp-validation-for="DateSent" class="text-danger"></span>
                 </div>
             </div>
@@ -64,7 +65,7 @@
         <div class="form-group">
             <label asp-for="DueDate1" class="col-md-4 control-label">@Html.DisplayNameFor(e => Model.DueDate1)</label>
             <div class="col-md-12">
-                <input asp-for="DueDate1" id="editReport_dueDate1" class="form-control input-datepicker"/>
+                <input asp-for="DueDate1" id="editReport_dueDate1" class="form-control input-datepicker" />
                 <span asp-validation-for="DueDate1" class="text-danger"></span>
             </div>
         </div>
@@ -216,7 +217,7 @@
                 </div>
             </div>
         </div>
-      
+
         <div class="form-group">
             <div class="col-md-4">
                 <div class="checkbox">
@@ -289,9 +290,14 @@
             </div>
         </div>
     </div>
+    <div class="modal-footer">
+        <div class="col-md-2">
+            <input type="submit" value="Save" class="btn btn-primary"/>
+        </div>
+    </div>
+</form>
 
 
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }

@@ -42,7 +42,7 @@ namespace ReportOverviewApp.Controllers
         /// </returns>
         /// 
 
-        private async Task<ReportViewModel> GetReportViewModelAsync(string search, string column, int recordsPerPage, int pageIndex, string state, string plan, string begin, string end, string frequency)
+        private async Task<ReportViewModel> GetReportViewModelAsync(string search, string column, int recordsPerPage, int pageIndex, string state, string plan, string begin, string end, string frequency, string businessContact, string businessOwner, string sourceDepartment)
         {
             if (viewModel == null)
             {
@@ -50,11 +50,18 @@ namespace ReportOverviewApp.Controllers
                 {
                     Reports = await _context.Reports.ToListAsync()
                 };
-                viewModel.States = viewModel.Reports.Select(r => r.State).OrderBy(s => s).Distinct();
-                viewModel.Plans = viewModel.Reports.Select(r => r.GroupName).OrderBy(p => p).Distinct();
+                viewModel.States = viewModel.Reports.Select(r => r.State).Distinct().OrderBy(s => s);
+                viewModel.Plans = viewModel.Reports.Select(r => r.GroupName).Distinct().OrderBy(p => p);
+                viewModel.Frequencies = viewModel.Reports.Select(r => r.Frequency).Distinct().OrderBy(f => f);
+                viewModel.BusinessContacts = viewModel.Reports.Select(r => r.BusinessContact).Distinct().OrderBy(bc => bc);
+                viewModel.BusinessOwners = viewModel.Reports.Select(r => r.BusinessOwner).Distinct().OrderBy(bo => bo);
+                viewModel.SourceDepartments = viewModel.Reports.Select(r => r.SourceDepartment).Distinct().OrderBy(sd => sd);
             }
             HandleStateAndPlan(state, plan);
             HandleSearch(search);
+            HandleBusinessContact(businessContact);
+            HandleBusinessOwner(businessOwner);
+            HandleSourceDepartment(sourceDepartment);
             HandleSort(column);
             HandleDates(begin, end);
             HandleFrequency(frequency);
@@ -62,6 +69,32 @@ namespace ReportOverviewApp.Controllers
             viewModel.Reports = viewModel.DisplayPage(pageIndex);
             return viewModel;
         }
+
+        private void HandleBusinessContact(string businessContact)
+        {
+            if (!String.IsNullOrEmpty(businessContact))
+            {
+                viewModel.BusinessContact = businessContact;
+                viewModel.Reports = viewModel.Reports.Where(r => r != null && r.BusinessContact == businessContact);
+            }
+        }
+        private void HandleBusinessOwner(string businessOwner)
+        {
+            if (!String.IsNullOrEmpty(businessOwner))
+            {
+                viewModel.BusinessOwner = businessOwner;
+                viewModel.Reports = viewModel.Reports.Where(r => r != null && r.BusinessOwner == businessOwner);
+            }
+        }
+        private void HandleSourceDepartment(string sourceDepartment)
+        {
+            if (!String.IsNullOrEmpty(sourceDepartment))
+            {
+                viewModel.SourceDepartment = sourceDepartment;
+                viewModel.Reports = viewModel.Reports.Where(r => r != null && r.SourceDepartment == sourceDepartment);
+            }
+        }
+
         private void HandleFrequency(string frequency)
         {
             if (!String.IsNullOrEmpty(frequency))
@@ -146,10 +179,15 @@ namespace ReportOverviewApp.Controllers
             userLogFactory = new UserLogFactory();
         }
 
+        private async Task<SelectPlanViewModel> GetSelectPlanViewModelAsync(string state)
+        {
+            return new SelectPlanViewModel(await _context.Reports.ToListAsync(), state);
+        }
+
         // GET: Reports
         [Authorize]
-        public async Task<IActionResult> Index(string search, string column, int entriesPerPage, int pageIndex, string state, string plan, string frequency, string begin = null, string end = null)
-            => View(await GetReportViewModelAsync(search, column, entriesPerPage, pageIndex, state, plan, begin, end, frequency));
+        public async Task<IActionResult> Index(string search, string column, int entriesPerPage, int pageIndex, string state, string plan, string frequency, string businessContact, string businessOwner, string sourceDepartment, string begin = null, string end = null)
+            => View(await GetReportViewModelAsync(search, column, entriesPerPage, pageIndex, state, plan, begin, end, frequency, businessContact, businessOwner, sourceDepartment));
 
         // GET: Reports/Details/5
         [Authorize]
@@ -161,24 +199,8 @@ namespace ReportOverviewApp.Controllers
             return View(report);
         }
 
-        public ActionResult SelectPlan(string state, string plan)
-            => View(GetReportViewModelFromSelectPlan(state, plan));
-
-        private ReportViewModel GetReportViewModelFromSelectPlan(string state, string plan)
-        {
-            if (viewModel == null) viewModel = new ReportViewModel(){Reports = from r in _context.Reports select r};
-            if (!String.IsNullOrEmpty(state)){
-                viewModel.State = state;
-                viewModel.Reports = viewModel.Reports.Where(r => r != null && r.State != null && r.State.Equals(state));
-            }
-            if (!String.IsNullOrEmpty(plan)){
-                viewModel.Plan = plan;
-                viewModel.Reports = viewModel.Reports.Where(r => r != null && r.GroupName != null &&  r.GroupName.Equals(plan));
-            }
-            viewModel.SetStates();
-            viewModel.SetPlans(state);
-            return viewModel;
-        }
+        public async Task<IActionResult> SelectPlan(string state)
+            => View(await GetSelectPlanViewModelAsync(state));
 
         // GET: Reports/Create
         [Authorize]
