@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using ReportOverviewApp.Data;
 using Microsoft.EntityFrameworkCore;
 using ReportOverviewApp.Models.HomeViewModels;
-using ReportOverviewApp.Models.WidgetModels;
+using NToastNotify;
 
 namespace ReportOverviewApp.Controllers
 {
@@ -15,10 +15,12 @@ namespace ReportOverviewApp.Controllers
     public class HomeController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private IToastNotification _toastNotification;
 
-        public HomeController(ApplicationDbContext context)
+        public HomeController(ApplicationDbContext context, IToastNotification toastNotification)
         {
             _context = context;
+            _toastNotification = toastNotification;
         }
 
         public IActionResult TimeViewComponent()
@@ -31,7 +33,7 @@ namespace ReportOverviewApp.Controllers
             {
                 Reports = await _context.Reports.ToListAsync(),
                 Users = await _context.Users.ToDictionaryAsync(usr => usr.Id, usr => usr.UserName),
-                UserLogs = from u in _context.UserLogs select u
+                UserLogs = await _context.UserLogs.ToListAsync()
             };
             return View(viewModel);
         }

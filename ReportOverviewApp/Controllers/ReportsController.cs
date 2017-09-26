@@ -14,12 +14,14 @@ using System.Reflection;
 using ReportOverviewApp.Helpers;
 using System.Text;
 using System.Globalization;
+using NToastNotify;
 
 namespace ReportOverviewApp.Controllers
 {
     public class ReportsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private IToastNotification _toastNotification;
         private ReportViewModel viewModel;
         private UserLogFactory userLogFactory;
 
@@ -105,9 +107,9 @@ namespace ReportOverviewApp.Controllers
         }
         private void HandleSort(string column)
         {
-            if (!String.IsNullOrEmpty(column)){
+            if (!String.IsNullOrEmpty(column)) {
                 viewModel.Column = column;
-                switch (viewModel.Column){
+                switch (viewModel.Column) {
                     case "ID":
                         viewModel.Reports = viewModel.Reports.OrderBy(report => report.ID);
                         break;
@@ -130,23 +132,23 @@ namespace ReportOverviewApp.Controllers
                         viewModel.Reports = viewModel.Reports.OrderBy(report => report.ID);
                         break;
                 }
-                
+
             }
         }
         private void HandleDates(string begin, string end)
         {
             IEnumerable<(Report report, DateTime? deadline)> list = viewModel.Reports.Select(r => (r, r.CurrentDeadline()));
             list = list.Where(r => r.deadline.HasValue);
-            if (begin != null){
+            if (begin != null) {
                 DateTime beginDate;
-                if(DateTime.TryParse(begin, out beginDate)){
+                if (DateTime.TryParse(begin, out beginDate)) {
                     viewModel.Begin = beginDate;
                     list = list.Where(r => r.deadline.Value >= beginDate);
                 }
             }
-            if (end != null){
+            if (end != null) {
                 DateTime endDate;
-                if(DateTime.TryParse(end, out endDate))
+                if (DateTime.TryParse(end, out endDate))
                 {
                     viewModel.End = endDate;
                     list = list.Where(r => r.deadline.Value <= endDate);
@@ -161,21 +163,22 @@ namespace ReportOverviewApp.Controllers
                 viewModel.State = state;
                 viewModel.Reports = viewModel.Reports.Where(r => r != null && r.State != null && r.State.Equals(viewModel.State));
             }
-            if (!String.IsNullOrEmpty(plan)){
+            if (!String.IsNullOrEmpty(plan)) {
                 viewModel.Plan = plan;
                 viewModel.Reports = viewModel.Reports.Where(r => r != null && r.GroupName != null && r.GroupName.Equals(viewModel.Plan));
             }
         }
         private void HandleSearch(string search)
         {
-            if (!String.IsNullOrEmpty(search)){
+            if (!String.IsNullOrEmpty(search)) {
                 viewModel.Search = search;
                 viewModel.Reports = viewModel.Reports.Where(r => r != null && r.Name != null && r.Name.ToLowerInvariant().Contains(viewModel.Search.ToLowerInvariant()));
             }
         }
-        public ReportsController(ApplicationDbContext context)
+        public ReportsController(ApplicationDbContext context, IToastNotification toastNotification)
         {
             _context = context;
+            _toastNotification = toastNotification;
             userLogFactory = new UserLogFactory();
         }
 
@@ -187,8 +190,9 @@ namespace ReportOverviewApp.Controllers
         // GET: Reports
         [Authorize]
         public async Task<IActionResult> Index(string search, string column, int entriesPerPage, int pageIndex, string state, string plan, string frequency, string businessContact, string businessOwner, string sourceDepartment, string begin = null, string end = null)
-            => View(await GetReportViewModelAsync(search, column, entriesPerPage, pageIndex, state, plan, begin, end, frequency, businessContact, businessOwner, sourceDepartment));
-
+        {
+            return View(await GetReportViewModelAsync(search, column, entriesPerPage, pageIndex, state, plan, begin, end, frequency, businessContact, businessOwner, sourceDepartment));
+        }
         // GET: Reports/Details/5
         [Authorize]
         public async Task<IActionResult> Details(int? id)
@@ -212,12 +216,17 @@ namespace ReportOverviewApp.Controllers
         [HttpPost, ValidateAntiForgeryToken, Authorize]
         public async Task<IActionResult> Create([Bind("ID,Name,Done,ClientNotified,Sent,DateDue,DateDone,DateClientNotified,DateSent,BusinessContact,BusinessOwner,DueDate1,DueDate2,DueDate3,DueDate4,Frequency,DayDue,DeliveryFunction,WorkInstructions,Notes,DaysAfterQuarter,FolderLocation,ReportType,RunWith,DeliveryMethod,DeliveryTo,EffectiveDate,TerminationDate,GroupName,State,ReportPath,OtherDepartment,SourceDepartment,QualityIndicator,ERSReportLocation,ERRStatus,DateAdded,SystemRefreshDate,LegacyReportID,LegacyReportIDR2,ERSReportName,OtherReportLocation,OtherReportName")] Report report)
         {
+            ToastMessage toast = null;
             if (ModelState.IsValid){
                 _context.Add(report);
                 _context.Add(userLogFactory.Build(GetCurrentUserID(), report.ID, $"\"{report.Name}\" has been created."));
+                toast = new ToastMessage(message: $"{report.Name} has been successfully created.", title: "Success", toasType: ToastEnums.ToastType.Success, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
                 await _context.SaveChangesAsync();
+                ShowToast(toast);
                 return RedirectToAction("Index");
             }
+            toast = new ToastMessage(message: $"One or more fields in the form are not valid.", title: "Changes Needed", toasType: ToastEnums.ToastType.Warning, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
+            ShowToast(toast);
             return View(report);
         }
 
@@ -240,21 +249,42 @@ namespace ReportOverviewApp.Controllers
         [HttpPost, ValidateAntiForgeryToken, Authorize]
         public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Done,ClientNotified,Sent,DateDue,DateDone,DateClientNotified,DateSent,BusinessContact,BusinessOwner,DueDate1,DueDate2,DueDate3,DueDate4,Frequency,DayDue,DeliveryFunction,WorkInstructions,Notes,DaysAfterQuarter,FolderLocation,ReportType,RunWith,DeliveryMethod,DeliveryTo,EffectiveDate,TerminationDate,GroupName,State,ReportPath,OtherDepartment,SourceDepartment,QualityIndicator,ERSReportLocation,ERRStatus,DateAdded,SystemRefreshDate,LegacyReportID,LegacyReportIDR2,ERSReportName,OtherReportLocation,OtherReportName")] Report report)
         {
-            if (id != report.ID) return NotFound();
+            ToastMessage toast = null;
+            if (id != report.ID)
+            {
+                toast = new ToastMessage(message: $"IDs do not match", title: "Something Went Wrong...", toasType: ToastEnums.ToastType.Error, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
+                ShowToast(toast);
+                return NotFound();
+            }
             if (ModelState.IsValid){
                 try{
                     _context.Add(userLogFactory.Build(GetCurrentUserID(), report.ID, $"\"{report.Name}\" has been edited."));
                     _context.Update(report);
                     await _context.SaveChangesAsync();
+                    toast = new ToastMessage(message: $"{ report.Name} has been successfully edited.", title: "Success", toasType: ToastEnums.ToastType.Success, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
                 }
                 catch (DbUpdateConcurrencyException){
-                    if (!ReportExists(report.ID)) return NotFound();
+                    if (!ReportExists(report.ID))
+                    {
+                        toast = new ToastMessage(message: $"{report.Name} was not found in the database.", title: "Something Went Wrong...", toasType: ToastEnums.ToastType.Error, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
+                        ShowToast(toast);
+                        return NotFound();
+                    }
                     else throw;
                 }
+                ShowToast(toast);
                 return RedirectToAction("Index");
             }
+            toast = new ToastMessage(message: $"One or more fields in the form are not valid.", title: "Changes Needed", toasType: ToastEnums.ToastType.Warning, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
+            ShowToast(toast);
             return View(report);
         }
+        
+        private void ShowToast(ToastMessage toastMessage)
+        {
+            _toastNotification.AddToastMessage(toastMessage.Title, toastMessage.Message, toastMessage.ToastType, toastMessage.ToastOptions);
+        }
+
         //private string CompareChanges(ref Report old, ref Report updated)
         //{
         //    if (old == null)
@@ -332,13 +362,15 @@ namespace ReportOverviewApp.Controllers
         [Authorize, HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            ToastMessage toast = null;
             var report = await _context.Reports.SingleOrDefaultAsync(m => m.ID == id);
             _context.Reports.Remove(report);
             _context.Add(userLogFactory.Build(GetCurrentUserID(), report.ID, $"\"{report.Name}\" has been deleted."));
+            toast = toast = new ToastMessage(message: $"{report.Name} has been successfully deleted.", title: "Success", toasType: ToastEnums.ToastType.Success, options: new ToastOption() { PositionClass = ToastPositions.BottomRight});
             await _context.SaveChangesAsync();
+            ShowToast(toast);
             return RedirectToAction("Index");
         }
-
         private bool ReportExists(int id) => _context.Reports.Any(e => e.ID == id);
     }
 }
