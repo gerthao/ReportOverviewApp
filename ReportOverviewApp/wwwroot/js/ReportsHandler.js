@@ -1,5 +1,6 @@
 ﻿//Javascript file meant to handle the views for the Reports controller.//
 'use strict';
+
 $(document).ready(function () {
     $("#ClearSearchForm").click(function () {
         $('input').val(null);
@@ -31,14 +32,14 @@ $(document).ready(function () {
         } return number;
     }
     function getDateTimeNow() {
-        var date = new Date();
-        var dateString;
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var year = date.getFullYear();
-        var hour = checkLessThanTen(date.getHours());
-        var minute = checkLessThanTen(date.getMinutes());
-        var second = checkLessThanTen(date.getSeconds());
+        let date = new Date();
+        let dateString;
+        let month = date.getMonth() + 1;
+        let day = date.getDate();
+        let year = date.getFullYear();
+        let hour = checkLessThanTen(date.getHours());
+        let minute = checkLessThanTen(date.getMinutes());
+        let second = checkLessThanTen(date.getSeconds());
         dateString = month + '/' + day + '/' + year + ' ' + hour + ':' + minute + ':' + second;
         return dateString;
     }
@@ -113,12 +114,12 @@ $(document).ready(function () {
     $('.modal').on('hidden.bs.modal', function () {
         $(this).find('form')[0].reset();
     });
-    
-    var root = window.location.origin;
+
+    let root = window.location.origin;
     $('#reportTable tr td a').on("click", function () {
-        var retrievedID = $(this).parent().parent().find(".ReportID").html();
-        var action = $(this).attr('id');
-        var link = root + "/Data/GetReport/" + retrievedID;
+        let retrievedID = $(this).parent().parent().find(".ReportID").html();
+        let action = $(this).attr('id');
+        let link = root + "/Data/GetReport/" + retrievedID;
         try {
             $.ajax({
                 url: link,
@@ -141,7 +142,7 @@ $(document).ready(function () {
         if (data === null) {
             console.log("there is no data");
         } else {
-            for (var i in data[0]) {
+            for (let i in data[0]) {
                 if (action === 'editReport') {
                     $('#' + action + '_' + i).val(data[0][i]);
                     if (i === "dateDone" && data[0][i] !== null) {

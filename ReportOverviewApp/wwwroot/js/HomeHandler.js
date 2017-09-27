@@ -1,12 +1,13 @@
 ﻿'use strict';
-var root = window.location.origin;
-var countArray = [0, 0, 0];
-var reportsArray = ["", "", ""];
+
+let root = window.location.origin;
+let countArray = [0, 0, 0];
+let reportsArray = ["", "", ""];
 var getCurrentTime = function () {
     $.get("/Home/TimeViewComponent", function (data) { $("#timeViewComponentContainer").html(data); });
 };
 function getUserLogs() {
-    var link = root + "/Data/GetUserLogs/";
+    let link = root + "/Data/GetUserLogs/";
     $.ajax({
         url: link,
         type: "GET",
@@ -17,9 +18,9 @@ function getUserLogs() {
         },
         error: console.error("failed: " + link)
     });
-};
+}
 function getReportCount() {
-    var link = root + "/Data/GetDeadlines/";
+    let link = root + "/Data/GetDeadlines/";
     $.ajax({
         url: link,
         type: "GET",
@@ -30,44 +31,44 @@ function getReportCount() {
         },
         error: console.error("failed: " + link)
     });
-};
+}
 function checkLessThanTen(number) {
     if (number < 10) {
         number = '0' + number;
     } return number;
 }
 function getDateTimeNow(date) {
-    var dateString;
-    var month = date.getMonth() + 1;
-    var day = date.getDate();
-    var year = date.getFullYear();
+    let dateString;
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+    let year = date.getFullYear();
     dateString = year + '-' + checkLessThanTen(month) + '-' + checkLessThanTen(day) + 'T00:00:00';
     return dateString;
 }
 function getTimestamp(date) {
-    var dateString;
-    var month = checkLessThanTen(date.getMonth() + 1);
-    var day = checkLessThanTen(date.getDate());
-    var year = date.getFullYear();
-    var hour = checkLessThanTen(date.getHours());
-    var minute = checkLessThanTen(date.getMinutes());
-    var second = checkLessThanTen(date.getSeconds());
+    let dateString;
+    let month = checkLessThanTen(date.getMonth() + 1);
+    let day = checkLessThanTen(date.getDate());
+    let year = date.getFullYear();
+    let hour = checkLessThanTen(date.getHours());
+    let minute = checkLessThanTen(date.getMinutes());
+    let second = checkLessThanTen(date.getSeconds());
     dateString = month + '/' + day + '/' + year + ' ' + hour + ':' + minute + ':' + second;
     return dateString;
 }
 function deadlineCount(data) {
-    var today = new Date();
+    let today = new Date();
     today = getDateTimeNow(today);
     $('#TotalReportCount').html(data.length);
-    var daily = data.filter(function (n) {
+    let daily = data.filter(function (n) {
         if (n === null || n.reportDeadline === null) return false;
         return n.reportDeadline.substring(0, 19) === today;
     });
     $('#todayReportCount').html(daily.length);
-    var week = new Date();
+    let week = new Date();
     week.setDate(week.getDate() + 7);
     week = getDateTimeNow(week);
-    var weekly = data.filter(function (n) {
+    let weekly = data.filter(function (n) {
         if (n === null || n.reportDeadline === null) return false;
         if (n.reportDeadline === null) return false;
         return n.reportDeadline.substring(0, 19) >= today && n.reportDeadline.substring(0, 19) <= week;
@@ -85,11 +86,11 @@ function deadlineCount(data) {
             handleReportsList(value);
         }
     });
-};
+}
 function createReportListGroup(jsonReportData){ 
     const limit = 30;
-    var reportString = "";
-    for (var i = 0; i < jsonReportData.length && i < limit; i++) {
+    let reportString = "";
+    for (let i = 0; i < jsonReportData.length && i < limit; i++) {
         reportString += '<li class="list-group-item">' + jsonReportData[i].reportName + "</li>";
     }
     if (jsonReportData.length > limit) {
@@ -97,7 +98,7 @@ function createReportListGroup(jsonReportData){
     }
     reportString += "</ul>";
     return reportString;
-};
+}
 function handleReportsList(htmlElement) {
     switch (htmlElement.id) {
         case "totalTab":
@@ -115,7 +116,7 @@ function handleReportsList(htmlElement) {
     if ($('#reportCard').text() === "") {
         $('#reportCard').html("<h5>No reports to display</h5>");
     }
-};
+}
 var updateComponents = function () {
     getUserLogs();
     getReportCount();
@@ -133,8 +134,8 @@ $(document).ready(function () {
     });
 });
 function handleReportCount(htmlElement, reports) {
-    var today = new Date();
-    var nextWeek = new Date();
+    let today = new Date();
+    let nextWeek = new Date();
     nextWeek.setDate(nextWeek.getDate() + 7);
     switch (htmlElement.id) {
         case "totalTab":
@@ -165,7 +166,7 @@ function getHtmlDate(name, date) {
     return name + '=' + dateString;
 }
 function handleJsonUserLogs(data) {
-    var body = '';
+    let body = '';
     if (data === null || data.length === 0) {
         body = '<tr><td class="col-md-6">No logs to display</td>' +
             '<td class="col-md-3"></td>' +
@@ -175,12 +176,12 @@ function handleJsonUserLogs(data) {
         data.sort(function(a, b){
             return b.timeStamp.localeCompare(a.timeStamp);
         });
-        for (var i = 0; i < data.length; i++) {
-            var temp = new Date(data[i]["timeStamp"]);
+        for (let i = 0; i < data.length; i++) {
+            let temp = new Date(data[i]["timeStamp"]);
             temp = getTimestamp(temp);
-            var msg = '<td class="col-md-6">' + data[i]["message"] + '</td>';
-            var usrID = '<td class="col-md-3">' + data[i]["userID"] + '</td>';
-            var tmStmp = '<td class="col-md-3">' + temp + '</td>';
+            let msg = '<td class="col-md-6">' + data[i]["message"] + '</td>';
+            let usrID = '<td class="col-md-3">' + data[i]["userID"] + '</td>';
+            let tmStmp = '<td class="col-md-3">' + temp + '</td>';
             body += '<tr>' + msg + tmStmp + usrID + '</tr>';
         }
     }

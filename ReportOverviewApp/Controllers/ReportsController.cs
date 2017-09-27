@@ -203,6 +203,7 @@ namespace ReportOverviewApp.Controllers
             return View(report);
         }
 
+        [Authorize]
         public async Task<IActionResult> SelectPlan(string state)
             => View(await GetSelectPlanViewModelAsync(state));
 
