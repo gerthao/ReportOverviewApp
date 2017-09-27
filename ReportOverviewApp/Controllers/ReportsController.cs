@@ -120,13 +120,13 @@ namespace ReportOverviewApp.Controllers
                         viewModel.Reports = viewModel.Reports.OrderBy(report => report.CurrentDeadline());
                         break;
                     case "Finished On":
-                        viewModel.Reports = viewModel.Reports.OrderBy(report => report.DateDone);
+                        viewModel.Reports = viewModel.Reports.OrderBy(report => report.FinishedDate);
                         break;
                     case "Notified On":
-                        viewModel.Reports = viewModel.Reports.OrderBy(report => report.DateClientNotified);
+                        viewModel.Reports = viewModel.Reports.OrderBy(report => report.ClientNotifiedDate);
                         break;
                     case "Sent On":
-                        viewModel.Reports = viewModel.Reports.OrderBy(report => report.DateSent);
+                        viewModel.Reports = viewModel.Reports.OrderBy(report => report.SentDate);
                         break;
                     default:
                         viewModel.Reports = viewModel.Reports.OrderBy(report => report.ID);

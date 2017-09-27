@@ -11,9 +11,10 @@ using System;
 namespace ReportOverviewApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170927150807_Initial_2")]
+    partial class Initial_2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -190,9 +191,15 @@ namespace ReportOverviewApp.Migrations
                     b.Property<string>("BusinessOwner")
                         .HasMaxLength(255);
 
-                    b.Property<DateTime?>("ClientNotifiedDate");
+                    b.Property<bool>("ClientNotified");
 
                     b.Property<DateTime?>("DateAdded");
+
+                    b.Property<DateTime?>("DateClientNotified");
+
+                    b.Property<DateTime?>("DateDone");
+
+                    b.Property<DateTime?>("DateSent");
 
                     b.Property<string>("DayDue")
                         .HasMaxLength(10);
@@ -206,6 +213,8 @@ namespace ReportOverviewApp.Migrations
 
                     b.Property<string>("DeliveryMethod")
                         .HasMaxLength(260);
+
+                    b.Property<bool>("Done");
 
                     b.Property<DateTime?>("DueDate1");
 
@@ -225,8 +234,6 @@ namespace ReportOverviewApp.Migrations
 
                     b.Property<DateTime?>("EffectiveDate");
 
-                    b.Property<DateTime?>("FinishedDate");
-
                     b.Property<string>("FolderLocation")
                         .HasMaxLength(2000);
 
@@ -235,16 +242,6 @@ namespace ReportOverviewApp.Migrations
 
                     b.Property<string>("GroupName")
                         .HasMaxLength(255);
-
-                    b.Property<bool>("IsClientNotified");
-
-                    b.Property<bool>("IsFinished");
-
-                    b.Property<bool>("IsFromOtherDepartment");
-
-                    b.Property<bool>("IsQualityIndicator");
-
-                    b.Property<bool>("IsSent");
 
                     b.Property<int?>("LegacyReportID");
 
@@ -255,11 +252,15 @@ namespace ReportOverviewApp.Migrations
 
                     b.Property<string>("Notes");
 
+                    b.Property<bool>("OtherDepartment");
+
                     b.Property<string>("OtherReportLocation")
                         .HasMaxLength(4000);
 
                     b.Property<string>("OtherReportName")
                         .HasMaxLength(1000);
+
+                    b.Property<bool>("QualityIndicator");
 
                     b.Property<string>("ReportPath")
                         .HasMaxLength(2000);
@@ -270,7 +271,7 @@ namespace ReportOverviewApp.Migrations
                     b.Property<string>("RunWith")
                         .HasMaxLength(100);
 
-                    b.Property<DateTime?>("SentDate");
+                    b.Property<bool>("Sent");
 
                     b.Property<string>("SourceDepartment")
                         .HasMaxLength(100);

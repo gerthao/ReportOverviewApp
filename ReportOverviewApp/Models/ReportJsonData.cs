@@ -127,9 +127,9 @@ namespace ReportOverviewApp.Models
             report.GroupName = GroupName?.Trim();
             report.State = State?.Trim();
             report.ReportPath = ReportPath?.Trim();
-            report.OtherDepartment = OtherDepartment;
+            report.IsFromOtherDepartment = OtherDepartment;
             report.SourceDepartment = SourceDepartment?.Trim();
-            report.QualityIndicator = QualityIndicator;
+            report.IsQualityIndicator = QualityIndicator;
             report.ERSReportLocation = ERSReportLocation?.Trim();
             report.ERRStatus = ERRStatus;
             report.LegacyReportID = LegacyReportID;

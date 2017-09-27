@@ -19,32 +19,32 @@
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="DateDone" class="control-label col-md-4">@Html.DisplayNameFor(e => Model.DateDone)</label>
+            <label asp-for="FinishedDate" class="control-label col-md-4">@Html.DisplayNameFor(e => Model.FinishedDate)</label>
             <div class="col-md-12">
                 <div class="input-group">
-                    <span class="input-group-addon"><input type="checkbox" id="editReport_done" asp-for="Done" /></span>
-                    <input id="editReport_dateDone" asp-for="DateDone" class="form-control" />
-                    <span asp-validation-for="DateDone" class="text-danger"></span>
+                    <span class="input-group-addon"><input type="checkbox" id="editReport_isFinished" asp-for="IsFinished" /></span>
+                    <input id="editReport_finishedDate" asp-for="FinishedDate" class="form-control" />
+                    <span asp-validation-for="FinishedDate" class="text-danger"></span>
                 </div>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="DateClientNotified" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.DateClientNotified)</label>
+            <label asp-for="ClientNotifiedDate" class="col-md-2 control-label">@Html.DisplayNameFor(e => Model.ClientNotifiedDate)</label>
             <div class="col-md-12">
                 <div class="input-group">
-                    <span class="input-group-addon"><input type="checkbox" id="editReport_clientNotified" asp-for="ClientNotified" /></span>
-                    <input id="editReport_dateClientNotified" asp-for="DateClientNotified" class="form-control" />
-                    <span asp-validation-for="DateClientNotified" class="text-danger"></span>
+                    <span class="input-group-addon"><input type="checkbox" id="editReport_isClientNotified" asp-for="IsClientNotified" /></span>
+                    <input id="editReport_clientNotifiedDate" asp-for="ClientNotifiedDate" class="form-control" />
+                    <span asp-validation-for="ClientNotifiedDate" class="text-danger"></span>
                 </div>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="DateSent" class="col-md-4 control-label">@Html.DisplayNameFor(e => Model.DateSent)</label>
+            <label asp-for="SentDate" class="col-md-4 control-label">@Html.DisplayNameFor(e => Model.SentDate)</label>
             <div class="col-md-12">
                 <div class="input-group">
-                    <span class="input-group-addon"><input type="checkbox" id="editReport_sent" asp-for="Sent" /></span>
-                    <input id="editReport_dateSent" asp-for="DateSent" class="form-control" />
-                    <span asp-validation-for="DateSent" class="text-danger"></span>
+                    <span class="input-group-addon"><input type="checkbox" id="editReport_isSent" asp-for="IsSent" /></span>
+                    <input id="editReport_sentDate" asp-for="SentDate" class="form-control" />
+                    <span asp-validation-for="SentDate" class="text-danger"></span>
                 </div>
             </div>
         </div>
@@ -126,7 +126,7 @@
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="DaysAfterQuarter" class="col-md-4 control-label">@Html.DisplayNameFor(e => Model.DaysAfterQuarter)</label>
+            <label asp-for="DaysAfterQuarter" class="col-md-6 control-label">@Html.DisplayNameFor(e => Model.DaysAfterQuarter)</label>
             <div class="col-md-12">
                 <input id="editReport_daysAfterQuarter" type="text" asp-for="DaysAfterQuarter" class="form-control" />
                 <span asp-validation-for="DaysAfterQuarter" class="text-danger"></span>
@@ -212,8 +212,8 @@
         <div class="form-group">
             <div class="col-md-4">
                 <div class="checkbox">
-                    <input id="editReport_otherDepartment" asp-for="OtherDepartment" />
-                    <label asp-for="OtherDepartment">@Html.DisplayNameFor(e => Model.OtherDepartment)</label>
+                    <input id="editReport_isFromOtherDepartment" asp-for="IsFromOtherDepartment" />
+                    <label asp-for="IsFromOtherDepartment">@Html.DisplayNameFor(e => Model.IsFromOtherDepartment)</label>
                 </div>
             </div>
         </div>
@@ -221,8 +221,8 @@
         <div class="form-group">
             <div class="col-md-4">
                 <div class="checkbox">
-                    <input id="editReport_qualityIndicator" asp-for="QualityIndicator" />
-                    <label asp-for="QualityIndicator">@Html.DisplayNameFor(e => Model.QualityIndicator)</label>
+                    <input id="editReport_qualityIndicator" asp-for="IsQualityIndicator" />
+                    <label asp-for="IsQualityIndicator">@Html.DisplayNameFor(e => Model.IsQualityIndicator)</label>
                 </div>
             </div>
         </div>

@@ -29,7 +29,6 @@ namespace ReportOverviewApp.Models
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:g}", ApplyFormatInEditMode = true)]
         public DateTime? SentDate { get; set; }
 
-        [ForeignKey("ReportID")]
         public int ReportID { get; set; }
     }
 }

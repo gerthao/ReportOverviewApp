@@ -5,39 +5,31 @@ var reportsArray = ["", "", ""];
 var getCurrentTime = function () {
     $.get("/Home/TimeViewComponent", function (data) { $("#timeViewComponentContainer").html(data); });
 };
-var getUserLogs = function () {
+function getUserLogs() {
     var link = root + "/Data/GetUserLogs/";
-    try {
-        $.ajax({
-            url: link,
-            type: "GET",
-            dataType: "json",
-            contentType: "application/json; charset-utf-8",
-            success: function(data) {
-                handleJsonUserLogs(data);
-            },
-            error: console.error("failed: " + link)
-        });
-    } catch (err) {
-        console.error(err);
-    }
+    $.ajax({
+        url: link,
+        type: "GET",
+        dataType: "json",
+        contentType: "application/json; charset-utf-8",
+        success: function(data) {
+            handleJsonUserLogs(data);
+        },
+        error: console.error("failed: " + link)
+    });
 };
-var getReportCount = function () {
+function getReportCount() {
     var link = root + "/Data/GetDeadlines/";
-    try {
-        $.ajax({
-            url: link,
-            type: "GET",
-            dataType: "json",
-            contentType: "application/json; charset-utf-8",
-            success: function (data) {
-                deadlineCount(data);
-            },
-            error: console.error("failed: " + link)
-        });
-    } catch (err) {
-        console.error(err);
-    }
+    $.ajax({
+        url: link,
+        type: "GET",
+        dataType: "json",
+        contentType: "application/json; charset-utf-8",
+        success: function (data) {
+            deadlineCount(data);
+        },
+        error: console.error("failed: " + link)
+    });
 };
 function checkLessThanTen(number) {
     if (number < 10) {
@@ -63,7 +55,7 @@ function getTimestamp(date) {
     dateString = month + '/' + day + '/' + year + ' ' + hour + ':' + minute + ':' + second;
     return dateString;
 }
-var deadlineCount = function (data) {
+function deadlineCount(data) {
     var today = new Date();
     today = getDateTimeNow(today);
     $('#TotalReportCount').html(data.length);
@@ -94,7 +86,7 @@ var deadlineCount = function (data) {
         }
     });
 };
-var createReportListGroup = function(jsonReportData){ 
+function createReportListGroup(jsonReportData){ 
     const limit = 30;
     var reportString = "";
     for (var i = 0; i < jsonReportData.length && i < limit; i++) {
@@ -106,7 +98,7 @@ var createReportListGroup = function(jsonReportData){
     reportString += "</ul>";
     return reportString;
 };
-var handleReportsList = function (htmlElement) {
+function handleReportsList(htmlElement) {
     switch (htmlElement.id) {
         case "totalTab":
             $('#reportCard').html(reportsArray[0]);
@@ -127,10 +119,10 @@ var handleReportsList = function (htmlElement) {
 var updateComponents = function () {
     getUserLogs();
     getReportCount();
+    setTimeout(updateComponents, 5000);
 };
 $(document).ready(function () {
     updateComponents();
-    $(function(){ window.setInterval(updateComponents, 5000); });
     $("#widgetTabs li a").on("click", function() {
         $(this).parent("li").parent("ul").children("li").each(function(index, value) {
             $(value.tagName + " a").removeClass("active");

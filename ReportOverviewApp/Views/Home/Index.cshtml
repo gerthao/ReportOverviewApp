@@ -1,16 +1,8 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-
 @model ReportOverviewApp.Models.HomeViewModels.HomeViewModel
-
 <style>
-    .caption-widget{
-        text-align: center;
-    }
-    .widget-option-menu{
-        text-align: left;
-    }
     .table-scrollable{
         max-height: 240px;
         overflow: auto;
@@ -21,13 +13,8 @@
         overflow: auto;
     }
 </style>
-
-<script src="~/lib/jquery/dist/jquery.js" type="text/javascript"></script>
-<script src="~/js/HomeHandler.js" type="text/javascript"></script>
-<h3 class="page-header">
-    Overview (Home Page)
-</h3>
-<div class="wigets-group">
+<h3>Overview (Home Page)</h3>
+<div>
     <div class="row">
         <div class="col-md-6">
             <div class="card border-dark card-scrollable">
@@ -100,3 +87,6 @@
         </div>
     </div>
 </div>
+@section Scripts{ 
+    <script src="~/js/HomeHandler.js" type="text/javascript"></script>
+}

@@ -16,19 +16,19 @@ namespace ReportOverviewApp.Models
         [StringLength(1000), Column(Order = 1)]
         public string Name { get; set; }
 
-        [Display(Name = "Finished")]
-        public bool Done { get; set; }
-        [Display(Name = "Notified")]
-        public bool ClientNotified { get; set; }
-        [Display(Name = "Sent")]
-        public bool Sent { get; set; }
+        [Display(Name = "Is Finished")]
+        public bool IsFinished { get; set; }
+        [Display(Name = "Is Client Notified")]
+        public bool IsClientNotified { get; set; }
+        [Display(Name = "Is Sent")]
+        public bool IsSent { get; set; }
 
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:g}", ApplyFormatInEditMode = true), Display(Name = "Finished On")]
-        public DateTime? DateDone { get; set; }
+        public DateTime? FinishedDate { get; set; }
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:g}", ApplyFormatInEditMode = true), Display(Name = "Notified On")]
-        public DateTime? DateClientNotified { get; set; }
+        public DateTime? ClientNotifiedDate { get; set; }
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:g}", ApplyFormatInEditMode = true), Display(Name = "Sent On")]
-        public DateTime? DateSent { get; set; }
+        public DateTime? SentDate { get; set; }
 
         //public string UserDone {get; set;}
         //public string UserClientNotified { get; set; }
@@ -38,12 +38,16 @@ namespace ReportOverviewApp.Models
         public string BusinessContact { get; set; }
         [StringLength(255), Display(Name = "Business Owner")]
         public string BusinessOwner { get; set; }
+        [Display(Name = "First Due Date (If Applicable)")]
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true, NullDisplayText = "No date given")]
         public DateTime? DueDate1 { get; set; }
+        [Display(Name = "Second Due Date (If Applicable)")]
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true, NullDisplayText = "No date given")]
         public DateTime? DueDate2 { get; set; }
+        [Display(Name = "Third Due Date (If Applicable)")]
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true, NullDisplayText = "No date given")]
         public DateTime? DueDate3 { get; set; }
+        [Display(Name = "Fourth Due Date (If Applicable)")]
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true, NullDisplayText = "No date given")]
         public DateTime? DueDate4 { get; set; }
         [StringLength(50)]
@@ -55,7 +59,7 @@ namespace ReportOverviewApp.Models
         [Display(Name = "Work Instructions")]
         public string WorkInstructions { get; set; }
         public string Notes{ get; set; }
-        [Display(Name = "Days After Quarter")]
+        [Display(Name = "Days After Quarter (If Applicable)")]
         public int? DaysAfterQuarter { get; set; }
         [StringLength(2000), Display(Name = "Folder Location")]
         public string FolderLocation { get; set; }
@@ -78,11 +82,11 @@ namespace ReportOverviewApp.Models
         [StringLength(2000), Display(Name = "Report Path")]
         public string ReportPath { get; set; }
         [Display(Name = "Other Department")]
-        public bool OtherDepartment { get; set; }
+        public bool IsFromOtherDepartment { get; set; }
         [StringLength(100), Display(Name = "Source Department")]
         public string SourceDepartment { get; set; }
         [Display(Name = "Quality Indicator")]
-        public bool QualityIndicator { get; set; }
+        public bool IsQualityIndicator { get; set; }
         [StringLength(4000), Display(Name = "ERS Report Location")]
         public string ERSReportLocation { get; set; }
         [Display(Name = "ERR Status")]

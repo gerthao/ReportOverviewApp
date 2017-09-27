@@ -11,7 +11,7 @@ namespace ReportOverviewApp.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public DbSet<Report> Reports {get; set;}
+        public DbSet<Report> Reports { get; set; }
         public DbSet<UserLog> UserLogs { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options){}
         protected override void OnModelCreating(ModelBuilder builder)
