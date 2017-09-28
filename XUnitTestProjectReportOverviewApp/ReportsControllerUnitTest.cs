@@ -20,7 +20,7 @@ namespace XUnitTestProjectReportOverviewApp
         public static Report Create(ReportEnum.FrequencyType frequency, string dayDue = null, int daysAfterQuarter = 0)
         {
             Report report = new Report();
-            report.ID = Count;
+            report.Id = Count;
             report.Name = $"Test Report #{Count}";
             report.SourceDepartment = "Test Department";
             report.GroupName = "Test Plan";

@@ -10,11 +10,14 @@ namespace ReportOverviewApp.Models
 
     public class Report
     {
+        
 
         [Column(Order = 0)]
-        public int ID { get; set; }
+        public int Id { get; set; }
         [StringLength(1000), Column(Order = 1)]
         public string Name { get; set; }
+
+        public virtual ICollection<ReportDeadline> Deadlines { get; set; }
 
         [Display(Name = "Is Finished")]
         public bool IsFinished { get; set; }
@@ -51,14 +54,14 @@ namespace ReportOverviewApp.Models
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true, NullDisplayText = "No date given")]
         public DateTime? DueDate4 { get; set; }
         [StringLength(50)]
-        public string Frequency { get; set;}
+        public string Frequency { get; set; }
         [StringLength(10)]
         public string DayDue { get; set; }
         [StringLength(1000), Display(Name = "Delivery Function")]
         public string DeliveryFunction { get; set; }
         [Display(Name = "Work Instructions")]
         public string WorkInstructions { get; set; }
-        public string Notes{ get; set; }
+        public string Notes { get; set; }
         [Display(Name = "Days After Quarter (If Applicable)")]
         public int? DaysAfterQuarter { get; set; }
         [StringLength(2000), Display(Name = "Folder Location")]
@@ -111,7 +114,8 @@ namespace ReportOverviewApp.Models
         /// </summary>
         /// <param name="compareDate">
         ///  Parameter compareDate is used to compared which day to look for deadlines.
-        ///  If null then compareDate becomes today's date.
+        ///  If null then compareDate becomes today's date.  If the report's termination date
+        ///  is due before comparDate, then the method returns null as there should not be a deadline anymore.
         /// </param>
         /// <returns>
         ///  Returns a Nullable DateTime object representating the current deadline of a report.
@@ -120,7 +124,10 @@ namespace ReportOverviewApp.Models
         {
             try
             {
-                if (compareDate == null) compareDate = DateTime.Today;
+                if (compareDate == null)
+                    compareDate = DateTime.Today;
+                if (IsTermed(compareDate))
+                    return null;
                 switch (Frequency)
                 {
                     case "Quarterly":
@@ -158,9 +165,11 @@ namespace ReportOverviewApp.Models
         {
             List<DateTime?> deadlines = GetAllDueDates(compareDate);
             const int quarterlyLimit = 4;
-            if (deadlines.Count() != quarterlyLimit) return null;
+            if (deadlines.Count() != quarterlyLimit)
+                return null;
             var current = deadlines.Where(e => e.Value >= compareDate).Take(1).Single();
-            if (deadlines.Count() == 0) return null;
+            if (deadlines.Count() == 0)
+                return null;
             return current;
         }
         private DateTime? GetDeadlineMonthly(DateTime compareDate)
@@ -170,7 +179,7 @@ namespace ReportOverviewApp.Models
                 DateTime? deadline = new DateTime(year: compareDate.Year, month: compareDate.Month, day: Int32.Parse(DayDue));
                 if (deadline < compareDate) deadline = deadline.Value.AddMonths(1);
                 return deadline;
-            } catch(Exception e)
+            } catch (Exception e)
             {
                 Console.WriteLine($"Error with GetDeadlineMonthy(DateTime compareDate): \"{e.Message}\"");
                 return null;
@@ -224,13 +233,18 @@ namespace ReportOverviewApp.Models
         {
             int biweeklyDay;
             const int biweek = 14;
-            if (!Int32.TryParse(DayDue, out biweeklyDay)) return null;
+            if (!Int32.TryParse(DayDue, out biweeklyDay))
+                return null;
             DateTime firstDeadline = new DateTime(year: compareDate.Year, month: compareDate.Month, day: biweeklyDay);
             DateTime secondDeadline = firstDeadline.AddDays(biweek);
-            if (compareDate <= firstDeadline) return firstDeadline;
-            else if (compareDate <= secondDeadline && compareDate > firstDeadline) return secondDeadline;
-            else if(compareDate > secondDeadline) return (firstDeadline.AddMonths(1));
-            else return null;
+            if (compareDate <= firstDeadline)
+                return firstDeadline;
+            else if (compareDate <= secondDeadline && compareDate > firstDeadline)
+                return secondDeadline;
+            else if (compareDate > secondDeadline)
+                return (firstDeadline.AddMonths(1));
+            else
+                return null;
         }
         private List<DateTime?> GetAllDueDates()
         {
@@ -241,10 +255,11 @@ namespace ReportOverviewApp.Models
         private List<DateTime?> GetAllDueDates(DateTime date)
         {
             List<DateTime?> dates = GetAllDueDates();
-            for(int i = 0; i < dates.Count(); i++)
+            for (int i = 0; i < dates.Count(); i++)
             {
                 dates[i] = new DateTime(year: date.Year, month: dates[i].Value.Month, day: dates[i].Value.Day);
-                if(dates[i].Value < date) dates[i] = dates[i].Value.AddYears(1);
+                if (dates[i].Value < date)
+                    dates[i] = dates[i].Value.AddYears(1);
             }
             dates.Sort();
             return dates;
@@ -253,7 +268,8 @@ namespace ReportOverviewApp.Models
         {
             const int annualLimit = 1;
             List<DateTime?> dates = GetAllDueDates(compareDate);
-            if (dates.Count != annualLimit) return null;
+            if (dates.Count != annualLimit)
+                return null;
             return dates.ElementAt(0);
         }
         private bool DeadlineHasPassed(DateTime deadline)
@@ -265,11 +281,17 @@ namespace ReportOverviewApp.Models
         {
             const int semiannualLimit = 2;
             List<DateTime?> dates = GetAllDueDates(compareDate);
-            if (dates.Count != semiannualLimit) return null;
+            if (dates.Count != semiannualLimit)
+                return null;
             return dates.Where(date => date.Value >= compareDate)
                         .OrderBy(date => date)
                         .First();
         }
-
+        public bool IsTermed(DateTime? compareDate)
+        {
+            if(compareDate == null)
+                compareDate = DateTime.Today;
+            return TerminationDate != null && TerminationDate.HasValue && TerminationDate.Value < compareDate;
+        }
     }
 }

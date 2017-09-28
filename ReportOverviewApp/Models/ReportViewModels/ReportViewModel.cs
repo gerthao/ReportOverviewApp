@@ -12,6 +12,7 @@ namespace ReportOverviewApp.Models.ReportViewModels
     public class ReportViewModel
     {
         public IEnumerable<Report> Reports { get; set; }
+        public IEnumerable<ReportDeadline> ReportDeadlineStatuses { get; set; }
         public IEnumerable<string> Frequencies { get; set; }
         public IEnumerable<string> BusinessContacts { get; set; }
         public IEnumerable<string> BusinessOwners { get; set; }
@@ -25,13 +26,13 @@ namespace ReportOverviewApp.Models.ReportViewModels
         private int Pages { get; set; }
         public int PageSize { get; set; }
         public int CurrentPage { get; private set; } = 1;
-        public const int DEFAULT_PAGE_SIZE = 100;
+        public const int DefaultPageSize = 100;
         public string Search{ get; set; }
         public string Column { get; set; }
         public string State { get; set; }
         public string Plan { get; set; }
-        public DateTime? DoneBegin { get; set; }
-        public DateTime? DoneEnd { get; set; }
+        public DateTime? FinishedBegin { get; set; }
+        public DateTime? FinishedEnd { get; set; }
         public DateTime? NotifiedBegin { get; set; }
         public DateTime? NotifiedEnd { get; set; }
         public DateTime? SentBegin { get; set; }
@@ -51,7 +52,7 @@ namespace ReportOverviewApp.Models.ReportViewModels
         public void GeneratePages(int mod)
         {
             if (Reports == null) return;
-            if (mod <= 0) mod = DEFAULT_PAGE_SIZE;
+            if (mod <= 0) mod = DefaultPageSize;
             PageSize = mod;
             Pages = Reports.Count() / PageSize;
             if (Reports.Count() % PageSize > 0) Pages++;

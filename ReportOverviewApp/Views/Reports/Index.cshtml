@@ -31,7 +31,7 @@ else {
     <table id="reportTable" class="table report-table table-bordered table-sm table-striped table-hover">
         <thead>
             <tr>
-                <th>@Html.ActionLink("ID", "Index", new { search = Model.Search, plan = Model.Plan, pageIndex = Model.CurrentPage, column = "ID", begin = Model.Begin, end = Model.End }, new { @class = "text-dark" })</th>
+                <th>@Html.ActionLink("Id", "Index", new { search = Model.Search, plan = Model.Plan, pageIndex = Model.CurrentPage, column = "Id", begin = Model.Begin, end = Model.End }, new { @class = "text-dark" })</th>
                 <th>@Html.ActionLink("Name", "Index", new { search = Model.Search, plan = Model.Plan, pageIndex = Model.CurrentPage, column = "Name", begin = Model.Begin, end = Model.End }, new { @class = "text-dark" })</th>
                 <th>@Html.ActionLink("Deadline", "Index", new { search = Model.Search, plan = Model.Plan, pageIndex = Model.CurrentPage, column = "Deadline", begin = Model.Begin, end = Model.End }, new { @class = "text-dark" })</th>
                 <th>@Html.ActionLink("Finished On", "Index", new { search = Model.Search, plan = Model.Plan, pageIndex = Model.CurrentPage, column = "Finished On", begin = Model.Begin, end = Model.End }, new { @class = "text-dark" })</th>
@@ -44,15 +44,17 @@ else {
             @for (int i = 0; i < Model.Reports.Count(); i++)
             {
                 <tr>
-                    <td class="ReportID">@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).ID)</td>
-                    <td class="ReportName">@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Name)</td>
+                    <td class="ReportID">@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Id)</td>
+                    <td class="ReportName">
+                        @Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Name)
+                    </td>
                     <td>@Model.DisplayDateTimeAsDate(Model.Reports.ElementAt(i).CurrentDeadline())</td>
                     <td><text>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).FinishedDate)</text></td>
                     <td><text>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).ClientNotifiedDate)</text></td>
                     <td><text>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).SentDate)</text></td>
                     <td style="text-align: center;">
                         <a id="editReport" data-toggle="modal" data-target="#editReportModal"><span class="fa fa-edit text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  @Model.Reports.ElementAt(i).Name"></span></a>
-                        <a asp-action="Details" asp-route-id="@Model.Reports.ElementAt(i).ID"><span class="fa fa-book text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="View:  @Model.Reports.ElementAt(i).Name"></span></a>
+                        <a asp-action="Details" asp-route-id="@Model.Reports.ElementAt(i).Id"><span class="fa fa-book text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="View:  @Model.Reports.ElementAt(i).Name"></span></a>
                         <a id="deleteReport" data-toggle="modal" data-target="#deleteReportModal"><span class="fa fa-remove text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Delete:  @Model.Reports.ElementAt(i).Name"></span></a>
                     </td>
                 </tr>
