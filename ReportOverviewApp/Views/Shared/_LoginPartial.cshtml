@@ -3,25 +3,33 @@
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
-
+<style>
+    .user-option-icon-onleft {
+        padding-right: 0.5rem;
+    }
+    .user-option-icon-onright {
+        padding-left: 0.5rem;
+    }
+</style>
 <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right">
     <ul class="navbar-nav mr-auto">
         <li class="dropdown nav-item">
             <a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#">
-                 @(SignInManager.IsSignedIn(User)? $"{User.Identity.Name} " : "Account ")
+                @{var userName = User.Identity.Name;
+                    try
+                    {
+                        userName = User.Identity.Name.Split('@').First().Replace('.', ' ');
+                    }
+                    catch {}
+                }
+                <span class="fa fa-user-o user-option-icon-onleft"></span>@(SignInManager.IsSignedIn(User)?$"{userName}":"Account")
             </a>
-            <ul class="dropdown-menu border-dark navbar-dark bg-dark">
+            <ul class="dropdown-menu dropdown-menu-right border-dark navbar-dark bg-dark">
                 @if (SignInManager.IsSignedIn(User))
                 {
-                    <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">User Profile</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Notifications <span class="badge" style="background-color: #FF5238;">0</span></a></li>
-                    <li class="nav-item">
-                        <button type="submit" class="btn btn-link nav-link">Log out</button>
-                    </li>
-
-                    @*<li>
-                        <button type="submit" class="btn btn-link navbar-btn navbar-link">Log out</button>
-                    </li>*@
+                    <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Manage" asp-action="Index" title="Manage"><span class="fa fa-address-card-o user-option-icon-onleft"></span>User Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#"><span class="fa fa-bell-o user-option-icon-onleft"></span>Notifications&nbsp&nbsp<span class="badge" style="background-color: #FF5238;">0</span></a></li>
+                    <li class="nav-item"><button type="submit" class="btn btn-link nav-link"><span class="fa fa-sign-out user-option-icon-onleft"></span>Log out</button></li>
                 }
                 else
                 {
@@ -30,8 +38,5 @@
                 }
             </ul>
         </li>
-        @if (SignInManager.IsSignedIn(User))
-        {}
     </ul>
-    
 </form>

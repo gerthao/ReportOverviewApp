@@ -24,10 +24,10 @@ namespace XUnitTestProjectReportOverviewApp
             Assert.True(mondayReport.CurrentDeadline().Value.DayOfWeek == DayOfWeek.Monday);
             Assert.True(monReport.CurrentDeadline().Value.DayOfWeek == DayOfWeek.Monday);
             Assert.True(tuesdayReport.CurrentDeadline().Value.DayOfWeek == DayOfWeek.Tuesday);
-            Assert.True(tuesdayReport.CurrentDeadline().Value.Month == DateTime.Today.Month);
+            Assert.True(tuesdayReport.CurrentDeadline().Value.Month == DateTime.Today.Month || tuesdayReport.CurrentDeadline().Value.Month == DateTime.Today.AddMonths(1).Month);
             Assert.True(fridayReport.CurrentDeadline().Value.DayOfWeek == DayOfWeek.Friday);
             Assert.False(thuReport.CurrentDeadline().Value.DayOfWeek == DayOfWeek.Monday);
-            Assert.True(satReport.CurrentDeadline().Value.Year == DateTime.Today.Year);
+            Assert.True(satReport.CurrentDeadline().Value.Year == DateTime.Today.Year || satReport.CurrentDeadline().Value.Year == DateTime.Today.AddYears(1).Year);
         }
         [Fact]
         public void ReportDeadlineTestWeeklyBadDeadline()

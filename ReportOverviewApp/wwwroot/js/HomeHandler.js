@@ -50,10 +50,19 @@ function getTimestamp(date) {
     let month = checkLessThanTen(date.getMonth() + 1);
     let day = checkLessThanTen(date.getDate());
     let year = date.getFullYear();
-    let hour = checkLessThanTen(date.getHours());
+    let hour = date.getHours();
     let minute = checkLessThanTen(date.getMinutes());
     let second = checkLessThanTen(date.getSeconds());
-    dateString = month + '/' + day + '/' + year + ' ' + hour + ':' + minute + ':' + second;
+    let ampm;
+    if (hour < 12) {
+        ampm = "AM";
+    } else {
+        ampm = "PM";
+        if (hour > 12) {
+            hour = hour - 12;
+        }
+    }
+    dateString = month + '/' + day + '/' + year + ' ' + checkLessThanTen(hour) + ':' + minute + ':' + second + ' ' + ampm;
     return dateString;
 }
 function deadlineCount(data) {
@@ -168,9 +177,8 @@ function getHtmlDate(name, date) {
 function handleJsonUserLogs(data) {
     let body = '';
     if (data === null || data.length === 0) {
-        body = '<tr><td class="col-md-6">No logs to display</td>' +
-            '<td class="col-md-3"></td>' +
-            '<td class="col-md-3"></td></tr>';
+        body =
+            '<tr><td colspan="4">No logs to display</td></tr>';
     }
     else {
         data.sort(function(a, b){
@@ -179,10 +187,17 @@ function handleJsonUserLogs(data) {
         for (let i = 0; i < data.length; i++) {
             let temp = new Date(data[i]["timeStamp"]);
             temp = getTimestamp(temp);
-            let msg = '<td class="col-md-6">' + data[i]["message"] + '</td>';
-            let usrID = '<td class="col-md-3">' + data[i]["userID"] + '</td>';
-            let tmStmp = '<td class="col-md-3">' + temp + '</td>';
-            body += '<tr>' + msg + tmStmp + usrID + '</tr>';
+            let msg = '<td>' + data[i]["message"] + '</td>';
+            let changesMessage;
+            if (data[i]["changes"] === null || data[i]["changes"] === undefined) {
+                changesMessage = 'N/A';
+            } else {
+                changesMessage = '<button type="button" class="btn btn-sm btn-block btn-link fa fa-list-ul"></i>';
+            }
+            let changes = '<td class="text-center">' + changesMessage + '</td>';
+            let usrID = '<td>' + data[i]["userID"] + '</td>';
+            let tmStmp = '<td>' + temp + '</td>';
+            body += '<tr>' + msg + tmStmp + usrID + changes + '</tr>';
         }
     }
     $('#userLogsBody').html(body);
