@@ -22,7 +22,7 @@ namespace ReportOverviewApp.Controllers
     {
         private readonly ApplicationDbContext _context;
         private IToastNotification _toastNotification;
-        private ReportViewModel viewModel;
+        private ReportListViewModel viewModel;
         private UserLogFactory userLogFactory;
 
         /// <summary>
@@ -44,137 +44,44 @@ namespace ReportOverviewApp.Controllers
         /// </returns>
         /// 
 
-        private async Task<ReportViewModel> GetReportViewModelAsync(string search, string column, int recordsPerPage, int pageIndex, string state, string plan, string begin, string end, string frequency, string businessContact, string businessOwner, string sourceDepartment)
+        private async Task<ReportListViewModel> GetReportViewModelAsync(string search, string column, int recordsPerPage, int pageIndex, string state, string plan, string begin, string end, string frequency, string businessContact, string businessOwner, string sourceDepartment)
         {
-            if (viewModel == null)
+            DropdownOptions options = new DropdownOptions()
             {
-                viewModel = new ReportViewModel()
-                {
-                    Reports = await _context.Reports.ToListAsync()
-                };
-                viewModel.States = viewModel.Reports.Select(r => r.State).Distinct().OrderBy(s => s);
-                viewModel.Plans = viewModel.Reports.Select(r => r.GroupName).Distinct().OrderBy(p => p);
-                viewModel.Frequencies = viewModel.Reports.Select(r => r.Frequency).Distinct().OrderBy(f => f);
-                viewModel.BusinessContacts = viewModel.Reports.Select(r => r.BusinessContact).Distinct().OrderBy(bc => bc);
-                viewModel.BusinessOwners = viewModel.Reports.Select(r => r.BusinessOwner).Distinct().OrderBy(bo => bo);
-                viewModel.SourceDepartments = viewModel.Reports.Select(r => r.SourceDepartment).Distinct().OrderBy(sd => sd);
-            }
-            HandleStateAndPlan(state, plan);
-            HandleSearch(search);
-            HandleBusinessContact(businessContact);
-            HandleBusinessOwner(businessOwner);
-            HandleSourceDepartment(sourceDepartment);
-            HandleSort(column);
-            HandleDates(begin, end);
-            HandleFrequency(frequency);
+                States = await _context.Reports.Select(r => r.State).OrderBy(s => s).Distinct().ToListAsync(),
+                Plans = await _context.Reports.Select(r => r.GroupName).OrderBy(gn => gn).Distinct().ToListAsync(),
+                Frequencies = await _context.Reports.Select(r => r.Frequency).OrderBy(f => f).Distinct().ToListAsync(),
+                BusinessContacts = await _context.Reports.Select(r => r.BusinessContact).OrderBy(bc => bc).Distinct().ToListAsync(),
+                BusinessOwners = await _context.Reports.Select(r => r.BusinessOwner).OrderBy(bo => bo).Distinct().ToListAsync(),
+                SourceDepartments = await _context.Reports.Select(r => r.SourceDepartment).OrderBy(sd => sd).Distinct().ToListAsync()
+            };
+            Filters filters = new Filters()
+            {
+                State = state,
+                Plan = plan,
+                Search = search,
+                BusinessContact = businessContact,
+                BusinessOwner = businessOwner,
+                SourceDepartment = sourceDepartment,
+                Column = column,
+                BeginString = begin,
+                EndString = end,
+                Frequency = frequency
+            };
+            viewModel = new ReportListViewModel(options: options, filters: filters)
+            {
+                Reports = await _context.Reports.Include(r => r.Deadlines).ToListAsync(),
+                ReportDeadlines = await _context.ReportDeadlines.Include(rd => rd.Report).Where(rd => rd != null).ToListAsync()
+            };
+            viewModel.Options = options;
+            viewModel.Filters = filters;
+            viewModel.ApplyFilters();
             viewModel.GeneratePages(recordsPerPage);
             viewModel.Reports = viewModel.DisplayPage(pageIndex);
             return viewModel;
         }
 
-        private void HandleBusinessContact(string businessContact)
-        {
-            if (!String.IsNullOrEmpty(businessContact))
-            {
-                viewModel.BusinessContact = businessContact;
-                viewModel.Reports = viewModel.Reports.Where(r => r != null && r.BusinessContact == businessContact);
-            }
-        }
-        private void HandleBusinessOwner(string businessOwner)
-        {
-            if (!String.IsNullOrEmpty(businessOwner))
-            {
-                viewModel.BusinessOwner = businessOwner;
-                viewModel.Reports = viewModel.Reports.Where(r => r != null && r.BusinessOwner == businessOwner);
-            }
-        }
-        private void HandleSourceDepartment(string sourceDepartment)
-        {
-            if (!String.IsNullOrEmpty(sourceDepartment))
-            {
-                viewModel.SourceDepartment = sourceDepartment;
-                viewModel.Reports = viewModel.Reports.Where(r => r != null && r.SourceDepartment == sourceDepartment);
-            }
-        }
-
-        private void HandleFrequency(string frequency)
-        {
-            if (!String.IsNullOrEmpty(frequency))
-            {
-                viewModel.Frequency = frequency;
-                viewModel.Reports = viewModel.Reports.Where(r => r != null && r.Frequency != null && r.Frequency.Equals(frequency));
-            }
-        }
-        private void HandleSort(string column)
-        {
-            if (!String.IsNullOrEmpty(column)) {
-                viewModel.Column = column;
-                switch (viewModel.Column) {
-                    case "Id":
-                        viewModel.Reports = viewModel.Reports.OrderBy(report => report.Id);
-                        break;
-                    case "Name":
-                        viewModel.Reports = viewModel.Reports.OrderBy(report => report.Name);
-                        break;
-                    case "Deadline":
-                        viewModel.Reports = viewModel.Reports.OrderBy(report => report.CurrentDeadline());
-                        break;
-                    case "Finished On":
-                        viewModel.Reports = viewModel.Reports.OrderBy(report => report.FinishedDate);
-                        break;
-                    case "Notified On":
-                        viewModel.Reports = viewModel.Reports.OrderBy(report => report.ClientNotifiedDate);
-                        break;
-                    case "Sent On":
-                        viewModel.Reports = viewModel.Reports.OrderBy(report => report.SentDate);
-                        break;
-                    default:
-                        viewModel.Reports = viewModel.Reports.OrderBy(report => report.Id);
-                        break;
-                }
-
-            }
-        }
-        private void HandleDates(string begin, string end)
-        {
-            IEnumerable<(Report report, DateTime? deadline)> list = viewModel.Reports.Select(r => (r, r.CurrentDeadline()));
-            list = list.Where(r => r.deadline.HasValue);
-            if (begin != null) {
-                DateTime beginDate;
-                if (DateTime.TryParse(begin, out beginDate)) {
-                    viewModel.Begin = beginDate;
-                    list = list.Where(r => r.deadline.Value >= beginDate);
-                }
-            }
-            if (end != null) {
-                DateTime endDate;
-                if (DateTime.TryParse(end, out endDate))
-                {
-                    viewModel.End = endDate;
-                    list = list.Where(r => r.deadline.Value <= endDate);
-                }
-            }
-            viewModel.Reports = list.Select(r => r.report);
-        }
-        private void HandleStateAndPlan(string state, string plan)
-        {
-            if (!String.IsNullOrEmpty(state))
-            {
-                viewModel.State = state;
-                viewModel.Reports = viewModel.Reports.Where(r => r != null && r.State != null && r.State.Equals(viewModel.State));
-            }
-            if (!String.IsNullOrEmpty(plan)) {
-                viewModel.Plan = plan;
-                viewModel.Reports = viewModel.Reports.Where(r => r != null && r.GroupName != null && r.GroupName.Equals(viewModel.Plan));
-            }
-        }
-        private void HandleSearch(string search)
-        {
-            if (!String.IsNullOrEmpty(search)) {
-                viewModel.Search = search;
-                viewModel.Reports = viewModel.Reports.Where(r => r != null && r.Name != null && r.Name.ToLowerInvariant().Contains(viewModel.Search.ToLowerInvariant()));
-            }
-        }
+        
         public ReportsController(ApplicationDbContext context, IToastNotification toastNotification)
         {
             _context = context;
@@ -301,12 +208,12 @@ namespace ReportOverviewApp.Controllers
             StringBuilder messageBuilder = new StringBuilder();
             messageBuilder
                 .Append(Compare("Name", old.Name, updated.Name))
-                .Append(Compare("Report Finished", old.IsFinished, updated.IsFinished))
-                .Append(Compare("Report Client Notified", old.IsClientNotified, updated.IsClientNotified))
-                .Append(Compare("Report Sent", old.IsSent, updated.IsSent))
-                .Append(Compare("Date Finished", old.FinishedDate, updated.FinishedDate))
-                .Append(Compare("Date Notified", old.ClientNotifiedDate, updated.ClientNotifiedDate))
-                .Append(Compare("Date Sent", old.SentDate, updated.SentDate))
+                //.Append(Compare("Report Finished", old.IsFinished, updated.IsFinished))
+                //.Append(Compare("Report Client Notified", old.IsClientNotified, updated.IsClientNotified))
+                //.Append(Compare("Report Sent", old.IsSent, updated.IsSent))
+                //.Append(Compare("Date Finished", old.FinishedDate, updated.FinishedDate))
+                //.Append(Compare("Date Notified", old.ClientNotifiedDate, updated.ClientNotifiedDate))
+                //.Append(Compare("Date Sent", old.SentDate, updated.SentDate))
                 .Append(Compare("Business Contact", old.BusinessContact, updated.BusinessContact))
                 .Append(Compare("Business Owner", old.BusinessContact, updated.BusinessContact))
                 .Append(Compare("Due Date 1", old.DueDate1, updated.DueDate1))

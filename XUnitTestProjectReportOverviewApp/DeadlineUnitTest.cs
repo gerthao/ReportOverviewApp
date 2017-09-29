@@ -21,6 +21,7 @@ namespace XUnitTestProjectReportOverviewApp
             Report thuReport = new Report() { DayDue = "THU", Frequency = "Weekly" };
             Report fridayReport = new Report() { DayDue = "Friday", Frequency = "Weekly" };
             Report satReport = new Report() { DayDue = "SAT", Frequency = "Weekly" };
+
             Assert.True(mondayReport.CurrentDeadline().Value.DayOfWeek == DayOfWeek.Monday);
             Assert.True(monReport.CurrentDeadline().Value.DayOfWeek == DayOfWeek.Monday);
             Assert.True(tuesdayReport.CurrentDeadline().Value.DayOfWeek == DayOfWeek.Tuesday);
@@ -34,8 +35,26 @@ namespace XUnitTestProjectReportOverviewApp
         {
             Report mondayReport = new Report() { DayDue = "Today", Frequency = "Weekly" };
             Report tueReport = new Report() { DayDue = "TUE", Frequency = "Weekly" };
+
             Assert.Null(mondayReport.CurrentDeadline());
             Assert.NotNull(tueReport.CurrentDeadline());
+        }
+        [Fact]
+        public void ReportDeadlineTestWeeklyAtCertainDate()
+        {
+            Report report = TestReportFactory.Create(ReportEnum.FrequencyType.Weekly, "Sunday");
+            DateTime compareDate = new DateTime(year: 2017, month: 10, day: 4);
+            Assert.True(report.Deadline(compareDate) == new DateTime(year: 2017, month: 10, day: 8));
+        }
+        [Fact]
+        public void ReportDeadlineTestWeeklyNearEndOfMonth()
+        {
+            Report report = TestReportFactory.Create(ReportEnum.FrequencyType.Weekly, "Friday");
+            DateTime compareDate = new DateTime(year: 2017, month: 9, day: 29);
+            DateTime compareDate2 = new DateTime(year: 2017, month: 9, day: 30);
+
+            Assert.True(report.Deadline(compareDate) == compareDate);
+            Assert.True(report.Deadline(compareDate2) == new DateTime(year: 2017, month: 10, day: 6));
         }
         [Fact]
         public void ReportDeadlineTestQuarterly()
@@ -48,6 +67,7 @@ namespace XUnitTestProjectReportOverviewApp
                 DueDate4 = new DateTime(year: 9999, month: 12, day: 1),
                 Frequency = "Quarterly"
             };
+
             Assert.True(report.Deadline(new DateTime(year: 2017, month: 3, day: 1)) == new DateTime(year: 2017, month: 3, day: 1));
             Assert.True(report.Deadline(new DateTime(year: 2017, month: 4, day: 1)) == new DateTime(year: 2017, month: 6, day: 1));
             Assert.True(report.Deadline(new DateTime(year: 2017, month: 12, day: 31)) == new DateTime(year: 2018, month: 3, day: 1));

@@ -10,7 +10,7 @@
         <dd>
             @Html.DisplayFor(model => model.Name)
         </dd>
-        <dt>
+        @*<dt>
             @Html.DisplayNameFor(model => model.IsFinished)
         </dt>
         <dd>
@@ -27,14 +27,14 @@
         </dt>
         <dd>
             @Html.DisplayFor(model => model.IsSent)
-        </dd>
-        <dt>
+        </dd>*@
+        @*<dt>
             Upcoming Deadline
         </dt>
         <dd>
             @Model.CurrentDeadline()
-        </dd>
-        <dt>
+        </dd>*@
+        @*<dt>
             @Html.DisplayNameFor(model => model.FinishedDate)
         </dt>
         <dd>
@@ -51,7 +51,7 @@
         </dt>
         <dd>
             @Html.DisplayFor(model => model.SentDate)
-        </dd>
+        </dd>*@
         <dt>
             @Html.DisplayNameFor(model => model.BusinessContact)
         </dt>
@@ -259,6 +259,6 @@
     </dl>
 </div>
 <div>
-    @Html.ActionLink(linkText: "Edit", controllerName: "Reports", actionName: "Edit", routeValues: new {id = Model.ID}, htmlAttributes: new { @class = "btn btn-outline-primary" })
+    @Html.ActionLink(linkText: "Edit", controllerName: "Reports", actionName: "Edit", routeValues: new {id = Model.Id}, htmlAttributes: new { @class = "btn btn-outline-primary" })
     @Html.ActionLink(linkText: "Go Back To Catalogue", controllerName: "Reports", actionName: "Index", routeValues: null, htmlAttributes: new { @class = "btn btn-outline-primary" })
 </div>

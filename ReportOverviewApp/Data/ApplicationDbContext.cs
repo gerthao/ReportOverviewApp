@@ -14,7 +14,8 @@ namespace ReportOverviewApp.Data
         public DbSet<Report> Reports { get; set; }
         public DbSet<UserLog> UserLogs { get; set; }
         public DbSet<ReportDeadline> ReportDeadlines { get; set; }
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options){}
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options){
+        }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

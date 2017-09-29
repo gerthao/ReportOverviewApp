@@ -11,7 +11,7 @@ namespace ReportOverviewApp.Models
     {
         public int Id { get; set; }
 
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:g}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         public DateTime Deadline { get; set; }
 
         public bool IsFinished { get; set; }

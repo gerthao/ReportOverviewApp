@@ -19,19 +19,19 @@ namespace ReportOverviewApp.Models
 
         public virtual ICollection<ReportDeadline> Deadlines { get; set; }
 
-        [Display(Name = "Is Finished")]
-        public bool IsFinished { get; set; }
-        [Display(Name = "Is Client Notified")]
-        public bool IsClientNotified { get; set; }
-        [Display(Name = "Is Sent")]
-        public bool IsSent { get; set; }
+        //[Display(Name = "Is Finished")]
+        //public bool IsFinished { get; set; }
+        //[Display(Name = "Is Client Notified")]
+        //public bool IsClientNotified { get; set; }
+        //[Display(Name = "Is Sent")]
+        //public bool IsSent { get; set; }
 
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:g}", ApplyFormatInEditMode = true), Display(Name = "Finished On")]
-        public DateTime? FinishedDate { get; set; }
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:g}", ApplyFormatInEditMode = true), Display(Name = "Notified On")]
-        public DateTime? ClientNotifiedDate { get; set; }
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:g}", ApplyFormatInEditMode = true), Display(Name = "Sent On")]
-        public DateTime? SentDate { get; set; }
+        //[DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:g}", ApplyFormatInEditMode = true), Display(Name = "Finished On")]
+        //public DateTime? FinishedDate { get; set; }
+        //[DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:g}", ApplyFormatInEditMode = true), Display(Name = "Notified On")]
+        //public DateTime? ClientNotifiedDate { get; set; }
+        //[DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:g}", ApplyFormatInEditMode = true), Display(Name = "Sent On")]
+        //public DateTime? SentDate { get; set; }
 
         //public string UserDone {get; set;}
         //public string UserClientNotified { get; set; }

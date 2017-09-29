@@ -1,4 +1,4 @@
-﻿@model ReportOverviewApp.Models.ReportViewModels.ReportViewModel
+﻿@model ReportOverviewApp.Models.ReportViewModels.ReportListViewModel
 
 <style>
     .dropdown-menu-scrollable{
@@ -21,15 +21,15 @@
                 <div class="form-horizontal">
                     <div class="form-group row">
                         <div class="col-sm-12">
-                            <input type="text" id="SearchNameInput" class="form-control" name="search" placeholder="Enter Report Name" value="@Model.Search" />
+                            <input type="text" id="SearchNameInput" class="form-control" name="search" placeholder="Enter Report Name" value="@Model.Filters.Search" />
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-sm-6">
-                            <input type="date" class="form-control input-datepicker" id="beginDateInput" name="begin" placeholder="Enter Begin Date" value="@Model.DisplayDateTimeAsDate(Model.Begin)" />
+                            <input type="date" class="form-control input-datepicker" id="beginDateInput" name="begin" placeholder="Enter Begin Date" value="@Model.DisplayDateTimeAsDate(Model.Filters.Begin)" />
                         </div>
                         <div class="col-sm-6">
-                            <input type="date" class="form-control input-datepicker" id="endDateInput" name="end" placeholder="Enter End Date" value="@Model.DisplayDateTimeAsDate(Model.End)" />
+                            <input type="date" class="form-control input-datepicker" id="endDateInput" name="end" placeholder="Enter End Date" value="@Model.DisplayDateTimeAsDate(Model.Filters.End)" />
                         </div>
                     </div>
                     <div class="form-group row">
@@ -39,7 +39,7 @@
                                     <div class="btn-group" style="min-width: 100%;">
                                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Business Contact<span class="caret"></span></button>
                                         <div id="businessContactList" class="dropdown-menu dropdown-menu-scrollable">
-                                            @foreach (var businessContactItem in Model.BusinessContacts.OrderBy(buinessContact => buinessContact))
+                                            @foreach (var businessContactItem in Model.Options.BusinessContacts.OrderBy(buinessContact => buinessContact))
                                             {
                                                 <a class="dropdown-item">@businessContactItem</a>
                                             }
@@ -47,7 +47,7 @@
                                     </div>
                                 </div>
                                 <span class="input-group-btn" style="width: 100%;">
-                                    <input id="businessContactInput" type="text" name="businessContact" class="form-control" aria-label="" value="@Model.BusinessContact" />
+                                    <input id="businessContactInput" type="text" name="businessContact" class="form-control" aria-label="" value="@Model.Filters.BusinessContact" />
                                 </span>
                             </div>
                         </div>
@@ -57,7 +57,7 @@
                                     <div class="btn-group" style="min-width: 100%;">
                                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Business owner<span class="caret"></span></button>
                                         <div id="businessOwnerList" class="dropdown-menu dropdown-menu-scrollable">
-                                            @foreach (var buinessOwnerItem in Model.BusinessOwners.OrderBy(buinessOwner => buinessOwner))
+                                            @foreach (var buinessOwnerItem in Model.Options.BusinessOwners.OrderBy(buinessOwner => buinessOwner))
                                             {
                                                 <a class="dropdown-item">@buinessOwnerItem</a>
                                             }
@@ -65,7 +65,7 @@
                                     </div>
                                 </div>
                                 <span class="input-group-btn" style="width: 100%;">
-                                    <input id="businessOwnerInput" type="text" name="buisnessOwner" class="form-control" aria-label="" value="@Model.BusinessOwner" />
+                                    <input id="businessOwnerInput" type="text" name="buisnessOwner" class="form-control" aria-label="" value="@Model.Filters.BusinessOwner" />
                                 </span>
                             </div>
                         </div>
@@ -77,7 +77,7 @@
                                     <div class="btn-group" style="min-width: 100%;">
                                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Frequency<span class="caret"></span></button>
                                         <div id="frequencyList" class="dropdown-menu dropdown-menu-scrollable">
-                                            @foreach (var frequencyItem in Model.Frequencies.OrderBy(frequency => frequency))
+                                            @foreach (var frequencyItem in Model.Options.Frequencies.OrderBy(frequency => frequency))
                                             {
                                                 <a class="dropdown-item">@frequencyItem</a>
                                             }
@@ -85,7 +85,7 @@
                                     </div>
                                 </div>
                                 <span class="input-group-btn" style="width: 100%;">
-                                    <input id="frequencyInput" type="text" name="frequency" class="form-control" aria-label="Text Input For Frequency" value="@Model.Frequency" />
+                                    <input id="frequencyInput" type="text" name="frequency" class="form-control" aria-label="Text Input For Frequency" value="@Model.Filters.Frequency" />
                                 </span>
                             </div>
                         </div>
@@ -95,7 +95,7 @@
                                     <div class="btn-group" style="min-width: 100%;">
                                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">State<span class="caret"></span></button>
                                         <div id="stateList" class="dropdown-menu dropdown-menu-scrollable">
-                                            @foreach (var stateItem in Model.States.OrderBy(state => state))
+                                            @foreach (var stateItem in Model.Options.States.OrderBy(state => state))
                                             {
                                                 <a class="dropdown-item">@stateItem</a>
                                             }
@@ -103,7 +103,7 @@
                                     </div>
                                 </div>
                                 <span class="input-group-btn" style="width: 100%;">
-                                    <input id="stateInput" type="text" name="state" class="form-control" aria-label="..." value="@Model.State" />
+                                    <input id="stateInput" type="text" name="state" class="form-control" aria-label="..." value="@Model.Filters.State" />
                                 </span>
                             </div>
                         </div>
@@ -115,7 +115,7 @@
                                     <div class="btn-group" style="min-width: 100%;">
                                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Plan <span class="caret"></span></button>
                                         <div id="planList" class="dropdown-menu dropdown-menu-scrollable">
-                                            @foreach (var planItem in Model.Plans.OrderBy(plan => plan))
+                                            @foreach (var planItem in Model.Options.Plans.OrderBy(plan => plan))
                                             {
                                                 <a class="dropdown-item">@planItem</a>
                                             }
@@ -123,7 +123,7 @@
                                     </div>
                                 </div>
                                 <span class="input-group-btn" style="width: 100%;">
-                                    <input id="planInput" type="text" name="plan" class="form-control" aria-label="..." value="@Model.Plan" />
+                                    <input id="planInput" type="text" name="plan" class="form-control" aria-label="..." value="@Model.Filters.Plan" />
                                 </span>
                             </div>
                         </div>
@@ -135,7 +135,7 @@
                                     <div class="btn-group" style="min-width: 100%;">
                                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Source Department<span class="caret"></span></button>
                                         <div id="sourceDepartmentList" class="dropdown-menu dropdown-menu-scrollable">
-                                            @foreach (var sourceDepartmentItem in Model.SourceDepartments.OrderBy(sourceDepartment => sourceDepartment))
+                                            @foreach (var sourceDepartmentItem in Model.Options.SourceDepartments.OrderBy(sourceDepartment => sourceDepartment))
                                             {
                                                 <a class="dropdown-item">@sourceDepartmentItem</a>
                                             }
@@ -143,7 +143,7 @@
                                     </div>
                                 </div>
                                 <span class="input-group-btn" style="width: 100%;">
-                                    <input id="sourceDepartmentInput" type="text" name="sourceDepartment" class="form-control" aria-label="" value="@Model.SourceDepartment" />
+                                    <input id="sourceDepartmentInput" type="text" name="sourceDepartment" class="form-control" aria-label="" value="@Model.Filters.SourceDepartment" />
                                 </span>
                             </div>
                         </div>

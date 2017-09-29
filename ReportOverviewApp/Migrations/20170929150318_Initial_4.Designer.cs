@@ -11,9 +11,10 @@ using System;
 namespace ReportOverviewApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170929150318_Initial_4")]
+    partial class Initial_4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -190,6 +191,8 @@ namespace ReportOverviewApp.Migrations
                     b.Property<string>("BusinessOwner")
                         .HasMaxLength(255);
 
+                    b.Property<DateTime?>("ClientNotifiedDate");
+
                     b.Property<DateTime?>("DateAdded");
 
                     b.Property<string>("DayDue")
@@ -223,6 +226,8 @@ namespace ReportOverviewApp.Migrations
 
                     b.Property<DateTime?>("EffectiveDate");
 
+                    b.Property<DateTime?>("FinishedDate");
+
                     b.Property<string>("FolderLocation")
                         .HasMaxLength(2000);
 
@@ -232,9 +237,15 @@ namespace ReportOverviewApp.Migrations
                     b.Property<string>("GroupName")
                         .HasMaxLength(255);
 
+                    b.Property<bool>("IsClientNotified");
+
+                    b.Property<bool>("IsFinished");
+
                     b.Property<bool>("IsFromOtherDepartment");
 
                     b.Property<bool>("IsQualityIndicator");
+
+                    b.Property<bool>("IsSent");
 
                     b.Property<int?>("LegacyReportID");
 
@@ -259,6 +270,8 @@ namespace ReportOverviewApp.Migrations
 
                     b.Property<string>("RunWith")
                         .HasMaxLength(100);
+
+                    b.Property<DateTime?>("SentDate");
 
                     b.Property<string>("SourceDepartment")
                         .HasMaxLength(100);
