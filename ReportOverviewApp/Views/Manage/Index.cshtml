@@ -1,29 +1,28 @@
 ﻿@model IndexViewModel
 @{
-    ViewData["Title"] = "Manage your account";
+    ViewData["Title"] = "Profile Management";
 }
 
-<h2>@ViewData["Title"].</h2>
 <p class="text-success">@ViewData["StatusMessage"]</p>
 
 <div>
-    <h4>Change your account settings</h4>
+    <h4>Account Settings</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>Password:</dt>
         <dd>
             @if (Model.HasPassword)
             {
-                <a asp-controller="Manage" asp-action="ChangePassword" class="btn-bracketed">Change</a>
+                <a asp-controller="Manage" asp-action="ChangePassword" class="btn btn-primary">Change your password</a>
             }
             else
             {
-                <a asp-controller="Manage" asp-action="SetPassword" class="btn-bracketed">Create</a>
+                <a asp-controller="Manage" asp-action="SetPassword" class="btn btn-primary">Create a password</a>
             }
         </dd>
-        <dt>External Logins:</dt>
+        <dt>External Logins: <span class="badge badge-danger badge-pill">@Model.Logins.Count Enabled</span></dt>
         <dd>
-            @Model.Logins.Count <a asp-controller="Manage" asp-action="ManageLogins" class="btn-bracketed">Manage</a>
+             <a asp-controller="Manage" asp-action="ManageLogins" class="btn btn-primary">Manage external logins</a>
         </dd>
         <dt>Phone Number:</dt>
         <dd>
@@ -65,6 +64,13 @@
                         <button type="submit" class="btn-link btn-bracketed">Enable</button> Disabled
                     </form>
                 }*@
+        </dd>
+        <dt>
+            Theme: <span class="badge badge-pill badge-secondary">Light Theme Enabled</span>
+        </dt>
+        <dd>
+            <button class="btn btn-light border-dark">Light Theme</button>
+            <button class="btn btn-dark">Dark Theme</button>
         </dd>
     </dl>
 </div>

@@ -53,9 +53,9 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Reports" asp-action="Index">Reporting Catalogue</a>
                         </li>
-                        @*<li class="nav-item">
-                            @Html.ActionLink(linkText: "Past Reports", actionName: "ViewPast", controllerName: "Reports", routeValues: new { begin = DateTime.Today.AddDays(-14).ToShortDateString(), end = DateTime.Today.ToShortDateString() }, htmlAttributes: new { @class = "nav-link" })
-                        </li>*@
+                        <li class="nav-item">
+                            @Html.ActionLink(linkText: "Past Reports", actionName: "PastReports", controllerName: "Reports", routeValues: new { }, htmlAttributes: new { @class = "nav-link" })
+                        </li>
                     </ul>
                     @await Html.PartialAsync("_LoginPartial")
                 </div>

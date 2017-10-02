@@ -7,6 +7,7 @@ namespace ReportOverviewApp.Models.ReportViewModels
     {
         public Report Report { get; set; }
         public DropdownOptions Options { get; set; }
+
         public ReportViewModel(ReportListViewModel reportListViewModel)
         {
             Options = reportListViewModel.Options;

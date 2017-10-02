@@ -8,5 +8,11 @@ namespace ReportOverviewApp.Models
     public class ApplicationUser : IdentityUser
     {
         public virtual ICollection<UserLog> UserLogs { get; private set; }
+        public Themes Theme { get; set; }
+
+        public enum Themes
+        {
+            Light, Dark
+        }
     }
 }

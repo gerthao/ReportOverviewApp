@@ -118,6 +118,11 @@ namespace ReportOverviewApp.Controllers
         [Authorize]
         public IActionResult Create() => View();
 
+        public async Task<IActionResult> PastReports()
+        {
+            return View(await _context.ReportDeadlines.Where(rd => rd != null && rd.Deadline != null && rd.Deadline < DateTime.Today).Include(rd => rd.Report).OrderByDescending(rd => rd.Deadline).ThenBy(rd => rd.Report.Name).ToListAsync());
+        }
+
         // POST: Reports/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.

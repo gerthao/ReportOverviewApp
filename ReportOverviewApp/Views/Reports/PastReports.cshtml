@@ -1,11 +1,67 @@
-﻿@model ReportOverviewApp.Models.ReportViewModels.ReportViewModel
+﻿@using ReportOverviewApp.Models;
+@model IEnumerable<ReportDeadline>
+@{
+    ViewData["Title"] = "Past Reports";
+}
 <h3>
-    Past Reports Done, Notified, And/Or Sent
+    Status of Past Reports
 </h3>
-<table>
+<br />
+@foreach (DateTime d in Model.Select(rd => rd.Deadline).Distinct())
+{
+    <table class="table table-sm table-striped">
+        <thead>
+            <tr style="background-color: #0064ad" class="text-light">
+                <th colspan="4" >
+                    Date:&nbsp;@d.ToShortDateString()
+                </th>
+            </tr>
+            <tr class="bg-light text-dark">
+                <th>Report</th>
+                <th>Finished On</th>
+                <th>Notified On</th>
+                <th>Sent On</th>
+            </tr>
+        </thead>
+        @foreach (ReportDeadline rd in Model.Select(rd => rd).Where(rd => rd.Deadline == d))
+        {
+            <tr class="text-dark">
+                <td>@Html.DisplayFor(modelItem => rd.Report.Name)</td>
+                @if (rd.FinishedDate != null)
+                {
+                    <td>@Html.DisplayFor(modelItem => rd.FinishedDate)</td>
+                } else
+                {
+                    <td class="text-danger">Not Finished</td>
+                }
+                @if (rd.ClientNotifiedDate != null)
+                {
+                    <td>@Html.DisplayFor(modelItem => rd.ClientNotifiedDate)</td>
+                }
+                else
+                {
+                    <td class="text-danger">No Notification</td>
+                }
+                @if (rd.SentDate != null)
+                {
+                    <td>@Html.DisplayFor(modelItem => rd.SentDate)</td>
+                }
+                else
+                {
+                    <td class="text-danger">Not Sent</td>
+                }
+            </tr>
+            
+
+        }
+    </table>
+    <br />
+}
+@*<table class="table table-sm">
     <thead>
         <tr>
-            <th>Name</th>
+            <th>Deadline</th>
+            <th>Report</th>
             <th>Finished On</th>
             <th>Notified On</th>
             <th>Sent On</th>
@@ -13,14 +69,15 @@
     </thead>
     <tbody>
         
-        @for (int i = 0; i < Model.Reports.Count(); i++)
+        @for (int i = 0; i < Model.Count(); i++)
         {
             <tr>
-                <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Name)</td>
-                <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateDone)</td>
-                <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateClientNotified)</td>
-                <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).DateSent)</td>
+                <td>@Html.DisplayFor(modelItem => Model.ElementAt(i).Deadline)</td>
+                <td>@Html.DisplayFor(modelItem => Model.ElementAt(i).Report.Name)</td>
+                <td>@Html.DisplayFor(modelItem => Model.ElementAt(i).FinishedDate)</td>
+                <td>@Html.DisplayFor(modelItem => Model.ElementAt(i).ClientNotifiedDate)</td>
+                <td>@Html.DisplayFor(modelItem => Model.ElementAt(i).SentDate)</td>
             </tr>
         }
     </tbody>
-</table>
+</table>*@
