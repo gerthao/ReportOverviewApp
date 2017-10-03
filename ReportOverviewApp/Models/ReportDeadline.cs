@@ -14,15 +14,15 @@ namespace ReportOverviewApp.Models
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         public DateTime Deadline { get; set; }
 
-        public bool IsFinished { get; set; }
+        public bool IsFinished { get => FinishedDate != null && FinishedDate <= Deadline; }
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:g}", ApplyFormatInEditMode = true)]
         public DateTime? FinishedDate { get; set; }
 
-        public bool IsClientNotified { get; set; }
+        public bool IsClientNotified { get => ClientNotifiedDate != null && ClientNotifiedDate <= Deadline; }
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:g}", ApplyFormatInEditMode = true)]
         public DateTime? ClientNotifiedDate { get; set; }
 
-        public bool IsSent { get; set; }
+        public bool IsSent { get => SentDate != null && SentDate <= Deadline; }
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:g}", ApplyFormatInEditMode = true)]
         public DateTime? SentDate { get; set; }
 

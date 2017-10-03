@@ -49,14 +49,15 @@ else {
                         @Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Name)
                     </td>
                     @*<td>@Model.DisplayDateTimeAsDate(Model.Reports.ElementAt(i).CurrentDeadline())</td>*@
-                    <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Deadlines.First().Deadline)</td>
-                    <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Deadlines.First().FinishedDate)</td>
-                    <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Deadlines.First().ClientNotifiedDate)</td>
-                    <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Deadlines.First().SentDate)</td>
+                    <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Deadlines.OrderByDescending(rd => rd.Deadline).First().Deadline)</td>
+                    <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Deadlines.OrderByDescending(rd => rd.Deadline).First().FinishedDate)</td>
+                    <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Deadlines.OrderByDescending(rd => rd.Deadline).First().ClientNotifiedDate)</td>
+                    <td>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Deadlines.OrderByDescending(rd => rd.Deadline).First().SentDate)</td>
                     @*<td><text>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).FinishedDate)</text></td>
                     <td><text>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).ClientNotifiedDate)</text></td>
                     <td><text>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).SentDate)</text></td>*@
                     <td style="text-align: center;">
+                        <a asp-action="EditDeadline" asp-route-id="@Model.Reports.ElementAt(i).Deadlines.OrderByDescending(rd => rd.Deadline).First().Id"><span class="fa fa-adjust text-primary" title="Edit:  <( >3<)>"></span></a>
                         <a id="editReport" data-toggle="modal" data-target="#editReportModal"><span class="fa fa-edit text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  @Model.Reports.ElementAt(i).Name"></span></a>
                         <a asp-action="Details" asp-route-id="@Model.Reports.ElementAt(i).Id"><span class="fa fa-book text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="View:  @Model.Reports.ElementAt(i).Name"></span></a>
                         <a id="deleteReport" data-toggle="modal" data-target="#deleteReportModal"><span class="fa fa-remove text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Delete:  @Model.Reports.ElementAt(i).Name"></span></a>

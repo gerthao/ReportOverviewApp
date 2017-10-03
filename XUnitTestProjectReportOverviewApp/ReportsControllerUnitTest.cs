@@ -17,7 +17,7 @@ namespace XUnitTestProjectReportOverviewApp
     public static class TestReportFactory
     {
         public static int Count { get; private set; } = 1;
-        public static Report Create(ReportEnum.FrequencyType frequency, string dayDue = null, int daysAfterQuarter = 0)
+        public static Report Create(FrequencyType frequency, string dayDue = null, int daysAfterQuarter = 0)
         {
             Report report = new Report();
             report.Id = Count;
@@ -27,7 +27,7 @@ namespace XUnitTestProjectReportOverviewApp
             report.State = "Test State";
             switch (frequency)
             {
-                case ReportEnum.FrequencyType.Quarterly:
+                case FrequencyType.Quarterly:
                     const int baseQuarterlyMonth = 3;
                     report.Frequency = "Quarterly";
                     report.DaysAfterQuarter = daysAfterQuarter;
@@ -36,11 +36,11 @@ namespace XUnitTestProjectReportOverviewApp
                     report.DueDate3 = report.DueDate2.Value.AddMonths(baseQuarterlyMonth);
                     report.DueDate4 = report.DueDate3.Value.AddMonths(baseQuarterlyMonth);
                     break;
-                case ReportEnum.FrequencyType.Weekly:
+                case FrequencyType.Weekly:
                     report.Frequency = "Weekly";
                     report.DayDue = dayDue;
                     break;
-                case ReportEnum.FrequencyType.Monthly:
+                case FrequencyType.Monthly:
                     report.Frequency = "Monthly";
                     report.DayDue = "10";
                     break;
@@ -55,14 +55,14 @@ namespace XUnitTestProjectReportOverviewApp
         {
             var testReports = new List<Report>
             {
-                TestReportFactory.Create(ReportEnum.FrequencyType.Quarterly, daysAfterQuarter: 15),
-                TestReportFactory.Create(ReportEnum.FrequencyType.Quarterly, daysAfterQuarter: 45),
-                TestReportFactory.Create(ReportEnum.FrequencyType.Quarterly, daysAfterQuarter: 30),
-                TestReportFactory.Create(ReportEnum.FrequencyType.Quarterly, daysAfterQuarter: 60),
-                TestReportFactory.Create(ReportEnum.FrequencyType.Weekly, dayDue: "Monday"),
-                TestReportFactory.Create(ReportEnum.FrequencyType.Weekly, dayDue: "Wednesday"),
-                TestReportFactory.Create(ReportEnum.FrequencyType.Weekly, dayDue: "Friday"),
-                TestReportFactory.Create(ReportEnum.FrequencyType.Monthly, dayDue: "12")
+                TestReportFactory.Create(FrequencyType.Quarterly, daysAfterQuarter: 15),
+                TestReportFactory.Create(FrequencyType.Quarterly, daysAfterQuarter: 45),
+                TestReportFactory.Create(FrequencyType.Quarterly, daysAfterQuarter: 30),
+                TestReportFactory.Create(FrequencyType.Quarterly, daysAfterQuarter: 60),
+                TestReportFactory.Create(FrequencyType.Weekly, dayDue: "Monday"),
+                TestReportFactory.Create(FrequencyType.Weekly, dayDue: "Wednesday"),
+                TestReportFactory.Create(FrequencyType.Weekly, dayDue: "Friday"),
+                TestReportFactory.Create(FrequencyType.Monthly, dayDue: "12")
             };
             DbSet<Report> asdf = testReports.AsQueryable() as DbSet<Report>;
             return asdf;

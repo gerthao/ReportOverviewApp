@@ -9,7 +9,7 @@ namespace ReportOverviewApp.Helpers
     public class UserLogFactory : Factory<UserLog>
     {
         
-        public override UserLog Build() => new UserLog();
+        public UserLog Build() => new UserLog();
         public UserLog Build(string _userId, string _message, string _notes = null, DateTime? _timeStamp = null) 
             => new UserLog(userId: _userId, message: _message, notes: _notes, timeStamp: _timeStamp == null ? DateTime.Now : _timeStamp);
     }

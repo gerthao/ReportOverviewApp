@@ -12,9 +12,10 @@ using System;
 namespace ReportOverviewApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171003160657_Initial_6")]
+    partial class Initial_6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -290,6 +291,12 @@ namespace ReportOverviewApp.Migrations
                     b.Property<DateTime>("Deadline");
 
                     b.Property<DateTime?>("FinishedDate");
+
+                    b.Property<bool>("IsClientNotified");
+
+                    b.Property<bool>("IsFinished");
+
+                    b.Property<bool>("IsSent");
 
                     b.Property<int>("ReportId");
 

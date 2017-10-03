@@ -75,7 +75,6 @@ namespace ReportOverviewApp
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -86,19 +85,8 @@ namespace ReportOverviewApp
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
             app.UseStaticFiles();
             app.UseAuthentication();
-            //app.UseIdentity();
-
-            // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715
-
-            //app.UseMicrosoftAccountAuthentication(new MicrosoftAccountOptions()
-            //{
-            //    ClientId = Configuration["Authentication:Microsoft:ClientId"],
-            //    ClientSecret = Configuration["Authentication:Microsoft:ClientSecret"]
-            //});
-
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

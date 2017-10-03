@@ -42,14 +42,14 @@ namespace XUnitTestProjectReportOverviewApp
         [Fact]
         public void ReportDeadlineTestWeeklyAtCertainDate()
         {
-            Report report = TestReportFactory.Create(ReportEnum.FrequencyType.Weekly, "Sunday");
+            Report report = TestReportFactory.Create(FrequencyType.Weekly, "Sunday");
             DateTime compareDate = new DateTime(year: 2017, month: 10, day: 4);
             Assert.True(report.Deadline(compareDate) == new DateTime(year: 2017, month: 10, day: 8));
         }
         [Fact]
         public void ReportDeadlineTestWeeklyNearEndOfMonth()
         {
-            Report report = TestReportFactory.Create(ReportEnum.FrequencyType.Weekly, "Friday");
+            Report report = TestReportFactory.Create(FrequencyType.Weekly, "Friday");
             DateTime compareDate = new DateTime(year: 2017, month: 9, day: 29);
             DateTime compareDate2 = new DateTime(year: 2017, month: 9, day: 30);
 

@@ -81,12 +81,39 @@ namespace ReportOverviewApp.Controllers
             return viewModel;
         }
 
+        private async Task UpdateDeadlinesAsync()
+        {
+            List<ReportDeadline> list = new List<ReportDeadline>();
+            if(_context != null)
+            {
+                var mostRecent = await _context.Reports.Include(r => r.Deadlines).Select(r =>  r.Deadlines.OrderByDescending(rd => rd.Deadline).FirstOrDefault()).ToListAsync();
+                foreach(ReportDeadline rd in mostRecent)
+                {
+                    var cd = rd.Report.CurrentDeadline();
+                    if(rd != null && rd.Report != null && rd.Deadline < cd)
+                    {
+                        ReportDeadline newReportDeadline = new ReportDeadline()
+                        {
+                            Deadline = cd.Value,
+                            ReportId = rd.ReportId
+                        };
+                        list.Add(newReportDeadline);
+                    }
+                }
+                if(list.Count > 0)
+                {
+                    await _context.ReportDeadlines.AddRangeAsync(list);
+                    await _context.SaveChangesAsync();
+                }
+            }  
+        }
         
         public ReportsController(ApplicationDbContext context, IToastNotification toastNotification)
         {
             _context = context;
             _toastNotification = toastNotification;
             userLogFactory = new UserLogFactory();
+            
         }
 
         private async Task<SelectPlanViewModel> GetSelectPlanViewModelAsync(string state)
@@ -98,6 +125,7 @@ namespace ReportOverviewApp.Controllers
         [Authorize]
         public async Task<IActionResult> Index(string search, string column, int entriesPerPage, int pageIndex, string state, string plan, string frequency, string businessContact, string businessOwner, string sourceDepartment, string begin = null, string end = null)
         {
+            //await UpdateDeadlinesAsync();
             return View(await GetReportViewModelAsync(search, column, entriesPerPage, pageIndex, state, plan, begin, end, frequency, businessContact, businessOwner, sourceDepartment));
         }
         // GET: Reports/Details/5
@@ -127,7 +155,7 @@ namespace ReportOverviewApp.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost, ValidateAntiForgeryToken, Authorize]
-        public async Task<IActionResult> Create([Bind("ID,Name,Done,ClientNotified,Sent,DateDue,DateDone,DateClientNotified,DateSent,BusinessContact,BusinessOwner,DueDate1,DueDate2,DueDate3,DueDate4,Frequency,DayDue,DeliveryFunction,WorkInstructions,Notes,DaysAfterQuarter,FolderLocation,ReportType,RunWith,DeliveryMethod,DeliveryTo,EffectiveDate,TerminationDate,GroupName,State,ReportPath,OtherDepartment,SourceDepartment,QualityIndicator,ERSReportLocation,ERRStatus,DateAdded,SystemRefreshDate,LegacyReportID,LegacyReportIDR2,ERSReportName,OtherReportLocation,OtherReportName")] Report report)
+        public async Task<IActionResult> Create([Bind("Id,Name,BusinessContact,BusinessOwner,DueDate1,DueDate2,DueDate3,DueDate4,Frequency,DayDue,DeliveryFunction,WorkInstructions,Notes,DaysAfterQuarter,FolderLocation,ReportType,RunWith,DeliveryMethod,DeliveryTo,EffectiveDate,TerminationDate,GroupName,State,ReportPath,OtherDepartment,SourceDepartment,QualityIndicator,ERSReportLocation,ERRStatus,DateAdded,SystemRefreshDate,LegacyReportID,LegacyReportIDR2,ERSReportName,OtherReportLocation,OtherReportName")] Report report)
         {
             ToastMessage toast = null;
             if (ModelState.IsValid){
@@ -141,6 +169,43 @@ namespace ReportOverviewApp.Controllers
             toast = new ToastMessage(message: $"One or more fields in the form are not valid.", title: "Changes Needed", toasType: ToastEnums.ToastType.Warning, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
             ShowToast(toast);
             return View(report);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> EditDeadline(int? id)
+        {
+            if (id == null) return NotFound();
+            var deadline = await _context.ReportDeadlines.Include(rd => rd.Report).SingleOrDefaultAsync(d => d.Id == id);
+            if (deadline == null) return NotFound();
+            return View(deadline);
+        }
+        [HttpPost, ValidateAntiForgeryToken, Authorize]
+        public async Task<IActionResult> EditDeadline(int? id, [Bind("Id,Deadline,FinishedDate,ClientNotifiedDate,SentDate,ReportId")] ReportDeadline reportDeadline)
+        {
+            if(id != reportDeadline.Id)
+            {
+                return NotFound();
+            }
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var unmodifiedDeadline = _context.ReportDeadlines.AsNoTracking().Include(rd => rd.Report).SingleOrDefault(d => d.Id == id);
+                    _context.Add(userLogFactory.Build(GetCurrentUserID(), $"\"Status for {unmodifiedDeadline.Report.Name}\" has been updated."));
+                    _context.Update(reportDeadline);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ReportDeadlineExists(reportDeadline.Id))
+                    {
+                        return NotFound();
+                    }
+                    else throw;
+                }
+                return RedirectToAction("Index");
+            }
+            return View(reportDeadline);
         }
 
         // GET: Reports/Edit/5
@@ -160,7 +225,7 @@ namespace ReportOverviewApp.Controllers
         private string GetCurrentUserID() => _context.Users.Where(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault().Id;
 
         [HttpPost, ValidateAntiForgeryToken, Authorize]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Done,ClientNotified,Sent,DateDue,DateDone,DateClientNotified,DateSent,BusinessContact,BusinessOwner,DueDate1,DueDate2,DueDate3,DueDate4,Frequency,DayDue,DeliveryFunction,WorkInstructions,Notes,DaysAfterQuarter,FolderLocation,ReportType,RunWith,DeliveryMethod,DeliveryTo,EffectiveDate,TerminationDate,GroupName,State,ReportPath,OtherDepartment,SourceDepartment,QualityIndicator,ERSReportLocation,ERRStatus,DateAdded,SystemRefreshDate,LegacyReportID,LegacyReportIDR2,ERSReportName,OtherReportLocation,OtherReportName")] Report report)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,BusinessContact,BusinessOwner,DueDate1,DueDate2,DueDate3,DueDate4,Frequency,DayDue,DeliveryFunction,WorkInstructions,Notes,DaysAfterQuarter,FolderLocation,ReportType,RunWith,DeliveryMethod,DeliveryTo,EffectiveDate,TerminationDate,GroupName,State,ReportPath,OtherDepartment,SourceDepartment,QualityIndicator,ERSReportLocation,ERRStatus,DateAdded,SystemRefreshDate,LegacyReportID,LegacyReportIDR2,ERSReportName,OtherReportLocation,OtherReportName")] Report report)
         {
             ToastMessage toast = null;
             if (id != report.Id)
@@ -286,5 +351,6 @@ namespace ReportOverviewApp.Controllers
             return RedirectToAction("Index");
         }
         private bool ReportExists(int id) => _context.Reports.Any(e => e.Id == id);
+        private bool ReportDeadlineExists(int id) => _context.ReportDeadlines.Any(e => e.Id == id);
     }
 }
