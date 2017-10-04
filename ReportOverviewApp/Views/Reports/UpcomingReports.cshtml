@@ -1,0 +1,130 @@
+﻿@using ReportOverviewApp.Models;
+@model IEnumerable<ReportDeadline>
+@{
+    ViewData["Title"] = "Upcoming Reports";
+}
+<h3>
+    Status of Upcoming Reports
+</h3>
+<br />
+@{
+    var today = DateTime.Today;
+    var tomorrow = DateTime.Today.AddDays(1);
+}
+@foreach (DateTime d in Model.Select(rd => rd.Deadline).Distinct())
+{
+    <table class="table table-sm table-striped table-bordered">
+        <thead>
+            <tr class="bg-darkblue text-light">
+                @if(d == today){
+                    <th colspan="5">Date:&nbsp;Today</th>
+                } else if(d == tomorrow){
+                    <th colspan="5">Date:&nbsp;Tomorrow</th>
+                }
+                else{
+                    <th colspan="5">Date:&nbsp;@d.ToShortDateString()</th>
+                }
+                
+            </tr>
+            <tr>
+                <th>Report</th>
+                <th>Finished On</th>
+                <th>Notified On</th>
+                <th>Sent On</th>
+                <th>Options</th>
+            </tr>
+        </thead>
+        @foreach (ReportDeadline rd in Model.Select(rd => rd).Where(rd => rd.Deadline == d))
+        {
+            <tr class="text-dark">
+                <td>@Html.DisplayFor(modelItem => rd.Report.Name)</td>
+                @if (rd.FinishedDate != null){
+                    <td>@Html.DisplayFor(modelItem => rd.FinishedDate)&nbsp;<i class="fa fa-thumbs-up text-success"></i></td>
+                } else{
+                    if(d == today){
+                        <td class="text-danger">Not Finished&nbsp;<i class="fa fa-exclamation-triangle" aria-hidden="true"></i></td>
+                    } else if(d == tomorrow){
+                         <td>Not Finished&nbsp;<i class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></i></td>
+                    } else {
+                        <td>Not Finished</td>
+                    }
+                }
+                @if (rd.ClientNotifiedDate != null)
+                {
+                    <td>@Html.DisplayFor(modelItem => rd.ClientNotifiedDate)&nbsp;<i class="fa fa-thumbs-up text-success"></i></td>
+                } else {
+                    if(d == today){
+                        <td class="text-danger">Not Notified&nbsp;<i class="fa fa-exclamation-triangle" aria-hidden="true"></i></td>
+                    } else if(d == tomorrow){
+                         <td>Not Notified&nbsp;<i class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></i></td>
+                    } else {
+                        <td>Not Notified</td>
+                    }
+                }
+                @if (rd.SentDate != null)
+                {
+                    <td>@Html.DisplayFor(modelItem => rd.SentDate)&nbsp;<i class="fa fa-thumbs-up text-success"></i></td>
+                }
+                else
+                {
+                    if(d == today){
+                        <td class="text-danger">Not Sent&nbsp;<i class="fa fa-exclamation-triangle" aria-hidden="true"></i></td>
+                    } else if(d == tomorrow){
+                         <td>Not Sent&nbsp;<i class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></i></td>
+                    } else {
+                        <td>Not Sent</td>
+                    }
+                }
+                <td style="text-align: center;">
+                    <a asp-action="EditDeadline" asp-route-id="@rd.Id"><span class="fa fa-adjust text-primary" title="Edit:  <( >3<)>"></span></a>
+                    <a id="editReport" data-toggle="modal" data-target="#editReportModal"><span class="fa fa-edit text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  @rd.Report.Name"></span></a>
+                    <a asp-action="Details" asp-route-id="@rd.Report.Id"><span class="fa fa-book text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="View:   @rd.Report.Name"></span></a>
+                    <a id="deleteReport" data-toggle="modal" data-target="#deleteReportModal"><span class="fa fa-remove text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Delete:   @rd.Report.Name"></span></a>
+                </td>
+            </tr>
+        }
+    </table>
+    <br />
+}
+<div id="editReportModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            @await Html.PartialAsync("Edit", new Report())
+        </div>
+    </div>
+</div>
+<div id="deleteReportModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            @await Html.PartialAsync("Delete", new Report())
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/js/ReportsHandler.js"></script>
+}
+@*<table class="table table-sm">
+    <thead>
+        <tr>
+            <th>Deadline</th>
+            <th>Report</th>
+            <th>Finished On</th>
+            <th>Notified On</th>
+            <th>Sent On</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+        @for (int i = 0; i < Model.Count(); i++)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => Model.ElementAt(i).Deadline)</td>
+                <td>@Html.DisplayFor(modelItem => Model.ElementAt(i).Report.Name)</td>
+                <td>@Html.DisplayFor(modelItem => Model.ElementAt(i).FinishedDate)</td>
+                <td>@Html.DisplayFor(modelItem => Model.ElementAt(i).ClientNotifiedDate)</td>
+                <td>@Html.DisplayFor(modelItem => Model.ElementAt(i).SentDate)</td>
+            </tr>
+        }
+    </tbody>
+</table>*@

@@ -1,0 +1,60 @@
+﻿@model IEnumerable<ReportDeadline>
+
+<table class="table table-sm table-striped">
+    <thead>
+        <tr>
+            <td class="bg-darkblue text-light text-center" colspan="4">Deadline History</td>
+        </tr>
+        <tr class="bg-light text-dark">
+            <th>Due Date</th>
+            <th>Finished?</th>
+            <th>Notification?</th>
+            <th>Sent?</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if(Model is null || Model.Count() == 0)
+        {
+            <tr>
+                <th colspan="4">
+                    Nothing To Display
+                </th>
+            </tr>
+        }
+        @foreach (ReportDeadline rd in Model)
+        {
+            <tr>
+                @if(rd.Deadline != null){
+                    <td>@rd.Deadline.ToShortDateString()</td>
+                }
+                else{
+                    <td>N/A</td>
+                }
+                @if (rd.FinishedDate != null)
+                {
+                    <td>@rd.FinishedDate</td>
+                }
+                else
+                {
+                    <td>N/A</td>
+                }
+                @if (rd.ClientNotifiedDate != null)
+                {
+                    <td>@rd.ClientNotifiedDate</td>
+                }
+                else
+                {
+                    <td>N/A</td>
+                }
+                @if (rd.SentDate != null)
+                {
+                    <td>@rd.SentDate</td>
+                }
+                else
+                {
+                    <td>N/A</td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

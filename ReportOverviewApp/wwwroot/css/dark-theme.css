@@ -1,0 +1,73 @@
+﻿body {
+    background-color: #303032;
+}
+h1, h2, h3, h4, h5, h6, p, td, th{
+    color: #d2d2d2
+}
+/*ul, ol {
+    border-color: #8e8e8e;
+    background-color: #303032;
+    color: #d2d2d2
+}*/
+.fa-refresh{
+    color: #246fcb;
+}
+table.table-bordered{
+    border: 2px solid #37445f;
+    border-bottom: 2px solid #37445f;
+}
+table.table-bordered thead {
+    border: 2px solid #37445f;
+    border-bottom: 2px solid #37445f;
+}
+table.table-bordered thead tr {
+    border: 2px solid #37445f;
+    border-bottom: 2px solid #37445f;
+}
+table.table-bordered thead tr td {
+    border: 2px solid #37445f;
+    border-bottom: 2px solid #37445f;
+}
+table.table-bordered thead tr th {
+    border: 2px solid #37445f;
+    border-bottom: 2px solid #37445f;
+}
+table.table-bordered tbody {
+    border: 2px solid #37445f;
+    border-bottom: 2px solid #37445f;
+}
+table.table-bordered tbody tr {
+    border: 2px solid #37445f;
+    border-bottom: 2px solid #37445f;
+}
+table.table-bordered tbody tr td{
+    border: 2px solid #37445f;
+    border-bottom: 2px solid #37445f;
+}
+table.table-bordered tbody tr th{
+    border: 2px solid #37445f;
+    border-bottom: 2px solid #37445f;
+}
+dt{
+    color: white;
+}
+hr{
+    background-color: #246fcb;
+}
+label {
+    color: white;
+}
+!input.btn{
+    background-color: black;
+    color: white;
+}
+.card{
+    background-color: #4a5365;
+}
+.card-header {
+    background-color: #246fcb;
+}
+.nav-tabs {
+    background-color: #246fcb;
+    color: aliceblue;
+}

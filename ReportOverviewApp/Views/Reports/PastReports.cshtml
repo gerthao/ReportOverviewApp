@@ -3,6 +3,9 @@
 @{
     ViewData["Title"] = "Past Reports";
 }
+@{ 
+    var yesterday = DateTime.Today.AddDays(-1);
+}
 <h3>
     Status of Past Reports
 </h3>
@@ -11,12 +14,22 @@
 {
     <table class="table table-sm table-striped">
         <thead>
-            <tr style="background-color: #0064ad" class="text-light">
-                <th colspan="4" >
-                    Date:&nbsp;@d.ToShortDateString()
-                </th>
+            <tr class="bg-darkblue text-light">
+                @if (d == yesterday)
+                {
+                    <th colspan="4">
+                        Date:&nbsp;Yesterday
+                    </th>
+                }
+                else
+                {
+                    <th colspan="4">
+                        Date:&nbsp;@d.ToShortDateString()
+                    </th>
+                }
+                
             </tr>
-            <tr class="bg-light text-dark">
+            <tr>
                 <th>Report</th>
                 <th>Finished On</th>
                 <th>Notified On</th>

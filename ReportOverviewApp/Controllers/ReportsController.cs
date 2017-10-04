@@ -84,13 +84,13 @@ namespace ReportOverviewApp.Controllers
         private async Task UpdateDeadlinesAsync()
         {
             List<ReportDeadline> list = new List<ReportDeadline>();
-            if(_context != null)
+            if (_context != null)
             {
-                var mostRecent = await _context.Reports.Include(r => r.Deadlines).Select(r =>  r.Deadlines.OrderByDescending(rd => rd.Deadline).FirstOrDefault()).ToListAsync();
-                foreach(ReportDeadline rd in mostRecent)
+                var mostRecent = await _context.Reports.Include(r => r.Deadlines).Select(r => r.Deadlines.OrderByDescending(rd => rd.Deadline).FirstOrDefault()).ToListAsync();
+                foreach (ReportDeadline rd in mostRecent)
                 {
                     var cd = rd.Report.CurrentDeadline();
-                    if(rd != null && rd.Report != null && rd.Deadline < cd)
+                    if (rd != null && rd.Report != null && rd.Deadline < cd)
                     {
                         ReportDeadline newReportDeadline = new ReportDeadline()
                         {
@@ -100,20 +100,20 @@ namespace ReportOverviewApp.Controllers
                         list.Add(newReportDeadline);
                     }
                 }
-                if(list.Count > 0)
+                if (list.Count > 0)
                 {
                     await _context.ReportDeadlines.AddRangeAsync(list);
                     await _context.SaveChangesAsync();
                 }
-            }  
+            }
         }
-        
+
         public ReportsController(ApplicationDbContext context, IToastNotification toastNotification)
         {
             _context = context;
             _toastNotification = toastNotification;
             userLogFactory = new UserLogFactory();
-            
+
         }
 
         private async Task<SelectPlanViewModel> GetSelectPlanViewModelAsync(string state)
@@ -133,7 +133,7 @@ namespace ReportOverviewApp.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
-            var report = await _context.Reports.SingleOrDefaultAsync(m => m.Id == id);
+            var report = await _context.Reports.Include(r => r.Deadlines).SingleOrDefaultAsync(m => m.Id == id);
             if (report == null) return NotFound();
             return View(report);
         }
@@ -146,6 +146,26 @@ namespace ReportOverviewApp.Controllers
         [Authorize]
         public IActionResult Create() => View();
 
+        //public async Task<IActionResult> WeekViewReports(int? week, int? year)
+        //{
+        //    if(year == null)
+        //    {
+        //        year = DateTime.Today.Year;
+        //    }
+        //    if(week == null)
+        //    {
+        //        week = DateTimeFormatInfo.CurrentInfo.Calendar.GetWeekOfYear(time: new DateTime(year.Value, 1, 1), rule: CalendarWeekRule.FirstFullWeek, firstDayOfWeek: DateTimeFormatInfo.CurrentInfo.FirstDayOfWeek);
+        //    }
+        //    DateTime first = DateTimeFormatInfo.CurrentInfo.Calendar.
+        //    return View(await _context.ReportDeadlines.Where(rd => rd != null && rd.Deadline != null && rd.Deadline >= DateTime.Today && rd.Deadline <= DateTime.Today)
+        //}
+        
+        public async Task<IActionResult> UpcomingReports()
+        {
+            return View(await _context.ReportDeadlines.Where(rd => rd != null && rd.Deadline != null & rd.Deadline >= DateTime.Today).Include(rd => rd.Report).OrderBy(rd => rd.Deadline).ThenBy(rd => rd.Report.Name).ToListAsync());
+        }
+
+        [Authorize]
         public async Task<IActionResult> PastReports()
         {
             return View(await _context.ReportDeadlines.Where(rd => rd != null && rd.Deadline != null && rd.Deadline < DateTime.Today).Include(rd => rd.Report).OrderByDescending(rd => rd.Deadline).ThenBy(rd => rd.Report.Name).ToListAsync());
