@@ -1,0 +1,13 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using ReportOverviewApp.Models
+
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    if(UserManager.FindByNameAsync(User.Identity.Name).Result.Theme == ApplicationUser.Themes.Dark)
+    {
+        <link rel="stylesheet" href="~/css/dark-theme.css" />
+    }
+}

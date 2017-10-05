@@ -65,12 +65,12 @@
                     </form>
                 }*@
         </dd>
-        <dt>
-            Theme: <span class="badge badge-pill badge-secondary">Light Theme Enabled</span>
-        </dt>
-        <dd>
-            <button class="btn btn-light border-dark">Light Theme</button>
-            <button class="btn btn-dark">Dark Theme</button>
-        </dd>
     </dl>
+</div>
+<div>
+        <label>
+            Themes: 
+        </label>
+        @Html.ActionLink(linkText: "Light", actionName: "ChangeTheme", routeValues: new { theme = "Light" }, htmlAttributes: new { @class = "btn btn-light border-dark" })
+        @Html.ActionLink(linkText: "Dark", actionName: "ChangeTheme", routeValues: new { theme = "Dark" }, htmlAttributes: new { @class = "btn btn-dark" })
 </div>

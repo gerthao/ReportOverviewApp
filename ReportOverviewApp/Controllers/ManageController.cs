@@ -90,6 +90,21 @@ namespace ReportOverviewApp.Controllers
             return RedirectToAction(nameof(ManageLogins), new { Message = message });
         }
 
+        public async Task<IActionResult> ChangeTheme(string theme)
+        {
+            var user = await GetCurrentUserAsync();
+            if (theme == "Dark")
+            {
+                user.Theme = ApplicationUser.Themes.Dark;
+            }
+            if(theme == "Light")
+            {
+                user.Theme = ApplicationUser.Themes.Light;
+            }
+            await _userManager.UpdateAsync(user);
+            return Redirect(nameof(Index));
+        }
+
         //
         // GET: /Manage/AddPhoneNumber
         public IActionResult AddPhoneNumber()

@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="~/lib/font-awesome-4.7.0/css/font-awesome.css" />
     <link rel="stylesheet" type="text/css" href="~/lib/loading/loading.css" />
     <link rel="stylesheet" href="~/lib/toastr/toastr.css" />
-    <link rel="stylesheet" href="~/css/dark-theme.css" />
+    
+    @await Html.PartialAsync("_Theme")
     <style>
         .navbar{
             padding: 3px;
