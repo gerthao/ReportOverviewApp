@@ -93,15 +93,21 @@ namespace ReportOverviewApp.Controllers
         public async Task<IActionResult> ChangeTheme(string theme)
         {
             var user = await GetCurrentUserAsync();
-            if (theme == "Dark")
+            bool themeChanged = false;
+            if (theme == "Dark" && user.Theme != ApplicationUser.Themes.Dark)
             {
                 user.Theme = ApplicationUser.Themes.Dark;
+                themeChanged = true;
             }
-            if(theme == "Light")
+            if(theme == "Light" && user.Theme != ApplicationUser.Themes.Light)
             {
                 user.Theme = ApplicationUser.Themes.Light;
+                themeChanged = true;
             }
-            await _userManager.UpdateAsync(user);
+            if (themeChanged)
+            {
+                await _userManager.UpdateAsync(user);
+            }
             return Redirect(nameof(Index));
         }
 

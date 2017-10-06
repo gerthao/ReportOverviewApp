@@ -51,6 +51,9 @@ table.table-bordered tbody tr th{
 dt{
     color: white;
 }
+dd{
+    color: lightgrey;
+}
 hr{
     background-color: #246fcb;
 }
@@ -78,4 +81,12 @@ label {
 .list-group-item:hover, .list-group-item.list-group-item-action:hover {
     background-color: #505066;
     color: #C0C0C0;
+}
+.pagination li.page-item span.page-link {
+    background-color: #404046;
+    border: 1px solid #3A3A3C;
+}
+.pagination li.page-item span a {
+    background-color: #404046;
+    border: 1px solid #3A3A3C;
 }

@@ -1,11 +1,11 @@
 ﻿@model IEnumerable<ReportDeadline>
 
-<table class="table table-sm table-striped">
+<table class="table table-sm table-striped table-bordered">
     <thead>
         <tr>
             <td class="bg-darkblue text-light text-center" colspan="4">Deadline History</td>
         </tr>
-        <tr class="bg-light text-dark">
+        <tr>
             <th>Due Date</th>
             <th>Finished?</th>
             <th>Notification?</th>
@@ -16,7 +16,7 @@
         @if(Model is null || Model.Count() == 0)
         {
             <tr>
-                <th colspan="4">
+                <th class="text-muted" colspan="4">
                     Nothing To Display
                 </th>
             </tr>

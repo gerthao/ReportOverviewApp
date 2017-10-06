@@ -174,9 +174,18 @@
             <dt>
                 @Html.DisplayNameFor(model => model.ERSReportLocation)
             </dt>
-            <dd>
-                @Html.DisplayFor(model => model.ERSReportLocation)
-            </dd>
+            @if (Model.ERSReportLocation.Contains(@"http://"))
+            {
+                <dd>@Model.ERSReportLocation.Split(':')[0]: <a href="@Model.ERSReportLocation.Substring(Model.ERSReportLocation.IndexOf(@"http://")).Trim()">@Model.ERSReportLocation.Substring(Model.ERSReportLocation.IndexOf(@"http://")).Trim()</a></dd>
+
+            }
+            else
+            {
+                <dd>
+                    @Html.DisplayFor(model => model.ERSReportLocation)
+                </dd>
+            }
+            
             <dt>
                 @Html.DisplayNameFor(model => model.ERRStatus)
             </dt>

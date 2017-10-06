@@ -76,7 +76,7 @@
                     }
                 }
                 <td style="text-align: center;">
-                    <a asp-action="EditDeadline" asp-route-id="@rd.Id"><span class="fa fa-adjust text-primary" title="Edit:  <( >3<)>"></span></a>
+                    <a asp-action="EditDeadline" asp-route-id="@rd.Id"><span class="fa fa-adjust text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  Report Deadline (@rd.Deadline.ToShortDateString())"></span></a>
                     <a id="editReport" data-toggle="modal" data-target="#editReportModal"><span class="fa fa-edit text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  @rd.Report.Name"></span></a>
                     <a asp-action="Details" asp-route-id="@rd.Report.Id"><span class="fa fa-book text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="View:   @rd.Report.Name"></span></a>
                     <a id="deleteReport" data-toggle="modal" data-target="#deleteReportModal"><span class="fa fa-remove text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Delete:   @rd.Report.Name"></span></a>
@@ -102,29 +102,10 @@
 </div>
 
 @section scripts{
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
     <script src="~/js/ReportsHandler.js"></script>
 }
-@*<table class="table table-sm">
-    <thead>
-        <tr>
-            <th>Deadline</th>
-            <th>Report</th>
-            <th>Finished On</th>
-            <th>Notified On</th>
-            <th>Sent On</th>
-        </tr>
-    </thead>
-    <tbody>
-        
-        @for (int i = 0; i < Model.Count(); i++)
-        {
-            <tr>
-                <td>@Html.DisplayFor(modelItem => Model.ElementAt(i).Deadline)</td>
-                <td>@Html.DisplayFor(modelItem => Model.ElementAt(i).Report.Name)</td>
-                <td>@Html.DisplayFor(modelItem => Model.ElementAt(i).FinishedDate)</td>
-                <td>@Html.DisplayFor(modelItem => Model.ElementAt(i).ClientNotifiedDate)</td>
-                <td>@Html.DisplayFor(modelItem => Model.ElementAt(i).SentDate)</td>
-            </tr>
-        }
-    </tbody>
-</table>*@
