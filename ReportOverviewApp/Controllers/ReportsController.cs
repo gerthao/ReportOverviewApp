@@ -3,17 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ReportOverviewApp.Data;
 using ReportOverviewApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using ReportOverviewApp.Models.ReportViewModels;
-using Newtonsoft.Json;
-using System.Reflection;
 using ReportOverviewApp.Helpers;
 using System.Text;
-using System.Globalization;
 using NToastNotify;
 
 namespace ReportOverviewApp.Controllers
@@ -81,31 +77,19 @@ namespace ReportOverviewApp.Controllers
             return viewModel;
         }
 
-        private async Task UpdateDeadlinesAsync()
+        public async Task<IActionResult> UpdateDeadlinesAsync()
         {
-            List<ReportDeadline> list = new List<ReportDeadline>();
-            if (_context != null)
+            if (_context != null && _context.ReportDeadlines != null)
             {
                 var mostRecent = await _context.Reports.Include(r => r.Deadlines).Select(r => r.Deadlines.OrderByDescending(rd => rd.Deadline).FirstOrDefault()).ToListAsync();
-                foreach (ReportDeadline rd in mostRecent)
-                {
-                    var cd = rd.Report.CurrentDeadline();
-                    if (rd != null && rd.Report != null && rd.Deadline < cd)
-                    {
-                        ReportDeadline newReportDeadline = new ReportDeadline()
-                        {
-                            Deadline = cd.Value,
-                            ReportId = rd.ReportId
-                        };
-                        list.Add(newReportDeadline);
-                    }
-                }
-                if (list.Count > 0)
+                var list = mostRecent.Where(rd => rd != null && rd.Report != null && rd.Deadline < rd.Report.CurrentDeadline()).Select(rd => new ReportDeadline() { Deadline = rd.Report.CurrentDeadline().Value, ReportId = rd.ReportId });
+                if (list.Count() > 0)
                 {
                     await _context.ReportDeadlines.AddRangeAsync(list);
                     await _context.SaveChangesAsync();
                 }
             }
+            return RedirectToAction(nameof(Index));
         }
 
         public ReportsController(ApplicationDbContext context, IToastNotification toastNotification)
@@ -145,20 +129,6 @@ namespace ReportOverviewApp.Controllers
         // GET: Reports/Create
         [Authorize]
         public IActionResult Create() => View();
-
-        //public async Task<IActionResult> WeekViewReports(int? week, int? year)
-        //{
-        //    if(year == null)
-        //    {
-        //        year = DateTime.Today.Year;
-        //    }
-        //    if(week == null)
-        //    {
-        //        week = DateTimeFormatInfo.CurrentInfo.Calendar.GetWeekOfYear(time: new DateTime(year.Value, 1, 1), rule: CalendarWeekRule.FirstFullWeek, firstDayOfWeek: DateTimeFormatInfo.CurrentInfo.FirstDayOfWeek);
-        //    }
-        //    DateTime first = DateTimeFormatInfo.CurrentInfo.Calendar.
-        //    return View(await _context.ReportDeadlines.Where(rd => rd != null && rd.Deadline != null && rd.Deadline >= DateTime.Today && rd.Deadline <= DateTime.Today)
-        //}
         
         public async Task<IActionResult> UpcomingReports()
         {
