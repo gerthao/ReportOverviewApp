@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace ReportOverviewApp.ViewComponents
 {
+    [ViewComponent]
     public class TimeViewComponent : ViewComponent
     {
         private readonly ApplicationDbContext _context;

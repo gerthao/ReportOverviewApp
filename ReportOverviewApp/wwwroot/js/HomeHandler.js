@@ -127,18 +127,30 @@ function handleReportsList(htmlElement) {
 var updateComponents = function () {
     getUserLogs();
     getReportCount();
+    //getCurrentDateTime();
     setTimeout(updateComponents, 5000);
 };
-//function getCurrentDateTime() {
-//    $("#currentDate").html("ViewComponents/InvokeAsync");
-//};
-//function updateDateTime() {
-//    getCurrentDateTime();
-//    setTimeout(updateDateTime(), 3000);
-//}
+var getCurrentDateTime = function() {
+    //$.get("Home/Time", function (data) {
+    //    $("#currentDateTime").html(Math.random());
+    //});
+    let link = root + "/Home/ViewTime/";
+    $.ajax({
+        url: link,
+        type: "GET",
+        success: function (data) {
+            $("#currentDateTime").html(Math.random());
+        },
+        error: $("#currentDateTime").html("failed: " + link)
+    });
+};
+var updateDateTime = function() {
+    getCurrentDateTime();
+    setTimeout(updateDateTime, 1000);
+}
 
 $(document).ready(function () {
-    //updateDateTime();
+    updateDateTime();
     updateComponents();
     $("#widgetTabs li a").on("click", function() {
         $(this).parent("li").parent("ul").children("li").each(function(index, value) {

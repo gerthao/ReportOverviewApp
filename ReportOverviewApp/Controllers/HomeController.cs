@@ -8,6 +8,7 @@ using ReportOverviewApp.Data;
 using Microsoft.EntityFrameworkCore;
 using ReportOverviewApp.Models.HomeViewModels;
 using NToastNotify;
+using ReportOverviewApp.ViewComponents;
 
 namespace ReportOverviewApp.Controllers
 {
@@ -23,10 +24,6 @@ namespace ReportOverviewApp.Controllers
             _toastNotification = toastNotification;
         }
 
-        public IActionResult TimeViewComponent()
-        {
-            return ViewComponent("TimeViewComponent");
-        }
         public async Task<IActionResult> Index()
         {
             var viewModel = new HomeViewModel()
@@ -56,6 +53,11 @@ namespace ReportOverviewApp.Controllers
         public IActionResult Error()
         {
             return View();
+        }
+
+        public IActionResult ViewTime()
+        {
+            return ViewComponent(componentName: @"TimeViewComponent");
         }
     }
 }
