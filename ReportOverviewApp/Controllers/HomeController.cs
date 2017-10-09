@@ -31,7 +31,8 @@ namespace ReportOverviewApp.Controllers
         {
             var viewModel = new HomeViewModel()
             {
-                Reports = await _context.Reports.ToListAsync(),
+                Reports = await _context.Reports.Include(r => r.Deadlines).ToListAsync(),
+                ReportDeadlines = await _context.ReportDeadlines.Include(rd => rd.Report).ToListAsync(),
                 Users = await _context.Users.ToDictionaryAsync(usr => usr.Id, usr => usr.UserName),
                 UserLogs = await _context.UserLogs.ToListAsync()
             };

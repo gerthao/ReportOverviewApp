@@ -3,9 +3,7 @@
 let root = window.location.origin;
 let countArray = [0, 0, 0];
 let reportsArray = ["", "", ""];
-var getCurrentTime = function () {
-    $.get("/Home/TimeViewComponent", function (data) { $("#timeViewComponentContainer").html(data); });
-};
+
 function getUserLogs() {
     let link = root + "/Data/GetUserLogs/";
     $.ajax({
@@ -131,7 +129,16 @@ var updateComponents = function () {
     getReportCount();
     setTimeout(updateComponents, 5000);
 };
+//function getCurrentDateTime() {
+//    $("#currentDate").html("ViewComponents/InvokeAsync");
+//};
+//function updateDateTime() {
+//    getCurrentDateTime();
+//    setTimeout(updateDateTime(), 3000);
+//}
+
 $(document).ready(function () {
+    //updateDateTime();
     updateComponents();
     $("#widgetTabs li a").on("click", function() {
         $(this).parent("li").parent("ul").children("li").each(function(index, value) {

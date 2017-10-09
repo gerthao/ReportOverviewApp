@@ -14,8 +14,11 @@
     }
 </style>
 <h3>Overview (Home Page)</h3>
-<div>
+<div> 
     <div class="row">
+        <div class="col-12" style="padding-bottom: 2.5rem;">
+            @await Component.InvokeAsync(name: "Time")
+        </div>
         <div class="col-md-6">
             <div class="card border-dark card-scrollable">
                 <div class="card-header">
@@ -60,7 +63,137 @@
                     </div>
                 </div>
             </div>
-        </div>   
+        </div>
+        <div class="col-sm-12" style="padding-top: 3rem;">
+            <h4>Report Status: Yesterday</h4>
+            <div class="col-12">
+                <div class="table-scrollable">
+                    <table class="table table-sm table-bordered" style="table-layout: fixed;">
+                        <thead class="bg-darkblue text-light">
+                            <tr class="col-md-12">
+                                <th style="width: 75%;">Report</th>
+                                <th style="width: 25%;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="col-1">
+                            @*<tr>
+                                <td class="col-md-12 text-center" colspan="4"><span class="fa fa-2x fa-refresh ld ld-spin"></span></td>
+                            </tr>*@
+                            @foreach (var rd in Model.ReportDeadlines.Where(rd => rd != null && rd.Deadline != null && rd.Deadline == DateTime.Today.AddDays(-1)))
+                            {
+                                <tr>
+                                    <td>
+                                        @rd.Report.Name
+                                    </td>
+                                    <td>
+                                        @{ var status = "Past Due"; }
+                                        @if (rd.FinishedDate != null)
+                                        {
+                                            status = "Finished";
+                                        }@if (rd.ClientNotifiedDate != null)
+                                        {
+                                            status = "Notified";
+                                        }@if (rd.FinishedDate != null)
+                                        {
+                                            status = "Sent";
+                                        }
+                                        <p class="text-danger">@status</p>
+                                    </td>
+                                </tr>
+
+                                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12" style="padding-top: 3rem;">
+            <h4>Report Status: Today</h4>
+            <div class="col-12">
+                <div class="table-scrollable">
+                    <table class="table table-sm table-bordered" style="table-layout: fixed;">
+                        <thead class="bg-darkblue text-light">
+                            <tr class="col-md-12">
+                                <th style="width: 75%;">Report</th>
+                                <th style="width: 25%;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="col-1">
+                            @*<tr>
+                                <td class="col-md-12 text-center" colspan="4"><span class="fa fa-2x fa-refresh ld ld-spin"></span></td>
+                            </tr>*@
+                            @foreach(var rd in Model.ReportDeadlines.Where(rd => rd != null && rd.Deadline != null && rd.Deadline == DateTime.Today))
+                            {
+                                <tr>
+                                    <td>
+                                        @rd.Report.Name
+                                    </td>
+                                    <td>
+                                        @{ var status = "No message"; }
+                                        @if(rd.FinishedDate != null)
+                                        {
+                                            status = "Finished";
+                                        }@if (rd.ClientNotifiedDate != null)
+                                        {
+                                            status = "Notified";
+                                        }@if (rd.FinishedDate != null)
+                                        {
+                                            status = "Sent";
+                                        }
+                                          @status
+                                    </td>
+                                </tr>
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12" style="padding-top: 3rem;">
+            <h4>Report Status: Tomorrow</h4>
+            <div class="col-12">
+                <div class="table-scrollable">
+                    <table class="table table-sm table-bordered" style="table-layout: fixed;">
+                        <thead class="bg-darkblue text-light">
+                            <tr class="col-md-12">
+                                <th style="width: 75%;">Report</th>
+                                <th style="width: 25%;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="col-1">
+                            @*<tr>
+                                <td class="col-md-12 text-center" colspan="4"><span class="fa fa-2x fa-refresh ld ld-spin"></span></td>
+                            </tr>*@
+                            @foreach (var rd in Model.ReportDeadlines.Where(rd => rd != null && rd.Deadline != null && rd.Deadline == DateTime.Today.AddDays(1)))
+                            {
+                                <tr>
+                                    <td>
+                                        @rd.Report.Name
+                                    </td>
+                                    <td>
+                                        @{ var status = "No message"; }
+                                        @if (rd.FinishedDate != null)
+                                        {
+                                            status = "Finished";
+                                        }@if (rd.ClientNotifiedDate != null)
+                                        {
+                                            status = "Notified";
+                                        }@if (rd.FinishedDate != null)
+                                        {
+                                            status = "Sent";
+                                        }
+                                        @status
+                                    </td>
+                                </tr>
+
+                                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
         <div class="col-sm-12" style="padding-top: 3rem;">
             <h4>User Logs</h4>
             <div class="col-12">

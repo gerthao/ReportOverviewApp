@@ -44,9 +44,6 @@
     <None Include="wwwroot\js\LogoutHandler.js" />
     <None Include="wwwroot\js\ReportsHandler.js" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\Home\Components\ReportsViewComponent\" />
-  </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <TypeScriptTarget>ES6</TypeScriptTarget>
     <TypeScriptJSXEmit>None</TypeScriptJSXEmit>

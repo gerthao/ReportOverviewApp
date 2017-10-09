@@ -13,8 +13,9 @@ namespace ReportOverviewApp.Models.HomeViewModels
     public class HomeViewModel
     {
         public IEnumerable<Report> Reports { get; set; }
-        public Dictionary<string, string> Users { get; set; }
+        public IDictionary<string, string> Users { get; set; }
         public IEnumerable<UserLog> UserLogs { get; set; }
+        public IEnumerable<ReportDeadline> ReportDeadlines { get; internal set; }
 
         /// <summary>
         /// Returns a username based on the userId given.

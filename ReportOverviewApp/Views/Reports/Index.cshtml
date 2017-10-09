@@ -61,7 +61,6 @@ else {
                 <tr>
                     <td class="ReportID">@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Id)</td>
                     <td class="ReportName">@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Name)</td>
-                    @*<td>@Model.DisplayDateTimeAsDate(Model.Reports.ElementAt(i).CurrentDeadline())</td>*@
                     @if (Model.Reports.ElementAt(i).Deadlines.Any())
                     {
                         currentReportDeadline = Model.Reports.ElementAt(i).Deadlines.OrderByDescending(rd => rd.Deadline).First();
@@ -74,10 +73,6 @@ else {
                         <td class="text-muted text-center" colspan="4">No Current Deadline Found</td>
 
                     }
-                    
-                    @*<td><text>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).FinishedDate)</text></td>
-                    <td><text>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).ClientNotifiedDate)</text></td>
-                    <td><text>@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).SentDate)</text></td>*@
                     <td style="text-align: center;">
                         @if (currentReportDeadline == null)
                         {

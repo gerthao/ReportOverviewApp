@@ -1,0 +1,16 @@
+﻿@model DateTime
+<div class="card">
+    <h6 class="card-header">
+        Current Date/Time
+    </h6>
+    <div id="currentTime" class="card-body">
+        @Model.ToLongDateString()
+        @Model.ToLongTimeString()
+    </div>
+</div>
+@section scripts{ 
+<script>
+
+</script>
+}
+

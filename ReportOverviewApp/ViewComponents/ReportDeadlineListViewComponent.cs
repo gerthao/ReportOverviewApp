@@ -8,17 +8,16 @@ using System.Threading.Tasks;
 
 namespace ReportOverviewApp.ViewComponents
 {
-    public class ReportListViewComponent : ViewComponent
+    public class ReportDeadlineListViewComponent : ViewComponent
     {
         private ApplicationDbContext _context;
-        public ReportListViewComponent(ApplicationDbContext context)
+        public ReportDeadlineListViewComponent(ApplicationDbContext context)
         {
             _context = context;
         }
-        
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            return View(await _context.Reports.Include(r => r.Deadlines).ToListAsync());
+            return View(await _context.ReportDeadlines.Include(r => r.Report).ToListAsync());
         }
     }
 }
