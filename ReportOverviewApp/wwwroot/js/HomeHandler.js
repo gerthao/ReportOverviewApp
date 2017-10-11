@@ -1,11 +1,10 @@
 ﻿'use strict';
 
-let root = window.location.origin;
 let countArray = [0, 0, 0];
 let reportsArray = ["", "", ""];
 
 function getUserLogs() {
-    let link = root + "/Data/GetUserLogs/";
+    let link = "/Data/GetUserLogs/";
     $.ajax({
         url: link,
         type: "GET",
@@ -18,7 +17,7 @@ function getUserLogs() {
     });
 }
 function getReportCount() {
-    let link = root + "/Data/GetDeadlines/";
+    let link = "/Data/GetDeadlines/";
     $.ajax({
         url: link,
         type: "GET",
@@ -127,22 +126,22 @@ function handleReportsList(htmlElement) {
 var updateComponents = function () {
     getUserLogs();
     getReportCount();
-    //getCurrentDateTime();
     setTimeout(updateComponents, 5000);
 };
 var getCurrentDateTime = function() {
-    //$.get("Home/Time", function (data) {
-    //    $("#currentDateTime").html(Math.random());
-    //});
-    let link = root + "/Home/ViewTime/";
-    $.ajax({
-        url: link,
-        type: "GET",
-        success: function (data) {
-            $("#currentDateTime").html(Math.random());
-        },
-        error: $("#currentDateTime").html("failed: " + link)
+    $.get("/Home/GetCurrentDateTime", function (data) {
+        $("#currentDateTimeContainer").html(data);
     });
+    //let link = "Home/GetCurrentDateTime";
+    //$.ajax({
+    //    url: link,
+    //    dataType: "html",
+    //    type: "GET",
+    //    success: function (data) {
+    //        $("#currentDateTimeContainer").html(data);
+    //    },
+    //    error: $("#currentDateTimeData").html("failed: " + link)
+    //});
 };
 var updateDateTime = function() {
     getCurrentDateTime();

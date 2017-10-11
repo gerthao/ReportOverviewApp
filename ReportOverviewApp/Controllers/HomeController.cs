@@ -55,9 +55,9 @@ namespace ReportOverviewApp.Controllers
             return View();
         }
 
-        public IActionResult ViewTime()
+        public IActionResult GetCurrentDateTime()
         {
-            return ViewComponent(componentName: @"TimeViewComponent");
+            return ViewComponent("Time");
         }
     }
 }

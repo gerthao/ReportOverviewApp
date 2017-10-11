@@ -49,6 +49,7 @@ namespace ReportOverviewApp.Controllers
             }
             return Json(await _context.Reports.Select(r => new ReportFragment(r)).Where(r => r.ReportDeadline == DateTime.Today.AddDays(days.Value)).ToListAsync());
         }
+
         /// <summary>
         /// Returs JSON-formatted data of UserLogs.
         /// </summary>
@@ -70,5 +71,12 @@ namespace ReportOverviewApp.Controllers
                 ReportDeadline = report.CurrentDeadline();
             }
         }
+
+        //[Authorize]
+        //public async Task<JsonResult> GetCurrentDateTime()
+        //{
+        //    DateTime dateTime = DateTime.Now;
+        //    return Json(await Task.FromResult(dateTime.ToShortTimeString()));
+        //}
     }
 }

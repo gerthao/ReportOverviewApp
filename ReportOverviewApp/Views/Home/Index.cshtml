@@ -16,7 +16,7 @@
 <h3>Overview (Home Page)</h3>
 <div> 
     <div class="row">
-        <div class="col-12" style="padding-bottom: 2.5rem;">
+        <div id="currentDateTimeContainer" class="col-12" style="padding-bottom: 2.5rem;">
             @await Component.InvokeAsync(name: "Time")
         </div>
         <div class="col-md-6">
@@ -41,15 +41,15 @@
                             </li>
                         </ul>
                     </div>
-                </div> 
+                </div>
                 <div class="card-block">
                     <div class="card-body">
-                        <h3 id="widgetTitle"class="card-title"><span class="fa fa-clock-o ld ld-float"></span></h3>
+                        <h3 id="widgetTitle" class="card-title"><span class="fa fa-clock-o ld ld-float"></span></h3>
                         <h2 id="reportCount">
                             <i class="fa fa-refresh ld ld-spin"></i>
                         </h2>
                         <div id="reportLink">
-                            @Html.ActionLink(linkText: "Go to reports", controllerName: "Reports", actionName: "Index", routeValues: new { begin=DateTime.Today, end=DateTime.Today}, htmlAttributes: new { @class = "btn btn-outline-primary" })
+                            @Html.ActionLink(linkText: "Go to reports", controllerName: "Reports", actionName: "Index", routeValues: new { begin = DateTime.Today, end = DateTime.Today }, htmlAttributes: new { @class = "btn btn-outline-primary" })
                         </div>
                     </div>
                 </div>
@@ -187,7 +187,7 @@
                                     </td>
                                 </tr>
 
-                                            }
+                             }
                         </tbody>
                     </table>
                 </div>

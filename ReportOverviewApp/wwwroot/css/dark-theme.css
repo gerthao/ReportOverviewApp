@@ -90,3 +90,14 @@ label {
     background-color: #404046;
     border: 1px solid #3A3A3C;
 }
+.modal-content {
+    background-color: #303032;
+}
+input.form-control, textarea.form-control {
+    color: #d2d2d2;
+    background-color: #404046;
+}
+input.form-control:focus, textarea.form-control:focus{
+    color: #d2d2d2;
+    background-color: #242424;
+}

@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace ReportOverviewApp.ViewComponents
 {
-    [ViewComponent]
     public class TimeViewComponent : ViewComponent
     {
         private readonly ApplicationDbContext _context;
@@ -16,14 +15,18 @@ namespace ReportOverviewApp.ViewComponents
         {
             _context = context;
         }
+        //public IViewComponentResult Invoke()
+        //{
+        //    return View("Default", DateTime.Now);
+        //}
         public async Task<IViewComponentResult> InvokeAsync()
         {
             return View("Default", await GetCurrentDateTimeAsync());
         }
         private async Task<string> GetCurrentTimeAsync()
         {
-            var currentTime = await Task.FromResult<string>(DateTime.Now.ToShortTimeString());
-            return currentTime;
+            DateTime current = DateTime.Now;
+            return await Task.FromResult(current.ToShortTimeString());
         }
         private async Task<DateTime> GetCurrentDateTimeAsync()
         {
