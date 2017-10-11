@@ -4,16 +4,19 @@ let countArray = [0, 0, 0];
 let reportsArray = ["", "", ""];
 
 function getUserLogs() {
-    let link = "/Data/GetUserLogs/";
-    $.ajax({
-        url: link,
-        type: "GET",
-        dataType: "json",
-        contentType: "application/json; charset-utf-8",
-        success: function(data) {
-            handleJsonUserLogs(data);
-        },
-        error: console.error("failed: " + link)
+    //let link = "/Data/GetUserLogs/";
+    //$.ajax({
+    //    url: link,
+    //    type: "GET",
+    //    dataType: "json",
+    //    contentType: "application/json; charset-utf-8",
+    //    success: function(data) {
+    //        handleJsonUserLogs(data);
+    //    },
+    //    error: console.error("failed: " + link)
+    //});
+    $.get("/Home/GetUserLogs", function (data) {
+        $("#userLogListContainer").html(data);
     });
 }
 function getReportCount() {
@@ -143,10 +146,10 @@ var getCurrentDateTime = function() {
     //    error: $("#currentDateTimeData").html("failed: " + link)
     //});
 };
-var updateDateTime = function() {
+var updateDateTime = function () {
     getCurrentDateTime();
     setTimeout(updateDateTime, 1000);
-}
+};
 
 $(document).ready(function () {
     updateDateTime();

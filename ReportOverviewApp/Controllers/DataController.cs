@@ -29,9 +29,9 @@ namespace ReportOverviewApp.Controllers
         [Authorize]
         public async Task<JsonResult> GetReport(int? id) => Json(await _context.Reports.Where(r => r.Id == id).ToListAsync());
         [Authorize]
-        public async Task<JsonResult> GetReports(int? id_1, int? id_2) => Json(await _context.Reports.Where(r => r.Id >= id_1 && r.Id <= id_2).ToListAsync());
+        public async Task<JsonResult> GetReports(int? id_1, int? id_2) => Json(await _context.Reports.Where(r => r.Id >= id_1 && r.Id <= id_2).OrderBy(r => r.Id).ToListAsync());
         [Authorize]
-        public async Task<JsonResult> GetAllReports() => Json(await _context.Reports.ToListAsync());
+        public async Task<JsonResult> GetAllReports() => Json(await _context.Reports.OrderBy(r => r.Name).ToListAsync());
 
         /// <summary>
         /// Returns JSON data of report names and deadlines.
@@ -45,9 +45,9 @@ namespace ReportOverviewApp.Controllers
         {
             if (days == null)
             {
-                return Json(await _context.Reports.Select(r => new ReportFragment(r)).ToListAsync());
+                return Json(await _context.Reports.OrderBy(r => r.Name).Select(r => new ReportFragment(r)).ToListAsync());
             }
-            return Json(await _context.Reports.Select(r => new ReportFragment(r)).Where(r => r.ReportDeadline == DateTime.Today.AddDays(days.Value)).ToListAsync());
+            return Json(await _context.Reports.OrderBy(r => r.Name).Select(r => new ReportFragment(r)).Where(r => r.ReportDeadline == DateTime.Today.AddDays(days.Value)).ToListAsync());
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace ReportOverviewApp.Controllers
         [Authorize]
         public async Task<JsonResult> GetUserLogs()
         {
-            return Json(await _context.UserLogs.ToListAsync());
+            return Json(await _context.UserLogs.OrderByDescending(ul => ul.TimeStamp).ToListAsync());
         }
         public class ReportFragment
         {
@@ -78,5 +78,6 @@ namespace ReportOverviewApp.Controllers
         //    DateTime dateTime = DateTime.Now;
         //    return Json(await Task.FromResult(dateTime.ToShortTimeString()));
         //}
+        
     }
 }

@@ -6,8 +6,12 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-    if(UserManager.FindByNameAsync(User.Identity.Name).Result.Theme == ApplicationUser.Themes.Dark)
+    switch(UserManager.FindByNameAsync(User.Identity.Name).Result.Theme)
     {
-        <link rel="stylesheet" href="~/css/dark-theme.css" />
+        case ApplicationUser.Themes.Dark:
+            <link rel="stylesheet" href="~/css/dark-theme.css" />
+            break;
+        case ApplicationUser.Themes.Light:
+            break;
     }
 }

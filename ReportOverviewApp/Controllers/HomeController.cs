@@ -59,5 +59,9 @@ namespace ReportOverviewApp.Controllers
         {
             return ViewComponent("Time");
         }
+        public IActionResult GetUserLogs()
+        {
+            return ViewComponent("UserLogList");
+        }
     }
 }

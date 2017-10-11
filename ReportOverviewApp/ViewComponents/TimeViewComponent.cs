@@ -15,10 +15,6 @@ namespace ReportOverviewApp.ViewComponents
         {
             _context = context;
         }
-        //public IViewComponentResult Invoke()
-        //{
-        //    return View("Default", DateTime.Now);
-        //}
         public async Task<IViewComponentResult> InvokeAsync()
         {
             return View("Default", await GetCurrentDateTimeAsync());

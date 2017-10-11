@@ -1,0 +1,36 @@
+﻿@model IEnumerable<ReportOverviewApp.Models.UserLog>
+<div class="card border-dark">
+    <h6 class="card-header">
+        User Logs
+    </h6>
+    <div >
+        <table class="card-body table table-bordered table-sm">
+            <thead class="bg-darkblue">
+                <tr>
+                    <th>Message</th>
+                    <th>TimeStamp</th>
+                    <th>User</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody >
+                @foreach (UserLog ul in Model)
+                {
+                    <tr>
+                        <td>@ul.Message</td>
+                        <td>@ul.TimeStamp</td>
+                        <td>@ul.User.UserName.Split('@')[0].Replace(".", " ")</td>
+                        @if (String.IsNullOrEmpty(ul.Notes))
+                        {
+                            <td><text>N/A</text></td>
+                        }
+                        else
+                        {
+                            <td><i class="fa fa-bathtub"></i></td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

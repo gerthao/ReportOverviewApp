@@ -1,5 +1,14 @@
-﻿body {
-}
+﻿
 .bg-darkblue {
     background-color: #0064ad;
+}
+.table-scrollable {
+    max-height: 24rem;
+    overflow: auto;
+}
+
+.card-scrollable {
+    min-height: 15rem;
+    max-height: 15rem;
+    overflow: auto;
 }

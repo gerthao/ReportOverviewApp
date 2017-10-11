@@ -1,5 +1,67 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@model ReportOverviewApp.Models.ReportViewModels.ReportDeadlineViewModel
+<div class="card border-dark">
+    <h6 class="card-header">
+        Report Status: 
+        @if(Model.Deadline != null && Model.Deadline.HasValue) {
+            @Model.Deadline.Value.ToShortDateString() 
+        }
+        @if (Model.HasDeadline() && Model.Deadline.Value == DateTime.Today)
+        {
+            <text>&nbsp;(Today)</text>
+        }
+    </h6>
+    <div class="table-scrollable">
+        @if(Model.DisplayReports().Count() == 0)
+        {
+            <p class="text-center">&nbsp;</p>
+        }
+        else
+        {
+            <table class="card-body table table-bordered table-sm">
+                <thead>
+                    <tr>
+                        <th>
+                            Report
+                        </th>
+                        <th>
+                            Finished
+                        </th>
+                        <th>
+                            Notified
+                        </th>
+                        <th>
+                            Sent
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (ReportDeadline rd in Model.DisplayReports())
+                {
+                        <tr>
+                            <td>
+                                @rd.Report.Name
+                            </td>
+                            <td>
+                                @rd.FinishedDate
+                                @if (rd.FinishedDate != null && rd.FinishedDate > rd.Deadline)
+                                { <text>&nbsp;(Late)</text>}
+                            </td>
+                            <td>
+                                @rd.ClientNotifiedDate
+                                @if (rd.ClientNotifiedDate != null && rd.ClientNotifiedDate > rd.Deadline)
+                                { <text>&nbsp;(Late)</text>}
+                            </td>
+                            <td>
+                                @rd.SentDate
+                                @if (rd.SentDate != null && rd.SentDate > rd.Deadline)
+                                { <text>&nbsp;(Late)</text>}
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
 }
+        
+    </div>
+</div>

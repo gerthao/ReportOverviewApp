@@ -15,11 +15,11 @@
 {
     <table class="table table-sm table-striped table-bordered">
         <thead>
-            <tr class="bg-darkblue text-light">
+            <tr class="bg-primary text-light">
                 @if(d == today){
-                    <th colspan="5">Date:&nbsp;Today</th>
+                    <th colspan="5">Date:&nbsp;@d.ToShortDateString()&nbsp;(Today)</th>
                 } else if(d == tomorrow){
-                    <th colspan="5">Date:&nbsp;Tomorrow</th>
+                    <th colspan="5">Date:&nbsp;@d.ToShortDateString()&nbsp;(Tomorrow)</th>
                 }
                 else{
                     <th colspan="5">Date:&nbsp;@d.ToShortDateString()</th>
@@ -39,7 +39,9 @@
             <tr class="text-dark">
                 <td>@Html.DisplayFor(modelItem => rd.Report.Name)</td>
                 @if (rd.FinishedDate != null){
-                    <td>@Html.DisplayFor(modelItem => rd.FinishedDate)&nbsp;<i class="fa fa-thumbs-up text-success"></i></td>
+                    <td>@Html.DisplayFor(modelItem => rd.FinishedDate)&nbsp;
+                    @if(rd.FinishedDate > rd.Deadline) { <text>(LATE)&nbsp;</text> }
+                    <i class="fa fa-thumbs-up text-success"></i></td>
                 } else{
                     if(d == today){
                         <td class="text-danger">Not Finished&nbsp;<i class="fa fa-exclamation-triangle" aria-hidden="true"></i></td>
@@ -51,7 +53,9 @@
                 }
                 @if (rd.ClientNotifiedDate != null)
                 {
-                    <td>@Html.DisplayFor(modelItem => rd.ClientNotifiedDate)&nbsp;<i class="fa fa-thumbs-up text-success"></i></td>
+                    <td>@Html.DisplayFor(modelItem => rd.ClientNotifiedDate)&nbsp;
+                    @if (rd.ClientNotifiedDate > rd.Deadline){ <text>(LATE)&nbsp;</text> }
+                    <i class="fa fa-thumbs-up text-success"></i></td>
                 } else {
                     if(d == today){
                         <td class="text-danger">Not Notified&nbsp;<i class="fa fa-exclamation-triangle" aria-hidden="true"></i></td>
@@ -63,7 +67,9 @@
                 }
                 @if (rd.SentDate != null)
                 {
-                    <td>@Html.DisplayFor(modelItem => rd.SentDate)&nbsp;<i class="fa fa-thumbs-up text-success"></i></td>
+                    <td>@Html.DisplayFor(modelItem => rd.SentDate)&nbsp;
+                    @if (rd.SentDate > rd.Deadline){ <text>(LATE)&nbsp;</text> }
+                    <i class="fa fa-thumbs-up text-success"></i></td>
                 }
                 else
                 {

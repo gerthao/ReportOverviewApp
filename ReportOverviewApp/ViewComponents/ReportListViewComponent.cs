@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ReportOverviewApp.Data;
+using ReportOverviewApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -60,10 +60,6 @@ hr{
 label {
     color: white;
 }
-!input.btn{
-    background-color: black;
-    color: white;
-}
 .card{
     background-color: #4a5365;
 }
@@ -74,6 +70,11 @@ label {
     background-color: #246fcb;
     color: aliceblue;
 }
+.card .card-header .card-header-tabs .nav .nav-item .active {
+    border: 2px solid #4a5365;
+    background-color: #4a5365;
+    color: aliceblue;
+}
 .list-group-item, .list-group-item.list-group-item-action {
     background-color: #404046;
     color: #DEDEDE;
@@ -82,7 +83,7 @@ label {
     background-color: #505066;
     color: #C0C0C0;
 }
-.pagination li.page-item span.page-link {
+.pagination li.page-item .page-link {
     background-color: #404046;
     border: 1px solid #3A3A3C;
 }
