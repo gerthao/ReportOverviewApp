@@ -5,7 +5,7 @@
     </h6>
     <div >
         <table class="card-body table table-bordered table-sm">
-            <thead class="bg-darkblue">
+            <thead>
                 <tr>
                     <th>Message</th>
                     <th>TimeStamp</th>
@@ -14,22 +14,33 @@
                 </tr>
             </thead>
             <tbody >
-                @foreach (UserLog ul in Model)
+                @if(Model.Any())
+                {
+                    @foreach (UserLog ul in Model)
+                    {
+                        <tr>
+                            <td>@ul.Message</td>
+                            <td>@ul.TimeStamp</td>
+                            <td>@ul.User.UserName.Split('@')[0].Replace(".", " ")</td>
+                            @if (String.IsNullOrEmpty(ul.Notes))
+                            {
+                                <td><text>N/A</text></td>
+                            }
+                            else
+                            {
+                                <td><i class="fa fa-bathtub"></i></td>
+                            }
+                        </tr>
+                     }
+
+                } else
                 {
                     <tr>
-                        <td>@ul.Message</td>
-                        <td>@ul.TimeStamp</td>
-                        <td>@ul.User.UserName.Split('@')[0].Replace(".", " ")</td>
-                        @if (String.IsNullOrEmpty(ul.Notes))
-                        {
-                            <td><text>N/A</text></td>
-                        }
-                        else
-                        {
-                            <td><i class="fa fa-bathtub"></i></td>
-                        }
+                        <td colspan="4" class="text-info">No logs present</td>
                     </tr>
+
                 }
+
             </tbody>
         </table>
     </div>

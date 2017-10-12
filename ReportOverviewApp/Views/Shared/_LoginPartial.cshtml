@@ -28,7 +28,7 @@
                 @if (SignInManager.IsSignedIn(User))
                 {
                     <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Manage" asp-action="Index" title="Manage"><span class="fa fa-address-card-o user-option-icon-onleft"></span>User Profile</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#"><span class="fa fa-bell-o user-option-icon-onleft"></span>Notifications&nbsp&nbsp<span class="badge" style="background-color: #FF5238;">0</span></a></li>
+                    @*<li class="nav-item"><a class="nav-link" href="#"><span class="fa fa-bell-o user-option-icon-onleft"></span>Notifications&nbsp&nbsp<span class="badge" style="background-color: #FF5238;">0</span></a></li>*@
                     <li class="nav-item"><button type="submit" class="btn btn-link nav-link"><span class="fa fa-sign-out user-option-icon-onleft"></span>Log out</button></li>
                 }
                 else

@@ -75,6 +75,9 @@ label {
     background-color: #4a5365;
     color: aliceblue;
 }
+.card-footer {
+    background-color: #3A4355;
+}
 .list-group-item, .list-group-item.list-group-item-action {
     background-color: #404046;
     color: #DEDEDE;

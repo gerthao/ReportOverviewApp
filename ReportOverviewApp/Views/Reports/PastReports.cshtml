@@ -62,7 +62,7 @@
                 }
                 else
                 {
-                    <td class="text-danger">Not Finished&nbsp;<i class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></i></td>
+                    <td class="text-danger">Not Finished&nbsp;<i class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i></td>
                 }
                 @if (rd.ClientNotifiedDate != null)
                 {
@@ -79,7 +79,7 @@
                 }
                 else
                 {
-                    <td class="text-danger">No Notification&nbsp;<i class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></i></td>
+                    <td class="text-danger">No Notification&nbsp;<i class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i></td>
                 }
                 @if (rd.SentDate != null)
                 {
@@ -96,7 +96,7 @@
                 }
                 else
                 {
-                    <td class="text-danger">Not Sent&nbsp;<i class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></i></td>
+                    <td class="text-danger">Not Sent&nbsp;<i class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i></td>
                 }
                 <td style="text-align: center;">
                     <a asp-action="EditDeadline" asp-route-id="@rd.Id"><span class="fa fa-adjust text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  Report Deadline (@rd.Deadline.ToShortDateString())"></span></a>
@@ -126,10 +126,5 @@
     </div>
 </div>
 @section  scripts{
-    <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip()
-        })
-</script>
 <script src="~/js/ReportsHandler.js"></script>
 }

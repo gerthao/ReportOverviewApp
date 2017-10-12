@@ -2,52 +2,77 @@
 @{
     ViewData["Title"] = "Manage your external logins";
 }
-
 <h2>@ViewData["Title"].</h2>
-
 <p class="text-success">@ViewData["StatusMessage"]</p>
+<hr />
 @if (Model.CurrentLogins.Count > 0)
 {
     <h4>Registered Logins</h4>
-    <table class="table">
-        <tbody>
-            @for (var index = 0; index < Model.CurrentLogins.Count; index++)
-            {
-                <tr>
-                    <td>@Model.CurrentLogins[index].LoginProvider</td>
-                    <td>
-                        @if ((bool)ViewData["ShowRemoveButton"])
-                        {
-                            <form asp-controller="Manage" asp-action="RemoveLogin" method="post" class="form-horizontal">
-                                <div>
-                                    <input asp-for="@Model.CurrentLogins[index].LoginProvider" name="LoginProvider" type="hidden" />
-                                    <input asp-for="@Model.CurrentLogins[index].ProviderKey" name="ProviderKey" type="hidden" />
-                                    <input type="submit" class="btn btn-default" value="Remove" title="Remove this @Model.CurrentLogins[index].LoginProvider login from your account" />
-                                </div>
-                            </form>
-                        }
-                        else
-                        {
-                            @: &nbsp;
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    @for (var index = 0; index < Model.CurrentLogins.Count; index++)
+    {
+        <div class="col-md-4">
+            <div class="card">
+                <h5 class="card-header">
+                    <i id="iconRegistered@(Model.CurrentLogins[index].LoginProvider)" class="fa fa-windows"></i> @Model.CurrentLogins[index].LoginProvider
+                </h5>
+                <div class="card-body">
+                    <h5>Status: Currently Enabled <i id="iconStatus@(Model.CurrentLogins[index].LoginProvider)" class="fa fa-smile-o text-success"></i></h5>
+                </div>
+                <div class="card-footer">
+                    @if ((bool)ViewData["ShowRemoveButton"])
+                    {
+                        <form asp-controller="Manage" asp-action="RemoveLogin" method="post" class="form-horizontal">
+                            <div>
+                                <input asp-for="@Model.CurrentLogins[index].LoginProvider" name="LoginProvider" type="hidden" />
+                                <input asp-for="@Model.CurrentLogins[index].ProviderKey" name="ProviderKey" type="hidden" />
+                                <input type="submit" id="removeButton@(Model.CurrentLogins[index].LoginProvider)" class="btn btn-primary btn-block" value="Remove" tabindex="0" data-toggle="tooltip" data-placement="bottom" title="Remove this @Model.CurrentLogins[index].LoginProvider login from your account" />
+                            </div>
+                        </form>
+                    }
+                    else
+                    {
+                        @: &nbsp;
+                    }
+                </div>
+            </div>
+        </div>
+        
+
+    }
 }
 @if (Model.OtherLogins.Count > 0)
 {
     <h4>Add another service to log in.</h4>
-    <hr />
     <form asp-controller="Manage" asp-action="LinkLogin" method="post" class="form-horizontal">
         <div id="socialLoginList">
             <p>
                 @foreach (var provider in Model.OtherLogins)
                 {
-                    <button type="submit" class="btn btn-default" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.Name</button>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <h5 class="card-header">
+                                <i id="iconUnregistered@(provider.Name)" class="fa fa-windows"></i> @provider.DisplayName
+                            </h5>
+                            <div class="card-body">
+                                <h5>Status: Currently Disabled</h5>
+                            </div>
+                            <div class="card-footer">
+                                <button type="submit" id="enableButton@(provider.Name)" class="btn btn-primary btn-block" name="provider" value="@provider.Name" tabindex="0" data-toggle="tooltip" data-placement="bottom" title="Log in using your @provider.DisplayName account">Enable</button>
+                            </div>
+                        </div>
+                    </div>
                 }
             </p>
         </div>
     </form>
+}
+@section scripts{ 
+    <script>
+        $("#enableButtonMicrosoft").hover(function () {
+            $("#iconUnregisteredMicrosoft").toggleClass("ld ld-spin");
+        });
+        $("#removeButtonMicrosoft").hover(function () {
+            $("#iconStatusMicrosoft").toggleClass("fa-frown-o text-warning");
+        });
+    </script>
 }

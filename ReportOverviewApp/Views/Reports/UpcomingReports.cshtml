@@ -44,7 +44,7 @@
                     <i class="fa fa-thumbs-up text-success"></i></td>
                 } else{
                     if(d == today){
-                        <td class="text-danger">Not Finished&nbsp;<i class="fa fa-exclamation-triangle" aria-hidden="true"></i></td>
+                        <td class="text-danger">Not Finished&nbsp;<i class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></i></td>
                     } else if(d == tomorrow){
                          <td>Not Finished&nbsp;<i class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></i></td>
                     } else {
@@ -58,7 +58,7 @@
                     <i class="fa fa-thumbs-up text-success"></i></td>
                 } else {
                     if(d == today){
-                        <td class="text-danger">Not Notified&nbsp;<i class="fa fa-exclamation-triangle" aria-hidden="true"></i></td>
+                        <td class="text-danger">Not Notified&nbsp;<i class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></i></td>
                     } else if(d == tomorrow){
                          <td>Not Notified&nbsp;<i class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></i></td>
                     } else {
@@ -74,7 +74,7 @@
                 else
                 {
                     if(d == today){
-                        <td class="text-danger">Not Sent&nbsp;<i class="fa fa-exclamation-triangle" aria-hidden="true"></i></td>
+                        <td class="text-danger">Not Sent&nbsp;<i class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></i></td>
                     } else if(d == tomorrow){
                          <td>Not Sent&nbsp;<i class="fa fa-exclamation-triangle text-warning" aria-hidden="true"></i></td>
                     } else {
@@ -108,10 +108,5 @@
 </div>
 
 @section scripts{
-    <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip()
-        })
-    </script>
     <script src="~/js/ReportsHandler.js"></script>
 }

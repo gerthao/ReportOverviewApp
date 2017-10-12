@@ -49,10 +49,10 @@ namespace ReportOverviewApp
             string connection = "DefaultConnection";
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString(connection)));
-            services.Configure<MvcOptions>(options =>
-            {
-                options.Filters.Add(new RequireHttpsAttribute());
-            });
+            //services.Configure<MvcOptions>(options =>
+            //{
+            //    options.Filters.Add(new RequireHttpsAttribute());
+            //});
             services.ConfigureApplicationCookie(options => options.LoginPath = "/Account/Login");
             services.AddIdentity<ApplicationUser, IdentityRole>(config =>
             {
@@ -84,8 +84,8 @@ namespace ReportOverviewApp
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-            var options = new RewriteOptions().AddRedirectToHttps();
-            app.UseRewriter(options);
+            //var options = new RewriteOptions().AddRedirectToHttps();
+            //app.UseRewriter(options);
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
