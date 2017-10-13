@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ReportOverviewApp.Models;
+using System.Collections.Generic;
 
 namespace ReportOverviewApp.Controllers
 {
@@ -33,6 +34,12 @@ namespace ReportOverviewApp.Controllers
         [Authorize]
         public async Task<JsonResult> GetAllReports() => Json(await _context.Reports.OrderBy(r => r.Name).ToListAsync());
 
+        //[Authorize]
+        //public async Task<JsonResult> GetGraphData()
+        //{
+        //    List<DateTime> dates = new List<DateTime>();
+        //    var i = await _context.Reports.Select()
+        //}
         /// <summary>
         /// Returns JSON data of report names and deadlines.
         /// </summary>

@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ReportOverviewApp.Models;
-using ReportOverviewApp.Models.WidgetModels;
 
 namespace ReportOverviewApp.Data
 {

@@ -3,40 +3,46 @@
     ViewData["Title"] = "Register";
 }
 
-<h2>@ViewData["Title"].</h2>
+<h4>@ViewData["Title"]:  Create a new account.</h4>
 
 <form asp-controller="Account" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
-    <h4>Create a new account.</h4>
     <hr />
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group">
-        <label asp-for="Email" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="Email" class="form-control" />
+        @*<label asp-for="Email" class="col-md-2 control-label"></label>*@
+
+            <div class=" input-group">
+                <span class="input-group-addon"><i class="fa fa-user fa-2x"></i></span>
+                <input type="email" asp-for="Email" class="input-lg form-control" placeholder="Email" />
+            </div>
             <span asp-validation-for="Email" class="text-danger"></span>
-        </div>
+        
     </div>
     <div class="form-group">
-        <label asp-for="Password" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="Password" class="form-control" />
+        @*<label asp-for="Password" class="col-md-2 control-label"></label>*@
+        
+            <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-lock fa-2x"></i></span>
+                <input id="password" type="password" asp-for="Password" class="input-lg form-control" placeholder="Password" />
+            </div>
             <span asp-validation-for="Password" class="text-danger"></span>
-        </div>
+        
     </div>
     <div class="form-group">
-        <label asp-for="ConfirmPassword" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="ConfirmPassword" class="form-control" />
+        @*<label asp-for="ConfirmPassword" class="col-md-2 control-label"></label>*@
+        
+            <div class="input-group" id="confirmPassword">
+                <span class="input-group-addon"><i class="fa fa-lock fa-2x"></i></span>
+                <input type="password" asp-for="ConfirmPassword" class="input-lg form-control" placeholder="Confirm Password" />
+            </div>
             <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-        </div>
+        
     </div>
     <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <button type="submit" class="btn btn-default">Register</button>
-        </div>
+        <button type="submit" class="btn btn-primary btn-lg text-center btn-block"><i class="fa fa-sign-in"></i> Register</button>
     </div>
 </form>
 
-@section Scripts {
+@section scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

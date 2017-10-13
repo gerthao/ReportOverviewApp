@@ -9,7 +9,7 @@
             @await Component.InvokeAsync(name: "Time")
         </div>
         <div class="col-md-6">
-            <div class="card border-dark card-scrollable">
+            <div class="card">
                 <div class="card-header">
                     <div class="card-header-tabs">
                         <ul class="nav nav-tabs card-header-tabs" id="widgetTabs">
@@ -37,7 +37,6 @@
                         <h2 id="reportCount">
                             <i class="fa fa-refresh ld ld-spin"></i>
                         </h2>
-                        
                     </div>
                     <div class="card-footer">
                         <div id="reportLink">
@@ -48,7 +47,7 @@
             </div>
         </div>
         <div class="col-md-6">
-            <div class="card border-dark card-scrollable">
+            <div class="card card-scrollable">
                 <div class="card-block">
                     <div class="card-body card-body-scrollable" id="reportCard">
                             <i class="fa fa-2x fa-refresh ld ld-spin"></i>
@@ -62,30 +61,46 @@
         <div class="col-sm-12" id="userLogListContainer" style="padding-top: 2.5rem;">
             @await Component.InvokeAsync(name: "UserLogList")
         </div>
-        @*<div class="col-sm-12" style="padding-top: 2.5rem;">
-            <h4>User Logs</h4>
-            <div class="col-12">
-                <div class="table-scrollable">
-                    <table class="table table-sm table-bordered" style="table-layout: fixed;" id="userLogsTable">
-                        <thead class="bg-primary text-light">
-                            <tr class="col-md-12">
-                                <th style="width: 45%;">Message</th>
-                                <th style="width: 20%;">Timestamp</th>
-                                <th style="width: 25%;">User</th>
-                                <th style="width: 10%;">Changes</th>
-                            </tr>
-                        </thead>
-                        <tbody id="userLogsBody" class="col-1">
-                            <tr>
-                                <td class="col-md-12 text-center" colspan="4"><span class="fa fa-2x fa-refresh ld ld-spin"></span></td>
-                            </tr>
-                        </tbody>
-                    </table>
+        <div class="col-sm-12" style="padding-top: 2.5rem; padding-bottom: 5.0rem;">
+            <div class="card">
+                <h6 class="card-header">Graph Data</h6>
+                <div class="card-block">
+                    <div id="chart"></div>
                 </div>
             </div>
-        </div>*@
+            
+        </div>
     </div>
 </div>
 @section Scripts{ 
     <script src="~/js/HomeHandler.js" type="text/javascript"></script>
+    <script>
+
+        var chart = c3.generate({
+            bindto: '#chart',
+            data: {
+                columns: [
+                    ['data1', 30, 200, 100, 300, 150, 250],
+                    ['data2', 50, 20, 10, 600, 15, 25]
+                ]
+            }
+        });
+
+        setTimeout(function () {
+            chart.load({
+                columns: [
+                    ['data1', 230, 190, 300, 100, 300, 400]
+                ]
+            });
+        }, 1000);
+
+        setTimeout(function () {
+            chart.load({
+                columns: [
+                    ['data3', 130, 150, 200, 300, 200, 100]
+                ]
+            });
+        }, 1500);
+
+    </script>
 }
