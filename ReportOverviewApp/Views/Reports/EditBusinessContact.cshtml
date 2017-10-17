@@ -1,0 +1,12 @@
+﻿@model IEnumerable<ReportOverviewApp.Models.Report>
+<h4>Edit Business Contacts</h4>
+<form>
+    <select>
+        @foreach(string contact in Model.Select(r => r.BusinessContact).OrderBy(bc => bc).Distinct())
+        {
+            <option value="@contact"></option>
+        }
+    </select>
+    <input type="text" placeholder="Enter new name" />
+    <input type="submit" value="Save Changes"/>
+</form>

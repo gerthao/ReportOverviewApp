@@ -40,6 +40,7 @@ namespace ReportOverviewApp.Controllers
         //    List<DateTime> dates = new List<DateTime>();
         //    var i = await _context.Reports.Select()
         //}
+
         /// <summary>
         /// Returns JSON data of report names and deadlines.
         /// </summary>

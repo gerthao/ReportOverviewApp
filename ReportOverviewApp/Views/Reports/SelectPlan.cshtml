@@ -3,40 +3,68 @@
 @{
     ViewData["Title"] = "SelectPlan";
 }
+<h3 class="page-header">Select Plan</h3>
+<hr />
+<h5>Clicking on a state will filter to associated plans.&nbsp;&nbsp;Clicking on a plan option will display reports under that plan.</h5>
 
-<h2 class="page-header">Select A Plan</h2>
-<div class="container">
-    <div class="row">
-        <h4 class="col-md-3">Choose State</h4>
-        <h4 class="col-md-9">Choose Plan</h4>
-    </div>
+<div id="selectPlanForm" class="container">
     <form>
         @if (Model == null || Model.StatePlanSelection == null || Model.StatePlanSelection.Count() == 0)
         {
             <div class="row">
-                <div class="col-md-12">
-                    <h5>No States Or Plans Found</h5>
+                <div class="col-md-12 list-group">
+                    <p class="list-group-item bg-danger"><strong>No States Or Plans Found</strong></p>
                 </div>
             </div>
-        } else{ 
+        }
+        else
+        {
             <div class="row">
                 <div class="col-md-3 list-group">
+                    <p class="list-group-item"><strong>Select State</strong></p>
                     @foreach (var stateItem in (Model.StatePlanSelection.Select(tuple => tuple.Item1).Distinct().OrderBy(t => t.ToString())))
                     {
-                        @Html.ActionLink(stateItem, "SelectPlan", new { state = @stateItem }, new { @class = "list-group-item list-group-item-action"})
+                        @*@Html.ActionLink(stateItem, "SelectPlan", new { state = @stateItem }, new { @class = "list-group-item list-group-item-action" })*@
+                        <p class="list-group-item list-group-item-action">@stateItem</p>
+                    }
+                    @if (!String.IsNullOrEmpty(Model.State))
+                    {
+                        @*@Html.ActionLink("[Go Back]", "SelectPlan", new { }, new {@class = "list-group-item list-group-item-action" })*@
                     }
                 </div>
-                <div class="col-md-9 list-group">
-                    @foreach (var statePlanItem in (Model.StatePlanSelection.Distinct().OrderBy(t => t.Item2)))
-                    {
-                        @Html.ActionLink(statePlanItem.Item2, "Index", new { state = @statePlanItem.Item1, plan = @statePlanItem.Item2 }, new { @class = "list-group-item list-group-item-action;"})
-                    }
+                <div id="planListGroup" class="col-md-6 list-group">
+                    <p class="list-group-item"><strong>Select Plan</strong></p>
+                    <div id="selectPlanListViewComponent">
+                        @await Component.InvokeAsync("SelectPlanList", Model.State)
+                    </div>
                 </div>
             </div>
         }
     </form>
 </div>
 
+
+
 @section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('p.list-group-item.list-group-item-action').on('click', function () {
+                let stateName = $(this).text();
+                if ($(this).hasClass('bg-primary')) {
+                    return;
+                }
+                $(this).addClass('bg-primary');
+                $(this).siblings().removeClass('bg-primary');
+                $.get('/Reports/GetSelectPlanList?State=' + stateName, function (data) {
+                    $('#selectPlanListViewComponent').slideUp(333, function () {
+                        $('#selectPlanListViewComponent').html(data);
+                    });
+                    $('#selectPlanListViewComponent').show(333);
+                    
+                });
+            });
+        });
+    </script>
+    
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

@@ -1,0 +1,17 @@
+﻿@model ReportOverviewApp.Models.ReportViewModels.SelectPlanViewModel
+
+@if(String.IsNullOrEmpty(Model.State)){ 
+    @Html.ActionLink("[All Reports]", "Index", new { }, new { @class = "list-group-item list-group-item-action" })
+}
+else if(Model.StatePlanSelection.Select(sp => sp.Item2).Count() > 1)
+{
+    @Html.ActionLink($"[All Reports From {Model.State}]", "Index", new { state = Model.State } , new { @class = "list-group-item list-group-item-action" })
+}
+else if (Model.StatePlanSelection.Select(sp => sp.Item2).Count() <= 0)
+{
+    <p class="list-group-item">No Plans Found Under This Category</p>
+}
+@foreach (var statePlanItem in (Model.StatePlanSelection.Distinct().OrderBy(t => t.Item2)))
+{
+    @Html.ActionLink(statePlanItem.Item2, "Index", new { state = @statePlanItem.Item1, plan = @statePlanItem.Item2 }, new { @class = "list-group-item list-group-item-action" })
+}

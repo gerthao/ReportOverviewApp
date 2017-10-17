@@ -139,15 +139,15 @@ namespace ReportOverviewApp.Models.ReportViewModels
         }
         private void HandleDates()
         {
-            IEnumerable<(Report report, DateTime? deadline)> list = Reports.Select(r => (r, r.CurrentDeadline()));
-            list = list.Where(r => r.deadline.HasValue);
+            IEnumerable<(Report report, ReportDeadline reportDeadline)> list = Reports.Select(r => (r, r.Deadlines.Any()? r.Deadlines.OrderByDescending(rd => rd.Deadline).First() : null));
+            list = list.Where(r => r.reportDeadline != null);
             if (Filters.BeginString != null)
             {
                 DateTime beginDate;
                 if (DateTime.TryParse(Filters.BeginString, out beginDate))
                 {
                     Filters.Begin = beginDate;
-                    list = list.Where(r => r.deadline.Value >= beginDate);
+                    list = list.Where(r => r.reportDeadline.Deadline >= beginDate);
                 }
             }
             if (Filters.EndString != null)
@@ -156,7 +156,7 @@ namespace ReportOverviewApp.Models.ReportViewModels
                 if (DateTime.TryParse(Filters.EndString, out endDate))
                 {
                     Filters.End = endDate;
-                    list = list.Where(r => r.deadline.Value <= endDate);
+                    list = list.Where(r => r.reportDeadline.Deadline <= endDate);
                 }
             }
             Reports = list.Select(r => r.report);

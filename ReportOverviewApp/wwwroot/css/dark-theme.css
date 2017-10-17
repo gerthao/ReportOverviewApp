@@ -82,7 +82,7 @@ label {
     background-color: #404046;
     color: #DEDEDE;
 }
-.list-group-item:hover, .list-group-item.list-group-item-action:hover {
+a.list-group-item:hover, a.list-group-item.list-group-item-action:hover, p.list-group-item.list-group-item-action:hover {
     background-color: #505066;
     color: #C0C0C0;
 }

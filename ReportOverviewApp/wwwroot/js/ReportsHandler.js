@@ -2,7 +2,10 @@
 'use strict';
 
 $(document).ready(function () {
-    $("#ClearSearchForm").click(function () {
+    $('#updateDeadlines').click(function () {
+        $(this).text('Updating...');
+    })
+    $("#clearSearchForm").click(function () {
         $('input').val(null);
     });
     $('#frequencyList a').click(function () {
@@ -112,7 +115,11 @@ $(document).ready(function () {
         }
     });
     $('.modal').on('hidden.bs.modal', function () {
-        $(this).find('form')[0].reset();
+        let findForm = $(this).find('form');
+        if (findForm[0] === null || findForm[0] === undefined) {
+            return;
+        }
+        findForm[0].reset();
     });
 
     let root = window.location.origin;

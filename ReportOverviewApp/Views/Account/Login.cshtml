@@ -18,7 +18,7 @@
         padding-top: 14%;
     }
 </style>
-<div id="col-md-12">
+<div class="col-md-12">
     <div id="book-page-1">
         <div class="loginForm ">
             <div class="row">
@@ -58,16 +58,14 @@
                                 </div>
                             </div>
                             <div class="col-md-12">
-                                @*<a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">Register</a>*@
-                                <button class="btn btn-link" id="registerLink">Register</button> |
+                                <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">Register</a> | 
+                                @*<a href="#" class="btn btn-link" id="registerLink">Register</a>*@
                                 <a asp-action="ForgotPassword">Forgot Password</a>
                             </div>
                         </form>
                     </section>
                     <div id="book-page-1-2" class="sr-only">
-                        <div id="register">
-                            @await Html.PartialAsync("Register");
-                        </div>
+                        @await Html.PartialAsync(partialViewName: "Register", model: new RegisterViewModel())
                     </div>
                 </div>
                 <div class="col-md-2"></div>
@@ -101,7 +99,7 @@
 </div>
 
 @section scripts {
-    <script>
+    @*<script>
 
         $(document).ready(function () {
             $('#book-page-1-2').hide();
@@ -113,9 +111,8 @@
             });
             $('#loginButton').click(function () {
                 $('#loginIcon').toggleClass('ld ld-flip-h');
-
             });
         });
-    </script>
+    </script>*@
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

@@ -77,17 +77,46 @@ namespace ReportOverviewApp.Controllers
             return viewModel;
         }
 
-        public async Task<IActionResult> UpdateDeadlinesAsync()
+        public IActionResult UpdateDeadlinesAsync()
         {
             if (_context != null && _context.ReportDeadlines != null)
             {
-                var mostRecent = await _context.Reports.Include(r => r.Deadlines).Select(r => r.Deadlines.OrderByDescending(rd => rd.Deadline).FirstOrDefault()).ToListAsync();
-                var list = mostRecent.Where(rd => rd != null && rd.Report != null && rd.Deadline < rd.Report.CurrentDeadline()).Select(rd => new ReportDeadline() { Deadline = rd.Report.CurrentDeadline().Value, ReportId = rd.ReportId });
-                if (list.Count() > 0)
+                //var mostRecent = await _context.Reports.Include(r => r.Deadlines).Select(r => r.Deadlines.Any()? r.Deadlines.OrderByDescending(rd => rd.Deadline).First() : null).ToListAsync();
+                //var list = mostRecent.Where(rd => rd != null && rd.Report != null && rd.Deadline < rd.Report.CurrentDeadline()).Select(rd => new ReportDeadline() { Deadline = rd.Report.CurrentDeadline().Value, ReportId = rd.ReportId });
+                //if (list.Count() > 0)
+                //{
+                //    await _context.ReportDeadlines.AddRangeAsync(list);
+                //    await _context.SaveChangesAsync();
+                //}
+                foreach(Report r in _context.Reports.Include(r => r.Deadlines))
                 {
-                    await _context.ReportDeadlines.AddRangeAsync(list);
-                    await _context.SaveChangesAsync();
+                    DateTime? currentCalculatedDeadline = r.CurrentDeadline();
+                    if(!(currentCalculatedDeadline == null || !currentCalculatedDeadline.HasValue))
+                    {
+                        if(r.Deadlines == null || r.Deadlines.Count() == 0)
+                        {
+                            ReportDeadline reportDeadline = new ReportDeadline()
+                            {
+                                ReportId = r.Id,
+                                Deadline = currentCalculatedDeadline.Value
+                            };
+                            _context.ReportDeadlines.Add(reportDeadline);
+                        } else
+                        {
+                            ReportDeadline mostRecentReportDeadline = r.Deadlines.OrderByDescending(rd => rd.Deadline).First();
+                            if (currentCalculatedDeadline > mostRecentReportDeadline.Deadline)
+                            {
+                                ReportDeadline reportDeadline = new ReportDeadline()
+                                {
+                                    ReportId = r.Id,
+                                    Deadline = currentCalculatedDeadline.Value
+                                };
+                                _context.ReportDeadlines.Add(reportDeadline);
+                            }
+                        }
+                    }
                 }
+                _context.SaveChanges();
             }
             return RedirectToAction(nameof(Index));
         }
@@ -122,6 +151,11 @@ namespace ReportOverviewApp.Controllers
             return View(report);
         }
 
+        public IActionResult GetSelectPlanList(string state = null)
+        {
+            return ViewComponent("SelectPlanList", new { State = state });
+        }
+
         [Authorize]
         public async Task<IActionResult> SelectPlan(string state)
             => View(await GetSelectPlanViewModelAsync(state));
@@ -149,6 +183,10 @@ namespace ReportOverviewApp.Controllers
         {
             ToastMessage toast = null;
             if (ModelState.IsValid){
+                if(report.DateAdded == null)
+                {
+                    report.DateAdded = DateTime.Now;
+                }
                 _context.Add(report);
                 _context.Add(userLogFactory.Build(GetCurrentUserID(), $"\"{report.Name}\" has been created."));
                 toast = new ToastMessage(message: $"{report.Name} has been successfully created.", title: "Success", toasType: ToastEnums.ToastType.Success, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });

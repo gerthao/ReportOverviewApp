@@ -10,11 +10,13 @@
 </style>
 <h4>
     Reporting Catalogue
-    <button class="btn btn-primary" type="button" id="mag-glass" data-toggle="modal" data-target="#SearchReportModal"><span class="fa fa-search"></span>&nbsp;&nbsp;Search</button>
+    <button class="btn btn-primary" type="button" id="mag-glass" data-toggle="modal" data-target="#searchReportModal"><span class="fa fa-search"></span>&nbsp;&nbsp;Search</button>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createReportModal" aria-label="Left Align"><span class="fa fa-plus-square"></span>&nbsp;&nbsp;Create New</button>
-    @Html.ActionLink(linkText: "Update Deadlines (Slow)", actionName: "UpdateDeadlinesAsync", controllerName: "Reports", routeValues: new { }, htmlAttributes: new { @class = "btn btn-primary" })
+    @Html.ActionLink(linkText: "Update Deadlines", actionName: "UpdateDeadlinesAsync", controllerName: "Reports", routeValues: new { }, htmlAttributes: new {@id="updateDeadlines", @class = "btn btn-primary" })
+    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#findMatchReplaceReportModal">Find Match & Replace</button>
 </h4>
-<div id="SearchReportModal" class="modal fade">
+<hr />
+<div id="searchReportModal" class="modal fade">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
              @await Html.PartialAsync("Search")
@@ -25,6 +27,13 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             @await Html.PartialAsync("Create", new Report())
+        </div>
+    </div>
+</div>
+<div id="findMatchReplaceReportModal" class="modal fade">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            
         </div>
     </div>
 </div>
