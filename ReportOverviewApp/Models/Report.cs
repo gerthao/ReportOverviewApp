@@ -36,22 +36,26 @@ namespace ReportOverviewApp.Models
         //public string UserDone {get; set;}
         //public string UserClientNotified { get; set; }
         //public string UserSent { get; set; }
+        public int BusinessContactId { get; set; }
+        public BusinessContact BusinessContact { get; set; }
 
-        [StringLength(255), Display(Name = "Business Contact")]
-        public string BusinessContact { get; set; }
-        [StringLength(255), Display(Name = "Business Owner")]
-        public string BusinessOwner { get; set; }
+        public virtual ICollection<ReportPlanMap> ReportPlanMapping { get; set; }
+
+        //[StringLength(255), Display(Name = "Business Contact")]
+        //public string BusinessContact { get; set; }
+        //[StringLength(255), Display(Name = "Business Owner")]
+        //public string BusinessOwner { get; set; }
         [Display(Name = "First Due Date (If Applicable)")]
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true, NullDisplayText = "No date given")]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         public DateTime? DueDate1 { get; set; }
         [Display(Name = "Second Due Date (If Applicable)")]
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true, NullDisplayText = "No date given")]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         public DateTime? DueDate2 { get; set; }
         [Display(Name = "Third Due Date (If Applicable)")]
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true, NullDisplayText = "No date given")]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         public DateTime? DueDate3 { get; set; }
         [Display(Name = "Fourth Due Date (If Applicable)")]
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true, NullDisplayText = "No date given")]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         public DateTime? DueDate4 { get; set; }
         [StringLength(50)]
         public string Frequency { get; set; }
@@ -78,14 +82,16 @@ namespace ReportOverviewApp.Models
         public DateTime? EffectiveDate { get; set; }
         [DataType(DataType.Date), Display(Name = "Termination Date")]
         public DateTime? TerminationDate { get; set; }
-        [StringLength(255), Display(Name = "Plan")]
-        public string GroupName { get; set; }
-        [StringLength(10)]
-        public string State { get; set; }
+        //[StringLength(255), Display(Name = "Plan")]
+        //public string GroupName { get; set; }
+        //[StringLength(10)]
+        //public string State { get; set; }
+        
+        
         [StringLength(2000), Display(Name = "Report Path")]
         public string ReportPath { get; set; }
         [Display(Name = "Other Department")]
-        public bool IsFromOtherDepartment { get; set; }
+        public bool IsFromOtherDepartment { get => !String.IsNullOrEmpty(SourceDepartment); }
         [StringLength(100), Display(Name = "Source Department")]
         public string SourceDepartment { get; set; }
         [Display(Name = "Quality Indicator")]
@@ -290,7 +296,9 @@ namespace ReportOverviewApp.Models
         public bool IsTermed(DateTime? compareDate)
         {
             if(compareDate == null)
+            {
                 compareDate = DateTime.Today;
+            }
             return TerminationDate != null && TerminationDate.HasValue && TerminationDate.Value < compareDate;
         }
     }

@@ -23,8 +23,8 @@ namespace XUnitTestProjectReportOverviewApp
             report.Id = Count;
             report.Name = $"Test Report #{Count}";
             report.SourceDepartment = "Test Department";
-            report.GroupName = "Test Plan";
-            report.State = "Test State";
+            //report.GroupName = "Test Plan";
+            //report.State = "Test State";
             switch (frequency)
             {
                 case FrequencyType.Quarterly:

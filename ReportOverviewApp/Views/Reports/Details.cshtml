@@ -22,16 +22,16 @@
                 @Model.CurrentDeadline()
             </dd>
             <dt>
-                @Html.DisplayNameFor(model => model.BusinessContact)
+                @Html.DisplayNameFor(model => model.BusinessContact.Name)
             </dt>
             <dd>
-                @Html.DisplayFor(model => model.BusinessContact)
+                @Html.DisplayFor(model => model.BusinessContact.Name)
             </dd>
             <dt>
-                @Html.DisplayNameFor(model => model.BusinessOwner)
+                @Html.DisplayNameFor(model => model.BusinessContact.BusinessOwner)
             </dt>
             <dd>
-                @Html.DisplayFor(model => model.BusinessOwner)
+                @Html.DisplayFor(model => model.BusinessContact.BusinessOwner)
             </dd>
             <dt>
                 @Html.DisplayNameFor(model => model.DueDate1)
@@ -174,7 +174,7 @@
             <dt>
                 @Html.DisplayNameFor(model => model.ERSReportLocation)
             </dt>
-            @if (Model.ERSReportLocation.Contains(@"http://"))
+            @if (!String.IsNullOrEmpty(Model.ERSReportLocation) && Model.ERSReportLocation.Contains(@"http://"))
             {
                 <dd>@Model.ERSReportLocation.Split(':')[0]: <a href="@Model.ERSReportLocation.Substring(Model.ERSReportLocation.IndexOf(@"http://")).Trim()">@Model.ERSReportLocation.Substring(Model.ERSReportLocation.IndexOf(@"http://")).Trim()</a></dd>
 

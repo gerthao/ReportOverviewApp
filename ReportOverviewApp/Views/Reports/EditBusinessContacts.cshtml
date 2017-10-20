@@ -1,0 +1,29 @@
+﻿@model IEnumerable<BusinessContact>
+<h4>Edit Business Contacts</h4>
+<form asp-action="EditBusinessContacts">
+    <div class="row">
+        
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Select Business Contact</label>
+                    <select class="form-control">
+                        @foreach(BusinessContact businessContact in Model)
+                        {
+                            <option>@businessContact.Name</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Edit Name</label>
+                    <input class="form-control" type="text" placeholder="Enter new name" />
+                </div>
+            </div>
+        
+    </div>
+    
+    
+    
+    <input class="btn btn-primary" type="submit" value="Save Changes"/>
+</form>

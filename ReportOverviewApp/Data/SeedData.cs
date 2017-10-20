@@ -25,18 +25,84 @@ namespace ReportOverviewApp.Data{
                 //    context.SaveChanges();
                 //}
                 
-                if (!context.Reports.Any())
+                context.BusinessContacts.RemoveRange(context.BusinessContacts);
+                context.ReportDeadlines.RemoveRange(context.ReportDeadlines);
+                context.States.RemoveRange(context.States);
+                context.Plans.RemoveRange(context.Plans);
+                context.Reports.RemoveRange(context.Reports);
+                context.ReportPlanMapping.RemoveRange(context.ReportPlanMapping);
+                
+                try
                 {
-                    try
+                    string jsonStateData;
+
+                    try { jsonStateData = File.ReadAllText(@"C:\Users\gthao\Desktop\states.json"); }
+                    catch { jsonStateData = File.ReadAllText(@"C:\Users\Ger\Desktop\states.json"); }
+                    List<State> states = JsonConvert.DeserializeObject<List<State>>(jsonStateData).ToList();
+
+                    
+
+                    context.States.AddRange(states);
+                    context.SaveChanges();
+
+                    string jsonReportData;
+                    try { jsonReportData = File.ReadAllText(@"C:\Users\gthao\Desktop\crc.json"); }
+                    catch { jsonReportData = File.ReadAllText(@"C:\Users\Ger\Desktop\crc.json"); }
+                    var results = JsonConvert.DeserializeObject<List<ReportJsonData>>(jsonReportData);
+                    List<(Report, Plan)> reportPairs = results.Select(jsonReport => jsonReport.ToReport()).ToList();
+                    foreach ((Report, Plan) rp in reportPairs)
                     {
-                        string jsonData;
-                        try { jsonData = File.ReadAllText(@"C:\Users\gthao\Desktop\crc.json"); }
-                        catch { jsonData = File.ReadAllText(@"C:\Users\Ger\Desktop\crc.json"); }
-                        List<Report> reports = JsonConvert.DeserializeObject<List<ReportJsonData>>(jsonData).Select(jsonReport => jsonReport.ToReport()).ToList();
+                        Console.WriteLine($"***{rp.Item1.Name} |||| {rp.Item2.Name}***");
+                    }
+                    List<Report> reports = reportPairs.Select(r => r.Item1).ToList();
+                    List<Plan> plans = reportPairs.Select(r => r.Item2).ToList();
+
+                    foreach (Plan plan in plans)
+                    {
+                        if (!context.Plans.Where(p => p.Name == plan.Name).Any())
+                        {
+                            context.Plans.Add(plan);
+                            context.SaveChanges();
+                        }
+                    }
 
 
-                        context.Reports.AddRange(reports);
+                    List<BusinessContact> businessContacts = reports.Select(r => r.BusinessContact).Distinct().OrderBy(bc => bc.Name).ToList();
+                        foreach(BusinessContact bc in businessContacts)
+                        {
+                            if(!context.BusinessContacts.Where(c => c.Name == bc.Name).Any())
+                            {
+                                context.BusinessContacts.Add(bc);
+                                context.SaveChanges();
+                            }
+                        }
+                        
+
+                        for (int i = 0; i < reports.Count; i++)
+                        {
+                            BusinessContact f = context.BusinessContacts.Where(bc => bc.Name == reports[i].BusinessContact.Name).First();
+                            reports[i].BusinessContact = reports[i].BusinessContact = null;
+                            reports[i].BusinessContactId = f.Id;
+                        }
+
+                        context.Reports.AddRange(reports.OrderBy(r => r.Name));
                         context.SaveChanges();
+
+                        
+
+                    for (int i = 0; i < reportPairs.Count(); i++)
+                        {
+                            (Report, Plan) pair = (context.Reports.Where(r => r.Name == reportPairs[i].Item1.Name).First(), context.Plans.Where(r => r.Name == reportPairs[i].Item2.Name).First());
+                            ReportPlanMap map = new ReportPlanMap()
+                            {
+                                ReportId = pair.Item1.Id,
+                                PlanId = pair.Item2.Id
+                            };
+                            context.ReportPlanMapping.Add(map);
+                            context.SaveChanges();
+                        }
+
+                       
 
                         List<ReportDeadline> deadlines = context.Reports.Where(r => r.CurrentDeadline() != null && r.CurrentDeadline().HasValue).Select(r => new ReportDeadline() { ReportId = r.Id, Deadline = r.CurrentDeadline().Value}).ToList();
 
@@ -45,9 +111,9 @@ namespace ReportOverviewApp.Data{
                     }
                     catch (Exception ex)
                     {
-                        throw ex;
+                    throw ex;
                     }
-                }
+                
             }
         }
     }

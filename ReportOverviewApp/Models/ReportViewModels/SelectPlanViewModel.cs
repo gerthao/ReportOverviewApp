@@ -7,26 +7,20 @@ namespace ReportOverviewApp.Models.ReportViewModels
 {
     public class SelectPlanViewModel
     {
-        public IEnumerable<Tuple<string, string>> StatePlanSelection { get; set; }
+        public IEnumerable<Plan> StatePlanSelection { get; set; }
         public string State { get; set; }
-        public SelectPlanViewModel(IEnumerable<Report> reports, string state = null)
+        public SelectPlanViewModel(IEnumerable<Plan> plans, string state = null)
         {
             State = state;
             if (String.IsNullOrEmpty(State))
             {
-                StatePlanSelection = reports
-                    .Where(r => !String.IsNullOrEmpty(r.State) && !String.IsNullOrEmpty(r.GroupName))
-                    .Select(r => new { r.State, r.GroupName })
-                    .AsEnumerable()
-                    .Select(t => new Tuple<string, string>(t.State, t.GroupName));
+                StatePlanSelection = plans.Where(p => p != null);
             } else
             {
-                StatePlanSelection = reports
-                    .Where(r => !String.IsNullOrEmpty(r.State) && !String.IsNullOrEmpty(r.GroupName))
-                    .Where(r => r.State == State)
-                    .Select(r => new { r.State, r.GroupName })
-                    .AsEnumerable()
-                    .Select(t => new Tuple<string, string>(t.State, t.GroupName));
+                StatePlanSelection = plans
+                    .Where(p => p != null && !String.IsNullOrEmpty(p.Name))
+                    .Where(p => !String.IsNullOrEmpty(p.State.Name))
+                    .Where(p => p.State.Name == State);
             }
         }
     }

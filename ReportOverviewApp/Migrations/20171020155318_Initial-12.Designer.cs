@@ -12,9 +12,10 @@ using System;
 namespace ReportOverviewApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171020155318_Initial-12")]
+    partial class Initial12
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -187,8 +188,7 @@ namespace ReportOverviewApp.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("BusinessOwner")
-                        .HasMaxLength(64);
+                    b.Property<string>("BusinessOwner");
 
                     b.Property<string>("Email")
                         .HasMaxLength(64);
@@ -212,7 +212,7 @@ namespace ReportOverviewApp.Migrations
                     b.Property<int>("StateId");
 
                     b.Property<string>("WindwardId")
-                        .HasMaxLength(64);
+                        .HasMaxLength(16);
 
                     b.HasKey("Id");
 
@@ -355,13 +355,13 @@ namespace ReportOverviewApp.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Name")
-                        .HasMaxLength(64);
-
-                    b.Property<string>("PostalAbbreviation")
                         .HasMaxLength(32);
 
+                    b.Property<string>("PostalAbbreviation")
+                        .HasMaxLength(16);
+
                     b.Property<string>("Type")
-                        .HasMaxLength(64);
+                        .HasMaxLength(32);
 
                     b.HasKey("Id");
 

@@ -44,11 +44,11 @@ namespace ReportOverviewApp.Controllers
         {
             DropdownOptions options = new DropdownOptions()
             {
-                States = await _context.Reports.Select(r => r.State).OrderBy(s => s).Distinct().ToListAsync(),
-                Plans = await _context.Reports.Select(r => r.GroupName).OrderBy(gn => gn).Distinct().ToListAsync(),
+                States = await _context.States.Select(s => s.Name).OrderBy(n => n).Distinct().ToListAsync(),
+                Plans = await _context.Plans.Select(p => p.Name).OrderBy(p => p).Distinct().ToListAsync(),
                 Frequencies = await _context.Reports.Select(r => r.Frequency).OrderBy(f => f).Distinct().ToListAsync(),
-                BusinessContacts = await _context.Reports.Select(r => r.BusinessContact).OrderBy(bc => bc).Distinct().ToListAsync(),
-                BusinessOwners = await _context.Reports.Select(r => r.BusinessOwner).OrderBy(bo => bo).Distinct().ToListAsync(),
+                BusinessContacts = await _context.BusinessContacts.Select(bc => bc.Name).OrderBy(bc => bc).Distinct().ToListAsync(),
+                BusinessOwners = await _context.BusinessContacts.Select(bc => bc.BusinessOwner).OrderBy(bo => bo).Distinct().ToListAsync(),
                 SourceDepartments = await _context.Reports.Select(r => r.SourceDepartment).OrderBy(sd => sd).Distinct().ToListAsync()
             };
             Filters filters = new Filters()
@@ -131,7 +131,7 @@ namespace ReportOverviewApp.Controllers
 
         private async Task<SelectPlanViewModel> GetSelectPlanViewModelAsync(string state)
         {
-            return new SelectPlanViewModel(await _context.Reports.ToListAsync(), state);
+            return new SelectPlanViewModel(await _context.Plans.ToListAsync(), state);
         }
 
         // GET: Reports
@@ -236,6 +236,12 @@ namespace ReportOverviewApp.Controllers
             return View(reportDeadline);
         }
 
+        public async Task<IActionResult> EditBusinessContacts()
+        {
+            return View(await _context.Reports.Select(r => r.BusinessContact).OrderBy(bc => bc).Distinct().ToListAsync());
+        }
+        
+
         // GET: Reports/Edit/5
         [Authorize]
         public async Task<IActionResult> Edit(int? id)
@@ -331,8 +337,8 @@ namespace ReportOverviewApp.Controllers
                 .Append(Compare("Delivery To", old.DeliverTo, updated.DeliverTo))
                 .Append(Compare("Effective Date", old.EffectiveDate, updated.EffectiveDate))
                 .Append(Compare("Termination Date", old.TerminationDate, updated.TerminationDate))
-                .Append(Compare("Plan", old.GroupName, updated.GroupName))
-                .Append(Compare("State", old.State, updated.State))
+                //.Append(Compare("Plan", old.GroupName, updated.GroupName))
+                //.Append(Compare("State", old.State, updated.State))
                 .Append(Compare("Report Path", old.ReportPath, updated.ReportPath))
                 .Append(Compare("Other Department", old.IsFromOtherDepartment, updated.IsFromOtherDepartment))
                 .Append(Compare("Source Department", old.SourceDepartment, updated.SourceDepartment))

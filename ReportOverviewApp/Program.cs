@@ -27,13 +27,13 @@ namespace ReportOverviewApp
             using(var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
-                try
-                {
+                //try
+                //{
                     SeedData.Initialize(services);
-                } catch (Exception e)
-                {
-                    services.GetRequiredService<ILogger<Program>>().LogError(e, "An error occurred initializing the database.");
-                }
+                //} catch (Exception e)
+                //{
+                //    services.GetRequiredService<ILogger<Program>>().LogError(e, "An error occurred initializing the database.");
+                //}
             }
             host.Run();
         }

@@ -12,9 +12,10 @@ using System;
 namespace ReportOverviewApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171019212921_Initial-11")]
+    partial class Initial11
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -187,14 +188,11 @@ namespace ReportOverviewApp.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("BusinessOwner")
-                        .HasMaxLength(64);
+                    b.Property<string>("BusinessOwner");
 
-                    b.Property<string>("Email")
-                        .HasMaxLength(64);
+                    b.Property<string>("Email");
 
-                    b.Property<string>("Name")
-                        .HasMaxLength(64);
+                    b.Property<string>("Name");
 
                     b.HasKey("Id");
 
@@ -206,13 +204,11 @@ namespace ReportOverviewApp.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Name")
-                        .HasMaxLength(255);
+                    b.Property<string>("Name");
 
                     b.Property<int>("StateId");
 
-                    b.Property<string>("WindwardId")
-                        .HasMaxLength(64);
+                    b.Property<string>("WindwardId");
 
                     b.HasKey("Id");
 
@@ -354,14 +350,12 @@ namespace ReportOverviewApp.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Name")
-                        .HasMaxLength(64);
+                    b.Property<string>("Name");
 
                     b.Property<string>("PostalAbbreviation")
-                        .HasMaxLength(32);
+                        .HasMaxLength(2);
 
-                    b.Property<string>("Type")
-                        .HasMaxLength(64);
+                    b.Property<string>("Type");
 
                     b.HasKey("Id");
 

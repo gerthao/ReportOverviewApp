@@ -56,6 +56,9 @@
                         <li class="nav-item">
                             @Html.ActionLink(linkText: "Past Reports", actionName: "PastReports", controllerName: "Reports", routeValues: new { }, htmlAttributes: new { @class = "nav-link" })
                         </li>
+                        <li class="nav-item">
+                            @Html.ActionLink(linkText: "Edit Business Contacts", actionName: "EditBusinessContacts", controllerName: "Reports", routeValues: new { }, htmlAttributes: new { @class = "nav-link" })
+                        </li>
                     </ul>
                     @await Html.PartialAsync("_LoginPartial")
                 </div>

@@ -42,7 +42,7 @@ else {
     <table id="reportTable" class="table report-table table-bordered table-sm table-striped table-hover">
         <thead>
             <tr>
-                <td class="bg-primary text-light" colspan="7">
+                <td class="bg-darkblue text-light" colspan="7">
                     @if (Model.Filters.Plan != null)
                     {
                         @(Model.Filters.Plan)
@@ -54,12 +54,47 @@ else {
                 </td>
             </tr>
             <tr>
-                <th>@Html.ActionLink("Id", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Id", begin = Model.Filters.Begin, end = Model.Filters.End }, new {  })</th>
-                <th>@Html.ActionLink("Name", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Name", begin = Model.Filters.Begin, end = Model.Filters.End }, new {  })</th>
-                <th>@Html.ActionLink("Deadline", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Deadline", begin = Model.Filters.Begin, end = Model.Filters.End }, new {  })</th>
-                <th>@Html.ActionLink("Finished On", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Finished On", begin = Model.Filters.Begin, end = Model.Filters.End }, new {  })</th>
-                <th>@Html.ActionLink("Notified On", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Notified On", begin = Model.Filters.Begin, end = Model.Filters.End }, new {  })</th>
-                <th>@Html.ActionLink("Sent On", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Sent On", begin = Model.Filters.Begin, end = Model.Filters.End }, new {  })</th>
+                <th>
+                    @Html.ActionLink("Id", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Id", begin = Model.Filters.Begin, end = Model.Filters.End }, new {  })
+                    @if(Model.Filters.Column == "Id" || String.IsNullOrEmpty(Model.Filters.Column))
+                    {
+                        <i class="fa fa-filter"></i>
+                    }
+                </th>
+                <th>
+                    @Html.ActionLink("Name", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Name", begin = Model.Filters.Begin, end = Model.Filters.End }, new {  })
+                    @if (Model.Filters.Column == "Name")
+                    {
+                        <i class="fa fa-filter"></i>
+                    }
+                </th>
+                <th>
+                    @Html.ActionLink("Deadline", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Deadline", begin = Model.Filters.Begin, end = Model.Filters.End }, new {  })
+                    @if (Model.Filters.Column == "Deadline")
+                    {
+                        <i class="fa fa-filter"></i>
+                    }
+                </th>
+                <th>@Html.ActionLink("Finished On", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Finished On", begin = Model.Filters.Begin, end = Model.Filters.End }, new {  })
+                    @if (Model.Filters.Column == "Finished On")
+                    {
+                        <i class="fa fa-filter"></i>
+                    }
+                </th>
+                <th>
+                    @Html.ActionLink("Notified On", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Notified On", begin = Model.Filters.Begin, end = Model.Filters.End }, new {  })
+                    @if (Model.Filters.Column == "Notified On")
+                    {
+                        <i class="fa fa-filter"></i>
+                    }
+                </th>
+                <th>
+                    @Html.ActionLink("Sent On", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Sent On", begin = Model.Filters.Begin, end = Model.Filters.End }, new {  })
+                    @if (Model.Filters.Column == "Sent On")
+                    {
+                        <i class="fa fa-filter"></i>
+                    }
+                </th>
                 <th>Options</th>
             </tr>
         </thead>

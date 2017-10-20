@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.RegularExpressions;
 
 namespace ReportOverviewApp.Models
 {
@@ -60,6 +61,8 @@ namespace ReportOverviewApp.Models
         public string GroupName { get; set; }
         [JsonProperty("STATE")]
         public string State { get; set; }
+        [JsonProperty("WW_GROUP_ID")]
+        public string WwGroupId { get; set; }
         [JsonProperty("REPORT_PATH")]
         public string ReportPath { get; set; }
         [JsonProperty("OTHER_DEPARTMENT")]
@@ -93,17 +96,47 @@ namespace ReportOverviewApp.Models
             return ExcelBaseDate.AddDays(days.Value);
         }
 
-        public Report ToReport()
+        public BusinessContact GetBusinessContacts()
+        {
+            return null;
+        }
+
+        public (Report, Plan) ToReport()
         {
             Report report = new Report();
+            Plan plan = new Plan();
+            if(plan == null)
+            {
+                plan = new Plan();
+            }
             if(report == null)
             {
                 report = new Report();
             }
+            if (String.IsNullOrEmpty(BusinessContact))
+            {
+                report.BusinessContact = null;
+            } else
+            {
+                report.BusinessContact = new BusinessContact()
+                {
+                    Name = BusinessContact,
+                    BusinessOwner = BusinessOwner
+                };
+            }
+            if (String.IsNullOrEmpty(SourceDepartment))
+            {
+                report.SourceDepartment = null;
+            } else
+            {
+                report.SourceDepartment = SourceDepartment.Trim();
+            }
+            
+            plan.Name = GroupName?.Trim();
+            plan.WindwardId = WwGroupId?.Trim();
+            plan.State = new State() { PostalAbbreviation = State?.Trim().ToUpper() };
 
             report.Name = Name?.Trim();
-            report.BusinessContact = BusinessContact?.Trim();
-            report.BusinessOwner = BusinessOwner?.Trim();
             report.DueDate1 = ToDate(DueDate1);
             report.DueDate2 = ToDate(DueDate2);
             report.DueDate3 = ToDate(DueDate3);
@@ -124,11 +157,9 @@ namespace ReportOverviewApp.Models
             report.RunWith = RunWith;
             report.Notes = Notes?.Trim();
             report.DaysAfterQuarter = DaysAfterQuarter;
-            report.GroupName = GroupName?.Trim();
-            report.State = State?.Trim();
+            //report.Plan = GroupName?.Trim();
+            //report.State = State?.Trim();
             report.ReportPath = ReportPath?.Trim();
-            report.IsFromOtherDepartment = OtherDepartment;
-            report.SourceDepartment = SourceDepartment?.Trim();
             report.IsQualityIndicator = QualityIndicator;
             report.ERSReportLocation = ERSReportLocation?.Trim();
             report.ERRStatus = ERRStatus;
@@ -138,7 +169,7 @@ namespace ReportOverviewApp.Models
             report.OtherReportLocation = OtherReportLocation?.Trim();
             report.OtherReportName = OtherReportName?.Trim();
 
-            return report;
+            return (report, plan);
         }
     }
 }

@@ -15,7 +15,7 @@
 </style>
 
     <div class="registerForm col-md-5">
-        <h4>Create a new account.</h4>
+        <h4>Register:&nbsp;&nbsp;Create a new account.</h4>
         <form asp-controller="Account" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
             <hr />
             <div asp-validation-summary="All" class="text-danger"></div>
@@ -55,26 +55,7 @@
         </form>
     </div>
 
-
-
-@*<div class="col-md-12">
-    <button class="btn btn-link" id="go">Go Back</button>
-</div>*@
-
 @section scripts {
-    @*<script>
-        $('#go').click(function () {
-            $('#book-page-1-1').show(1500);
-            $('#book-page-1-2').hide(500);
-            $('#book-page-1-2').addClass('sr-only');
-        })
-    </script>*@
-    @*<script>
-        $(document).ready(function () {
-            $('#registerButton').click(function () {
-                $('#registerIcon').toggleClass('ld ld-flip-h');
-            });
-        });
-    </script>*@
+
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

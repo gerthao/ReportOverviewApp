@@ -81,14 +81,14 @@ namespace ReportOverviewApp.Models.ReportViewModels
         {
             if (!String.IsNullOrEmpty(Filters.BusinessContact))
             {
-                Reports = Reports.Where(r => r != null && r.BusinessContact == Filters.BusinessContact);
+                Reports = Reports.Where(r => r != null && r.BusinessContact != null && r.BusinessContact.Name == Filters.BusinessContact);
             }
         }
         private void HandleBusinessOwner()
         {
             if (!String.IsNullOrEmpty(Filters.BusinessOwner))
             {
-                Reports = Reports.Where(r => r != null && r.BusinessOwner == Filters.BusinessOwner);
+                Reports = Reports.Where(r => r != null && r.BusinessContact != null && r.BusinessContact.BusinessOwner == Filters.BusinessOwner);
             }
         }
         private void HandleSourceDepartment()
@@ -163,13 +163,14 @@ namespace ReportOverviewApp.Models.ReportViewModels
         }
         private void HandleStateAndPlan()
         {
-            if (!String.IsNullOrEmpty(Filters.State))
-            {
-                Reports = Reports.Where(r => r != null && r.State != null && r.State.Equals(Filters.State));
-            }
+            
             if (!String.IsNullOrEmpty(Filters.Plan))
             {
-                Reports = Reports.Where(r => r != null && r.GroupName != null && r.GroupName.Equals(Filters.Plan));
+                Reports = Reports.Where(r => r != null && r.ReportPlanMapping.Select(rpm => rpm.Plan.Name).ToList().Contains(Filters.Plan));
+            }
+            if (!String.IsNullOrEmpty(Filters.State))
+            {
+                Reports = Reports.Where(r => r != null && r.ReportPlanMapping.Select(rpm => rpm.Plan.State.Name).ToList().Contains(Filters.State));
             }
         }
         private void HandleSearch()
