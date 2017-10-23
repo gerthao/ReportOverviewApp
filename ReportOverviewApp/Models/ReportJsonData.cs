@@ -90,6 +90,13 @@ namespace ReportOverviewApp.Models
         [JsonProperty("OTHER_REPORT_NAME")]
         public string OtherReportName { get; set; }
 
+        private State DefaultState = new State()
+        {
+            Name = "N/A",
+            PostalAbbreviation = "N/A",
+            Type = "N/A"
+        };
+
         private DateTime? ToDate(double? days)
         {
             if (days == null) return null;
@@ -134,7 +141,13 @@ namespace ReportOverviewApp.Models
             
             plan.Name = GroupName?.Trim();
             plan.WindwardId = WwGroupId?.Trim();
-            plan.State = new State() { PostalAbbreviation = State?.Trim().ToUpper() };
+            if (!String.IsNullOrEmpty(State))
+            {
+                plan.State = new State() { PostalAbbreviation = State.Trim().ToUpper() };
+            } else
+            {
+                plan.State = DefaultState;
+            }
 
             report.Name = Name?.Trim();
             report.DueDate1 = ToDate(DueDate1);

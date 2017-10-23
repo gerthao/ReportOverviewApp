@@ -14,17 +14,35 @@
     .btn-lg{
         max-width: 100%;
     }
-    .loginForm{
-        padding-top: 14%;
+    .loginForm {
+        background-color: #F6F6F6;
+        padding-top: 5%;
+        padding-left: 5%;
+        padding-right: 5%;
+        padding-bottom: 5%;
+    }
+    .vertical-divider {
+        border-left: 1px solid #E0E0E0;
+        min-width: 1px;
+        max-width: 1px;
+        max-height: 22rem;
+        min-height: 22rem;
+        align-self:center;
     }
 </style>
 <div class="col-md-12">
-    <div id="book-page-1">
-        <div class="loginForm ">
+        <div style="padding-top:5%"></div>
+        <div class="loginForm sr-only">
             <div class="row">
-                <div id="book-page-1-1" class="col-md-5">
+                <div class="col-md-12">
+                    <h4>DentaQuest Report Tracker</h4>
+                    <br />
+                </div>
+            </div>
+            <div class="row">
+                <div id="loginSection" class="col-md-5">
                     <section >
-                        <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
+                        <form asp-controller="Account" id="loginFormSection" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
                             <h4>Sign into your account.</h4>
                             <hr />
                             <div asp-validation-summary="All" class="text-danger"></div>
@@ -49,7 +67,7 @@
                                     <button id="loginButton" type="submit" class="btn btn-lg btn-primary btn-block"><span id="loginIcon" class="fa fa-sign-in"></span> Log in</button>
                                 </div>
                             </div>
-                            <div class="form-group col-md-12">
+                            <div class="form-group">
                                 <div class="checkbox">
                                     <label asp-for="RememberMe">
                                         <input asp-for="RememberMe" />
@@ -57,19 +75,21 @@
                                     </label>
                                 </div>
                             </div>
-                            <div class="col-md-12">
-                                <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">Register</a> | 
-                                @*<a href="#" class="btn btn-link" id="registerLink">Register</a>*@
-                                <a asp-action="ForgotPassword">Forgot Password</a>
+                            <div>
+                                @*<a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">Register</a> |*@ 
+                                <noscript><a class="btn btn-info" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">Register</a></noscript>
+                                <button type="button" class="btn btn-info" id="registerLink">Register</button>
+                                <a class="btn btn-info" asp-action="ForgotPassword">Forgot Password</a>
                             </div>
                         </form>
-                    </section>
-                    
+                    </section>            
                 </div>
-                @*<div id="book-page-1-2" class="sr-only col-md-5">
-                    @await Html.PartialAsync(partialViewName: "Register", model: new RegisterViewModel())
-                </div>*@
-                <div class="col-md-2"></div>
+                <div id="registerPartialView" class="sr-only col-md-5">
+                    @await Html.PartialAsync(partialViewName: "RegisterLogin", model: new RegisterViewModel())
+                </div>
+                <div class="col-md-2" style="padding-left: 8%;">
+                    <hr class="text-right align-items-end align-content-end vertical-divider" />
+                </div>
                 <div class="col-md-5" id="externalLogin">
                     <section>
                         <h4>Use another service to log in.</h4>
@@ -81,12 +101,16 @@
                                     <p>
                                         @foreach (var provider in loginProviders)
                                         {
-                                            <button type="submit" class="btn btn-lg btn-block btn-outline-dark" name="provider" value="@provider.Name" data-toggle="tooltip" data-placement="bottom" title="Log in using your @provider.DisplayName account">
+                                            <div class="btn-group btn-block">
                                                 @if (provider.Name.Equals("Microsoft"))
                                                 {
-                                                    <span><img alt="Microsoft" src="https://assets.onestore.ms/cdnfiles/external/uhf/long/9a49a7e9d8e881327e81b9eb43dabc01de70a9bb/images/microsoft-gray.png" itemprop="logo" itemscope="itemscope" style="height:1.5rem;"></span>
+                                                    <span class="bg-primary text-light input-group-addon fa fa-2x text-center fa-windows">@*<img alt="Microsoft" src="https://assets.onestore.ms/cdnfiles/external/uhf/long/9a49a7e9d8e881327e81b9eb43dabc01de70a9bb/images/microsoft-gray.png" itemprop="logo" itemscope="itemscope" style="height:1.5rem;">*@</span>
                                                 }
-                                            </button>
+                                                <button type="submit" class="btn btn-lg btn-block btn-primary" name="provider" value="@provider.Name" data-toggle="tooltip" data-placement="bottom" title="Log in using your @provider.DisplayName account">
+                                                    @provider.Name
+                                                </button>
+                                            </div>
+                                            
                                         }
                                     </p>
                                 </div>
@@ -96,26 +120,29 @@
                 </div>
             </div>
         </div>
-    </div>
 </div>
 
 @section scripts {
     <script>
 
         $(document).ready(function () {
-            //$('#book-page-1-2').hide();
-            //$('#registerLink').click(function () {
-
-            //    $('#book-page-1-1').fadeOut(500, function () {
-            //        $('#book-page-1-2').removeClass('sr-only');
-            //        $('#book-page-1-2').show(1000);
-            //    });
-                
-                
-            //});
-            //$('#loginButton').click(function () {
-            //    $('#loginIcon').toggleClass('ld ld-flip-h');
-            //});
+            $('.loginForm').hide(0, function () {
+                $(this).removeClass('sr-only');
+                $(this).show(800);
+            });
+            $('#registerPartialView').hide();
+            $('#registerLink').click(function () {
+                $('#loginSection').slideUp(800, function () {
+                    $('#registerPartialView').removeClass('sr-only');
+                    $('#registerPartialView').show(800);
+                });
+            });
+            $('#loginLink').click(function () {
+                $('#registerPartialView').slideUp(800, function () {
+                    $('#registerPartialView').addClass('sr-only');
+                    $('#loginSection').show(800);
+                });
+            });
         });
     </script>
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }

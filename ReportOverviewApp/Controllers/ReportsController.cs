@@ -66,7 +66,10 @@ namespace ReportOverviewApp.Controllers
             };
             viewModel = new ReportListViewModel(options: options, filters: filters)
             {
-                Reports = await _context.Reports.Include(r => r.Deadlines).ToListAsync(),
+                Reports = await _context.Reports.Include(r => r.Deadlines)
+                                                .Include(r => r.ReportPlanMapping)
+                                                    .ThenInclude(rpm => rpm.Plan)
+                                                        .ThenInclude(p => p.State).ToListAsync(),
                 ReportDeadlines = await _context.ReportDeadlines.Include(rd => rd.Report).Where(rd => rd != null).ToListAsync()
             };
             viewModel.Options = options;
@@ -131,7 +134,7 @@ namespace ReportOverviewApp.Controllers
 
         private async Task<SelectPlanViewModel> GetSelectPlanViewModelAsync(string state)
         {
-            return new SelectPlanViewModel(await _context.Plans.ToListAsync(), state);
+            return new SelectPlanViewModel(await _context.Plans.Include(p => p.State).ToListAsync(), state);
         }
 
         // GET: Reports
