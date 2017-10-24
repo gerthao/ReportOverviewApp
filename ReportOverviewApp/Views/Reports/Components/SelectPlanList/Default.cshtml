@@ -3,15 +3,15 @@
 @if(String.IsNullOrEmpty(Model.State)){ 
     @Html.ActionLink("[All Reports]", "Index", new { }, new { @class = "list-group-item list-group-item-action" })
 }
-else if(Model.StatePlanSelection.Count() > 1)
+else if(Model.Plans.Count() > 1)
 {
     @Html.ActionLink($"[All Reports From {Model.State}]", "Index", new { state = Model.State } , new { @class = "list-group-item list-group-item-action" })
 }
-else if (Model.StatePlanSelection.Count() <= 0)
+else if (Model.Plans.Count() <= 0)
 {
     <p class="list-group-item">No Plans Found Under This Category</p>
 }
-@foreach (var planItem in Model.StatePlanSelection)
+@foreach (var planItem in Model.Plans)
 {
-    @Html.ActionLink("asdfjewf", "Index", new { state = planItem.State, plan = planItem }, new { @class = "list-group-item list-group-item-action" })
+    @Html.ActionLink(planItem.Name, "Index", new { state = planItem.State.Name, plan = planItem.Name }, new { @class = "list-group-item list-group-item-action" })
 }

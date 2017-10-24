@@ -8,7 +8,7 @@
 <h5 style="padding-bottom:1.0rem;">Clicking on a state will filter to associated plans.&nbsp;&nbsp;Clicking on a plan option will display reports under that plan.</h5>
 <div id="selectPlanForm" class="container">
     <form>
-        @if (Model == null || Model.StatePlanSelection == null || Model.StatePlanSelection.Count() == 0)
+        @if (Model == null || Model.Plans == null || Model.Plans.Count() == 0)
         {
             <div class="row">
                 <div class="col-md-12 list-group">
@@ -21,10 +21,10 @@
             <div class="row">
                 <div class="col-md-3 list-group">
                     <p class="list-group-item"><strong>Select State</strong></p>
-                    @foreach (var planItem in (Model.StatePlanSelection))
+                    @foreach (var stateItem in Model.Plans.Select(p => p.State).OrderBy(s => s.PostalAbbreviation).Distinct())
                     {
                         @*@Html.ActionLink(stateItem, "SelectPlan", new { state = @stateItem }, new { @class = "list-group-item list-group-item-action" })*@
-                        <p class="list-group-item list-group-item-action">@planItem.State.Name</p>
+                            <p class="list-group-item list-group-item-action">@stateItem.PostalAbbreviation</p>
                     }
                     @if (!String.IsNullOrEmpty(Model.State))
                     {

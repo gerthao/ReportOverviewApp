@@ -7,20 +7,22 @@ namespace ReportOverviewApp.Models.ReportViewModels
 {
     public class SelectPlanViewModel
     {
-        public IEnumerable<Plan> StatePlanSelection { get; set; }
+        public IEnumerable<Plan> Plans { get; set; }
+        public IEnumerable<State> States { get; set; }
         public string State { get; set; }
-        public SelectPlanViewModel(IEnumerable<Plan> plans, string state = null)
+        public SelectPlanViewModel(IEnumerable<Plan> plans, IEnumerable<State> states, string state = null)
         {
             State = state;
+            States = states;
             if (String.IsNullOrEmpty(State))
             {
-                StatePlanSelection = plans.Where(p => p != null);
+                Plans = plans.Where(p => p != null);
             } else
             {
-                StatePlanSelection = plans
+                Plans = plans
                     .Where(p => p != null && !String.IsNullOrEmpty(p.Name))
                     .Where(p => !String.IsNullOrEmpty(p.State.Name))
-                    .Where(p => p.State.Name == State);
+                    .Where(p => p.State.PostalAbbreviation == State);
             }
         }
     }

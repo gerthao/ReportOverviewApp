@@ -35,7 +35,7 @@
         <div class="loginForm sr-only">
             <div class="row">
                 <div class="col-md-12">
-                    <h4>DentaQuest Report Tracker</h4>
+                    @*<h4>DentaQuest Report Tracker</h4>*@
                     <br />
                 </div>
             </div>
@@ -128,19 +128,19 @@
         $(document).ready(function () {
             $('.loginForm').hide(0, function () {
                 $(this).removeClass('sr-only');
-                $(this).show(800);
+                $(this).show(500);
             });
             $('#registerPartialView').hide();
             $('#registerLink').click(function () {
-                $('#loginSection').slideUp(800, function () {
+                $('#loginSection').slideUp(500, function () {
                     $('#registerPartialView').removeClass('sr-only');
-                    $('#registerPartialView').show(800);
+                    $('#registerPartialView').show(500);
                 });
             });
             $('#loginLink').click(function () {
-                $('#registerPartialView').slideUp(800, function () {
+                $('#registerPartialView').hide(500, function () {
                     $('#registerPartialView').addClass('sr-only');
-                    $('#loginSection').show(800);
+                    $('#loginSection').slideDown(500);
                 });
             });
         });

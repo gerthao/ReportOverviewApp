@@ -134,7 +134,7 @@ namespace ReportOverviewApp.Controllers
 
         private async Task<SelectPlanViewModel> GetSelectPlanViewModelAsync(string state)
         {
-            return new SelectPlanViewModel(await _context.Plans.Include(p => p.State).ToListAsync(), state);
+            return new SelectPlanViewModel(await _context.Plans.Include(p => p.State).ToListAsync(), await _context.States.OrderBy(s => s.Name).ToListAsync(), state);
         }
 
         // GET: Reports

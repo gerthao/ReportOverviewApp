@@ -18,7 +18,7 @@ namespace ReportOverviewApp.ViewComponents
         }
         public async Task<IViewComponentResult> InvokeAsync(string state = null)
         {
-            var viewModel = new SelectPlanViewModel(await _context.Plans.Include(p => p.State).ToListAsync(), state);
+            var viewModel = new SelectPlanViewModel(await _context.Plans.Include(p => p.State).ToListAsync(), await _context.States.OrderBy(s => s.Name).ToListAsync(), state);
             return View(viewModel);
         }
     }

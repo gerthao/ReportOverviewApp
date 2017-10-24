@@ -10,8 +10,7 @@ namespace ReportOverviewApp.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-
+        public int BusinessOwnerId { get; set; }
         public virtual ICollection<Report> Reports { get; set; }
-        public virtual ICollection<BusinessContact> BusinessContacts { get; set; }
     }
 }
