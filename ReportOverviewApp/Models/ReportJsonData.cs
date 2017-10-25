@@ -65,7 +65,7 @@ namespace ReportOverviewApp.Models
         public string WwGroupId { get; set; }
         [JsonProperty("REPORT_PATH")]
         public string ReportPath { get; set; }
-        [JsonProperty("OTHER_DEPARTMENT")]
+        //[JsonProperty("OTHER_DEPARTMENT")]
         public bool OtherDepartment { get; set; }
         [JsonProperty("SOURCE_DEPARTMENT")]
         public string SourceDepartment { get; set; }
@@ -138,16 +138,21 @@ namespace ReportOverviewApp.Models
             {
                 report.SourceDepartment = SourceDepartment.Trim();
             }
-            
-            plan.Name = GroupName?.Trim();
-            plan.WindwardId = WwGroupId?.Trim();
             if (!String.IsNullOrEmpty(State))
             {
                 plan.State = new State() { PostalAbbreviation = State.Trim().ToUpper() };
-            } else
+            }
+            else
             {
                 plan.State = DefaultState;
             }
+            if (String.IsNullOrEmpty(GroupName))
+            {
+                GroupName = $"N/A ({State})";
+            }
+            plan.Name = GroupName?.Trim();
+            plan.WindwardId = WwGroupId?.Trim();
+            
 
             report.Name = Name?.Trim();
             report.DueDate1 = ToDate(DueDate1);

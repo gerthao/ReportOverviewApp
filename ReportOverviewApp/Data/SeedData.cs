@@ -33,8 +33,8 @@ namespace ReportOverviewApp.Data{
                 //context.ReportPlanMapping.RemoveRange(context.ReportPlanMapping);
                 if (context.Reports == null || context.Reports.Count() <= 0)
                 {
-                    try
-                    {
+                    //try
+                    //{
                         string jsonStateData;
 
                         try { jsonStateData = File.ReadAllText(@"C:\Users\gthao\Desktop\states.json"); }
@@ -51,12 +51,8 @@ namespace ReportOverviewApp.Data{
                         catch { jsonReportData = File.ReadAllText(@"C:\Users\Ger\Desktop\crc.json"); }
                         var results = JsonConvert.DeserializeObject<List<ReportJsonData>>(jsonReportData);
                         List<(Report, Plan)> reportPairs = results.Select(jsonReport => jsonReport.ToReport()).ToList();
-                        foreach ((Report, Plan) rp in reportPairs)
-                        {
-                            Console.WriteLine($"***{rp.Item1.Name} |||| {rp.Item2.Name}***");
-                        }
-                        List<Report> reports = reportPairs.Select(r => r.Item1).ToList();
-                        List<Plan> plans = reportPairs.Select(r => r.Item2).ToList();
+                        List<Report> reports = reportPairs.Select(pair => pair.Item1).ToList();
+                        List<Plan> plans = reportPairs.Select(pair => pair.Item2).Where(plan => plan != null).GroupBy(plan => plan.Name).Select(group => group.First()).ToList();
                         List<Plan> plansToDb = new List<Plan>();
                         for (int i = 0; i < plans.Count(); i++)
                         {
@@ -64,7 +60,7 @@ namespace ReportOverviewApp.Data{
                             {
                                 if (plans[i] != null && plans[i].State != null && !String.IsNullOrEmpty(plans[i].State.PostalAbbreviation) && context.States.Where(s => s.PostalAbbreviation == plans[i].State.PostalAbbreviation).Any())
                                 {
-                                    plans[i].State = context.States.Where(s => s.PostalAbbreviation == plans[i].State.PostalAbbreviation).First();
+                                    plans[i].State = context.States.Where(state => state.PostalAbbreviation == plans[i].State.PostalAbbreviation).First();
                                     plans[i].StateId = plans[i].State.Id;
                                 }
                                 plansToDb.Add(plans[i]);
@@ -77,18 +73,17 @@ namespace ReportOverviewApp.Data{
                         }
                         context.Plans.AddRange(plansToDb);
                         context.SaveChanges();
-
-                        List<BusinessContact> businessContacts = reports.Select(r => r.BusinessContact).Distinct().OrderBy(bc => bc.Name).ToList();
-                        List<BusinessContact> businessContactsToDb = new List<BusinessContact>();
-                        foreach (BusinessContact bc in businessContacts)
-                        {
-                            if (!context.BusinessContacts.Where(c => c.Name == bc.Name).Any())
-                            {
-                                businessContactsToDb.Add(bc);
+                    List<BusinessContact> businessContacts = results.Select(json => json.BusinessContact).Distinct().Select(e => new BusinessContact() { Name = e, BusinessOwner = "Client Engagement" }).Distinct().ToList();
+                        //List<BusinessContact> businessContactsToDb = new List<BusinessContact>();
+                        //foreach (BusinessContact bc in businessContacts)
+                        //{
+                        //    if (!context.BusinessContacts.Where(c => c.Name == bc.Name).Any())
+                        //    {
+                        //        businessContactsToDb.Add(bc);
                                 
-                            }
-                        }
-                        context.BusinessContacts.AddRange(businessContactsToDb);
+                        //    }
+                        //}
+                        context.BusinessContacts.AddRange(businessContacts);
                         context.SaveChanges();
 
                         for (int i = 0; i < reports.Count; i++)
@@ -97,7 +92,7 @@ namespace ReportOverviewApp.Data{
                             reports[i].BusinessContact = reports[i].BusinessContact = null;
                             reports[i].BusinessContactId = f.Id;
                         }
-                        context.Reports.AddRange(reports.OrderBy(r => r.Name));
+                        context.Reports.AddRange(reports);
                         context.SaveChanges();
 
                         List<ReportPlanMap> rpmToDb = new List<ReportPlanMap>();
@@ -123,11 +118,11 @@ namespace ReportOverviewApp.Data{
 
                         context.ReportDeadlines.AddRange(deadlines);
                         context.SaveChanges();
-                    }
-                    catch (Exception ex)
-                    {
-                        throw ex;
-                    }
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    throw ex;
+                    //}
 
                 }
             }

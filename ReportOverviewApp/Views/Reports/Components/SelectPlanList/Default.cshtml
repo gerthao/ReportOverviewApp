@@ -13,5 +13,5 @@ else if (Model.Plans.Count() <= 0)
 }
 @foreach (var planItem in Model.Plans)
 {
-    @Html.ActionLink(planItem.Name, "Index", new { state = planItem.State.Name, plan = planItem.Name }, new { @class = "list-group-item list-group-item-action" })
+    @Html.ActionLink(planItem.Name, "Index", new { state = planItem.State.PostalAbbreviation, plan = planItem.Name }, new { @class = "list-group-item list-group-item-action" })
 }

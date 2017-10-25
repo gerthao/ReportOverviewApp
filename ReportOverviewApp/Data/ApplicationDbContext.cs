@@ -11,7 +11,9 @@ namespace ReportOverviewApp.Data
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<Report> Reports { get; set; }
+        //public DbSet<Department> SourceDepartments { get; set; }
         public DbSet<BusinessContact> BusinessContacts { get; set; }
+        //public DbSet<BusinessOwner> BusinessOwners { get; set; }
         public DbSet<Plan> Plans { get; set; }
         public DbSet<State> States { get; set; }
         public DbSet<ReportPlanMap> ReportPlanMapping { get; set; }

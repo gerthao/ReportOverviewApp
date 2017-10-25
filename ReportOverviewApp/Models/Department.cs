@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace ReportOverviewApp.Models
 {
-    public class Department
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public int BusinessOwnerId { get; set; }
-        public virtual ICollection<Report> Reports { get; set; }
-    }
+    //public class Department
+    //{
+    //    public int Id { get; set; }
+    //    public string Name { get; set; }
+    //    public int BusinessOwnerId { get; set; }
+    //    public virtual ICollection<Report> Reports { get; set; }
+    //}
 }

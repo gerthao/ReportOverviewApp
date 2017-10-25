@@ -44,10 +44,10 @@ namespace ReportOverviewApp.Controllers
         {
             DropdownOptions options = new DropdownOptions()
             {
-                States = await _context.States.Select(s => s.Name).OrderBy(n => n).Distinct().ToListAsync(),
-                Plans = await _context.Plans.Select(p => p.Name).OrderBy(p => p).Distinct().ToListAsync(),
+                States = await _context.States.Select(s => s.PostalAbbreviation).OrderBy(n => n).ToListAsync(),
+                Plans = await _context.Plans.Select(p => p.Name).OrderBy(p => p).ToListAsync(),
                 Frequencies = await _context.Reports.Select(r => r.Frequency).OrderBy(f => f).Distinct().ToListAsync(),
-                BusinessContacts = await _context.BusinessContacts.Select(bc => bc.Name).OrderBy(bc => bc).Distinct().ToListAsync(),
+                BusinessContacts = await _context.BusinessContacts.Select(bc => bc.Name).OrderBy(bc => bc).ToListAsync(),
                 BusinessOwners = await _context.BusinessContacts.Select(bc => bc.BusinessOwner).OrderBy(bo => bo).Distinct().ToListAsync(),
                 SourceDepartments = await _context.Reports.Select(r => r.SourceDepartment).OrderBy(sd => sd).Distinct().ToListAsync()
             };
@@ -241,7 +241,7 @@ namespace ReportOverviewApp.Controllers
 
         public async Task<IActionResult> EditBusinessContacts()
         {
-            return View(await _context.Reports.Select(r => r.BusinessContact).OrderBy(bc => bc).Distinct().ToListAsync());
+            return View(await _context.Reports.Select(r => r.BusinessContact).OrderBy(bc => bc).ToListAsync());
         }
         
 
