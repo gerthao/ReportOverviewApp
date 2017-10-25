@@ -16,7 +16,8 @@ namespace ReportOverviewApp.Models
 
         public override DateTime? GetDeadline(DateTime selectedDateTime)
         {
-            throw new NotImplementedException();
+            DateTime firstQuarter = new DateTime(year: DateTime.Now.Year, month: 3, day: 31);
+            return null;
         }
 
     }

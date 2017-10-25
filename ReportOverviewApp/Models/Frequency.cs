@@ -11,14 +11,20 @@ namespace ReportOverviewApp.Models
         public abstract string Name { get; }
         public abstract int Period { get; }
         public abstract DateTime? GetDeadline(DateTime selectedDateTime);
-        public DateTime? EnsureBusinessDay(DateTime selectedDateTime)
+        public DateTime? EnsureBusinessDay(DateTime selectedDateTime, bool decrement = true)
         {
             if (selectedDateTime == null) {
                 return null;
             }
             while(selectedDateTime.DayOfWeek is DayOfWeek.Saturday || selectedDateTime.DayOfWeek is DayOfWeek.Sunday)
             {
-                selectedDateTime = selectedDateTime.AddDays(-1);
+                if (decrement)
+                {
+                    selectedDateTime = selectedDateTime.AddDays(-1);
+                } else
+                {
+                    selectedDateTime = selectedDateTime.AddDays(1);
+                }
             }
             return selectedDateTime;
         }

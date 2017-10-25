@@ -170,7 +170,7 @@ namespace ReportOverviewApp.Models.ReportViewModels
             }
             if (!String.IsNullOrEmpty(Filters.State))
             {
-                Reports = Reports.Where(r => r != null && r.ReportPlanMapping.Select(rpm => rpm.Plan.State.Name).ToList().Contains(Filters.State));
+                Reports = Reports.Where(r => r != null && r.ReportPlanMapping.Select(rpm => rpm.Plan.State.PostalAbbreviation).ToList().Contains(Filters.State));
             }
         }
         private void HandleSearch()

@@ -12,8 +12,6 @@ namespace ReportOverviewApp.Models
         public int Id { get; set; }
         [StringLength(64)]
         public string Name { get; set; }
-        [StringLength(64)]
-        public string Email { get; set; }
 
         //public int BusinessOwnerId { get; set; }
         [StringLength(64)]
