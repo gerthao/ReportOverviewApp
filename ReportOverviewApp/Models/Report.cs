@@ -137,17 +137,17 @@ namespace ReportOverviewApp.Models
                 switch (Frequency)
                 {
                     case "Quarterly":
-                        return GetDeadlineQuarterly(compareDate);
+                        return EnsureBusinessDate(GetDeadlineQuarterly(compareDate));
                     case "Monthly":
-                        return GetDeadlineMonthly(compareDate);
+                        return EnsureBusinessDate(GetDeadlineMonthly(compareDate));
                     case "Weekly":
-                        return GetDeadlineWeekly(compareDate);
+                        return EnsureBusinessDate(GetDeadlineWeekly(compareDate));
                     case "Biweekly":
-                        return GetDeadlineBiweekly(compareDate);
+                        return EnsureBusinessDate(GetDeadlineBiweekly(compareDate));
                     case "Annual":
-                        return GetDeadlineAnnual(compareDate);
+                        return EnsureBusinessDate(GetDeadlineAnnual(compareDate));
                     case "Semiannual":
-                        return GetDeadlineSemiannual(compareDate);
+                        return EnsureBusinessDate(GetDeadlineSemiannual(compareDate));
                     default:
                         return null;
                 }
@@ -157,6 +157,15 @@ namespace ReportOverviewApp.Models
                 Console.WriteLine($"Something went wrong: { e.ToString()}");
             }
             return null;
+        }
+        private DateTime? EnsureBusinessDate(DateTime? date)
+        {
+            if (date == null || !date.HasValue) return null;
+            while(date.Value.DayOfWeek is DayOfWeek.Saturday || date.Value.DayOfWeek is DayOfWeek.Sunday)
+            {
+                date = date.Value.AddDays(-1);
+            }
+            return date;
         }
         /// <summary>
         /// Gets the closest deadline for a report from today.

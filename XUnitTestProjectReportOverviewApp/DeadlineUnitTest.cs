@@ -73,6 +73,19 @@ namespace XUnitTestProjectReportOverviewApp
             Assert.True(report.Deadline(new DateTime(year: 2017, month: 12, day: 31)) == new DateTime(year: 2018, month: 3, day: 1));
         }
         [Fact]
+        public void ReportDeadlineTestQuarterlySecond()
+        {
+            Report report = new Report()
+            {
+                DueDate1 = new DateTime(year: 9999, month: 10, day: 30),
+                DueDate2 = new DateTime(year: 9999, month: 1, day: 30),
+                DueDate3 = new DateTime(year: 9999, month: 4, day: 30),
+                DueDate4 = new DateTime(year: 9999, month: 7, day: 30),
+                Frequency = "Quarterly"
+            };
+            Assert.False(report.CurrentDeadline() == null && report.CurrentDeadline().HasValue);
+        }
+        [Fact]
         public void ReportDeadlineTestQuarterlyBadDeadline()
         {
             Report report1 = new Report()

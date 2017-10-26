@@ -38,7 +38,7 @@
                                     <div class="btn-group" style="min-width: 100%;">
                                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Business Contact<span class="caret"></span></button>
                                         <div id="businessContactList" class="dropdown-menu dropdown-menu-scrollable">
-                                            @foreach (var businessContactItem in Model.Options.BusinessContacts.OrderBy(buinessContact => buinessContact))
+                                            @foreach (var businessContactItem in Model.Options.BusinessContacts.OrderBy(businessContact => businessContact))
                                             {
                                                 <a class="dropdown-item">@businessContactItem</a>
                                             }
@@ -56,15 +56,15 @@
                                     <div class="btn-group" style="min-width: 100%;">
                                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Business Owner<span class="caret"></span></button>
                                         <div id="businessOwnerList" class="dropdown-menu dropdown-menu-scrollable">
-                                            @foreach (var buinessOwnerItem in Model.Options.BusinessOwners.OrderBy(buinessOwner => buinessOwner))
+                                            @foreach (var businessOwnerItem in Model.Options.BusinessOwners.OrderBy(businessOwner => businessOwner))
                                             {
-                                                <a class="dropdown-item">@buinessOwnerItem</a>
+                                                <a class="dropdown-item">@businessOwnerItem</a>
                                             }
                                         </div>
                                     </div>
                                 </div>
                                 <span class="input-group-btn" style="width: 100%;">
-                                    <input id="businessOwnerInput" type="text" name="buisnessOwner" class="form-control" aria-label="" value="@Model.Filters.BusinessOwner" />
+                                    <input id="businessOwnerInput" type="text" name="businessOwner" class="form-control" aria-label="" value="@Model.Filters.BusinessOwner" />
                                 </span>
                             </div>
                         </div>

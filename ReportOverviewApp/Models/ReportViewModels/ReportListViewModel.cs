@@ -68,9 +68,9 @@ namespace ReportOverviewApp.Models.ReportViewModels
         }
         public void ApplyFilters()
         {
+            HandleDates();
             HandleBusinessContact();
             HandleBusinessOwner();
-            HandleDates();
             HandleFrequency();
             HandleSearch();
             HandleSourceDepartment();
@@ -139,15 +139,18 @@ namespace ReportOverviewApp.Models.ReportViewModels
         }
         private void HandleDates()
         {
-            IEnumerable<(Report report, ReportDeadline reportDeadline)> list = Reports.Select(r => (r, r.Deadlines.Any()? r.Deadlines.OrderByDescending(rd => rd.Deadline).First() : null));
-            list = list.Where(r => r.reportDeadline != null);
+            
+            if(!String.IsNullOrEmpty(Filters.BeginString) && !String.IsNullOrEmpty(Filters.EndString))
+            {
+                Reports = Reports.Where(r => r.Deadlines != null).Where(r => r.Deadlines.Any());
+            } 
             if (Filters.BeginString != null)
             {
                 DateTime beginDate;
                 if (DateTime.TryParse(Filters.BeginString, out beginDate))
                 {
                     Filters.Begin = beginDate;
-                    list = list.Where(r => r.reportDeadline.Deadline >= beginDate);
+                    Reports = Reports.Where(r => r.Deadlines.Any(rd => rd.Deadline >= beginDate));
                 }
             }
             if (Filters.EndString != null)
@@ -156,10 +159,9 @@ namespace ReportOverviewApp.Models.ReportViewModels
                 if (DateTime.TryParse(Filters.EndString, out endDate))
                 {
                     Filters.End = endDate;
-                    list = list.Where(r => r.reportDeadline.Deadline <= endDate);
+                    Reports = Reports.Where(r => r.Deadlines.Any(rd => rd.Deadline >= endDate));
                 }
             }
-            Reports = list.Select(r => r.report);
         }
         private void HandleStateAndPlan()
         {

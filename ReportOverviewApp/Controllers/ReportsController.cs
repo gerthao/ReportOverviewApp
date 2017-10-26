@@ -67,6 +67,7 @@ namespace ReportOverviewApp.Controllers
             viewModel = new ReportListViewModel(options: options, filters: filters)
             {
                 Reports = await _context.Reports.Include(r => r.Deadlines)
+                                                .Include(r => r.BusinessContact)
                                                 .Include(r => r.ReportPlanMapping)
                                                     .ThenInclude(rpm => rpm.Plan)
                                                         .ThenInclude(p => p.State).ToListAsync(),
@@ -78,6 +79,11 @@ namespace ReportOverviewApp.Controllers
             viewModel.GeneratePages(recordsPerPage);
             viewModel.Reports = viewModel.DisplayPage(pageIndex);
             return viewModel;
+        }
+
+        public IActionResult EditReport(int? id)
+        {
+            return ViewComponent("EditReport", new { reportId = id });
         }
 
         public IActionResult UpdateDeadlinesAsync()

@@ -123,27 +123,36 @@ $(document).ready(function () {
     });
 
     let root = window.location.origin;
+    //$('#reportTable tr td a').on("click", function () {
+    //    let retrievedID = $(this).parent().parent().find(".ReportID").html();
+    //    let action = $(this).attr('id');
+    //    let link = root + "/Data/GetReport/" + retrievedID;
+    //    try {
+    //        $.ajax({
+    //            url: link,
+    //            type: "GET",
+    //            dataType: 'json',
+    //            contentType: 'application/json; charset=utf-8',
+    //            success: function (data) {
+    //                handleJSONReport(data, action);
+    //            },
+    //            error: function () {
+    //                console.error("failed: " + link);
+    //            }
+    //        });
+    //    } catch (err) {
+    //        console.error(err);
+    //    }
+    //    updateFrequencyFields();
+    //});
     $('#reportTable tr td a').on("click", function () {
         let retrievedID = $(this).parent().parent().find(".ReportID").html();
         let action = $(this).attr('id');
-        let link = root + "/Data/GetReport/" + retrievedID;
-        try {
-            $.ajax({
-                url: link,
-                type: "GET",
-                dataType: 'json',
-                contentType: 'application/json; charset=utf-8',
-                success: function (data) {
-                    handleJSONReport(data, action);
-                },
-                error: function () {
-                    console.error("failed: " + link);
-                }
-            });
-        } catch (err) {
-            console.error(err);
-        }
-        updateFrequencyFields();
+        let link = root + "/Reports/EditReport?id=" + retrievedID;
+        $.get(link, function (data) {
+
+            $('#editReportContainer').html(data);
+        })
     });
     function handleJSONReport(data, action) {
         if (data === null) {

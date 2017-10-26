@@ -55,7 +55,7 @@
                 $(this).addClass('bg-primary');
                 $(this).siblings().removeClass('bg-primary');
                 $.get('/Reports/GetSelectPlanList?State=' + stateName, function (data) {
-                    $('#selectPlanListViewComponent').slideUp(333, function () {
+                    $('#selectPlanListViewComponent').hide(100, function () {
                         $('#selectPlanListViewComponent').html(data);
                     });
                     $('#selectPlanListViewComponent').show(333);

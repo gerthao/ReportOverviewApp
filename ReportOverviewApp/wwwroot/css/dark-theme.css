@@ -105,3 +105,8 @@ input.form-control:focus, textarea.form-control:focus{
     color: #d2d2d2;
     background-color: #242424;
 }
+select.form-control, select.form-control:focus{
+    color: #d2d2d2;
+    background-color: #404046;
+    
+}

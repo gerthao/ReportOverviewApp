@@ -33,7 +33,8 @@
 <div id="findMatchReplaceReportModal" class="modal fade">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            
+            <div id="findMatchReportContainer">
+            </div>
         </div>
     </div>
 </div>
@@ -105,9 +106,9 @@ else {
                 <tr>
                     <td class="ReportID">@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Id)</td>
                     <td class="ReportName">@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Name)</td>
-                    @if (Model.Reports.ElementAt(i).Deadlines.Any())
+                    @if (Model.Reports.ElementAt(i).Deadlines != null && Model.Reports.ElementAt(i).Deadlines.Any())
                     {
-                        currentReportDeadline = Model.Reports.ElementAt(i).Deadlines.OrderByDescending(rd => rd.Deadline).First();
+                        currentReportDeadline = Model.Reports.Select(r => r.Deadlines.OrderByDescending(rd => rd.Deadline).First()).First();
                         <td>@Html.DisplayFor(modelItem => currentReportDeadline.Deadline)</td>
                         <td>@Html.DisplayFor(modelItem => currentReportDeadline.FinishedDate)</td>
                         <td>@Html.DisplayFor(modelItem => currentReportDeadline.ClientNotifiedDate)</td>
@@ -120,7 +121,7 @@ else {
                     <td style="text-align: center;">
                         @if (currentReportDeadline == null)
                         {
-                            <a class="disabled"><span class="fa fa-adjust text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="No Current Deadline"></span></a>
+                            <a class="disabled"><span class="fa fa-adjust text-muted" tabindex="0" data-toggle="tooltip" data-placement="top" title="No Deadline Found"></span></a>
                         }
                         else
                         {
@@ -134,10 +135,15 @@ else {
             }
         </tbody>
     </table>
+    
     <div id="editReportModal" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                @await Html.PartialAsync("Edit", new Report())
+                @*@await Html.PartialAsync("Edit", new Report())*@
+                <div id="editReportContainer">
+                    @await Component.InvokeAsync(name: "EditReport", arguments: new { id = 1 })
+                </div>
+                
             </div>
         </div>
     </div>

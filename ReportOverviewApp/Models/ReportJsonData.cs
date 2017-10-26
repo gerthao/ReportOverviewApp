@@ -127,8 +127,8 @@ namespace ReportOverviewApp.Models
             {
                 report.BusinessContact = new BusinessContact()
                 {
-                    Name = BusinessContact,
-                    BusinessOwner = BusinessOwner
+                    Name = BusinessContact?.Trim(),
+                    BusinessOwner = "Client Engagement"
                 };
             }
             if (String.IsNullOrEmpty(SourceDepartment))
