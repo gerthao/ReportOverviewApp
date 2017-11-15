@@ -9,32 +9,53 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
+<table class="table table-sm table-bordered table-striped table-hover ">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Name)
                 </th>
-                <th>
+                @*<th>
                     @Html.DisplayNameFor(model => model.WindwardId)
-                </th>
+                </th>*@
             <th>
                 @Html.DisplayNameFor(model => model.State)
             </th>
-            <th></th>
+            <th>
+                Has Active Reports?
+            </th>
+            <th>
+                Has Termed Reports?
+            </th>
+            <th>Options</th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model.OrderBy(p => p.State.PostalAbbreviation)) {
         <tr>
             <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
-            <td>
+            @*<td>
                 @Html.DisplayFor(modelItem => item.WindwardId)
+            </td>*@
+            <td>
+                @item.State.Name
             </td>
             <td>
-                @item.State.Name (@item.State.PostalAbbreviation) [@item.StateId]
+                @{var hasActiveReports = item.HasActiveReports ? "Yes" : "No";}
+                @hasActiveReports
+            </td>
+            <td>
+                
+                @{var hasTermedReports = item.HasTermedReports ? "Yes" : "No";}
+                @hasTermedReports
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

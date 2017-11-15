@@ -38,9 +38,9 @@
                                     <div class="btn-group" style="min-width: 100%;">
                                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Business Contact<span class="caret"></span></button>
                                         <div id="businessContactList" class="dropdown-menu dropdown-menu-scrollable">
-                                            @foreach (var businessContactItem in Model.Options.BusinessContacts.OrderBy(businessContact => businessContact))
+                                            @foreach (var businessContactItem in Model.Options.BusinessContacts)
                                             {
-                                                <a class="dropdown-item">@businessContactItem</a>
+                                                <a class="dropdown-item">@businessContactItem.Name</a>
                                             }
                                         </div>
                                     </div>
@@ -94,9 +94,9 @@
                                     <div class="btn-group" style="min-width: 100%;">
                                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">State<span class="caret"></span></button>
                                         <div id="stateList" class="dropdown-menu dropdown-menu-scrollable">
-                                            @foreach (var stateItem in Model.Options.States.OrderBy(state => state))
+                                            @foreach (var stateItem in Model.Options.States)
                                             {
-                                                <a class="dropdown-item">@stateItem</a>
+                                                <a class="dropdown-item">@stateItem.PostalAbbreviation</a>
                                             }
                                         </div>
                                     </div>
@@ -114,9 +114,9 @@
                                     <div class="btn-group" style="min-width: 100%;">
                                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Plan <span class="caret"></span></button>
                                         <div id="planList" class="dropdown-menu dropdown-menu-scrollable">
-                                            @foreach (var planItem in Model.Options.Plans.OrderBy(plan => plan))
+                                            @foreach (var planItem in Model.Options.Plans)
                                             {
-                                                <a class="dropdown-item">@planItem</a>
+                                                <a class="dropdown-item">@planItem.Name</a>
                                             }
                                         </div>
                                     </div>
@@ -134,7 +134,7 @@
                                     <div class="btn-group" style="min-width: 100%;">
                                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Source Department<span class="caret"></span></button>
                                         <div id="sourceDepartmentList" class="dropdown-menu dropdown-menu-scrollable">
-                                            @foreach (var sourceDepartmentItem in Model.Options.SourceDepartments.OrderBy(sourceDepartment => sourceDepartment))
+                                            @foreach (var sourceDepartmentItem in Model.Options.SourceDepartments)
                                             {
                                                 <a class="dropdown-item">@sourceDepartmentItem</a>
                                             }

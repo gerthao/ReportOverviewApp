@@ -21,6 +21,10 @@
     <Authors>Ger Thao</Authors>
     <Company></Company>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Properties\PublishProfiles\ReportTracking - Web Deploy.pubxml" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
@@ -43,6 +47,9 @@
     <None Include="wwwroot\js\HomeHandler.js" />
     <None Include="wwwroot\js\LogoutHandler.js" />
     <None Include="wwwroot\js\ReportsHandler.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <TypeScriptTarget>ES6</TypeScriptTarget>

@@ -152,7 +152,7 @@ var updateDateTime = function () {
 };
 
 $(document).ready(function () {
-    updateDateTime();
+    //updateDateTime();
     updateComponents();
     $("#widgetTabs li a").on("click", function() {
         $(this).parent("li").parent("ul").children("li").each(function(index, value) {

@@ -150,7 +150,6 @@ $(document).ready(function () {
         let action = $(this).attr('id');
         let link = root + "/Reports/EditReport?id=" + retrievedID;
         $.get(link, function (data) {
-
             $('#editReportContainer').html(data);
         })
     });

@@ -81,14 +81,14 @@ namespace ReportOverviewApp.Models.ReportViewModels
         {
             if (!String.IsNullOrEmpty(Filters.BusinessContact))
             {
-                Reports = Reports.Where(r => r != null && r.BusinessContact != null && r.BusinessContact.Name == Filters.BusinessContact);
+                Reports = Reports.Where(r => r != null && r.BusinessContact != null && r.BusinessContact.Name.ToLower().Contains(Filters.BusinessContact.ToLower()));
             }
         }
         private void HandleBusinessOwner()
         {
             if (!String.IsNullOrEmpty(Filters.BusinessOwner))
             {
-                Reports = Reports.Where(r => r != null && r.BusinessContact != null && r.BusinessContact.BusinessOwner == Filters.BusinessOwner);
+                Reports = Reports.Where(r => r != null && r.BusinessContact != null && r.BusinessContact.BusinessOwner.ToLower().Contains(Filters.BusinessOwner.ToLower()));
             }
         }
         private void HandleSourceDepartment()

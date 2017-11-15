@@ -44,10 +44,10 @@ namespace ReportOverviewApp.Controllers
         {
             DropdownOptions options = new DropdownOptions()
             {
-                States = await _context.States.Select(s => s.PostalAbbreviation).OrderBy(n => n).ToListAsync(),
-                Plans = await _context.Plans.Select(p => p.Name).OrderBy(p => p).ToListAsync(),
+                States = await _context.States.OrderBy(s => s.PostalAbbreviation).ToListAsync(),
+                Plans = await _context.Plans.OrderBy(p => p.Name).ToListAsync(),
                 Frequencies = await _context.Reports.Select(r => r.Frequency).OrderBy(f => f).Distinct().ToListAsync(),
-                BusinessContacts = await _context.BusinessContacts.Select(bc => bc.Name).OrderBy(bc => bc).ToListAsync(),
+                BusinessContacts = await _context.BusinessContacts.OrderBy(bc => bc.Name).ToListAsync(),
                 BusinessOwners = await _context.BusinessContacts.Select(bc => bc.BusinessOwner).OrderBy(bo => bo).Distinct().ToListAsync(),
                 SourceDepartments = await _context.Reports.Select(r => r.SourceDepartment).OrderBy(sd => sd).Distinct().ToListAsync()
             };

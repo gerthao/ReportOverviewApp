@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ReportOverviewApp.Data;
 using ReportOverviewApp.Models;
+using ReportOverviewApp.Models.ReportViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace ReportOverviewApp.ViewComponents
         {
             if(reportId == null)
             {
-                return View(new Report());
+                return View(new ReportViewModel());
             }
             Report report = await _context.Reports.Include(r => r.Deadlines)
                                                .Include(r => r.BusinessContact)
@@ -30,9 +31,22 @@ namespace ReportOverviewApp.ViewComponents
                                                .Where(r => r.Id == reportId).SingleOrDefaultAsync();
             if (report == null)
             {
-                return View(new Report());
+                return View(new ReportViewModel());
             }
-            return View(report);
+            ReportViewModel reportViewModel = new ReportViewModel()
+            {
+                Report = report,
+                Options = new DropdownOptions()
+                {
+                    BusinessContacts = await _context.BusinessContacts.OrderBy(bc => bc.Name).ToListAsync(),
+                    Frequencies = await _context.Reports.Select(r => r.Frequency).Distinct().OrderBy(f => f).ToListAsync(),
+                    Plans = await _context.Plans.Include(p => p.State).OrderBy(p => p.Name).ToListAsync(),
+                    SourceDepartments = await _context.Reports.Select(r => r.SourceDepartment).Distinct().OrderBy(sd => sd).ToListAsync(),
+                    States = await _context.States.OrderBy(s => s.PostalAbbreviation).ToListAsync(),
+                    BusinessOwners = null
+                }
+            };
+            return View(reportViewModel);
         }
     }
 }
