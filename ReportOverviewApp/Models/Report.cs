@@ -46,16 +46,16 @@ namespace ReportOverviewApp.Models
         //[StringLength(255), Display(Name = "Business Owner")]
         //public string BusinessOwner { get; set; }
         [Display(Name = "First Due Date (If Applicable)")]
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime? DueDate1 { get; set; }
         [Display(Name = "Second Due Date (If Applicable)")]
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime? DueDate2 { get; set; }
         [Display(Name = "Third Due Date (If Applicable)")]
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime? DueDate3 { get; set; }
         [Display(Name = "Fourth Due Date (If Applicable)")]
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime? DueDate4 { get; set; }
         [StringLength(50)]
         public string Frequency { get; set; }
@@ -100,9 +100,9 @@ namespace ReportOverviewApp.Models
         public string ERSReportLocation { get; set; }
         [Display(Name = "ERR Status")]
         public int? ERRStatus { get; set; }
-        [Display(Name = "Date Added"), DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:g}", ConvertEmptyStringToNull = true, ApplyFormatInEditMode = true, NullDisplayText = "No date given")]
+        [Display(Name = "Date Added"), DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ConvertEmptyStringToNull = true, ApplyFormatInEditMode = true, NullDisplayText = "No date given")]
         public DateTime? DateAdded { get; set; }
-        [Display(Name = "System Refresh Date"), DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:g}", ConvertEmptyStringToNull = true, ApplyFormatInEditMode = true, NullDisplayText = "No date given")]
+        [Display(Name = "System Refresh Date"), DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ConvertEmptyStringToNull = true, ApplyFormatInEditMode = true, NullDisplayText = "No date given")]
         public DateTime? SystemRefreshDate { get; set; }
         [Display(Name = "Legacy Report ID")]
         public int? LegacyReportID { get; set; }
