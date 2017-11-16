@@ -256,9 +256,17 @@ namespace ReportOverviewApp.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
-            var report = await _context.Reports.SingleOrDefaultAsync(m => m.Id == id);
+            var report = await _context.Reports.Include(r => r.BusinessContact).Include(r => r.ReportPlanMapping).ThenInclude(rpm => rpm.Plan).ThenInclude(p => p.State).SingleOrDefaultAsync(m => m.Id == id);
             if (report == null) return NotFound();
-            return View(report);
+            return View(new ReportViewModel(report, new DropdownOptions()
+            {
+                States = await _context.States.OrderBy(s => s.PostalAbbreviation).ToListAsync(),
+                Plans = await _context.Plans.OrderBy(p => p.Name).ToListAsync(),
+                Frequencies = await _context.Reports.Select(r => r.Frequency).OrderBy(f => f).Distinct().ToListAsync(),
+                BusinessContacts = await _context.BusinessContacts.OrderBy(bc => bc.Name).ToListAsync(),
+                BusinessOwners = await _context.BusinessContacts.Select(bc => bc.BusinessOwner).OrderBy(bo => bo).Distinct().ToListAsync(),
+                SourceDepartments = await _context.Reports.Select(r => r.SourceDepartment).OrderBy(sd => sd).Distinct().ToListAsync()
+            }));
         }
 
         // POST: Reports/Edit/5
@@ -268,10 +276,10 @@ namespace ReportOverviewApp.Controllers
         private string GetCurrentUserID() => _context.Users.Where(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault().Id;
 
         [HttpPost, ValidateAntiForgeryToken, Authorize]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,BusinessContact,BusinessOwner,DueDate1,DueDate2,DueDate3,DueDate4,Frequency,DayDue,DeliveryFunction,WorkInstructions,Notes,DaysAfterQuarter,FolderLocation,ReportType,RunWith,DeliveryMethod,DeliveryTo,EffectiveDate,TerminationDate,GroupName,State,ReportPath,OtherDepartment,SourceDepartment,QualityIndicator,ERSReportLocation,ERRStatus,DateAdded,SystemRefreshDate,LegacyReportID,LegacyReportIDR2,ERSReportName,OtherReportLocation,OtherReportName")] Report report)
+        public async Task<IActionResult> Edit(int id, [Bind("Report")] ReportViewModel reportViewModel /*[Bind("Id,Name,BusinessContact,BusinessOwner,DueDate1,DueDate2,DueDate3,DueDate4,Frequency,DayDue,DeliveryFunction,WorkInstructions,Notes,DaysAfterQuarter,FolderLocation,ReportType,RunWith,DeliveryMethod,DeliveryTo,EffectiveDate,TerminationDate,GroupName,State,ReportPath,OtherDepartment,SourceDepartment,QualityIndicator,ERSReportLocation,ERRStatus,DateAdded,SystemRefreshDate,LegacyReportID,LegacyReportIDR2,ERSReportName,OtherReportLocation,OtherReportName")] Report report*/)
         {
             ToastMessage toast = null;
-            if (id != report.Id)
+            if (id != reportViewModel.Report.Id)
             {
                 toast = new ToastMessage(message: $"IDs do not match", title: "Something Went Wrong...", toasType: ToastEnums.ToastType.Error, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
                 ShowToast(toast);
@@ -279,16 +287,16 @@ namespace ReportOverviewApp.Controllers
             }
             if (ModelState.IsValid){
                 try{
-                    var unmodifiedReport = _context.Reports.AsNoTracking().SingleOrDefault(r => r.Id == report.Id);
-                    _context.Add(userLogFactory.Build(GetCurrentUserID(), $"\"{report.Name}\" has been edited.", CompareChanges(unmodifiedReport, report)));
-                    _context.Update(report);
+                    var unmodifiedReport = _context.Reports.AsNoTracking().SingleOrDefault(r => r.Id == reportViewModel.Report.Id);
+                    _context.Add(userLogFactory.Build(GetCurrentUserID(), $"\"{reportViewModel.Report.Name}\" has been edited.", CompareChanges(unmodifiedReport, reportViewModel.Report)));
+                    _context.Update(reportViewModel.Report);
                     await _context.SaveChangesAsync();
-                    toast = new ToastMessage(message: $"{report.Name} has been successfully edited.", title: "Success", toasType: ToastEnums.ToastType.Success, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
+                    toast = new ToastMessage(message: $"{reportViewModel.Report.Name} has been successfully edited.", title: "Success", toasType: ToastEnums.ToastType.Success, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
                 }
                 catch (DbUpdateConcurrencyException){
-                    if (!ReportExists(report.Id))
+                    if (!ReportExists(reportViewModel.Report.Id))
                     {
-                        toast = new ToastMessage(message: $"{report.Name} was not found in the database.", title: "Something Went Wrong...", toasType: ToastEnums.ToastType.Error, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
+                        toast = new ToastMessage(message: $"{reportViewModel.Report.Name} was not found in the database.", title: "Something Went Wrong...", toasType: ToastEnums.ToastType.Error, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
                         ShowToast(toast);
                         return NotFound();
                     }
@@ -299,7 +307,7 @@ namespace ReportOverviewApp.Controllers
             }
             toast = new ToastMessage(message: $"One or more fields in the form are not valid.", title: "Changes Needed", toasType: ToastEnums.ToastType.Warning, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
             ShowToast(toast);
-            return View(report);
+            return View(reportViewModel);
         }
         
         private void ShowToast(ToastMessage toastMessage)
@@ -385,7 +393,7 @@ namespace ReportOverviewApp.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             ToastMessage toast = null;
-            var report = await _context.Reports.SingleOrDefaultAsync(m => m.Id == id);
+            var report = await _context.Reports.Include(r => r.BusinessContact).Include(r => r.ReportPlanMapping).ThenInclude(rpm => rpm.Plan).ThenInclude(p => p.State).SingleOrDefaultAsync(m => m.Id == id);
             _context.Reports.Remove(report);
             _context.Add(userLogFactory.Build(GetCurrentUserID(), $"\"{report.Name}\" has been deleted."));
             toast = toast = new ToastMessage(message: $"{report.Name} has been successfully deleted.", title: "Success", toasType: ToastEnums.ToastType.Success, options: new ToastOption() { PositionClass = ToastPositions.BottomRight});

@@ -3,7 +3,7 @@
 
 <style>
     input {
-        max-width: 90%
+        max-width: 100%
     }
 
     textarea {
@@ -12,12 +12,12 @@
 </style>
 @if(Model == null || Model.Report == null)
 {
-    <h5>Error:  No Report Found.</h5>
+    <h5 class="col-md-12">Error:  No Report Found.  Try Again.</h5>
 
 }
 else
 {
-    <form asp-action="Edit">
+    <form asp-action="Edit" asp-route-id="@Model.Report.Id">
         <div class="modal-header"><h5 class="modal-title">Edit Report</h5></div>
         <div class="form-horizontal modal-body">
             <h6 class="font-italic">Report Information</h6>
@@ -298,20 +298,6 @@ else
                     <span asp-validation-for="Report.TerminationDate" class="text-danger"></span>
                 </div>
             </div>
-            @*<div class="form-group">
-                    <label asp-for="GroupName" class="col-md-4 control-label">@Html.DisplayNameFor(e => Model.GroupName)</label>
-                    <div class="col-md-12">
-                        <input id="editReport_groupName" asp-for="GroupName" class="form-control" />
-                        <span asp-validation-for="GroupName" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label asp-for="State" class="col-md-4 control-label">@Html.DisplayNameFor(e => Model.State)</label>
-                    <div class="col-md-12">
-                        <input id="editReport_state" asp-for="State" class="form-control" />
-                        <span asp-validation-for="State" class="text-danger"></span>
-                    </div>
-                </div>*@
             <div class="form-group">
                 <label asp-for="Report.ReportPath" class="col-md-4 control-label">@Html.DisplayNameFor(e => Model.Report.ReportPath)</label>
                 <div class="col-md-12">
@@ -326,15 +312,6 @@ else
                     <span asp-validation-for="Report.SourceDepartment" class="text-danger"></span>
                 </div>
             </div>
-            @*<div class="form-group">
-                    <div class="col-md-4">
-                        <div class="checkbox">
-                            <input id="editReport_isFromOtherDepartment" asp-for="IsFromOtherDepartment" />
-                            <label asp-for="IsFromOtherDepartment">@Html.DisplayNameFor(e => Model.IsFromOtherDepartment)</label>
-                        </div>
-                    </div>
-                </div>*@
-
             <div class="form-group">
                 <div class="col-md-4">
                     <div class="checkbox">
