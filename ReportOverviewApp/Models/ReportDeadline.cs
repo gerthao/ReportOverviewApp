@@ -11,19 +11,19 @@ namespace ReportOverviewApp.Models
     {
         public int Id { get; set; }
 
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime Deadline { get; set; }
 
         public bool IsFinished { get => FinishedDate != null && FinishedDate <= Deadline; }
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:g}", ApplyFormatInEditMode = true)]
+        
         public DateTime? FinishedDate { get; set; }
 
         public bool IsClientNotified { get => ClientNotifiedDate != null && ClientNotifiedDate <= Deadline; }
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:g}", ApplyFormatInEditMode = true)]
+        
         public DateTime? ClientNotifiedDate { get; set; }
 
         public bool IsSent { get => SentDate != null && SentDate <= Deadline; }
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:g}", ApplyFormatInEditMode = true)]
+        
         public DateTime? SentDate { get; set; }
 
         public Report Report { get; set; }

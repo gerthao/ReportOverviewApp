@@ -1,0 +1,38 @@
+﻿@model ReportOverviewApp.Models.ReportViewModels.ReportViewModel
+
+@if (Model.Report != null && Model.Report.BusinessContact != null)
+{
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header btn-group btn-block" style="height: 3rem;">
+                <p class="text-center card-title" style="display: inline;">@Model.Report.BusinessContact.Name</p>
+                <button type="button" onclick="$(this).parent().parent().slideUp(250, function () { $(this).parent().remove() });" class="btn btn-primary" style="height:inherit; max-height:inherit; min-height:inherit; top: 0px; bottom: inherit; position:absolute; right: 0px;"><i class="fa fa-remove"></i></button>
+            </div>
+            <div class="card-body">
+                <div class="form-row col-md-12">
+                    <div class="form-group col-md-2">
+                        <label asp-for="Report.BusinessContact.Id" class="control-label">ID</label>
+                        <input class="form-control" type="number" asp-for="Report.BusinessContactId" readonly />
+                        <span asp-validation-for="Report.BusinessContact.Id" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label asp-for="Report.BusinessContact.Name" class="control-label">Name</label>
+                        <input id="editReport_businessContact" asp-for="Report.BusinessContact.Name" class="form-control" readonly />
+                        <span asp-validation-for="Report.BusinessContact.Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label asp-for="Report.BusinessContact.BusinessOwner" class="control-label">Business Owner</label>
+                        <input id="editReport_businessOwner" asp-for="Report.BusinessContact.BusinessOwner" class="form-control" readonly />
+                        <span asp-validation-for="Report.BusinessContact.BusinessOwner" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="form-group">
+        <h6>No Business Contacts Found</h6>
+    </div>
+}

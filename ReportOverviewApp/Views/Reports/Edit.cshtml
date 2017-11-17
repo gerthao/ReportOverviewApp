@@ -1,2 +1,7 @@
 @model ReportOverviewApp.Models.ReportViewModels.ReportViewModel
+
+@{
+    ViewData["Title"] = $"Edit - {Model.Report.Name}";
+}
+
 @await Html.PartialAsync("Components/EditReport/Default")

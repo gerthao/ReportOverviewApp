@@ -59,13 +59,14 @@ else
                 <div class="col-md-12">
                     <label>Assigned Business Contact</label>
                 </div>
+                <div id="businessContactContainer">
                 @if (Model.Report != null && Model.Report.BusinessContact != null)
                 {
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header btn-group btn-block" style="height: 3rem;">
                                 <p class="text-center card-title" style="display: inline;">@Model.Report.BusinessContact.Name</p>
-                                <button type="button" class="btn btn-primary" style="height:inherit; max-height:inherit; min-height:inherit; top: 0px; bottom: inherit; position:absolute; right: 0px;"><i class="fa fa-remove"></i></button>
+                                <button type="button" onclick="$(this).parent().parent().slideUp(250, function () { $(this).parent().remove() });" class="btn btn-primary" style="height:inherit; max-height:inherit; min-height:inherit; top: 0px; bottom: inherit; position:absolute; right: 0px;"><i class="fa fa-remove"></i></button>
                             </div>
                             <div class="card-body">
                                 <div class="form-row col-md-12">
@@ -136,7 +137,7 @@ else
                                 <div class="card">
                                     <div class="card-header btn-group btn-block" style="height: 3rem;">
                                         <p class="text-center card-title" style="display: inline;">@map.Plan.Name</p>
-                                        <button type="button" class="btn btn-primary" style="height:inherit; max-height:inherit; min-height:inherit; top: 0px; bottom: inherit; position:absolute; right: 0px;"><i class="fa fa-remove"></i></button>
+                                        <button type="button" onclick="$(this).parent().parent().slideUp(250, function () { $(this).parent().remove() });" class="btn btn-primary" style="height:inherit; max-height:inherit; min-height:inherit; top: 0px; bottom: inherit; position:absolute; right: 0px;"><i class="fa fa-remove"></i></button>
                                     </div>
                                     
                                     <div class="card-body">

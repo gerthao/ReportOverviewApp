@@ -114,7 +114,11 @@
 <div id="editReportModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            @await Html.PartialAsync("Edit", new Report())
+            @*@await Html.PartialAsync("Edit", new Report())*@
+            <div id="editReportContainer">
+                @await Component.InvokeAsync(name: "EditReport")
+            </div>
+
         </div>
     </div>
 </div>

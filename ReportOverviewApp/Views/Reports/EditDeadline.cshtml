@@ -10,22 +10,22 @@
             <input type="hidden" asp-for="ReportId" />
             <div class="form-group">
                 <label asp-for="Deadline" class="control-label"></label>
-                <input asp-for="Deadline" class="form-control" />
+                <input type="date" asp-for="Deadline" class="form-control" />
                 <span asp-validation-for="Deadline" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="FinishedDate" class="control-label"></label>
-                <input asp-for="FinishedDate" class="form-control" />
+                <input type="datetime-local" asp-for="FinishedDate" class="form-control" />
                 <span asp-validation-for="FinishedDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ClientNotifiedDate" class="control-label"></label>
-                <input asp-for="ClientNotifiedDate" class="form-control" />
+                <input type="datetime-local" asp-for="ClientNotifiedDate" class="form-control" />
                 <span asp-validation-for="ClientNotifiedDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="SentDate" class="control-label"></label>
-                <input asp-for="SentDate" class="form-control" />
+                <input type="datetime-local" asp-for="SentDate" class="form-control" />
                 <span asp-validation-for="SentDate" class="text-danger"></span>
             </div>
             <div class="form-group">
