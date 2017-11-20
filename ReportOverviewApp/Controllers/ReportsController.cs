@@ -292,6 +292,7 @@ namespace ReportOverviewApp.Controllers
             if (ModelState.IsValid){
                 try{
                     var unmodifiedReport = _context.Reports.AsNoTracking().SingleOrDefault(r => r.Id == reportViewModel.Report.Id);
+                    reportViewModel.Report.BusinessContact = null;
                     _context.Add(userLogFactory.Build(GetCurrentUserID(), $"\"{reportViewModel.Report.Name}\" has been edited.", CompareChanges(unmodifiedReport, reportViewModel.Report)));
                     _context.Update(reportViewModel.Report);
                     await _context.SaveChangesAsync();
