@@ -85,6 +85,10 @@ namespace ReportOverviewApp.Controllers
         {
             return ViewComponent("EditReport", new { reportId = id });
         }
+        public IActionResult SelectBusinessContact(int? id, string name, bool removal=false)
+        {
+            return ViewComponent("SelectBusinessContact", new { reportId = id, businessContactName = name, remove = removal });
+        }
 
         public IActionResult UpdateDeadlinesAsync()
         {

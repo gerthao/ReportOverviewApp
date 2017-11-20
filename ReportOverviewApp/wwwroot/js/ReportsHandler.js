@@ -149,8 +149,13 @@ $(document).ready(function () {
         let retrievedID = $(this).parent().parent().find(".ReportID").html();
         let action = $(this).attr('id');
         let link = root + "/Reports/EditReport?id=" + retrievedID;
+        $('#editReportContainer').html('<div class="col-md-12" style="text-align: center; padding-top: 50%; padding-bottom: 50%; position: absolute;"><i class="fa fa-5x fa-refresh ld ld-spin"></i></div>');
         $.get(link, function (data) {
-            $('#editReportContainer').html(data);
+            $('#editReportContainer').fadeOut(500, function () {
+                $(this).html(data);
+                $(this).fadeIn(500);
+            })
+            
         })
     });
     function handleJSONReport(data, action) {
