@@ -25,13 +25,13 @@
         </div>
     </div>
 </div>
-<div id="createReportModal" class="modal fade" tabindex="-1" role="dialog">
+@*<div id="createReportModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            @await Html.PartialAsync("Create", new Report())
+            @await Html.PartialAsync("Create", new ReportViewModel() { Report = new Report(), Options = Model.Options })
         </div>
     </div>
-</div>
+</div>*@
 <div id="findMatchReplaceReportModal" class="modal fade">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">

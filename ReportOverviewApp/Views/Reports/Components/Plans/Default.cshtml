@@ -1,0 +1,137 @@
+﻿@using ReportOverviewApp.Models.ReportViewModels;
+@model ReportViewModel
+<div id="planInformation">
+    @{ 
+        string planList;
+        if (Model.Report.ReportPlanMapping.Any())
+        {
+            planList = Model.Report.ReportPlanMapping.Select(rpm => rpm.Plan.Name).Aggregate((a, b) => $"{a};{b}");
+            Model.PlanIds = Model.Report.ReportPlanMapping.Select(rpm => rpm.PlanId.ToString()).Aggregate((a, b) => $"{a},{b}");
+
+        } else
+        {
+            Model.PlanIds = "";
+            planList = "";
+        }
+
+
+    }
+    <h6 class="font-italic">Plan Information</h6>
+    <div>
+        <div class="col-md-12">
+            <label>Selection</label>
+        </div>
+        <div id="idList"> 
+            <input class="sr-only form-control" asp-for="PlanIds" readonly>
+
+        
+            
+        </div>
+        <div class="form-row col-md-12">
+            <div class="form-group col-md-10">
+                <select id="planSelectList" class="form-control col-md-12">
+                    @foreach (Plan planOption in Model.Options.Plans)
+                    {
+                        @if (Model.Report.ReportPlanMapping.Select(rpm => rpm.Plan).Any(p => p == planOption))
+                        {
+                            <option disabled class="bg-primary">@planOption.Name</option>
+
+                        }
+                        else
+                        {
+                            <option>@planOption.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="form-group col-md-2">
+                <button id="planAddButton" class="btn btn-primary btn-block" type="button"><i id="planAddButtonIcon" class="fa fa-plus-circle"></i>&nbsp;&nbsp;Add</button>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-12">
+            <label asp-for="Report.ReportPlanMapping" class="control-label">Associated Plans</label>
+        </div>
+        <div id="planCards">
+            @if (Model.Report.ReportPlanMapping != null && Model.Report.ReportPlanMapping.Any())
+            {
+
+                <div id="planCardsGr" class="card-group">
+                    @for (int i = 0; i < Model.Report.ReportPlanMapping?.Count(); i++)
+                    {
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header btn-group btn-block" style="height: 3rem;">
+                                    <p class="text-center card-title" style="display: inline;">@Model.Report.ReportPlanMapping.ElementAt(i).Plan.Name</p>
+                                    <button type="button" class="btn btn-primary planRemoveButton" style="height:inherit; max-height:inherit; min-height:inherit; top: 0px; bottom: inherit; position:absolute; right: 0px;"><i class="fa fa-remove"></i></button>
+                                </div>
+
+                                <div class="card-body">
+                                    <div class="form-row col-md-12">
+                                        <div class="form-group col-md-2">
+                                            <label asp-for="@Model.Report.ReportPlanMapping.ElementAt(i).Plan.Id" class="control-label">Plan ID</label>
+                                            <input class="form-control" type="number" asp-for="@Model.Report.ReportPlanMapping.ElementAt(i).PlanId" readonly />
+                                            <span asp-validation-for="@Model.Report.ReportPlanMapping.ElementAt(i).Plan.Id" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label asp-for="@Model.Report.ReportPlanMapping.ElementAt(i).Plan.Name" class="control-label">Name</label>
+                                            <input id="editReport_groupName" asp-for="@Model.Report.ReportPlanMapping.ElementAt(i).Plan.Name" class="form-control" readonly />
+                                            <span asp-validation-for="@Model.Report.ReportPlanMapping.ElementAt(i).Plan.Name" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <label asp-for="@Model.Report.ReportPlanMapping.ElementAt(i).Plan.State.Id" class="control-label">State ID</label>
+                                            <input class="form-control" type="number" asp-for="@Model.Report.ReportPlanMapping.ElementAt(i).Plan.StateId" readonly />
+                                            <span asp-validation-for="@Model.Report.ReportPlanMapping.ElementAt(i).Plan.State.Id" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <label asp-for="@Model.Report.ReportPlanMapping.ElementAt(i).Plan.State.Name" class="control-label">State</label>
+                                            <input id="editReport_state" asp-for="@Model.Report.ReportPlanMapping.ElementAt(i).Plan.State.Name" class="form-control" readonly />
+                                            <span asp-validation-for="@Model.Report.ReportPlanMapping.ElementAt(i).Plan.State.Name" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+            }
+            else
+            {
+                <div id="empty" class="form-group col-md-12">
+                    <h6 class="list-group-item list-group-item-warning">No Plans Found</h6>
+                </div>
+
+            }
+        </div>
+       
+
+    </div>
+    <script>
+
+    $('#planAddButton').click(function () {
+        $('#planAddButtonIcon').removeClass();
+        $('#planAddButtonIcon').addClass('fa fa-refresh text-light ld ld-spin');
+        $.get("/Reports/Plans?id=" + @Model.Report.Id + "&name=" + $('#planSelectList option:selected').text() + "&planList=" + "@planList" + "&removal=false", function (data) {
+            $('#planCards').fadeOut(500, function () {
+                $('#planInformation').html(data);
+                $('#planCards').hide(0, function () {
+                    $('#planCards').fadeIn(500);
+                });
+            });
+        });
+    });
+    $('.planRemoveButton').click(function () {
+        let planName = $(this).parent().children('.card-title').text();
+        $(this).parent().parent().parent().slideUp(250, function () {
+            $.get("/Reports/Plans?id=" + @Model.Report.Id + "&name=" + planName, "&planList=" + "@planList" + "&removal=true", function (data) {
+                $('#planInformation').html(data);
+                $('#empty').hide(0, function () {
+                    $('#empty').show(500);
+                });
+            });
+        });
+    });
+    </script> 
+</div>

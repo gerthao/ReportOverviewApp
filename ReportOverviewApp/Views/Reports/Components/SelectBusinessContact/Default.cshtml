@@ -29,7 +29,7 @@
         <label>Assigned Business Contact</label>
     </div>
     <div id="businessContactCard">
-        @if (Model.Report != null && Model.Report.BusinessContact != null)
+        @if (Model.Report != null && Model.Report.BusinessContact != null && Model.Report.BusinessContactId != null)
         {
             <div class="col-md-12">
                 <div class="card">
@@ -66,8 +66,7 @@
             </div>
         }
     </div>
-</div>
-<script>
+    <script>
     $('#businessContactSelectButton').click(function () {
         $('#businessContactSelectButtonIcon').removeClass();
         $('#businessContactSelectButtonIcon').addClass('fa fa-refresh text-light ld ld-spin');
@@ -88,11 +87,13 @@
                 $('#businessContactCard').hide(0, function () {
                     $('#businessContactCard').show(500);
                 });
-                
+
             });
         });
     });
-</script>
+    </script>
+
+</div>
 
 
 

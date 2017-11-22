@@ -20,23 +20,8 @@ namespace ReportOverviewApp.ViewComponents
         }
         public async Task<IViewComponentResult> InvokeAsync(int? reportId, string businessContactName, bool remove=false)
         {
-            if (reportId == null)
-            {
-                return View(new ReportViewModel());
-            }
-            Report report = await _context.Reports.Include(r => r.Deadlines)
-                                               .Include(r => r.BusinessContact)
-                                               .Include(r => r.ReportPlanMapping)
-                                                    .ThenInclude(rpm => rpm.Plan)
-                                                    .ThenInclude(p => p.State)
-                                               .Where(r => r.Id == reportId).SingleOrDefaultAsync();
-            if (report == null)
-            {
-                return View(new ReportViewModel());
-            }
             ReportViewModel reportViewModel = new ReportViewModel()
             {
-                Report = report,
                 Options = new DropdownOptions()
                 {
                     BusinessContacts = await _context.BusinessContacts.OrderBy(bc => bc.Name).ToListAsync(),
@@ -47,8 +32,29 @@ namespace ReportOverviewApp.ViewComponents
                     BusinessOwners = null
                 }
             };
+            if (reportId == null)
+            {
+                reportViewModel.Report = new Report();
+                return View(reportViewModel);
+            }
+            Report report = await _context.Reports.Include(r => r.Deadlines)
+                                               .Include(r => r.BusinessContact)
+                                               .Include(r => r.ReportPlanMapping)
+                                                    .ThenInclude(rpm => rpm.Plan)
+                                                    .ThenInclude(p => p.State)
+                                               .Where(r => r.Id == reportId).SingleOrDefaultAsync();
+            if (report == null)
+            {
+                reportViewModel.Report = new Report();
+                return View(reportViewModel);
+            } else
+            {
+                reportViewModel.Report = report;
+            }
+            
             if (remove)
             {
+                reportViewModel.Report.BusinessContactId = null;
                 reportViewModel.Report.BusinessContact = null;
                 return View(reportViewModel);
             }

@@ -223,7 +223,7 @@ namespace ReportOverviewApp.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("BusinessContactId");
+                    b.Property<int?>("BusinessContactId");
 
                     b.Property<DateTime?>("DateAdded");
 
@@ -442,8 +442,7 @@ namespace ReportOverviewApp.Migrations
                 {
                     b.HasOne("ReportOverviewApp.Models.BusinessContact", "BusinessContact")
                         .WithMany("Reports")
-                        .HasForeignKey("BusinessContactId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("BusinessContactId");
                 });
 
             modelBuilder.Entity("ReportOverviewApp.Models.ReportDeadline", b =>

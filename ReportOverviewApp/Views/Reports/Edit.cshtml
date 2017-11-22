@@ -4,4 +4,57 @@
     ViewData["Title"] = $"Edit - {Model.Report.Name}";
 }
 
-@await Html.PartialAsync("Components/EditReport/Default")
+@await Component.InvokeAsync("EditReport", new { reportId = Model.Report.Id})
+
+@*<script>
+
+    $('#planAddButton').click(function () {
+        $('#planAddButtonIcon').removeClass();
+        $('#planAddButtonIcon').addClass('fa fa-refresh text-light ld ld-spin');
+        $.get("/Reports/Plans?id=" + @Model.Report.Id + "&name=" + $('#planSelectList option:selected').text() + "&planList=" + "@planList" + "&removal=false", function (data) {
+            $('#planCards').fadeOut(500, function () {
+                $('#planInformation').html(data);
+                $('#planCards').hide(0, function () {
+                    $('#planCards').fadeIn(500);
+                });
+            });
+        });
+    });
+    $('.planRemoveButton').click(function () {
+        let planName = $(this).parent().children('.card-title').text();
+        $(this).parent().parent().parent().slideUp(250, function () {
+            $.get("/Reports/Plans?id=" + @Model.Report.Id + "&name=" + planName, "&planList=" + "@planList" + "&removal=true", function (data) {
+                $('#planInformation').html(data);
+                $('#empty').hide(0, function () {
+                    $('#empty').show(500);
+                });
+            });
+        });
+    });
+</script>
+<script>
+    $('#businessContactSelectButton').click(function () {
+        $('#businessContactSelectButtonIcon').removeClass();
+        $('#businessContactSelectButtonIcon').addClass('fa fa-refresh text-light ld ld-spin');
+        $.get("/Reports/SelectBusinessContact?id=" + @Model.Report.Id + "&name=" + $('#businessContactSelectList option:selected').text(), function (data) {
+            $('#businessContactCard').fadeOut(500, function () {
+                $('#businessContactInformation').html(data);
+                $('#businessContactCard').hide(0, function () {
+                    $('#businessContactCard').fadeIn(500);
+                });
+            });
+        });
+    });
+    $('#businessContactRemoveButton').click(function () {
+        $('#businessContactCard').slideUp(250, function () {
+            $('#businessContactCard').remove();
+            $.get("/Reports/SelectBusinessContact?id=" + @Model.Report.Id + "&removal=" + "true", function (data) {
+                $('#businessContactInformation').html(data);
+                $('#businessContactCard').hide(0, function () {
+                    $('#businessContactCard').show(500);
+                });
+
+            });
+        });
+    });
+</script>*@

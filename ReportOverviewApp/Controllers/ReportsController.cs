@@ -89,6 +89,10 @@ namespace ReportOverviewApp.Controllers
         {
             return ViewComponent("SelectBusinessContact", new { reportId = id, businessContactName = name, remove = removal });
         }
+        public IActionResult Plans(int? id, string name, string planList, bool removal = false)
+        {
+            return ViewComponent("Plans", new { reportId = id, planName = name, plans = planList, remove = removal });
+        }
 
         public IActionResult UpdateDeadlinesAsync()
         {
@@ -170,7 +174,7 @@ namespace ReportOverviewApp.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> SelectPlan(string state)
+        public async Task<IActionResult> SelectPlanViewModel(string state)
             => View(await GetSelectPlanViewModelAsync(state));
 
         // GET: Reports/Create
@@ -192,24 +196,24 @@ namespace ReportOverviewApp.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost, ValidateAntiForgeryToken, Authorize]
-        public async Task<IActionResult> Create([Bind("Id,Name,BusinessContact,BusinessOwner,DueDate1,DueDate2,DueDate3,DueDate4,Frequency,DayDue,DeliveryFunction,WorkInstructions,Notes,DaysAfterQuarter,FolderLocation,ReportType,RunWith,DeliveryMethod,DeliveryTo,EffectiveDate,TerminationDate,GroupName,State,ReportPath,OtherDepartment,SourceDepartment,QualityIndicator,ERSReportLocation,ERRStatus,DateAdded,SystemRefreshDate,LegacyReportID,LegacyReportIDR2,ERSReportName,OtherReportLocation,OtherReportName")] Report report)
+        public async Task<IActionResult> Create([Bind("Report, PlanIds")] ReportViewModel reportViewModel)
         {
             ToastMessage toast = null;
             if (ModelState.IsValid){
-                if(report.DateAdded == null)
+                if(reportViewModel.Report.DateAdded == null)
                 {
-                    report.DateAdded = DateTime.Now;
+                    reportViewModel.Report.DateAdded = DateTime.Now;
                 }
-                _context.Add(report);
-                _context.Add(userLogFactory.Build(GetCurrentUserID(), $"\"{report.Name}\" has been created."));
-                toast = new ToastMessage(message: $"{report.Name} has been successfully created.", title: "Success", toasType: ToastEnums.ToastType.Success, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
+                _context.Add(reportViewModel.Report);
+                _context.Add(userLogFactory.Build(GetCurrentUserID(), $"\"{reportViewModel.Report.Name}\" has been created."));
+                toast = new ToastMessage(message: $"{reportViewModel.Report.Name} has been successfully created.", title: "Success", toasType: ToastEnums.ToastType.Success, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
                 await _context.SaveChangesAsync();
                 ShowToast(toast);
                 return RedirectToAction("Index");
             }
             toast = new ToastMessage(message: $"One or more fields in the form are not valid.", title: "Changes Needed", toasType: ToastEnums.ToastType.Warning, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
             ShowToast(toast);
-            return View(report);
+            return View(reportViewModel);
         }
 
         [Authorize]
@@ -254,6 +258,7 @@ namespace ReportOverviewApp.Controllers
             return View(await _context.Reports.Select(r => r.BusinessContact).OrderBy(bc => bc).ToListAsync());
         }
         
+        
 
         // GET: Reports/Edit/5
         [Authorize]
@@ -280,7 +285,7 @@ namespace ReportOverviewApp.Controllers
         private string GetCurrentUserID() => _context.Users.Where(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault().Id;
 
         [HttpPost, ValidateAntiForgeryToken, Authorize]
-        public async Task<IActionResult> Edit(int id, [Bind("Report")] ReportViewModel reportViewModel /*[Bind("Id,Name,BusinessContact,BusinessOwner,DueDate1,DueDate2,DueDate3,DueDate4,Frequency,DayDue,DeliveryFunction,WorkInstructions,Notes,DaysAfterQuarter,FolderLocation,ReportType,RunWith,DeliveryMethod,DeliveryTo,EffectiveDate,TerminationDate,GroupName,State,ReportPath,OtherDepartment,SourceDepartment,QualityIndicator,ERSReportLocation,ERRStatus,DateAdded,SystemRefreshDate,LegacyReportID,LegacyReportIDR2,ERSReportName,OtherReportLocation,OtherReportName")] Report report*/)
+        public async Task<IActionResult> Edit(int id, [Bind("Report, PlanIds")] ReportViewModel reportViewModel /*[Bind("Id,Name,BusinessContact,BusinessOwner,DueDate1,DueDate2,DueDate3,DueDate4,Frequency,DayDue,DeliveryFunction,WorkInstructions,Notes,DaysAfterQuarter,FolderLocation,ReportType,RunWith,DeliveryMethod,DeliveryTo,EffectiveDate,TerminationDate,GroupName,State,ReportPath,OtherDepartment,SourceDepartment,QualityIndicator,ERSReportLocation,ERRStatus,DateAdded,SystemRefreshDate,LegacyReportID,LegacyReportIDR2,ERSReportName,OtherReportLocation,OtherReportName")] Report report*/)
         {
             ToastMessage toast = null;
             if (id != reportViewModel.Report.Id)
@@ -292,8 +297,41 @@ namespace ReportOverviewApp.Controllers
             if (ModelState.IsValid){
                 try{
                     var unmodifiedReport = _context.Reports.AsNoTracking().SingleOrDefault(r => r.Id == reportViewModel.Report.Id);
-                    reportViewModel.Report.BusinessContact = null;
+                    
                     _context.Add(userLogFactory.Build(GetCurrentUserID(), $"\"{reportViewModel.Report.Name}\" has been edited.", CompareChanges(unmodifiedReport, reportViewModel.Report)));
+                    reportViewModel.Report.BusinessContact = null;
+
+                    List<ReportPlanMap> list = new List<ReportPlanMap>();
+                    if(!String.IsNullOrEmpty(reportViewModel.PlanIds) && !String.IsNullOrWhiteSpace(reportViewModel.PlanIds))
+                    {
+                        foreach (int planId in reportViewModel.PlanIds?.Split(',')?.Select(i => int.Parse(i))?.ToList())
+                        {
+                            Plan plan = await _context.Plans.FindAsync(planId);
+                            if (plan != null)
+                            {
+                                list.Add(new ReportPlanMap()
+                                {
+                                    ReportId = reportViewModel.Report.Id,
+                                    PlanId = plan.Id,
+                                });
+                            }
+                        }
+                    }
+                    
+                    reportViewModel.Report.ReportPlanMapping = list;
+                    
+                    var maps = _context.ReportPlanMapping.Where(m => m.ReportId == reportViewModel.Report.Id);
+                    if(maps != null)
+                    {
+                        _context.ReportPlanMapping.RemoveRange(maps);
+
+                    }
+                    if(reportViewModel.Report.ReportPlanMapping != null)
+                    {
+                        _context.ReportPlanMapping.AddRange(reportViewModel.Report.ReportPlanMapping);
+                    }
+                    
+
                     _context.Update(reportViewModel.Report);
                     await _context.SaveChangesAsync();
                     toast = new ToastMessage(message: $"{reportViewModel.Report.Name} has been successfully edited.", title: "Success", toasType: ToastEnums.ToastType.Success, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });

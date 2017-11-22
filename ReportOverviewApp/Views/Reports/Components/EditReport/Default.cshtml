@@ -43,7 +43,7 @@ else
                 @await  Html.PartialAsync("Components/SelectBusinessContact/Default")
             </div>*@
 
-            <div>
+            <div id="businessContactContainer">
                 @await  Component.InvokeAsync("SelectBusinessContact", new { reportId = Model?.Report?.Id})
             </div>
             @*<div id="businessContactInformation">
@@ -111,7 +111,10 @@ else
                 }
             </div>*@
             <hr />
-            <div id="planInformation">
+            <div id="planContainer">
+                @await Component.InvokeAsync("Plans", new { reportId = Model?.Report?.Id, plans="default" })
+            </div>
+            @*<div id="planInformation">
                 <h6 class="font-italic">Plan Information</h6>
                 <div>
                     <div class="col-md-12">
@@ -191,7 +194,7 @@ else
                     }
 
                 </div>
-            </div>
+            </div>*@
             <hr />
             <h6 class="font-italic">Report Information (Continued)</h6>
             <div class="form-group">
@@ -225,7 +228,20 @@ else
             <div class="form-group">
                 <label asp-for="Report.Frequency" class="col-md-4 control-label">@Html.DisplayNameFor(e => Model.Report.Frequency)</label>
                 <div class="col-md-12">
-                    <input asp-for="Report.Frequency" id="editReport_frequency" class="form-control" />
+                    <select asp-for="Report.Frequency" id="editReport_frequency" class="form-control col-md-12">
+                        @foreach(string frequency in Model.Options.Frequencies)
+                        {
+                            @if (frequency == Model.Report.Frequency)
+                            {
+                                <option selected>@frequency</option>
+
+                            } else
+                            {
+                                <option>@frequency</option>
+
+                            }
+                        }
+                     </select>
                     <span asp-validation-for="Report.Frequency" class="text-danger"></span>
                 </div>
             </div>

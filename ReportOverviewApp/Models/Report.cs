@@ -36,7 +36,7 @@ namespace ReportOverviewApp.Models
         //public string UserDone {get; set;}
         //public string UserClientNotified { get; set; }
         //public string UserSent { get; set; }
-        public int BusinessContactId { get; set; }
+        public int? BusinessContactId { get; set; }
         public BusinessContact BusinessContact { get; set; }
 
         public virtual ICollection<ReportPlanMap> ReportPlanMapping { get; set; }

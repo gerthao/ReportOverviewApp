@@ -6,13 +6,14 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using ReportOverviewApp.Data;
+using ReportOverviewApp.Models;
 using System;
 
 namespace ReportOverviewApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20170929151813_Initial_5")]
-    partial class Initial_5
+    [Migration("20171121230245_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -162,6 +163,8 @@ namespace ReportOverviewApp.Migrations
 
                     b.Property<string>("SecurityStamp");
 
+                    b.Property<int>("Theme");
+
                     b.Property<bool>("TwoFactorEnabled");
 
                     b.Property<string>("UserName")
@@ -180,16 +183,48 @@ namespace ReportOverviewApp.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("ReportOverviewApp.Models.BusinessContact", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("BusinessOwner")
+                        .HasMaxLength(64);
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(64);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BusinessContacts");
+                });
+
+            modelBuilder.Entity("ReportOverviewApp.Models.Plan", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(255);
+
+                    b.Property<int>("StateId");
+
+                    b.Property<string>("WindwardId")
+                        .HasMaxLength(64);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StateId");
+
+                    b.ToTable("Plans");
+                });
+
             modelBuilder.Entity("ReportOverviewApp.Models.Report", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("BusinessContact")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("BusinessOwner")
-                        .HasMaxLength(255);
+                    b.Property<int?>("BusinessContactId");
 
                     b.Property<DateTime?>("DateAdded");
 
@@ -230,11 +265,6 @@ namespace ReportOverviewApp.Migrations
                     b.Property<string>("Frequency")
                         .HasMaxLength(50);
 
-                    b.Property<string>("GroupName")
-                        .HasMaxLength(255);
-
-                    b.Property<bool>("IsFromOtherDepartment");
-
                     b.Property<bool>("IsQualityIndicator");
 
                     b.Property<int?>("LegacyReportID");
@@ -264,9 +294,6 @@ namespace ReportOverviewApp.Migrations
                     b.Property<string>("SourceDepartment")
                         .HasMaxLength(100);
 
-                    b.Property<string>("State")
-                        .HasMaxLength(10);
-
                     b.Property<DateTime?>("SystemRefreshDate");
 
                     b.Property<DateTime?>("TerminationDate");
@@ -275,7 +302,9 @@ namespace ReportOverviewApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Report");
+                    b.HasIndex("BusinessContactId");
+
+                    b.ToTable("Reports");
                 });
 
             modelBuilder.Entity("ReportOverviewApp.Models.ReportDeadline", b =>
@@ -289,12 +318,6 @@ namespace ReportOverviewApp.Migrations
 
                     b.Property<DateTime?>("FinishedDate");
 
-                    b.Property<bool>("IsClientNotified");
-
-                    b.Property<bool>("IsFinished");
-
-                    b.Property<bool>("IsSent");
-
                     b.Property<int>("ReportId");
 
                     b.Property<DateTime?>("SentDate");
@@ -304,6 +327,43 @@ namespace ReportOverviewApp.Migrations
                     b.HasIndex("ReportId");
 
                     b.ToTable("ReportDeadlines");
+                });
+
+            modelBuilder.Entity("ReportOverviewApp.Models.ReportPlanMap", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("PlanId");
+
+                    b.Property<int>("ReportId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlanId");
+
+                    b.HasIndex("ReportId");
+
+                    b.ToTable("ReportPlanMapping");
+                });
+
+            modelBuilder.Entity("ReportOverviewApp.Models.State", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(64);
+
+                    b.Property<string>("PostalAbbreviation")
+                        .HasMaxLength(32);
+
+                    b.Property<string>("Type")
+                        .HasMaxLength(64);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("States");
                 });
 
             modelBuilder.Entity("ReportOverviewApp.Models.UserLog", b =>
@@ -323,7 +383,7 @@ namespace ReportOverviewApp.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserLog");
+                    b.ToTable("UserLogs");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -371,10 +431,38 @@ namespace ReportOverviewApp.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("ReportOverviewApp.Models.Plan", b =>
+                {
+                    b.HasOne("ReportOverviewApp.Models.State", "State")
+                        .WithMany("Plans")
+                        .HasForeignKey("StateId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ReportOverviewApp.Models.Report", b =>
+                {
+                    b.HasOne("ReportOverviewApp.Models.BusinessContact", "BusinessContact")
+                        .WithMany("Reports")
+                        .HasForeignKey("BusinessContactId");
+                });
+
             modelBuilder.Entity("ReportOverviewApp.Models.ReportDeadline", b =>
                 {
                     b.HasOne("ReportOverviewApp.Models.Report", "Report")
                         .WithMany("Deadlines")
+                        .HasForeignKey("ReportId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ReportOverviewApp.Models.ReportPlanMap", b =>
+                {
+                    b.HasOne("ReportOverviewApp.Models.Plan", "Plan")
+                        .WithMany("ReportPlanMapping")
+                        .HasForeignKey("PlanId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ReportOverviewApp.Models.Report", "Report")
+                        .WithMany("ReportPlanMapping")
                         .HasForeignKey("ReportId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
