@@ -35,7 +35,7 @@ namespace ReportOverviewApp.Controllers
         ///  This parameter determines the number of records displayed on a page.
         /// </param>
         /// <returns>
-        ///  Returns a ReportViewModel which contains a IEnumberable<Report> based on the parameters given.
+        ///  Returns a ReportViewModel based on the parameters given.
         ///  The returned object is used for the Index method.
         /// </returns>
         /// 
