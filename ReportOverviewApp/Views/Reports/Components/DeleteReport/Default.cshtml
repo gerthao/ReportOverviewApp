@@ -1,0 +1,17 @@
+﻿@model ReportOverviewApp.Models.Report
+
+@{
+    ViewData["Title"] = "Delete";
+}
+<form asp-action="Delete" asp-route-id="@Model.Id">
+    <div class="modal-header"><h5 class="modal-title">Delete Report</h5></div>
+    <div class="modal-body">
+        <h5>Are you sure you want to delete <span class="font-italic font-weight-bold" id="deleteReport_name">@Model.Name</span>?</h5>
+        <input type="hidden" class="sr-only" id="deleteReport_id" asp-for="Id" />
+    </div>
+    <div class="modal-footer">
+        <div class="col-md-2">
+            <input type="submit" class="btn btn-danger" value="Delete" />
+        </div>
+    </div>
+</form>

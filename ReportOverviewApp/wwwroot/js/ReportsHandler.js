@@ -4,7 +4,7 @@
 $(document).ready(function () {
     $('#updateDeadlines').click(function () {
         $(this).text('Updating...');
-    })
+    });
     $("#clearSearchForm").click(function () {
         $('input').val(null);
     });
@@ -58,62 +58,62 @@ $(document).ready(function () {
             }
         });
     }
-    //not implemented yet//
-    function handleCheckboxDateTimeOnInput(checkboxInput, dateInput) {
-        $(dateInput).on('input', function (e) {
-            if ($(this).val() !== '') {
-                $(checkboxInput).prop('checked', true);
-            } else {
-                $(checkboxInput).prop('checked', false);
-            }
-        });
-    }
-    $('#editReport_done').click(function () {
-        if ($('#editReport_dateDone').val() === '' && $('#editReport_done:checked').val()) {
-            $('#editReport_dateDone').val(getDateTimeNow());
-            return;
-        }
-        if ($('#editReport_dateDone').val() !== '' && !$('#editReport_done:checked').val()) {
-            $('#editReport_dateDone').val('');
-        }
-    });
-    $('#editReport_clientNotified').click(function () {
-        if ($('#editReport_dateClientNotified').val() === '' && $('#editReport_clientNotified:checked').val()) {
-            $('#editReport_dateClientNotified').val(getDateTimeNow());
-            return;
-        } if ($('#editReport_dateClientNotifed').val() !== '' && !$('#editReport_clientNotified:checked').val()) {
-            $('#editReport_dateClientNotified').val('');
-        }
-    });
-    $('#editReport_sent').click(function () {
-        if ($('#editReport_dateSent').val() === '' && $('#editReport_sent:checked').val()) {
-            $('#editReport_dateSent').val(getDateTimeNow());
-            return;
-        } if ($('#editReport_dateSent').val() !== '' && !$('#editReport_sent:checked').val()) {
-            $('#editReport_dateSent').val('');
-        }
-    });
-    $('#edit_dateDone').on('input', function (e) {
-        if ($(this).val() !== '') {
-            $('#editReport_done').prop('checked', true);
-        } else {
-            $('#editReport_done').prop('checked', false);
-        }
-    });
-    $('#editReport_dateClientNotified').on('input', function (e) {
-        if ($(this).val() !== '') {
-            $('#editReport_clientNotified').prop('checked', true);
-        } else {
-            $('#editReport_clientNotified').prop('checked', false);
-        }
-    });
-    $('#editReport_dateSent').on('input', function (e) {
-        if ($(this).val() !== '') {
-            $('#editReport_sent').prop('checked', true);
-        } else {
-            $('#editReport_sent').prop('checked', false);
-        }
-    });
+    ////not implemented yet//
+    //function handleCheckboxDateTimeOnInput(checkboxInput, dateInput) {
+    //    $(dateInput).on('input', function (e) {
+    //        if ($(this).val() !== '') {
+    //            $(checkboxInput).prop('checked', true);
+    //        } else {
+    //            $(checkboxInput).prop('checked', false);
+    //        }
+    //    });
+    //}
+    //$('#editReport_done').click(function () {
+    //    if ($('#editReport_dateDone').val() === '' && $('#editReport_done:checked').val()) {
+    //        $('#editReport_dateDone').val(getDateTimeNow());
+    //        return;
+    //    }
+    //    if ($('#editReport_dateDone').val() !== '' && !$('#editReport_done:checked').val()) {
+    //        $('#editReport_dateDone').val('');
+    //    }
+    //});
+    //$('#editReport_clientNotified').click(function () {
+    //    if ($('#editReport_dateClientNotified').val() === '' && $('#editReport_clientNotified:checked').val()) {
+    //        $('#editReport_dateClientNotified').val(getDateTimeNow());
+    //        return;
+    //    } if ($('#editReport_dateClientNotifed').val() !== '' && !$('#editReport_clientNotified:checked').val()) {
+    //        $('#editReport_dateClientNotified').val('');
+    //    }
+    //});
+    //$('#editReport_sent').click(function () {
+    //    if ($('#editReport_dateSent').val() === '' && $('#editReport_sent:checked').val()) {
+    //        $('#editReport_dateSent').val(getDateTimeNow());
+    //        return;
+    //    } if ($('#editReport_dateSent').val() !== '' && !$('#editReport_sent:checked').val()) {
+    //        $('#editReport_dateSent').val('');
+    //    }
+    //});
+    //$('#edit_dateDone').on('input', function (e) {
+    //    if ($(this).val() !== '') {
+    //        $('#editReport_done').prop('checked', true);
+    //    } else {
+    //        $('#editReport_done').prop('checked', false);
+    //    }
+    //});
+    //$('#editReport_dateClientNotified').on('input', function (e) {
+    //    if ($(this).val() !== '') {
+    //        $('#editReport_clientNotified').prop('checked', true);
+    //    } else {
+    //        $('#editReport_clientNotified').prop('checked', false);
+    //    }
+    //});
+    //$('#editReport_dateSent').on('input', function (e) {
+    //    if ($(this).val() !== '') {
+    //        $('#editReport_sent').prop('checked', true);
+    //    } else {
+    //        $('#editReport_sent').prop('checked', false);
+    //    }
+    //});
     $('.modal').on('hidden.bs.modal', function () {
         let findForm = $(this).find('form');
         if (findForm[0] === null || findForm[0] === undefined) {
@@ -145,7 +145,7 @@ $(document).ready(function () {
     //    }
     //    updateFrequencyFields();
     //});
-    $('#reportTable tr td a').on("click", function () {
+    $('#reportTable tr td #editReport').on("click", function () {
         let retrievedID = $(this).parent().parent().find(".ReportID").html();
         let action = $(this).attr('id');
         let link = root + "/Reports/EditReport?id=" + retrievedID;
@@ -154,72 +154,83 @@ $(document).ready(function () {
             $('#editReportContainer').fadeOut(500, function () {
                 $(this).html(data);
                 $(this).fadeIn(500);
-            })
-            
-        })
+            });
+        });
     });
-    function handleJSONReport(data, action) {
-        if (data === null) {
-            console.log("there is no data");
-        } else {
-            for (let i in data[0]) {
-                if (action === 'editReport') {
-                    $('#' + action + '_' + i).val(data[0][i]);
-                    if (i === "dateDone" && data[0][i] !== null) {
-                        $('#' + action + '_done').prop('checked', true);
-                    } if (i === 'dateClientNotified' && data[0][i] !== null) {
-                        $('#' + action + '_clientNotified').prop('checked', true);
-                    } if (i === 'dateSent' && data[0][i] !== null) {
-                        $('#' + action + '_sent').prop('checked', true);
-                    }
-                }
-                if (action === 'deleteReport') {
-                    if (i === 'id') {
-                        $('#' + action + '_' + i).val(data[0][i]);
-                    } else {
-                        $('#' + action + '_' + i).html(data[0][i]);
-                    }
+    $('#reportTable tr td #deleteReport').on("click", function () {
+        let retrievedID = $(this).parent().parent().find(".ReportID").html();
+        let action = $(this).attr('id');
+        let link = root + "/Reports/DeleteReport?id=" + retrievedID;
+        $('#deleteReportContainer').html('<div class="col-md-12" style="text-align: center; padding-top: 50%; padding-bottom: 50%; position: absolute;"><i class="fa fa-5x fa-refresh ld ld-spin"></i></div>');
+        $.get(link, function (data) {
+            $('#deleteReportContainer').fadeOut(500, function () {
+                $(this).html(data);
+                $(this).fadeIn(500);
+            });
+        });
+    });
+    //function handleJSONReport(data, action) {
+    //    if (data === null) {
+    //        console.log("there is no data");
+    //    } else {
+    //        for (let i in data[0]) {
+    //            if (action === 'editReport') {
+    //                $('#' + action + '_' + i).val(data[0][i]);
+    //                if (i === "dateDone" && data[0][i] !== null) {
+    //                    $('#' + action + '_done').prop('checked', true);
+    //                } if (i === 'dateClientNotified' && data[0][i] !== null) {
+    //                    $('#' + action + '_clientNotified').prop('checked', true);
+    //                } if (i === 'dateSent' && data[0][i] !== null) {
+    //                    $('#' + action + '_sent').prop('checked', true);
+    //                }
+    //            }
+    //            if (action === 'deleteReport') {
+    //                if (i === 'id') {
+    //                    $('#' + action + '_' + i).val(data[0][i]);
+    //                } else {
+    //                    $('#' + action + '_' + i).html(data[0][i]);
+    //                }
                     
-                }
-            }
-        }
-    }
-    function updateFrequencyFields() {
-        switch ($('#edit_frequency').val()) {
-            case 'Weekly':
-            case 'Biweekly':
-            case 'Monthly':
-                $('#editReport_dueDate1').parent().parent().hide();
-                $('#editReport_dueDate2').parent().parent().hide();
-                $('#editReport_dueDate3').parent().parent().hide();
-                $('#editReport_dueDate4').parent().parent().hide();
-                $('#editReport_daysAfterQuarter').parent().parent().hide();
-                break;
-            case 'Quarterly':
-                $('#editReport_dueDate1').parent().parent().show();
-                $('#editReport_dueDate2').parent().parent().show();
-                $('#editReport_dueDate3').parent().parent().show();
-                $('#editReport_dueDate4').parent().parent().show();
-                $('#editReport_daysAfterQuarter').parent().parent().show();
-                break;
-            case 'Semiannual':
-                $('#editReport_dueDate1').parent().parent().show();
-                $('#editReport_dueDate2').parent().parent().show();
-                $('#editReport_dueDate3').parent().parent().hide();
-                $('#editReport_dueDate4').parent().parent().hide();
-                $('#editReport_daysAfterQuarter').parent().parent().hide();
-                break;
-            case 'Annual':
-                $('#editReport_dueDate1').parent().parent().show();
-                $('#editReport_dueDate2').parent().parent().hide();
-                $('#editReport_dueDate3').parent().parent().hide();
-                $('#editReport_dueDate4').parent().parent().hide();
-                $('#editReport_daysAfterQuarter').parent().parent().hide();
-                break;
-        }
-    }
-    updateFrequencyFields();
-    $('#frequency').on('input', function () {
-        updateFrequencyFields();
-    });
+    //            }
+    //        }
+    //    }
+    //}
+    //function updateFrequencyFields() {
+    //    switch ($('#edit_frequency').val()) {
+    //        case 'Weekly':
+    //        case 'Biweekly':
+    //        case 'Monthly':
+    //            $('#editReport_dueDate1').parent().parent().hide();
+    //            $('#editReport_dueDate2').parent().parent().hide();
+    //            $('#editReport_dueDate3').parent().parent().hide();
+    //            $('#editReport_dueDate4').parent().parent().hide();
+    //            $('#editReport_daysAfterQuarter').parent().parent().hide();
+    //            break;
+    //        case 'Quarterly':
+    //            $('#editReport_dueDate1').parent().parent().show();
+    //            $('#editReport_dueDate2').parent().parent().show();
+    //            $('#editReport_dueDate3').parent().parent().show();
+    //            $('#editReport_dueDate4').parent().parent().show();
+    //            $('#editReport_daysAfterQuarter').parent().parent().show();
+    //            break;
+    //        case 'Semiannual':
+    //            $('#editReport_dueDate1').parent().parent().show();
+    //            $('#editReport_dueDate2').parent().parent().show();
+    //            $('#editReport_dueDate3').parent().parent().hide();
+    //            $('#editReport_dueDate4').parent().parent().hide();
+    //            $('#editReport_daysAfterQuarter').parent().parent().hide();
+    //            break;
+    //        case 'Annual':
+    //            $('#editReport_dueDate1').parent().parent().show();
+    //            $('#editReport_dueDate2').parent().parent().hide();
+    //            $('#editReport_dueDate3').parent().parent().hide();
+    //            $('#editReport_dueDate4').parent().parent().hide();
+    //            $('#editReport_daysAfterQuarter').parent().parent().hide();
+    //            break;
+    //    }
+    //}
+    //updateFrequencyFields();
+    //$('#frequency').on('input', function () {
+    //    updateFrequencyFields();
+    //});
 });

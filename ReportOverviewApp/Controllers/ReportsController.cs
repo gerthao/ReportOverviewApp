@@ -80,18 +80,25 @@ namespace ReportOverviewApp.Controllers
             viewModel.Reports = viewModel.DisplayPage(pageIndex);
             return viewModel;
         }
-
+        public IActionResult CreateReport()
+        {
+            return ViewComponent("CreateReport");
+        }
         public IActionResult EditReport(int? id)
         {
             return ViewComponent("EditReport", new { reportId = id });
         }
-        public IActionResult SelectBusinessContact(int? id, string name, bool removal=false)
+        public IActionResult DeleteReport(int? id)
         {
-            return ViewComponent("SelectBusinessContact", new { reportId = id, businessContactName = name, remove = removal });
+            return ViewComponent("DeleteReport", new { reportId = id });
         }
-        public IActionResult Plans(int? id, string name, string planList, bool removal = false)
+        public IActionResult SelectBusinessContact(int? id, int? contactId, bool removal=false)
         {
-            return ViewComponent("Plans", new { reportId = id, planName = name, plans = planList, remove = removal });
+            return ViewComponent("SelectBusinessContact", new { reportId = id, businessContactId = contactId, remove = removal });
+        }
+        public IActionResult Plans(int? id, string name, IEnumerable<int> planIds, bool isModified = false, bool removal = false)
+        {
+            return ViewComponent("Plans", new { reportId = id, planName = name, plans = planIds, changed = isModified, remove = removal });
         }
 
         public IActionResult UpdateDeadlinesAsync()
@@ -183,7 +190,7 @@ namespace ReportOverviewApp.Controllers
         
         public async Task<IActionResult> UpcomingReports()
         {
-            return View(await _context.ReportDeadlines.Where(rd => rd != null && rd.Deadline != null & rd.Deadline >= DateTime.Today).Include(rd => rd.Report).OrderBy(rd => rd.Deadline).ThenBy(rd => rd.Report.Name).ToListAsync());
+            return View(await _context.ReportDeadlines.Where(rd => rd != null && rd.Deadline != null && rd.Deadline >= DateTime.Today && rd.Deadline <= DateTime.Today.AddDays(7)).Include(rd => rd.Report).OrderBy(rd => rd.Deadline).ThenBy(rd => rd.Report.Name).ToListAsync());
         }
 
         [Authorize]
@@ -196,7 +203,7 @@ namespace ReportOverviewApp.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost, ValidateAntiForgeryToken, Authorize]
-        public async Task<IActionResult> Create([Bind("Report, PlanIds")] ReportViewModel reportViewModel)
+        public async Task<IActionResult> Create([Bind("Report, Plans")] ReportViewModel reportViewModel)
         {
             ToastMessage toast = null;
             if (ModelState.IsValid){
@@ -204,10 +211,15 @@ namespace ReportOverviewApp.Controllers
                 {
                     reportViewModel.Report.DateAdded = DateTime.Now;
                 }
+                reportViewModel.Report.BusinessContact = null;
                 _context.Add(reportViewModel.Report);
-                _context.Add(userLogFactory.Build(GetCurrentUserID(), $"\"{reportViewModel.Report.Name}\" has been created."));
-                toast = new ToastMessage(message: $"{reportViewModel.Report.Name} has been successfully created.", title: "Success", toasType: ToastEnums.ToastType.Success, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
                 await _context.SaveChangesAsync();
+                List<ReportPlanMap> list = reportViewModel.Plans is null || reportViewModel.Plans.Count() == 0 ? new List<ReportPlanMap>() : reportViewModel.Plans.Select(i => new ReportPlanMap() { PlanId = i, ReportId = reportViewModel.Report.Id }).ToList();
+                reportViewModel.Report.ReportPlanMapping = list;
+                _context.Update(reportViewModel.Report);
+                _context.Add(userLogFactory.Build(GetCurrentUserID(), $"\"{reportViewModel.Report.Name}\" has been created."));
+                await _context.SaveChangesAsync();
+                toast = new ToastMessage(message: $"{reportViewModel.Report.Name} has been successfully created.", title: "Success", toasType: ToastEnums.ToastType.Success, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
                 ShowToast(toast);
                 return RedirectToAction("Index");
             }
@@ -285,7 +297,7 @@ namespace ReportOverviewApp.Controllers
         private string GetCurrentUserID() => _context.Users.Where(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault().Id;
 
         [HttpPost, ValidateAntiForgeryToken, Authorize]
-        public async Task<IActionResult> Edit(int id, [Bind("Report, PlanIds")] ReportViewModel reportViewModel /*[Bind("Id,Name,BusinessContact,BusinessOwner,DueDate1,DueDate2,DueDate3,DueDate4,Frequency,DayDue,DeliveryFunction,WorkInstructions,Notes,DaysAfterQuarter,FolderLocation,ReportType,RunWith,DeliveryMethod,DeliveryTo,EffectiveDate,TerminationDate,GroupName,State,ReportPath,OtherDepartment,SourceDepartment,QualityIndicator,ERSReportLocation,ERRStatus,DateAdded,SystemRefreshDate,LegacyReportID,LegacyReportIDR2,ERSReportName,OtherReportLocation,OtherReportName")] Report report*/)
+        public async Task<IActionResult> Edit(int id, [Bind("Report, Plans")] ReportViewModel reportViewModel /*[Bind("Id,Name,BusinessContact,BusinessOwner,DueDate1,DueDate2,DueDate3,DueDate4,Frequency,DayDue,DeliveryFunction,WorkInstructions,Notes,DaysAfterQuarter,FolderLocation,ReportType,RunWith,DeliveryMethod,DeliveryTo,EffectiveDate,TerminationDate,GroupName,State,ReportPath,OtherDepartment,SourceDepartment,QualityIndicator,ERSReportLocation,ERRStatus,DateAdded,SystemRefreshDate,LegacyReportID,LegacyReportIDR2,ERSReportName,OtherReportLocation,OtherReportName")] Report report*/)
         {
             ToastMessage toast = null;
             if (id != reportViewModel.Report.Id)
@@ -301,22 +313,23 @@ namespace ReportOverviewApp.Controllers
                     _context.Add(userLogFactory.Build(GetCurrentUserID(), $"\"{reportViewModel.Report.Name}\" has been edited.", CompareChanges(unmodifiedReport, reportViewModel.Report)));
                     reportViewModel.Report.BusinessContact = null;
 
-                    List<ReportPlanMap> list = new List<ReportPlanMap>();
-                    if(!String.IsNullOrEmpty(reportViewModel.PlanIds) && !String.IsNullOrWhiteSpace(reportViewModel.PlanIds))
-                    {
-                        foreach (int planId in reportViewModel.PlanIds?.Split(',')?.Select(i => int.Parse(i))?.ToList())
-                        {
-                            Plan plan = await _context.Plans.FindAsync(planId);
-                            if (plan != null)
-                            {
-                                list.Add(new ReportPlanMap()
-                                {
-                                    ReportId = reportViewModel.Report.Id,
-                                    PlanId = plan.Id,
-                                });
-                            }
-                        }
-                    }
+                    List<ReportPlanMap> list = reportViewModel.Plans is null || reportViewModel.Plans.Count() == 0 ? new List<ReportPlanMap>() : reportViewModel.Plans.Select(i => new ReportPlanMap() { PlanId = i, ReportId = reportViewModel.Report.Id }).ToList();
+
+                    //if(!String.IsNullOrEmpty(reportViewModel.PlanIds) && !String.IsNullOrWhiteSpace(reportViewModel.PlanIds))
+                    //{
+                    //    foreach (int planId in reportViewModel.PlanIds?.Split(',')?.Select(i => int.Parse(i))?.ToList())
+                    //    {
+                    //        Plan plan = await _context.Plans.FindAsync(planId);
+                    //        if (plan != null)
+                    //        {
+                    //            list.Add(new ReportPlanMap()
+                    //            {
+                    //                ReportId = reportViewModel.Report.Id,
+                    //                PlanId = plan.Id,
+                    //            });
+                    //        }
+                    //    }
+                    //}
                     
                     reportViewModel.Report.ReportPlanMapping = list;
                     
@@ -379,7 +392,6 @@ namespace ReportOverviewApp.Controllers
                 //.Append(Compare("Date Notified", old.ClientNotifiedDate, updated.ClientNotifiedDate))
                 //.Append(Compare("Date Sent", old.SentDate, updated.SentDate))
                 .Append(Compare("Business Contact", old.BusinessContact, updated.BusinessContact))
-                .Append(Compare("Business Owner", old.BusinessContact, updated.BusinessContact))
                 .Append(Compare("Due Date 1", old.DueDate1, updated.DueDate1))
                 .Append(Compare("Due Date 2", old.DueDate2, updated.DueDate2))
                 .Append(Compare("Due Date 3", old.DueDate3, updated.DueDate3))
@@ -397,7 +409,7 @@ namespace ReportOverviewApp.Controllers
                 .Append(Compare("Delivery To", old.DeliverTo, updated.DeliverTo))
                 .Append(Compare("Effective Date", old.EffectiveDate, updated.EffectiveDate))
                 .Append(Compare("Termination Date", old.TerminationDate, updated.TerminationDate))
-                //.Append(Compare("Plan", old.GroupName, updated.GroupName))
+                .Append(Compare("Plan(s)", old.ReportPlanMapping, updated.ReportPlanMapping))
                 //.Append(Compare("State", old.State, updated.State))
                 .Append(Compare("Report Path", old.ReportPath, updated.ReportPath))
                 .Append(Compare("Other Department", old.IsFromOtherDepartment, updated.IsFromOtherDepartment))

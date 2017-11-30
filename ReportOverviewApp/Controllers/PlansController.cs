@@ -22,7 +22,7 @@ namespace ReportOverviewApp.Controllers
         // GET: Plans
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Plans.Include(p => p.State);
+            var applicationDbContext = _context.Plans.Include(p => p.State).Include(p => p.ReportPlanMapping).ThenInclude(rpm => rpm.Report);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -48,7 +48,7 @@ namespace ReportOverviewApp.Controllers
         // GET: Plans/Create
         public IActionResult Create()
         {
-            ViewData["StateId"] = new SelectList(_context.States, "Id", "Id");
+            ViewData["StateId"] = new SelectList(_context.States, "Id", "Name");
             return View();
         }
 
@@ -65,7 +65,7 @@ namespace ReportOverviewApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StateId"] = new SelectList(_context.States, "Id", "Id", plan.StateId);
+            ViewData["StateId"] = new SelectList(_context.States, "Id", "Name", plan.StateId);
             return View(plan);
         }
 
@@ -82,7 +82,7 @@ namespace ReportOverviewApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["StateId"] = new SelectList(_context.States, "Id", "Id", plan.StateId);
+            ViewData["StateId"] = new SelectList(_context.States, "Id", "Name", plan.StateId);
             return View(plan);
         }
 
@@ -118,7 +118,7 @@ namespace ReportOverviewApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StateId"] = new SelectList(_context.States, "Id", "Id", plan.StateId);
+            ViewData["StateId"] = new SelectList(_context.States, "Id", "Name", plan.StateId);
             return View(plan);
         }
 

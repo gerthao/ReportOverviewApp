@@ -134,11 +134,11 @@
             $('#registerLink').click(function () {
                 $('#loginSection').slideUp(500, function () {
                     $('#registerPartialView').removeClass('sr-only');
-                    $('#registerPartialView').show(500);
+                    $('#registerPartialView').slideDown(500);
                 });
             });
             $('#loginLink').click(function () {
-                $('#registerPartialView').hide(500, function () {
+                $('#registerPartialView').slideUp(500, function () {
                     $('#registerPartialView').addClass('sr-only');
                     $('#loginSection').slideDown(500);
                 });

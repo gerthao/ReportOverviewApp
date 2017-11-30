@@ -40,13 +40,6 @@ namespace XUnitTestProjectReportOverviewApp
             Assert.NotNull(tueReport.CurrentDeadline());
         }
         [Fact]
-        public void ReportDeadlineTestWeeklyAtCertainDate()
-        {
-            Report report = TestReportFactory.Create(FrequencyType.Weekly, "Sunday");
-            DateTime compareDate = new DateTime(year: 2017, month: 10, day: 4);
-            Assert.True(report.Deadline(compareDate) == new DateTime(year: 2017, month: 10, day: 8));
-        }
-        [Fact]
         public void ReportDeadlineTestWeeklyNearEndOfMonth()
         {
             Report report = TestReportFactory.Create(FrequencyType.Weekly, "Friday");
@@ -116,10 +109,9 @@ namespace XUnitTestProjectReportOverviewApp
                 Frequency = "Monthly"
             };
             Assert.False(report.CurrentDeadline() == null || !report.CurrentDeadline().HasValue);
-            Assert.True(report.Frequency == "Monthly");
             Assert.True(report.Deadline(new DateTime(year: 2011, month: 4, day: 15)) == new DateTime(year: 2011, month: 4, day: 15));
-            Assert.True(report.Deadline(new DateTime(year: 2011, month: 4, day: 16)) == new DateTime(year: 2011, month: 5, day: 15));
-            Assert.True(report.Deadline(new DateTime(year: 2011, month: 12, day: 22)) == new DateTime(year: 2012, month: 1, day: 15));
+            Assert.True(report.Deadline(new DateTime(year: 2011, month: 4, day: 16)) == new DateTime(year: 2011, month: 5, day: 13));
+            Assert.True(report.Deadline(new DateTime(year: 2011, month: 12, day: 22)) == new DateTime(year: 2012, month: 1, day: 13));
         }
         [Fact]
         public void ReportDeadlineTestMonthlyBadDeadline()
@@ -154,9 +146,9 @@ namespace XUnitTestProjectReportOverviewApp
             Assert.True(report1.Deadline(date2) == new DateTime(year: 2013, month: 3, day: 15));
             Assert.True(report1.Deadline(date3) == new DateTime(year: 2013, month: 3, day: 29));
             Assert.True(report1.Deadline(date4) == new DateTime(year: 2013, month: 3, day: 29));
-            Assert.True(report2.Deadline(date1) == new DateTime(year: 2013, month: 3, day: 30));
-            Assert.True(report2.Deadline(date5) == new DateTime(year: 2013, month: 3, day: 30));
-            Assert.True(report2.Deadline(date6) == new DateTime(year: 2013, month: 4, day: 13));
+            Assert.True(report2.Deadline(date1) == new DateTime(year: 2013, month: 3, day: 29));
+            Assert.True(report2.Deadline(date5) == new DateTime(year: 2013, month: 3, day: 29));
+            Assert.True(report2.Deadline(date6) == new DateTime(year: 2013, month: 4, day: 12));
             Assert.True(report2.Deadline(date7) == new DateTime(year: 2013, month: 4, day: 30));
         }
         [Fact]

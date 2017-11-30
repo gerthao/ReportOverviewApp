@@ -78,14 +78,14 @@ label {
 .card-footer {
     background-color: #3A4355;
 }
-.list-group-item, .list-group-item.list-group-item-action {
+/*.list-group-item, .list-group-item.list-group-item-action {
     background-color: #404046;
     color: #DEDEDE;
 }
 a.list-group-item:hover, a.list-group-item.list-group-item-action:hover, p.list-group-item.list-group-item-action:hover {
     background-color: #505066;
     color: #C0C0C0;
-}
+}*/
 .pagination li.page-item .page-link {
     background-color: #404046;
     border: 1px solid #3A3A3C;

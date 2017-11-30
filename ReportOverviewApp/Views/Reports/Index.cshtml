@@ -15,7 +15,7 @@
     <button class="btn btn-primary" type="button" id="mag-glass" data-toggle="modal" data-target="#searchReportModal"><span class="fa fa-search"></span>&nbsp;&nbsp;Search</button>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createReportModal" aria-label="Left Align"><span class="fa fa-plus-square"></span>&nbsp;&nbsp;Create New</button>
     @Html.ActionLink(linkText: "Update Deadlines", actionName: "UpdateDeadlinesAsync", controllerName: "Reports", routeValues: new { }, htmlAttributes: new {@id="updateDeadlines", @class = "btn btn-primary" })
-    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#findMatchReplaceReportModal">Find Match & Replace</button>
+    @*<button class="btn btn-primary" type="button" data-toggle="modal" data-target="#findMatchReplaceReportModal">Find Match & Replace</button>*@
 </h4>
 <hr />
 <div id="searchReportModal" class="modal fade">
@@ -25,21 +25,15 @@
         </div>
     </div>
 </div>
-@*<div id="createReportModal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            @await Html.PartialAsync("Create", new ReportViewModel() { Report = new Report(), Options = Model.Options })
-        </div>
-    </div>
-</div>*@
-<div id="findMatchReplaceReportModal" class="modal fade">
+
+@*<div id="findMatchReplaceReportModal" class="modal fade">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div id="findMatchReportContainer">
             </div>
         </div>
     </div>
-</div>
+</div>*@
 @if (Model == null || Model.Reports == null || Model.Reports.Count() == 0) { <br /><h4 class="text-center" style="padding-top: 30px">No Records To Display</h4> }
 else {
     <table id="reportTable" class="table report-table table-bordered table-sm table-striped table-hover">
@@ -78,15 +72,15 @@ else {
                         <i class="fa fa-filter"></i>
                     }
                 </th>
-                <th>@Html.ActionLink("Finished On", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Finished On", begin = Model.Filters.Begin, end = Model.Filters.End }, new {  })
-                    @if (Model.Filters.Column == "Finished On")
+                <th>@Html.ActionLink("Ran On", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Finished On", begin = Model.Filters.Begin, end = Model.Filters.End }, new {  })
+                    @if (Model.Filters.Column == "Ran On")
                     {
                         <i class="fa fa-filter"></i>
                     }
                 </th>
                 <th>
-                    @Html.ActionLink("Notified On", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Notified On", begin = Model.Filters.Begin, end = Model.Filters.End }, new {  })
-                    @if (Model.Filters.Column == "Notified On")
+                    @Html.ActionLink("Approved On", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Notified On", begin = Model.Filters.Begin, end = Model.Filters.End }, new {  })
+                    @if (Model.Filters.Column == "Approved On")
                     {
                         <i class="fa fa-filter"></i>
                     }
@@ -137,7 +131,15 @@ else {
             }
         </tbody>
     </table>
-    
+    <div id="createReportModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div id="createReportContainer">
+                    @await Component.InvokeAsync("CreateReport")
+                </div>
+            </div>
+        </div>
+    </div>
     <div id="editReportModal" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -152,7 +154,9 @@ else {
     <div id="deleteReportModal" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                    @await Html.PartialAsync("Delete", new Report())
+                <div id="deleteReportContainer">
+                    @await Component.InvokeAsync(name: "DeleteReport", arguments: new { })
+                </div>
             </div>
         </div>
     </div>

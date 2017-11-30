@@ -10,13 +10,13 @@
             <select id="businessContactSelectList" class="form-control col-md-12">
                 @foreach (BusinessContact businessContactOption in Model.Options.BusinessContacts)
                 {
-                    if (businessContactOption == Model.Report.BusinessContact)
+                    if (Model.Report.BusinessContact != null && businessContactOption == Model.Report.BusinessContact)
                     {
-                        <option disabled class="bg-primary">@businessContactOption.Name</option>
+                        <option selected class="bg-primary" value="@businessContactOption.Id">@businessContactOption.Name</option>
                     }
                     else
                     {
-                        <option>@businessContactOption.Name</option>
+                        <option value="@businessContactOption.Id">@businessContactOption.Name</option>
                     }
                 }
             </select>
@@ -70,7 +70,8 @@
     $('#businessContactSelectButton').click(function () {
         $('#businessContactSelectButtonIcon').removeClass();
         $('#businessContactSelectButtonIcon').addClass('fa fa-refresh text-light ld ld-spin');
-        $.get("/Reports/SelectBusinessContact?id=" + @Model.Report.Id + "&name=" + $('#businessContactSelectList option:selected').text(), function (data) {
+        $(this).unbind();
+        $.get("/Reports/SelectBusinessContact?id=" + @Model.Report.Id + "&contactId=" + $('#businessContactSelectList option:selected').val(), function (data) {
             $('#businessContactCard').fadeOut(500, function () {
                 $('#businessContactInformation').html(data);
                 $('#businessContactCard').hide(0, function () {

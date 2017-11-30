@@ -18,7 +18,7 @@ namespace ReportOverviewApp.ViewComponents
         {
             _context = context;
         }
-        public async Task<IViewComponentResult> InvokeAsync(int? reportId, string businessContactName, bool remove=false)
+        public async Task<IViewComponentResult> InvokeAsync(int? reportId, int? businessContactId, bool remove=false)
         {
             ReportViewModel reportViewModel = new ReportViewModel()
             {
@@ -37,11 +37,11 @@ namespace ReportOverviewApp.ViewComponents
                 reportViewModel.Report = new Report();
                 return View(reportViewModel);
             }
-            Report report = await _context.Reports.Include(r => r.Deadlines)
+            Report report = await _context.Reports/*.Include(r => r.Deadlines)*/
                                                .Include(r => r.BusinessContact)
-                                               .Include(r => r.ReportPlanMapping)
-                                                    .ThenInclude(rpm => rpm.Plan)
-                                                    .ThenInclude(p => p.State)
+                                               //.Include(r => r.ReportPlanMapping)
+                                               //     .ThenInclude(rpm => rpm.Plan)
+                                               //     .ThenInclude(p => p.State)
                                                .Where(r => r.Id == reportId).SingleOrDefaultAsync();
             if (report == null)
             {
@@ -58,11 +58,11 @@ namespace ReportOverviewApp.ViewComponents
                 reportViewModel.Report.BusinessContact = null;
                 return View(reportViewModel);
             }
-            if (String.IsNullOrEmpty(businessContactName))
+            if (businessContactId is null || !businessContactId.HasValue)
             {
                 return View(reportViewModel);
             }
-            BusinessContact businessContact = await _context.BusinessContacts.Where(bc => bc.Name == businessContactName)?.SingleOrDefaultAsync();
+            BusinessContact businessContact = await _context.BusinessContacts.FindAsync(businessContactId.Value);
             if(businessContact == null || businessContact.Name == null)
             {
                 return View(reportViewModel);

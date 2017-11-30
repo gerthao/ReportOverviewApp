@@ -19,6 +19,8 @@ namespace ReportOverviewApp.ViewComponents
         
         public async Task<IViewComponentResult> InvokeAsync()
         {
+            
+
             return View(await _context.Reports.Include(r => r.Deadlines).ToListAsync());
         }
     }

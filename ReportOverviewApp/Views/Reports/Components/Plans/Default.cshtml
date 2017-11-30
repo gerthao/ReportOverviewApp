@@ -1,52 +1,34 @@
 ﻿@using ReportOverviewApp.Models.ReportViewModels;
 @model ReportViewModel
 <div id="planInformation">
-    @{ 
-        string planList;
-        if (Model.Report.ReportPlanMapping.Any())
-        {
-            planList = Model.Report.ReportPlanMapping.Select(rpm => rpm.Plan.Name).Aggregate((a, b) => $"{a};{b}");
-            Model.PlanIds = Model.Report.ReportPlanMapping.Select(rpm => rpm.PlanId.ToString()).Aggregate((a, b) => $"{a},{b}");
-
-        } else
-        {
-            Model.PlanIds = "";
-            planList = "";
-        }
-
-
-    }
     <h6 class="font-italic">Plan Information</h6>
     <div>
         <div class="col-md-12">
             <label>Selection</label>
         </div>
-        <div id="idList"> 
-            <input class="sr-only form-control" asp-for="PlanIds" readonly>
-
-        
-            
-        </div>
+        @*<div id="idList"> 
+            <input class="form-control" asp-for="PlanIds" readonly>            
+        </div>*@
         <div class="form-row col-md-12">
-            <div class="form-group col-md-10">
-                <select id="planSelectList" class="form-control col-md-12">
+            <div class="form-group col-md-12">
+                <select id="planSelectList" size="8" asp-for="Plans" class="form-control col-md-12" multiple>
                     @foreach (Plan planOption in Model.Options.Plans)
                     {
-                        @if (Model.Report.ReportPlanMapping.Select(rpm => rpm.Plan).Any(p => p == planOption))
+                        @if (Model.Report.ReportPlanMapping != null && Model.Report.ReportPlanMapping.Select(rpm => rpm.Plan).Any(p => p == planOption))
                         {
-                            <option disabled class="bg-primary">@planOption.Name</option>
+                            <option selected value="@planOption.Id">@planOption.Name</option>
 
                         }
                         else
                         {
-                            <option>@planOption.Name</option>
+                            <option value="@planOption.Id">@planOption.Name</option>
                         }
                     }
                 </select>
             </div>
-            <div class="form-group col-md-2">
+            @*<div class="form-group col-md-2">
                 <button id="planAddButton" class="btn btn-primary btn-block" type="button"><i id="planAddButtonIcon" class="fa fa-plus-circle"></i>&nbsp;&nbsp;Add</button>
-            </div>
+            </div>*@
         </div>
     </div>
     <div class="form-group">
@@ -57,14 +39,14 @@
             @if (Model.Report.ReportPlanMapping != null && Model.Report.ReportPlanMapping.Any())
             {
 
-                <div id="planCardsGr" class="card-group">
+                <div id="planCardsGroup" class="card-group">
                     @for (int i = 0; i < Model.Report.ReportPlanMapping?.Count(); i++)
                     {
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="card-header btn-group btn-block" style="height: 3rem;">
                                     <p class="text-center card-title" style="display: inline;">@Model.Report.ReportPlanMapping.ElementAt(i).Plan.Name</p>
-                                    <button type="button" class="btn btn-primary planRemoveButton" style="height:inherit; max-height:inherit; min-height:inherit; top: 0px; bottom: inherit; position:absolute; right: 0px;"><i class="fa fa-remove"></i></button>
+                                    @*<button type="button" class="btn btn-primary planRemoveButton" style="height:inherit; max-height:inherit; min-height:inherit; top: 0px; bottom: inherit; position:absolute; right: 0px;"><i class="fa fa-remove"></i></button>*@
                                 </div>
 
                                 <div class="card-body">
@@ -108,24 +90,16 @@
        
 
     </div>
-    <script>
-
-    $('#planAddButton').click(function () {
-        $('#planAddButtonIcon').removeClass();
-        $('#planAddButtonIcon').addClass('fa fa-refresh text-light ld ld-spin');
-        $.get("/Reports/Plans?id=" + @Model.Report.Id + "&name=" + $('#planSelectList option:selected').text() + "&planList=" + "@planList" + "&removal=false", function (data) {
-            $('#planCards').fadeOut(500, function () {
-                $('#planInformation').html(data);
-                $('#planCards').hide(0, function () {
-                    $('#planCards').fadeIn(500);
-                });
-            });
+    @*<script>
+    $('#planSelectList').click(function () {
+        $.get("/Reports/Plans?id=" + @Model.Report.Id + "&planIds=" + $('#planSelectList').val() + "&isModified=true" + "&removal=false", function (data) {
+            $('#planInformation').html(data);
         });
     });
     $('.planRemoveButton').click(function () {
         let planName = $(this).parent().children('.card-title').text();
         $(this).parent().parent().parent().slideUp(250, function () {
-            $.get("/Reports/Plans?id=" + @Model.Report.Id + "&name=" + planName, "&planList=" + "@planList" + "&removal=true", function (data) {
+            $.get("/Reports/Plans?id=" + @Model.Report.Id + "&name=" + planName + "&isModified=true" + "&removal=true", function (data) {
                 $('#planInformation').html(data);
                 $('#empty').hide(0, function () {
                     $('#empty').show(500);
@@ -133,5 +107,5 @@
             });
         });
     });
-    </script> 
+    </script>*@ 
 </div>

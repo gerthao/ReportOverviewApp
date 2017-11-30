@@ -18,6 +18,10 @@ namespace ReportOverviewApp.Models
         public string BusinessOwner { get; set; }
         
         public ICollection<Report> Reports { get; set; }
-        
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

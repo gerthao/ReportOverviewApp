@@ -9,9 +9,12 @@
     switch(UserManager.FindByNameAsync(User.Identity.Name).Result.Theme)
     {
         case ApplicationUser.Themes.Dark:
-            <link rel="stylesheet" href="~/css/dark-theme.css" />
+            <div id="darkTheme">
+                <link rel="stylesheet" href="~/css/dark-theme.css" />
+            </div>
             break;
         case ApplicationUser.Themes.Light:
+            //default theme//
             break;
     }
 }

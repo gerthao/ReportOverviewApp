@@ -17,66 +17,10 @@ namespace ReportOverviewApp.ViewComponents
         {
             _context = context;
         }
-        public async Task<IViewComponentResult> InvokeAsync(int? reportId, string planName, string plans, bool remove=false)
+        public async Task<IViewComponentResult> InvokeAsync(int? reportId, string planName, IEnumerable<int> plans, bool changed=false, bool remove=false)
         {
-            if (reportId == null)
-            {
-                return View(new ReportViewModel());
-            }
-            Report report = await _context.Reports.Include(r => r.Deadlines)
-                                               .Include(r => r.BusinessContact)
-                                               .Include(r => r.ReportPlanMapping)
-                                                    .ThenInclude(rpm => rpm.Plan)
-                                                    .ThenInclude(p => p.State)
-                                               .Where(r => r.Id == reportId).SingleOrDefaultAsync();
-            if (report == null)
-            {
-                return View(new ReportViewModel());
-            }
-            if (plans != "default")
-            {
-                report.ReportPlanMapping = new List<ReportPlanMap>();
-                string[] list;
-                if (!String.IsNullOrEmpty(plans))
-                {
-                    if (plans.Contains(';'))
-                    {
-                        list = plans.Split(';');
-                    }
-                    else
-                    {
-                        list = new string[] { plans };
-                    }
-                } else
-                {
-                    list = null;
-                }
-
-                
-                if (list != null)
-                {
-                    foreach (string planString in list)
-                    {
-                        Plan plan = await _context.Plans.Include(p => p.State).Where(p => p.Name == planString)?.SingleOrDefaultAsync();
-                        if (plan != null)
-                        {
-                            report.ReportPlanMapping.Add(new ReportPlanMap()
-                            {
-                                ReportId = report.Id,
-                                Report = report,
-                                PlanId = plan.Id,
-                                Plan = plan
-                            });
-                        }
-                    }
-
-                }
-                
-            }
-            
             ReportViewModel reportViewModel = new ReportViewModel()
             {
-                Report = report,
                 Options = new DropdownOptions()
                 {
                     BusinessContacts = await _context.BusinessContacts.OrderBy(bc => bc.Name).ToListAsync(),
@@ -87,6 +31,62 @@ namespace ReportOverviewApp.ViewComponents
                     BusinessOwners = null
                 }
             };
+            if (reportId == null)
+            {
+                reportViewModel.Report = new Report();
+                return View(reportViewModel);
+            }
+            Report report = await _context.Reports
+                                               //.Include(r => r.Deadlines)
+                                               //.Include(r => r.BusinessContact)
+                                               .Include(r => r.ReportPlanMapping)
+                                                    .ThenInclude(rpm => rpm.Plan)
+                                                    .ThenInclude(p => p.State)
+                                               .Where(r => r.Id == reportId).SingleOrDefaultAsync();
+            if (report == null)
+            {
+                reportViewModel.Report = new Report();
+                return View(reportViewModel);
+            }
+            reportViewModel.Report = report;
+            if (changed)
+            {
+                report.ReportPlanMapping = plans != null && plans.Count() > 0 ? plans.Select(i => new ReportPlanMap() { PlanId = i, ReportId = report.Id }).ToList() : new List<ReportPlanMap>();
+                
+                //if (!String.IsNullOrEmpty(plans))
+                //{
+                //    if (plans.Contains(','))
+                //    {
+                //        list = plans.Split(',');
+                //    }
+                //    else
+                //    {
+                //        list = new string[] { plans };
+                //    }
+                //} else
+                //{
+                //    list = null;
+                //}    
+                //if (list != null)
+                //{
+                //    foreach (string planId in list)
+                //    {
+                //        Plan plan = await _context.Plans.Include(p => p.State).Where(p => p.Id.ToString() == planId)?.SingleOrDefaultAsync();
+                //        if (plan != null)
+                //        {
+                //            report.ReportPlanMapping.Add(new ReportPlanMap()
+                //            {
+                //                ReportId = report.Id,
+                //                Report = report,
+                //                PlanId = plan.Id,
+                //                Plan = plan
+                //            });
+                //        }
+                //    }
+                //}
+            }
+            
+            
             if (!String.IsNullOrEmpty(planName))
             {
                 Plan plan = await _context.Plans.Include(p => p.State).Where(p => p.Name == planName)?.SingleOrDefaultAsync();
@@ -108,14 +108,18 @@ namespace ReportOverviewApp.ViewComponents
                     }
                     else
                     {
-                        for (int i = 0; i < reportViewModel.Report.ReportPlanMapping.Count(); i++)
+                        if(reportViewModel.Report.ReportPlanMapping != null)
                         {
-                            ReportPlanMap map = reportViewModel.Report.ReportPlanMapping.ElementAt(i);
-                            if (map.ReportId == reportViewModel.Report.Id && map.PlanId == plan.Id)
+                            for (int i = 0; i < reportViewModel.Report.ReportPlanMapping.Count(); i++)
                             {
-                                reportViewModel.Report.ReportPlanMapping.Remove(map);
+                                ReportPlanMap map = reportViewModel.Report.ReportPlanMapping.ElementAt(i);
+                                if (map.ReportId == reportViewModel.Report.Id && map.PlanId == plan.Id)
+                                {
+                                    reportViewModel.Report.ReportPlanMapping.Remove(map);
+                                }
                             }
                         }
+                        
                     }
 
                 }
