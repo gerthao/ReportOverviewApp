@@ -56,7 +56,7 @@ namespace ReportOverviewApp.Models.ReportViewModels
         //        }
         //        else if (reportDeadline.IsFinished)
         //        {
-        //            messageFinished = CheckStatus("Finished", reportDeadline.FinishedDate);
+        //            messageFinished = CheckStatus("Finished", reportDeadline.RunDate);
         //        }
         //        else
         //        {

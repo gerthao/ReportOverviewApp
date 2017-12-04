@@ -36,8 +36,8 @@
             </tr>
             <tr>
                 <th>Report</th>
-                <th>Finished On</th>
-                <th>Notified On</th>
+                <th>Ran On</th>
+                <th>Approved On</th>
                 <th>Sent On</th>
                 <th>Options</th>
             </tr>
@@ -46,11 +46,11 @@
         {
             <tr class="text-dark">
                 <td>@Html.DisplayFor(modelItem => rd.Report.Name)</td>
-                @if (rd.FinishedDate != null)
+                @if (rd.RunDate != null)
                 {
                     <td>
-                        @Html.DisplayFor(modelItem => rd.FinishedDate)&nbsp;
-                    @if (rd.FinishedDate > rd.Deadline)
+                        @Html.DisplayFor(modelItem => rd.RunDate)&nbsp;
+                    @if (rd.RunDate > rd.Deadline)
                     {
                         <text>(LATE)&nbsp;<i class="fa fa-thumbs-up text-warning"></i></text>
                     }
@@ -62,13 +62,13 @@
                 }
                 else
                 {
-                    <td class="text-danger">Not Finished&nbsp;<i class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i></td>
+                    <td class="text-danger">Not Run&nbsp;<i class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i></td>
                 }
-                @if (rd.ClientNotifiedDate != null)
+                @if (rd.ApprovalDate != null)
                 {
                     <td>
-                        @Html.DisplayFor(modelItem => rd.ClientNotifiedDate)&nbsp;
-                    @if (rd.ClientNotifiedDate > rd.Deadline)
+                        @Html.DisplayFor(modelItem => rd.ApprovalDate)&nbsp;
+                    @if (rd.ApprovalDate > rd.Deadline)
                     {  <text>(LATE)&nbsp;<i class="fa fa-thumbs-up text-warning"></i></text>
                     }
                     else
@@ -79,7 +79,7 @@
                 }
                 else
                 {
-                    <td class="text-danger">No Notification&nbsp;<i class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i></td>
+                    <td class="text-danger">No Approval&nbsp;<i class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i></td>
                 }
                 @if (rd.SentDate != null)
                 {

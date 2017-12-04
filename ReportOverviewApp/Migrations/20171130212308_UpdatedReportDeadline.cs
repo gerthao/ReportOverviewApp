@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace ReportOverviewApp.Migrations
 {
-    public partial class Initial : Migration
+    public partial class UpdatedReportDeadline : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -282,10 +282,10 @@ namespace ReportOverviewApp.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ClientNotifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ApprovalDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Deadline = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FinishedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ReportId = table.Column<int>(type: "int", nullable: false),
+                    RunDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     SentDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>

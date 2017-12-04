@@ -27,7 +27,7 @@ namespace ReportOverviewApp.Models
         //public bool IsSent { get; set; }
 
         //[DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:g}", ApplyFormatInEditMode = true), Display(Name = "Finished On")]
-        //public DateTime? FinishedDate { get; set; }
+        //public DateTime? RunDate { get; set; }
         //[DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:g}", ApplyFormatInEditMode = true), Display(Name = "Notified On")]
         //public DateTime? ClientNotifiedDate { get; set; }
         //[DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:g}", ApplyFormatInEditMode = true), Display(Name = "Sent On")]

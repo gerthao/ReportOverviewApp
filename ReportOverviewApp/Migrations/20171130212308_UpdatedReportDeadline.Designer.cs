@@ -12,8 +12,8 @@ using System;
 namespace ReportOverviewApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20171121230245_Initial")]
-    partial class Initial
+    [Migration("20171130212308_UpdatedReportDeadline")]
+    partial class UpdatedReportDeadline
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -312,13 +312,13 @@ namespace ReportOverviewApp.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime?>("ClientNotifiedDate");
+                    b.Property<DateTime?>("ApprovalDate");
 
                     b.Property<DateTime>("Deadline");
 
-                    b.Property<DateTime?>("FinishedDate");
-
                     b.Property<int>("ReportId");
+
+                    b.Property<DateTime?>("RunDate");
 
                     b.Property<DateTime?>("SentDate");
 

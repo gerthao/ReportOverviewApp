@@ -72,14 +72,14 @@ else {
                         <i class="fa fa-filter"></i>
                     }
                 </th>
-                <th>@Html.ActionLink("Ran On", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Finished On", begin = Model.Filters.Begin, end = Model.Filters.End }, new {  })
+                <th>@Html.ActionLink("Ran On", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Ran On", begin = Model.Filters.Begin, end = Model.Filters.End }, new {  })
                     @if (Model.Filters.Column == "Ran On")
                     {
                         <i class="fa fa-filter"></i>
                     }
                 </th>
                 <th>
-                    @Html.ActionLink("Approved On", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Notified On", begin = Model.Filters.Begin, end = Model.Filters.End }, new {  })
+                    @Html.ActionLink("Approved On", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Approved On", begin = Model.Filters.Begin, end = Model.Filters.End }, new {  })
                     @if (Model.Filters.Column == "Approved On")
                     {
                         <i class="fa fa-filter"></i>
@@ -106,8 +106,8 @@ else {
                     {
                         currentReportDeadline = Model.Reports.Select(r => r.Deadlines.OrderByDescending(rd => rd.Deadline).First()).First();
                         <td>@Html.DisplayFor(modelItem => currentReportDeadline.Deadline)</td>
-                        <td>@Html.DisplayFor(modelItem => currentReportDeadline.FinishedDate)</td>
-                        <td>@Html.DisplayFor(modelItem => currentReportDeadline.ClientNotifiedDate)</td>
+                        <td>@Html.DisplayFor(modelItem => currentReportDeadline.RunDate)</td>
+                        <td>@Html.DisplayFor(modelItem => currentReportDeadline.ApprovalDate)</td>
                         <td>@Html.DisplayFor(modelItem => currentReportDeadline.SentDate)</td>
                     } else
                     {

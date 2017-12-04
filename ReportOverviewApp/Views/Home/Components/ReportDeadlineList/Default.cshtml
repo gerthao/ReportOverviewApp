@@ -24,10 +24,10 @@
                             Report
                         </th>
                         <th>
-                            Finished
+                            Ran
                         </th>
                         <th>
-                            Notified
+                            Approved
                         </th>
                         <th>
                             Sent
@@ -42,13 +42,13 @@
                                 @rd.Report.Name
                             </td>
                             <td>
-                                @rd.FinishedDate
-                                @if (rd.FinishedDate != null && rd.FinishedDate > rd.Deadline)
+                                @rd.RunDate
+                                @if (rd.RunDate != null && rd.RunDate > rd.Deadline)
                                 { <text>&nbsp;(Late)</text>}
                             </td>
                             <td>
-                                @rd.ClientNotifiedDate
-                                @if (rd.ClientNotifiedDate != null && rd.ClientNotifiedDate > rd.Deadline)
+                                @rd.ApprovalDate
+                                @if (rd.ApprovalDate != null && rd.ApprovalDate > rd.Deadline)
                                 { <text>&nbsp;(Late)</text>}
                             </td>
                             <td>

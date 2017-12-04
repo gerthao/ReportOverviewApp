@@ -7,9 +7,9 @@
         </tr>
         <tr>
             <th>Due Date</th>
-            <th>Finished?</th>
-            <th>Notification?</th>
-            <th>Sent?</th>
+            <th>Run Date</th>
+            <th>Approval Date</th>
+            <th>Sent Date</th>
         </tr>
     </thead>
     <tbody>
@@ -30,17 +30,17 @@
                 else{
                     <td>N/A</td>
                 }
-                @if (rd.FinishedDate != null)
+                @if (rd.RunDate != null)
                 {
-                    <td>@rd.FinishedDate</td>
+                    <td>@rd.RunDate</td>
                 }
                 else
                 {
                     <td>N/A</td>
                 }
-                @if (rd.ClientNotifiedDate != null)
+                @if (rd.ApprovalDate != null)
                 {
-                    <td>@rd.ClientNotifiedDate</td>
+                    <td>@rd.ApprovalDate</td>
                 }
                 else
                 {

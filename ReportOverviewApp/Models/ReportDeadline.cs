@@ -14,13 +14,13 @@ namespace ReportOverviewApp.Models
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime Deadline { get; set; }
 
-        public bool IsFinished { get => FinishedDate != null && FinishedDate <= Deadline; }
+        public bool HasRun { get => RunDate != null && RunDate <= Deadline; }
         
-        public DateTime? FinishedDate { get; set; }
+        public DateTime? RunDate { get; set; }
 
-        public bool IsClientNotified { get => ClientNotifiedDate != null && ClientNotifiedDate <= Deadline; }
+        public bool IsApproved { get => ApprovalDate != null && ApprovalDate <= Deadline; }
         
-        public DateTime? ClientNotifiedDate { get; set; }
+        public DateTime? ApprovalDate { get; set; }
 
         public bool IsSent { get => SentDate != null && SentDate <= Deadline; }
         

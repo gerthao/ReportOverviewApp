@@ -311,13 +311,13 @@ namespace ReportOverviewApp.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime?>("ClientNotifiedDate");
+                    b.Property<DateTime?>("ApprovalDate");
 
                     b.Property<DateTime>("Deadline");
 
-                    b.Property<DateTime?>("FinishedDate");
-
                     b.Property<int>("ReportId");
+
+                    b.Property<DateTime?>("RunDate");
 
                     b.Property<DateTime?>("SentDate");
 

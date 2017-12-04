@@ -122,7 +122,7 @@ namespace ReportOverviewApp.Models.ReportViewModels
                         Reports = Reports.OrderBy(report => report.CurrentDeadline());
                         break;
                     //case "Finished On":
-                    //    viewModel.Reports = viewModel.Reports.OrderBy(report => report.FinishedDate);
+                    //    viewModel.Reports = viewModel.Reports.OrderBy(report => report.RunDate);
                     //    break;
                     //case "Notified On":
                     //    viewModel.Reports = viewModel.Reports.OrderBy(report => report.ClientNotifiedDate);
