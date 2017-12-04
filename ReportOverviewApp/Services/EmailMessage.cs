@@ -10,8 +10,8 @@ namespace ReportOverviewApp.Services
         public string Subject { get; set; }
         public string Content { get; set; }
 
-        public ICollection<EmailAddress> ToAddresses { get; set; }
-        public ICollection<EmailAddress> FromAddresses { get; set; }
+        public List<EmailAddress> ToAddresses { get; set; }
+        public List<EmailAddress> FromAddresses { get; set; }
 
         public EmailMessage()
         {
