@@ -51,7 +51,7 @@ namespace ReportOverviewApp.Controllers
                 BusinessOwners = await _context.BusinessContacts.Select(bc => bc.BusinessOwner).OrderBy(bo => bo).Distinct().ToListAsync(),
                 SourceDepartments = await _context.Reports.Select(r => r.SourceDepartment).OrderBy(sd => sd).Distinct().ToListAsync()
             };
-            Filters filters = new Filters()
+            Models.ReportViewModels.Filters filters = new Models.ReportViewModels.Filters()
             {
                 State = state,
                 Plan = plan,
@@ -80,6 +80,7 @@ namespace ReportOverviewApp.Controllers
             viewModel.Reports = viewModel.DisplayPage(pageIndex);
             return viewModel;
         }
+
         public IActionResult CreateReport()
         {
             return ViewComponent("CreateReport");
@@ -181,7 +182,7 @@ namespace ReportOverviewApp.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> SelectPlanViewModel(string state)
+        public async Task<IActionResult> SelectPlan(string state)
             => View(await GetSelectPlanViewModelAsync(state));
 
         // GET: Reports/Create
@@ -237,10 +238,13 @@ namespace ReportOverviewApp.Controllers
             return View(deadline);
         }
         [HttpPost, ValidateAntiForgeryToken, Authorize]
-        public async Task<IActionResult> EditDeadline(int? id, [Bind("Id,Deadline,FinishedDate,ClientNotifiedDate,SentDate,ReportId")] ReportDeadline reportDeadline)
+        public async Task<IActionResult> EditDeadline(int? id, [Bind("Id,Deadline,RunDate,ApprovalDate,SentDate,ReportId")] ReportDeadline reportDeadline)
         {
+            ToastMessage toast = null;
             if(id != reportDeadline.Id)
             {
+                toast = new ToastMessage(message: $"IDs do not match", title: "Something Went Wrong...", toasType: ToastEnums.ToastType.Error, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
+                ShowToast(toast);
                 return NotFound();
             }
             if (ModelState.IsValid)
@@ -248,27 +252,33 @@ namespace ReportOverviewApp.Controllers
                 try
                 {
                     var unmodifiedDeadline = _context.ReportDeadlines.AsNoTracking().Include(rd => rd.Report).SingleOrDefault(d => d.Id == id);
-                    _context.Add(userLogFactory.Build(GetCurrentUserID(), $"\"Status for {unmodifiedDeadline.Report.Name}\" has been updated."));
+                    _context.Add(userLogFactory.Build(GetCurrentUserID(), $"\"Status for {unmodifiedDeadline.Report.Name}\" has been updated.", CompareChanges(unmodifiedDeadline, reportDeadline)));
                     _context.Update(reportDeadline);
                     await _context.SaveChangesAsync();
+                    toast = new ToastMessage(message: $"Deadline ({reportDeadline.Deadline.ToString("MM/dd/yyyy")}) for {unmodifiedDeadline.Report.Name} has been successfully edited.", title: "Success", toasType: ToastEnums.ToastType.Success, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!ReportDeadlineExists(reportDeadline.Id))
                     {
+                        toast = new ToastMessage(message: $"Deadline ({reportDeadline.Deadline.ToString("MM/dd/yyyy")}) was not found in the database.", title: "Something Went Wrong...", toasType: ToastEnums.ToastType.Error, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
+                        ShowToast(toast);
                         return NotFound();
                     }
                     else throw;
                 }
+                ShowToast(toast);
                 return RedirectToAction("Index");
             }
+            toast = new ToastMessage(message: $"One or more fields in the form are not valid.", title: "Changes Needed", toasType: ToastEnums.ToastType.Warning, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
+            ShowToast(toast);
             return View(reportDeadline);
         }
 
-        public async Task<IActionResult> EditBusinessContacts()
-        {
-            return View(await _context.Reports.Select(r => r.BusinessContact).OrderBy(bc => bc).ToListAsync());
-        }
+        //public async Task<IActionResult> EditBusinessContacts()
+        //{
+        //    return View(await _context.Reports.Select(r => r.BusinessContact).OrderBy(bc => bc).ToListAsync());
+        //}
         
         
 
@@ -371,6 +381,30 @@ namespace ReportOverviewApp.Controllers
             _toastNotification.AddToastMessage(toastMessage.Title, toastMessage.Message, toastMessage.ToastType, toastMessage.ToastOptions);
         }
 
+        private string CompareChanges(ReportDeadline old, ReportDeadline updated)
+        {
+            if (old == null)
+            {
+                old = new ReportDeadline();
+            }
+            if (updated == null)
+            {
+                updated = new ReportDeadline();
+            }
+            if (old.Equals(updated)) return "No Apparent Changes Made.";
+            StringBuilder messageBuilder = new StringBuilder();
+            messageBuilder
+                .Append(Compare("Date Ran", old.RunDate, updated.RunDate))
+                .Append(Compare("Date Approved", old.ApprovalDate, updated.ApprovalDate))
+                .Append(Compare("Date Sent", old.SentDate, updated.SentDate));
+            string Compare<T>(string header, T item1, T item2)
+            {
+                string item1Entry = item1 != null ? item1.ToString() : "null";
+                string item2Entry = item2 != null ? item2.ToString() : "null"; ;
+                return (!item1Entry.Equals(item2Entry)) ? ($"{header}: {item1Entry} updated to {item2Entry}\n") : (String.Empty);
+            }
+            return messageBuilder.ToString();
+        }
         private string CompareChanges(Report old, Report updated)
         {
             if (old == null)
@@ -385,12 +419,6 @@ namespace ReportOverviewApp.Controllers
             StringBuilder messageBuilder = new StringBuilder();
             messageBuilder
                 .Append(Compare("Name", old.Name, updated.Name))
-                //.Append(Compare("Report Finished", old.IsFinished, updated.IsFinished))
-                //.Append(Compare("Report Client Notified", old.IsClientNotified, updated.IsClientNotified))
-                //.Append(Compare("Report Sent", old.IsSent, updated.IsSent))
-                //.Append(Compare("Date Finished", old.FinishedDate, updated.FinishedDate))
-                //.Append(Compare("Date Notified", old.ClientNotifiedDate, updated.ClientNotifiedDate))
-                //.Append(Compare("Date Sent", old.SentDate, updated.SentDate))
                 .Append(Compare("Business Contact", old.BusinessContact, updated.BusinessContact))
                 .Append(Compare("Due Date 1", old.DueDate1, updated.DueDate1))
                 .Append(Compare("Due Date 2", old.DueDate2, updated.DueDate2))
@@ -410,7 +438,6 @@ namespace ReportOverviewApp.Controllers
                 .Append(Compare("Effective Date", old.EffectiveDate, updated.EffectiveDate))
                 .Append(Compare("Termination Date", old.TerminationDate, updated.TerminationDate))
                 .Append(Compare("Plan(s)", old.ReportPlanMapping, updated.ReportPlanMapping))
-                //.Append(Compare("State", old.State, updated.State))
                 .Append(Compare("Report Path", old.ReportPath, updated.ReportPath))
                 .Append(Compare("Other Department", old.IsFromOtherDepartment, updated.IsFromOtherDepartment))
                 .Append(Compare("Source Department", old.SourceDepartment, updated.SourceDepartment))
@@ -428,7 +455,7 @@ namespace ReportOverviewApp.Controllers
             {
                 string item1Entry = item1 != null ? item1.ToString() : "null";
                 string item2Entry = item2 != null ? item2.ToString() : "null"; ;
-                return (!item1Entry.Equals(item2Entry)) ? ($"{header}: {item1Entry} => {item2Entry}\n") : (String.Empty);
+                return (!item1Entry.Equals(item2Entry)) ? ($"{header}: {item1Entry} updated to {item2Entry}\n") : (String.Empty);
             }
             return messageBuilder.ToString();
         }

@@ -104,12 +104,38 @@ else {
                     <td class="ReportName">@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Name)</td>
                     @if (Model.Reports.ElementAt(i).Deadlines != null && Model.Reports.ElementAt(i).Deadlines.Any())
                     {
-                        currentReportDeadline = Model.Reports.Select(r => r.Deadlines.OrderByDescending(rd => rd.Deadline).First()).First();
-                        <td>@Html.DisplayFor(modelItem => currentReportDeadline.Deadline)</td>
-                        <td>@Html.DisplayFor(modelItem => currentReportDeadline.RunDate)</td>
-                        <td>@Html.DisplayFor(modelItem => currentReportDeadline.ApprovalDate)</td>
-                        <td>@Html.DisplayFor(modelItem => currentReportDeadline.SentDate)</td>
-                    } else
+                        currentReportDeadline = Model.Reports.ElementAt(i).Deadlines.OrderByDescending(rd => rd.Deadline).First();
+                        <td>@currentReportDeadline.Deadline.ToString("MM/dd/yyyy")</td>
+                        @if (currentReportDeadline.RunDate != null && currentReportDeadline.RunDate.HasValue)
+                        {
+                            <td>@currentReportDeadline.RunDate.Value.ToString("MM/dd/yyyy hh:mm tt")</td>
+                        }
+                        else
+                        {
+                            <td ></td>
+                        }
+                        @if (currentReportDeadline.ApprovalDate != null && currentReportDeadline.ApprovalDate.HasValue)
+                        {
+                            <td>@currentReportDeadline.RunDate.Value.ToString("MM/dd/yyyy hh:mm tt")</td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                        @if (currentReportDeadline.SentDate != null && currentReportDeadline.SentDate.HasValue)
+                        {
+                            <td>@currentReportDeadline.RunDate.Value.ToString("MM/dd/yyyy hh:mm tt")</td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                    } else if(Model.Reports.ElementAt(i).IsTermed(DateTime.Today))
+                    {
+                        <td class="text-muted text-center" colspan="4">Termed</td>
+
+                    }
+                    else
                     {
                         <td class="text-muted text-center" colspan="4">No Current Deadline Found</td>
 
