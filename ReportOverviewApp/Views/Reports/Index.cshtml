@@ -1,4 +1,5 @@
 @using ReportOverviewApp.Models.ReportViewModels
+@using ReportOverviewApp.Models
 @model ReportListViewModel
 
 
@@ -15,13 +16,58 @@
     <button class="btn btn-primary" type="button" id="mag-glass" data-toggle="modal" data-target="#searchReportModal"><span class="fa fa-search"></span>&nbsp;&nbsp;Search</button>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createReportModal" aria-label="Left Align"><span class="fa fa-plus-square"></span>&nbsp;&nbsp;Create New</button>
     @Html.ActionLink(linkText: "Update Deadlines", actionName: "UpdateDeadlinesAsync", controllerName: "Reports", routeValues: new { }, htmlAttributes: new {@id="updateDeadlines", @class = "btn btn-primary" })
-    @*<button class="btn btn-primary" type="button" data-toggle="modal" data-target="#findMatchReplaceReportModal">Find Match & Replace</button>*@
+    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#exportModal"><span class="fa fa-files-o"></span>&nbsp;&nbsp;Export</button>
 </h4>
 <hr />
 <div id="searchReportModal" class="modal fade">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
              @await Html.PartialAsync("Search")
+        </div>
+    </div>
+</div>
+<div id="exportModal" class="modal fade">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <form asp-controller="Data" asp-action="ExportReportDeadlines">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Export Report Deadlines...
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="form-row col-md-12">
+                            <div class="form-group col-md-6">
+                                    <label class="form-control-label">Start</label>
+                                    <input type="date" class="form-control" name="begin" placeholder="Enter Report Name" value='@DateTime.Today.ToString("yyyy-MM-dd")' required/>
+                            </div>
+                            <div class="form-group col-md-6">
+                                    <label class="form-control-label">End</label>
+                                    <input type="date" class="form-control" name="end" placeholder="Enter Report Name" value='@DateTime.Today.ToString("yyyy-MM-dd")'  required/>
+                            </div>
+                        </div>
+                        <div class="form-row col-md-12">
+                            <div class="form-group col-md-9">
+                                <label class="form-control-label">Name</label>
+                                <input type="text" class="form-control" name="fileName" placeholder="Enter Report Name" value='reportdeadlines_exported_(@DateTime.Now.ToString("MM.dd.yyyy hh.mm.ss tt"))'  required/>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="form-control-label">File Type</label>
+                                <select class="form-control" name="fileAs"  required>
+                                    <option selected value="@FileExtension.Excel">Excel (.xlsx)</option>
+                                    <option value="@FileExtension.Json">JavaScript Object Notation (.json)</option>
+                                    <option value="@FileExtension.Csv">Comma-separated Values (.csv)</option>
+                                    <option value="@FileExtension.Xml">Extensible Markup Language (.xml)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit"><span class="fa fa-arrow-down"></span> Export</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
