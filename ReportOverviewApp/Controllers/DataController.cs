@@ -288,6 +288,16 @@ namespace ReportOverviewApp.Controllers
             return Json(await _context.Reports.OrderBy(r => r.Name).Select(r => new ReportFragment(r)).Where(r => r.ReportDeadline == DateTime.Today.AddDays(days.Value)).ToListAsync());
         }
 
+        [Authorize]
+        public async Task<JsonResult> GetDeadlinesCount(double? days)
+        {
+            if (days == null)
+            {
+                return Json(await _context.ReportDeadlines.Include(rd => rd.Report).OrderBy(rd => rd.Deadline).ThenBy(rd => rd.Report.Name).GroupBy(rd => rd.Deadline).ToDictionaryAsync(k => k.Key.ToString("yyyy-MM-dd"), v => v.Count()));
+            }
+            return Json(await _context.Reports.OrderBy(r => r.Name).Select(r => new ReportFragment(r)).Where(r => r.ReportDeadline == DateTime.Today.AddDays(days.Value)).ToListAsync());
+        }
+
         /// <summary>
         /// Returs JSON-formatted data of UserLogs.
         /// </summary>

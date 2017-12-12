@@ -132,15 +132,15 @@
             });
             $('#registerPartialView').hide();
             $('#registerLink').click(function () {
-                $('#loginSection').slideUp(500, function () {
+                $('#loginSection').fadeOut(500, function () {
                     $('#registerPartialView').removeClass('sr-only');
-                    $('#registerPartialView').slideDown(500);
+                    $('#registerPartialView').show(500);
                 });
             });
             $('#loginLink').click(function () {
-                $('#registerPartialView').slideUp(500, function () {
+                $('#registerPartialView').fadeOut(500, function () {
                     $('#registerPartialView').addClass('sr-only');
-                    $('#loginSection').slideDown(500);
+                    $('#loginSection').show(500);
                 });
             });
         });
