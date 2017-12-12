@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using ReportOverviewApp.Data;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ReportOverviewApp.Models;
+using System.Reflection;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
@@ -13,6 +15,7 @@ using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using Newtonsoft.Json;
 using System.Text;
+using System.Xml;
 
 namespace ReportOverviewApp.Controllers
 {
@@ -37,24 +40,32 @@ namespace ReportOverviewApp.Controllers
             {
                 end = DateTime.Today;
             }
-            return Json(await _context.ReportDeadlines.Include(rd => rd.Report).Where(rd => rd.Deadline >= begin && rd.Deadline <= end).Select(rd => new
-            {
-                id = rd.Id,
-                reportId = rd.ReportId,
-                name = rd.Report.Name,
-                deadline = rd.Deadline,
-                runDate = rd.RunDate,
-                approvalDate = rd.ApprovalDate,
-                sentDate = rd.SentDate,
-                instructions = rd.Report.WorkInstructions,
-                notes = rd.Report.Notes
-            }).ToListAsync());
+            return Json(await GetExportedDataAsync(begin, end));
         }
+        private async Task<List<Dictionary<string, object>>> GetExportedDataAsync(DateTime? begin, DateTime? end) =>
+            await _context.ReportDeadlines.Include(rd => rd.Report)
+                                                .ThenInclude(r => r.ReportPlanMapping)
+                                                    .ThenInclude(rpm => rpm.Plan)
+                                                .Where(rd => rd.Deadline >= begin && rd.Deadline <= end)
+                                                .Select(rd => new
+                                                {
+                                                    ReportDeadlineId = rd.Id,
+                                                    Deadline = rd.Deadline,
+                                                    RunDate = rd.RunDate,
+                                                    ApprovalDate = rd.ApprovalDate,
+                                                    SentDate = rd.SentDate,
+                                                    ReportName = rd.Report.Name ?? rd.Report.OtherReportName ?? "Unknown",
+                                                    ReportId = rd.ReportId,
+                                                    Frequency = rd.Report.Frequency,
+                                                    Plans = rd.Report.ReportPlanMapping.Select(rpm => rpm.Plan) ?? null
+                                                })
+                                                .OrderBy(r => r.ReportId)
+                                                .Select(rd => rd.GetType().GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public).ToDictionary(f => f.Name, f => f.GetValue(rd))).ToListAsync();
+        
         private async Task<IActionResult> ExportAsExcel(string fileName, DateTime? begin, DateTime? end)
         {
             string webRootPath = _hostingEnvironment.WebRootPath;
             string URL;
-
             FileInfo file;
             try
             {
@@ -64,52 +75,50 @@ namespace ReportOverviewApp.Controllers
             }
             catch (NotSupportedException)
             {
-                fileName = $@"reportdeadlines_exported_({DateTime.Now.ToString("MM.dd.yyyy hh.mm.ss tt")}).xlsx";
+                fileName = $@"exported_({DateTime.Now.ToString("MM.dd.yyyy hh.mm.ss tt")}).xlsx";
                 URL = $"{Request.Scheme}://{Request.Host}/{fileName}";
                 file = new FileInfo(Path.Combine(webRootPath, fileName));
             }
-
             MemoryStream memoryStream = new MemoryStream();
             using (var fileStream = new FileStream(Path.Combine(webRootPath, fileName), FileMode.Create, FileAccess.Write))
             {
-                var reportDeadlines = await _context.ReportDeadlines.Include(rd => rd.Report)
-                                                                    .ThenInclude(r => r.ReportPlanMapping)
-                                                                        .ThenInclude(rpm => rpm.Plan)
-                                                                    .Where(rd => rd.Deadline >= begin && rd.Deadline <= end).ToListAsync();
+                var exportData = await GetExportedDataAsync(begin, end);
                 IWorkbook workbook;
                 workbook = new XSSFWorkbook();
-                ISheet excelSheet = workbook.CreateSheet("Reports");
+                ISheet excelSheet = workbook.CreateSheet($"Reports");
                 IRow row = excelSheet.CreateRow(0);
-                row.CreateCell(0).SetCellValue("Id");
-                row.CreateCell(1).SetCellValue("ReportId");
-                row.CreateCell(2).SetCellValue("Name");
-                row.CreateCell(3).SetCellValue("Plan(s)");
-                row.CreateCell(4).SetCellValue("Deadline");
-                row.CreateCell(5).SetCellValue("RunDate");
-                row.CreateCell(6).SetCellValue("ApprovalDate");
-                row.CreateCell(7).SetCellValue("SentDate");
-                for (int i = 0; i < reportDeadlines.Count(); i++)
+                if(exportData.Count() == 0)
                 {
-                    row = excelSheet.CreateRow(i + 1);
-                    row.CreateCell(0).SetCellValue(reportDeadlines[i].Id);
-                    row.CreateCell(1).SetCellValue(reportDeadlines[i].ReportId);
-                    row.CreateCell(2).SetCellValue(reportDeadlines[i].Report.Name);
-                    if (reportDeadlines[i].Report.ReportPlanMapping != null && reportDeadlines[i].Report.ReportPlanMapping.Select(rpm => rpm.Plan).Any())
+                    row.CreateCell(0).SetCellValue("No Data");
+                }
+                else
+                {
+                    var keys = exportData.ElementAt(0).Keys;
+                    for (int i = 0; i < keys?.Count(); i++)
                     {
-                        row.CreateCell(3).SetCellValue(reportDeadlines[i].Report.ReportPlanMapping.Select(rpm => rpm.Plan.Name).Aggregate((a, b) => $"{a}, {b}"));
+                        row.CreateCell(i).SetCellValue(keys?.ElementAt(i).Split('>')[0].Replace("<", String.Empty));
                     }
-                    row.CreateCell(4).SetCellValue(reportDeadlines[i].Deadline.ToString("MM/dd/yyyy"));
-                    if (reportDeadlines[i].RunDate != null)
+                    for (int i = 0; i < exportData.Count(); i++)
                     {
-                        row.CreateCell(5).SetCellValue(reportDeadlines[i].RunDate.Value.ToString("MM/dd/yyyy hh:mm:ss tt"));
-                    }
-                    if (reportDeadlines[i].ApprovalDate != null)
-                    {
-                        row.CreateCell(6).SetCellValue(reportDeadlines[i].ApprovalDate.Value.ToString("MM/dd/yyyy hh:mm:ss tt"));
-                    }
-                    if (reportDeadlines[i].SentDate != null)
-                    {
-                        row.CreateCell(7).SetCellValue(reportDeadlines[i].SentDate.Value.ToString("MM/dd/yyyy hh:mm:ss tt"));
+                        row = excelSheet.CreateRow(i + 1);
+                        for (int j = 0; j < exportData.ElementAt(i).Count(); j++)
+                        {
+                            if(exportData.ElementAt(i).ElementAt(j).Value is IEnumerable<Plan>)
+                            {
+                                if(exportData.ElementAt(i).ElementAt(j).Value != null && (exportData.ElementAt(i).ElementAt(j).Value as IEnumerable<Plan>).Any())
+                                {
+                                    row.CreateCell(j).SetCellValue((exportData.ElementAt(i).ElementAt(j).Value as IEnumerable<Plan>).Select(p => p.Name).Aggregate((a, b) => $"{a},{b}") ?? null);
+                                } else
+                                {
+                                    row.CreateCell(j).SetCellValue(String.Empty);
+                                }    
+                            }
+                            else
+                            {
+                                row.CreateCell(j).SetCellValue(exportData.ElementAt(i).ElementAt(j).Value?.ToString());
+                            }
+                           
+                        }
                     }
                 }
                 workbook.Write(fileStream);
@@ -126,10 +135,10 @@ namespace ReportOverviewApp.Controllers
             if (!string.IsNullOrEmpty(fileName) && !string.IsNullOrWhiteSpace(fileName))
             {
                 fileName = fileName.Replace("\\", "")
-                            .Replace("/", "")
-                            .Replace("\"", "")
+                            .Replace("/", "-")
+                            .Replace("\"", "-")
                             .Replace("*", "")
-                            .Replace(":", "")
+                            .Replace(":", ".")
                             .Replace("?", "")
                             .Replace("<", "")
                             .Replace(">", "")
@@ -158,9 +167,56 @@ namespace ReportOverviewApp.Controllers
             return View("Error");
         }
 
-        private Task<IActionResult> ExportAsXml(string fileName, DateTime? begin, DateTime? end)
+        private async Task<IActionResult> ExportAsXml(string fileName, DateTime? begin, DateTime? end)
         {
             throw new NotImplementedException();
+            //string webRootPath = _hostingEnvironment.WebRootPath;
+            //string URL;
+            //FileInfo file;
+            //try
+            //{
+            //    fileName = $@"{fileName}.xml";
+            //    URL = $"{Request.Scheme}://{Request.Host}/{fileName}";
+            //    file = new FileInfo(Path.Combine(webRootPath, fileName));
+            //}
+            //catch (NotSupportedException)
+            //{
+            //    fileName = $@"reportdeadlines_exported_({DateTime.Now.ToString("MM.dd.yyyy hh.mm.ss tt")}).xml";
+            //    URL = $"{Request.Scheme}://{Request.Host}/{fileName}";
+            //    file = new FileInfo(Path.Combine(webRootPath, fileName));
+            //}
+            //var memoryStream = new MemoryStream();
+            //var f = new FileStream(Path.Combine(webRootPath, fileName), FileMode.Create, FileAccess.ReadWrite);
+            //using (var xmlWriter = XmlWriter.Create(f, new XmlWriterSettings() { Indent = true, Async = true}))
+            //{
+            //    var exportData = await GetExportedDataAsync(begin, end);
+            //    await xmlWriter.WriteStartDocumentAsync();
+            //    if (exportData.Count() == 0)
+            //    {
+                    
+            //    }
+            //    else
+            //    {
+            //        await xmlWriter.WriteStartElementAsync(String.Empty, "reports", String.Empty);
+            //        foreach(var d in exportData)
+            //        {
+            //            await xmlWriter.WriteStartElementAsync(String.Empty, "report", String.Empty);
+            //            foreach(var kv in d)
+            //            {
+            //                await xmlWriter.WriteAttributeStringAsync(String.Empty, kv.Key.Split('>')[0].Replace("<", String.Empty), String.Empty, kv.Value == null ? String.Empty : kv.Value.ToString());
+            //            }
+            //            await xmlWriter.WriteEndElementAsync();
+            //        }
+            //        await xmlWriter.WriteEndElementAsync();
+            //    }
+            //    await xmlWriter.FlushAsync();
+            //}
+            //using (f)
+            //{
+            //    await f.CopyToAsync(memoryStream);
+            //}
+            //memoryStream.Position = 0;
+            //return File(memoryStream, "text/xml", fileName);
         }
 
         private async Task<IActionResult> ExportAsCsv(string fileName, DateTime? begin, DateTime? end)
@@ -183,69 +239,30 @@ namespace ReportOverviewApp.Controllers
             }
 
             MemoryStream memoryStream = new MemoryStream();
-            using (var fileStream = new FileStream(Path.Combine(webRootPath, fileName), FileMode.Create, FileAccess.Write))
+            using (var streamWriter = new StreamWriter(new FileStream(Path.Combine(webRootPath, fileName), FileMode.Create, FileAccess.Write)))
             {
-                var reportDeadlines = await _context.ReportDeadlines.Include(rd => rd.Report)
-                                                                    .ThenInclude(r => r.ReportPlanMapping)
-                                                                        .ThenInclude(rpm => rpm.Plan)
-                                                                    .Where(rd => rd.Deadline >= begin && rd.Deadline <= end).ToListAsync();
-                StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.Append("Id,")
-                             .Append("ReportId,")
-                             .Append("Name,")
-                             .Append("Plans,")
-                             .Append("Deadline,")
-                             .Append("RunDate,")
-                             .Append("ApprovalDate,")
-                             .AppendLine("SentDate,");
-
-                foreach(ReportDeadline reportDeadline in reportDeadlines)
+                var exportData = await GetExportedDataAsync(begin, end);
+                if (exportData.Count() == 0)
                 {
-                    stringBuilder.Append($"{reportDeadline.Id},")
-                             .Append($"{reportDeadline.ReportId},")
-                             .Append($"{reportDeadline.Report.Name},");
-                    if(reportDeadline.Report.ReportPlanMapping != null && reportDeadline.Report.ReportPlanMapping.Select(rpm => rpm.Plan).Any())
+                    await streamWriter.WriteLineAsync("No Data");
+                }
+                else
+                {
+                    var keys = exportData.ElementAt(0).Keys;
+                    await streamWriter.WriteLineAsync(keys?.Select(k => k.Split('>')[0].Replace("<", String.Empty)).Aggregate((a, b) => $"{a},{b}"));
+                    for (int i = 0; i < exportData.Count(); i++)
                     {
-                        stringBuilder.Append($"{reportDeadline.Report.ReportPlanMapping.Select(rpm => rpm.Plan.Name).Aggregate((a, b) => $"\"{a}, {b}\"")},");
-                    }
-                    else
-                    {
-                        stringBuilder.Append($"\"\",");
-                    }
-                    stringBuilder.Append($"{reportDeadline.Deadline},");
-                    if (reportDeadline.RunDate != null)
-                    {
-                        stringBuilder.Append($"{reportDeadline.RunDate.Value.ToString("MM/dd/yyyy hh:mm:ss tt")},");
-                    }
-                    else
-                    {
-                        stringBuilder.Append($"\"\",");
-                    }
-                    if (reportDeadline.ApprovalDate != null)
-                    {
-                        stringBuilder.Append($"{reportDeadline.ApprovalDate.Value.ToString("MM/dd/yyyy hh:mm:ss tt")},");
-                    }
-                    else
-                    {
-                        stringBuilder.Append($"\"\",");
-                    }
-                    if (reportDeadline.SentDate != null)
-                    {
-                        stringBuilder.AppendLine(reportDeadline.SentDate.Value.ToString("MM/dd/yyyy hh:mm:ss tt"));
-                    }
-                    else
-                    {
-                        stringBuilder.AppendLine($"\"\"");
+                        await streamWriter.WriteLineAsync(exportData.ElementAt(i).Select(kv => kv.Value == null ? String.Empty : kv.Value.ToString()).Aggregate((a, b) => $"{a},{b}"));
                     }
                 }
-                //line needed//
+                await streamWriter.FlushAsync();
             }
             using (var fileStream = new FileStream(Path.Combine(webRootPath, fileName), FileMode.Open))
             {
                 await fileStream.CopyToAsync(memoryStream);
             }
             memoryStream.Position = 0;
-            return File(memoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+            return File(memoryStream, "text/csv", fileName);
         }
 
         /// <summary>

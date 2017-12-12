@@ -310,5 +310,7 @@ namespace ReportOverviewApp.Models
             }
             return TerminationDate != null && TerminationDate.HasValue && TerminationDate.Value < compareDate;
         }
+
+        public override string ToString() => Name;
     }
 }

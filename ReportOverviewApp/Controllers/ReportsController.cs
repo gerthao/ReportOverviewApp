@@ -25,14 +25,14 @@ namespace ReportOverviewApp.Controllers
         ///  This method creates a ViewModel to displays records from the Report class.
         /// </summary>
         /// <param name="search">
-        ///  This parameter determines the list of records retrieved containing the search.
+        ///  Determines the list of records retrieved containing the search.
         ///  parameter's values
         /// </param>
         /// <param name="column">
-        ///  This parameter determines the sort order of the list of records by a certain Report field.
+        ///  Determines the sort order of the list of records by a certain Report field.
         /// </param>
         /// <param name="recordsPerPage">
-        ///  This parameter determines the number of records displayed on a page.
+        ///  Determines the number of records displayed on a page.
         /// </param>
         /// <returns>
         ///  Returns a ReportViewModel based on the parameters given.
@@ -51,7 +51,7 @@ namespace ReportOverviewApp.Controllers
                 BusinessOwners = await _context.BusinessContacts.Select(bc => bc.BusinessOwner).OrderBy(bo => bo).Distinct().ToListAsync(),
                 SourceDepartments = await _context.Reports.Select(r => r.SourceDepartment).OrderBy(sd => sd).Distinct().ToListAsync()
             };
-            Models.ReportViewModels.Filters filters = new Models.ReportViewModels.Filters()
+            Filters filters = new Filters()
             {
                 State = state,
                 Plan = plan,
@@ -274,11 +274,6 @@ namespace ReportOverviewApp.Controllers
             ShowToast(toast);
             return View(reportDeadline);
         }
-
-        //public async Task<IActionResult> EditBusinessContacts()
-        //{
-        //    return View(await _context.Reports.Select(r => r.BusinessContact).OrderBy(bc => bc).ToListAsync());
-        //}
         
         
 
@@ -318,43 +313,20 @@ namespace ReportOverviewApp.Controllers
             }
             if (ModelState.IsValid){
                 try{
-                    var unmodifiedReport = _context.Reports.AsNoTracking().SingleOrDefault(r => r.Id == reportViewModel.Report.Id);
-                    
+                    var unmodifiedReport = _context.Reports.AsNoTracking().SingleOrDefault(r => r.Id == reportViewModel.Report.Id);                   
                     _context.Add(userLogFactory.Build(GetCurrentUserID(), $"\"{reportViewModel.Report.Name}\" has been edited.", CompareChanges(unmodifiedReport, reportViewModel.Report)));
                     reportViewModel.Report.BusinessContact = null;
-
-                    List<ReportPlanMap> list = reportViewModel.Plans is null || reportViewModel.Plans.Count() == 0 ? new List<ReportPlanMap>() : reportViewModel.Plans.Select(i => new ReportPlanMap() { PlanId = i, ReportId = reportViewModel.Report.Id }).ToList();
-
-                    //if(!String.IsNullOrEmpty(reportViewModel.PlanIds) && !String.IsNullOrWhiteSpace(reportViewModel.PlanIds))
-                    //{
-                    //    foreach (int planId in reportViewModel.PlanIds?.Split(',')?.Select(i => int.Parse(i))?.ToList())
-                    //    {
-                    //        Plan plan = await _context.Plans.FindAsync(planId);
-                    //        if (plan != null)
-                    //        {
-                    //            list.Add(new ReportPlanMap()
-                    //            {
-                    //                ReportId = reportViewModel.Report.Id,
-                    //                PlanId = plan.Id,
-                    //            });
-                    //        }
-                    //    }
-                    //}
-                    
-                    reportViewModel.Report.ReportPlanMapping = list;
-                    
+                    List<ReportPlanMap> list = reportViewModel.Plans is null || reportViewModel.Plans.Count() == 0 ? new List<ReportPlanMap>() : reportViewModel.Plans.Select(i => new ReportPlanMap() { PlanId = i, ReportId = reportViewModel.Report.Id }).ToList();              
+                    reportViewModel.Report.ReportPlanMapping = list;                    
                     var maps = _context.ReportPlanMapping.Where(m => m.ReportId == reportViewModel.Report.Id);
                     if(maps != null)
                     {
                         _context.ReportPlanMapping.RemoveRange(maps);
-
                     }
                     if(reportViewModel.Report.ReportPlanMapping != null)
                     {
                         _context.ReportPlanMapping.AddRange(reportViewModel.Report.ReportPlanMapping);
                     }
-                    
-
                     _context.Update(reportViewModel.Report);
                     await _context.SaveChangesAsync();
                     toast = new ToastMessage(message: $"{reportViewModel.Report.Name} has been successfully edited.", title: "Success", toasType: ToastEnums.ToastType.Success, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
