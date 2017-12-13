@@ -1,0 +1,61 @@
+﻿@model ReportDeadline
+
+<style>
+    input {
+        max-width: 100%
+    }
+
+    textarea {
+        max-width: 100%
+    }
+</style>
+
+@if (Model == null || Model.Id <= 0 || Model.Report == null)
+{
+    <div class="modal-header">
+        <h5 class=" model-title">Error</h5>
+    </div>
+    <div class="modal-body">
+        <h5>
+            No Report Deadline Information Found.  Try Again.
+        </h5>
+    </div>
+}
+else
+{
+
+    <form asp-action="EditDeadline" asp-route-id=@Model.Id>
+        <div class="modal-header"><h5 class="modal-title">Report Deadline Status: @Model.Report.Name</h5></div>
+        <div class="modal-body">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="ReportId" />
+            <div class="form-group">
+                <label asp-for="Deadline" class="control-label"></label>
+                <input type="text" asp-for="Deadline" class="form-control" required />
+                <span asp-validation-for="Deadline" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RunDate" class="control-label"></label>
+                <input type="text" asp-for="RunDate" class="form-control" />
+                <span asp-validation-for="RunDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ApprovalDate" class="control-label"></label>
+                <input type="text" asp-for="ApprovalDate" class="form-control" />
+                <span asp-validation-for="ApprovalDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SentDate" class="control-label"></label>
+                <input type="text" asp-for="SentDate" class="form-control" />
+                <span asp-validation-for="SentDate" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="col-md-2">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </div>
+    </form>
+
+}
