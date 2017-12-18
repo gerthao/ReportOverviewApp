@@ -7,7 +7,7 @@ namespace ReportOverviewApp.Models
 {
     public enum FileExtension
     {
-        Excel, Json, Csv, Xml
+        Excel, Json, Csv, Tsv, Xml
     }
     
 }

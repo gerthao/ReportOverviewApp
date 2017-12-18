@@ -50,13 +50,13 @@ namespace ReportOverviewApp.Controllers
                                                 .Select(rd => new
                                                 {
                                                     ReportDeadlineId = rd.Id,
-                                                    Deadline = rd.Deadline,
-                                                    RunDate = rd.RunDate,
-                                                    ApprovalDate = rd.ApprovalDate,
-                                                    SentDate = rd.SentDate,
+                                                    rd.Deadline,
+                                                    rd.RunDate,
+                                                    rd.ApprovalDate,
+                                                    rd.SentDate,
                                                     ReportName = rd.Report.Name ?? rd.Report.OtherReportName ?? "Unknown",
-                                                    ReportId = rd.ReportId,
-                                                    Frequency = rd.Report.Frequency,
+                                                    rd.ReportId,
+                                                    rd.Report.Frequency,
                                                     Plans = rd.Report.ReportPlanMapping.Select(rpm => rpm.Plan) ?? null
                                                 })
                                                 .OrderBy(r => r.ReportId)
@@ -158,7 +158,9 @@ namespace ReportOverviewApp.Controllers
                 case FileExtension.Json:
                     return await ExportAsJson(fileName, begin, end);
                 case FileExtension.Csv:
-                    return await ExportAsCsv(fileName, begin, end);
+                    return await ExportAsSeparatedValues(fileName, ',', begin, end);
+                case FileExtension.Tsv:
+                    return await ExportAsSeparatedValues(fileName, '\t', begin, end);
                 case FileExtension.Xml:
                     return await ExportAsXml(fileName, begin, end);
                 case FileExtension.Excel:
@@ -219,21 +221,22 @@ namespace ReportOverviewApp.Controllers
             //return File(memoryStream, "text/xml", fileName);
         }
 
-        private async Task<IActionResult> ExportAsCsv(string fileName, DateTime? begin, DateTime? end)
+        private async Task<IActionResult> ExportAsSeparatedValues(string fileName, char delimiter, DateTime? begin, DateTime? end)
         {
             string webRootPath = _hostingEnvironment.WebRootPath;
             string URL;
-
+            string extension = delimiter == ',' ? "csv" : delimiter == '\t' ? "tsv" : "file";
+            string mediaType = delimiter == ',' ? "text/csv" : delimiter == '\t' ? "text/tab-separated-values" : "text/plain";
             FileInfo file;
             try
             {
-                fileName = $@"{fileName}.csv";
+                fileName = $@"{fileName}.{extension}";
                 URL = $"{Request.Scheme}://{Request.Host}/{fileName}";
                 file = new FileInfo(Path.Combine(webRootPath, fileName));
             }
             catch (NotSupportedException)
             {
-                fileName = $@"reportdeadlines_exported_({DateTime.Now.ToString("MM.dd.yyyy hh.mm.ss tt")}).csv";
+                fileName = $@"reportdeadlines_exported_({DateTime.Now.ToString("MM.dd.yyyy hh.mm.ss tt")}).{extension}";
                 URL = $"{Request.Scheme}://{Request.Host}/{fileName}";
                 file = new FileInfo(Path.Combine(webRootPath, fileName));
             }
@@ -244,15 +247,15 @@ namespace ReportOverviewApp.Controllers
                 var exportData = await GetExportedDataAsync(begin, end);
                 if (exportData.Count() == 0)
                 {
-                    await streamWriter.WriteLineAsync("No Data");
+                    await streamWriter.WriteLineAsync();
                 }
                 else
                 {
                     var keys = exportData.ElementAt(0).Keys;
-                    await streamWriter.WriteLineAsync(keys?.Select(k => k.Split('>')[0].Replace("<", String.Empty)).Aggregate((a, b) => $"{a},{b}"));
+                    await streamWriter.WriteLineAsync(keys?.Select(k => k.Split('>')[0].Replace("<", String.Empty)).Aggregate((a, b) => $"{a}{delimiter}{b}"));
                     for (int i = 0; i < exportData.Count(); i++)
                     {
-                        await streamWriter.WriteLineAsync(exportData.ElementAt(i).Select(kv => kv.Value == null ? String.Empty : kv.Value.ToString()).Aggregate((a, b) => $"{a},{b}"));
+                        await streamWriter.WriteLineAsync(exportData.ElementAt(i).Select(kv => kv.Value == null ? String.Empty : kv.Value.ToString()).Aggregate((a, b) => $"{a}{delimiter}{b}"));
                     }
                 }
                 await streamWriter.FlushAsync();
@@ -262,7 +265,7 @@ namespace ReportOverviewApp.Controllers
                 await fileStream.CopyToAsync(memoryStream);
             }
             memoryStream.Position = 0;
-            return File(memoryStream, "text/csv", fileName);
+            return File(memoryStream, mediaType, fileName);
         }
 
         /// <summary>
