@@ -30,8 +30,8 @@ namespace ReportOverviewApp.Controllers
             _context = context;
             _hostingEnvironment = hostingEnvironment;
         }
-
-        private async Task<JsonResult> ExportAsJson(string fileName, DateTime? begin, DateTime? end)
+        [Produces("application/json")]
+        private async Task<JsonResult> ExportAsJson(DateTime? begin, DateTime? end)
         {
             if (begin == null || !begin.HasValue)
             {
@@ -41,7 +41,12 @@ namespace ReportOverviewApp.Controllers
             {
                 end = DateTime.Today;
             }
-            return Json(await GetExportedDataAsync(begin, end));
+            //var ser = JsonSerializer.Create();
+            //ser.Serialize(new StreamWriter(new MemoryStream()), null);
+            return Json(await GetExportedDataXmlAsync(begin, end), new JsonSerializerSettings()
+            {
+                Formatting = Newtonsoft.Json.Formatting.Indented
+            });
         }
         public class ReportExportData
         {
@@ -163,7 +168,6 @@ namespace ReportOverviewApp.Controllers
             {
                 await fileStream.CopyToAsync(memoryStream);
             }
-            memoryStream.Position = 0;
             return File(memoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
         }
         public async Task<IActionResult> ExportReportDeadlines(DateTime? begin, DateTime? end, string fileName, FileExtension fileAs = FileExtension.Excel)
@@ -192,7 +196,7 @@ namespace ReportOverviewApp.Controllers
             switch (fileAs)
             {
                 case FileExtension.Json:
-                    return await ExportAsJson(fileName, begin, end);
+                    return await ExportAsJson(begin, end);
                 case FileExtension.Csv:
                     return await ExportAsSeparatedValues(fileName, ',', begin, end);
                 case FileExtension.Tsv:
@@ -207,112 +211,53 @@ namespace ReportOverviewApp.Controllers
 
         private async Task<IActionResult> ExportAsXml(string fileName, DateTime? begin, DateTime? end)
         {
-            
-            string webRootPath = _hostingEnvironment.WebRootPath;
-            string URL;
-            FileInfo file;
-            try
-            {
-                fileName = $@"{fileName}.xml";
-                URL = $"{Request.Scheme}://{Request.Host}/{fileName}";
-                file = new FileInfo(Path.Combine(webRootPath, fileName));
-            }
-            catch (NotSupportedException)
-            {
-                fileName = $@"reportdeadlines_exported_({DateTime.Now.ToString("MM.dd.yyyy hh.mm.ss tt")}).xml";
-                URL = $"{Request.Scheme}://{Request.Host}/{fileName}";
-                file = new FileInfo(Path.Combine(webRootPath, fileName));
-            }
+            fileName = $@"{fileName}.xml";
             var memoryStream = new MemoryStream();
-            using (var f = new FileStream(Path.Combine(webRootPath, fileName), FileMode.Create, FileAccess.ReadWrite))
+            using (var streamWriter = new StreamWriter(memoryStream))
             {
                 var exportData = await GetExportedDataXmlAsync(begin, end);
                 XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<ReportExportData>));
-                //exportData.ForEach(e => xmlSerializer.Serialize(f, e));
-                xmlSerializer.Serialize(f, exportData);
+                xmlSerializer.Serialize(streamWriter, exportData);
             }
-            using (var f = new FileStream(Path.Combine(webRootPath, fileName), FileMode.Open))
-            {
-                await f.CopyToAsync(memoryStream);
-            }
-            //var f = new FileStream(Path.Combine(webRootPath, fileName), FileMode.Create, FileAccess.ReadWrite);
-            //using (var xmlWriter = XmlWriter.Create(f, new XmlWriterSettings() { Indent = true, Async = true }))
-            //{
-            //    var exportData = await GetExportedDataAsync(begin, end);
-            //    await xmlWriter.WriteStartDocumentAsync();
-            //    if (exportData.Count() == 0)
-            //    {
-
-            //    }
-            //    else
-            //    {
-            //        await xmlWriter.WriteStartElementAsync(String.Empty, "reports", String.Empty);
-            //        foreach (var d in exportData)
-            //        {
-            //            await xmlWriter.WriteStartElementAsync(String.Empty, "report", String.Empty);
-            //            foreach (var kv in d)
-            //            {
-            //                await xmlWriter.WriteAttributeStringAsync(String.Empty, kv.Key.Split('>')[0].Replace("<", String.Empty), String.Empty, kv.Value == null ? String.Empty : kv.Value.ToString());
-            //            }
-            //            await xmlWriter.WriteEndElementAsync();
-            //        }
-            //        await xmlWriter.WriteEndElementAsync();
-            //    }
-            //    await xmlWriter.FlushAsync();
-            //}
-            //using (f)
-            //{
-            //    await f.CopyToAsync(memoryStream);
-            //}
-            memoryStream.Position = 0;
-            return File(memoryStream, "text/xml", fileName);
+            return File(memoryStream.GetBuffer(), "text/xml", fileName);
         }
-
+        /// <summary>
+        /// not fully implemented
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="delimiter"></param>
+        /// <returns></returns>
+        private string HandleData(object data, char delimiter)
+        {
+            if(data is IEnumerable<Plan>)
+            {
+                var plans = (data as IEnumerable<Plan>);
+                if(plans.Select(p => p.Name).Any())
+                {
+                    return plans.Select(p => p.Name).Aggregate((a, b) => $"{a}{delimiter}{b}");
+                }
+            }
+            return String.Empty;
+        }
         private async Task<IActionResult> ExportAsSeparatedValues(string fileName, char delimiter, DateTime? begin, DateTime? end)
         {
             string webRootPath = _hostingEnvironment.WebRootPath;
-            string URL;
             string extension = delimiter == ',' ? "csv" : delimiter == '\t' ? "tsv" : "file";
             string mediaType = delimiter == ',' ? "text/csv" : delimiter == '\t' ? "text/tab-separated-values" : "text/plain";
-            FileInfo file;
-            try
-            {
-                fileName = $@"{fileName}.{extension}";
-                URL = $"{Request.Scheme}://{Request.Host}/{fileName}";
-                file = new FileInfo(Path.Combine(webRootPath, fileName));
-            }
-            catch (NotSupportedException)
-            {
-                fileName = $@"reportdeadlines_exported_({DateTime.Now.ToString("MM.dd.yyyy hh.mm.ss tt")}).{extension}";
-                URL = $"{Request.Scheme}://{Request.Host}/{fileName}";
-                file = new FileInfo(Path.Combine(webRootPath, fileName));
-            }
-
+            fileName = $@"{fileName}.{extension}";
             MemoryStream memoryStream = new MemoryStream();
-            using (var streamWriter = new StreamWriter(new FileStream(Path.Combine(webRootPath, fileName), FileMode.Create, FileAccess.Write)))
+            using (var streamWriter = new StreamWriter(memoryStream))
             {
                 var exportData = await GetExportedDataAsync(begin, end);
-                if (exportData.Count() == 0)
-                {
-                    await streamWriter.WriteLineAsync();
-                }
-                else
+                if (exportData.Count() > 0)
                 {
                     var keys = exportData.ElementAt(0).Keys;
                     await streamWriter.WriteLineAsync(keys?.Select(k => k.Split('>')[0].Replace("<", String.Empty)).Aggregate((a, b) => $"{a}{delimiter}{b}"));
-                    for (int i = 0; i < exportData.Count(); i++)
-                    {
-                        await streamWriter.WriteLineAsync(exportData.ElementAt(i).Select(kv => kv.Value == null ? String.Empty : kv.Value.ToString()).Aggregate((a, b) => $"{a}{delimiter}{b}"));
-                    }
+                    exportData.ForEach(async dictionary => await streamWriter.WriteLineAsync(dictionary.Select(kv => kv.Value == null ? String.Empty : kv.Value is IEnumerable<Plan> ? ((kv.Value as IEnumerable<Plan>).Select(p => p.Name).Any() ? (kv.Value as IEnumerable<Plan>).Select(p => p.Name).Aggregate((a, b) => $"{a.Replace(",", String.Empty)};{b.Replace(",", String.Empty)}") : String.Empty) : kv.Value.ToString()).Aggregate((a, b) => $"{a.Replace(",", String.Empty)}{delimiter}{b.Replace(",", String.Empty)}")));
                 }
                 await streamWriter.FlushAsync();
             }
-            using (var fileStream = new FileStream(Path.Combine(webRootPath, fileName), FileMode.Open))
-            {
-                await fileStream.CopyToAsync(memoryStream);
-            }
-            memoryStream.Position = 0;
-            return File(memoryStream, mediaType, fileName);
+            return File(memoryStream.GetBuffer(), mediaType, fileName);
         }
 
         /// <summary>
