@@ -15,6 +15,7 @@ using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using Newtonsoft.Json;
 using System.Text;
+using System.Xml.Serialization;
 using System.Xml;
 
 namespace ReportOverviewApp.Controllers
@@ -29,7 +30,7 @@ namespace ReportOverviewApp.Controllers
             _context = context;
             _hostingEnvironment = hostingEnvironment;
         }
-        
+
         private async Task<JsonResult> ExportAsJson(string fileName, DateTime? begin, DateTime? end)
         {
             if (begin == null || !begin.HasValue)
@@ -42,6 +43,41 @@ namespace ReportOverviewApp.Controllers
             }
             return Json(await GetExportedDataAsync(begin, end));
         }
+        public class ReportExportData
+        {
+            public int ReportDeadlineId { get; set; }
+            public DateTime Deadline { get; set; }
+            public DateTime? RunDate { get; set; }
+            public DateTime? ApprovalDate { get; set; }
+            public DateTime? SentDate { get; set; }
+            public int ReportId { get; set; }
+            public string ReportName { get; set; }
+            public string Frequency { get; set; }
+            public List<string> Plans { get; set; }
+        }
+        private async Task<List<ReportExportData>> GetExportedDataXmlAsync(DateTime? begin, DateTime? end)
+        {
+            var export = await _context.ReportDeadlines.Include(rd => rd.Report)
+                                .ThenInclude(r => r.ReportPlanMapping)
+                                .ThenInclude(rpm => rpm.Plan)
+                                .Where(rd => rd.Deadline >= begin && rd.Deadline <= end)
+                                .Select(rd => new ReportExportData()
+                                {
+                                    ReportDeadlineId = rd.Id,
+                                    Deadline = rd.Deadline,
+                                    RunDate = rd.RunDate,
+                                    ApprovalDate = rd.ApprovalDate,
+                                    SentDate = rd.SentDate,
+                                    ReportId = rd.ReportId,
+                                    ReportName = rd.Report.Name ?? rd.Report.OtherReportName ?? String.Empty,
+                                    Frequency = rd.Report.Frequency,
+                                    Plans = rd.Report.ReportPlanMapping.Where(rpm => rpm.Plan != null && !String.IsNullOrEmpty(rpm.Plan.Name)).Select(rpm => rpm.Plan.Name).ToList()
+                                })
+                                .OrderBy(rd => rd.ReportId).ToListAsync();
+            return export;
+            
+        }
+
         private async Task<List<Dictionary<string, object>>> GetExportedDataAsync(DateTime? begin, DateTime? end) =>
             await _context.ReportDeadlines.Include(rd => rd.Report)
                                                 .ThenInclude(r => r.ReportPlanMapping)
@@ -54,7 +90,7 @@ namespace ReportOverviewApp.Controllers
                                                     rd.RunDate,
                                                     rd.ApprovalDate,
                                                     rd.SentDate,
-                                                    ReportName = rd.Report.Name ?? rd.Report.OtherReportName ?? "Unknown",
+                                                    ReportName = rd.Report.Name ?? rd.Report.OtherReportName ?? String.Empty,
                                                     rd.ReportId,
                                                     rd.Report.Frequency,
                                                     Plans = rd.Report.ReportPlanMapping.Select(rpm => rpm.Plan) ?? null
@@ -171,39 +207,50 @@ namespace ReportOverviewApp.Controllers
 
         private async Task<IActionResult> ExportAsXml(string fileName, DateTime? begin, DateTime? end)
         {
-            throw new NotImplementedException();
-            //string webRootPath = _hostingEnvironment.WebRootPath;
-            //string URL;
-            //FileInfo file;
-            //try
-            //{
-            //    fileName = $@"{fileName}.xml";
-            //    URL = $"{Request.Scheme}://{Request.Host}/{fileName}";
-            //    file = new FileInfo(Path.Combine(webRootPath, fileName));
-            //}
-            //catch (NotSupportedException)
-            //{
-            //    fileName = $@"reportdeadlines_exported_({DateTime.Now.ToString("MM.dd.yyyy hh.mm.ss tt")}).xml";
-            //    URL = $"{Request.Scheme}://{Request.Host}/{fileName}";
-            //    file = new FileInfo(Path.Combine(webRootPath, fileName));
-            //}
-            //var memoryStream = new MemoryStream();
+            
+            string webRootPath = _hostingEnvironment.WebRootPath;
+            string URL;
+            FileInfo file;
+            try
+            {
+                fileName = $@"{fileName}.xml";
+                URL = $"{Request.Scheme}://{Request.Host}/{fileName}";
+                file = new FileInfo(Path.Combine(webRootPath, fileName));
+            }
+            catch (NotSupportedException)
+            {
+                fileName = $@"reportdeadlines_exported_({DateTime.Now.ToString("MM.dd.yyyy hh.mm.ss tt")}).xml";
+                URL = $"{Request.Scheme}://{Request.Host}/{fileName}";
+                file = new FileInfo(Path.Combine(webRootPath, fileName));
+            }
+            var memoryStream = new MemoryStream();
+            using (var f = new FileStream(Path.Combine(webRootPath, fileName), FileMode.Create, FileAccess.ReadWrite))
+            {
+                var exportData = await GetExportedDataXmlAsync(begin, end);
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<ReportExportData>));
+                //exportData.ForEach(e => xmlSerializer.Serialize(f, e));
+                xmlSerializer.Serialize(f, exportData);
+            }
+            using (var f = new FileStream(Path.Combine(webRootPath, fileName), FileMode.Open))
+            {
+                await f.CopyToAsync(memoryStream);
+            }
             //var f = new FileStream(Path.Combine(webRootPath, fileName), FileMode.Create, FileAccess.ReadWrite);
-            //using (var xmlWriter = XmlWriter.Create(f, new XmlWriterSettings() { Indent = true, Async = true}))
+            //using (var xmlWriter = XmlWriter.Create(f, new XmlWriterSettings() { Indent = true, Async = true }))
             //{
             //    var exportData = await GetExportedDataAsync(begin, end);
             //    await xmlWriter.WriteStartDocumentAsync();
             //    if (exportData.Count() == 0)
             //    {
-                    
+
             //    }
             //    else
             //    {
             //        await xmlWriter.WriteStartElementAsync(String.Empty, "reports", String.Empty);
-            //        foreach(var d in exportData)
+            //        foreach (var d in exportData)
             //        {
             //            await xmlWriter.WriteStartElementAsync(String.Empty, "report", String.Empty);
-            //            foreach(var kv in d)
+            //            foreach (var kv in d)
             //            {
             //                await xmlWriter.WriteAttributeStringAsync(String.Empty, kv.Key.Split('>')[0].Replace("<", String.Empty), String.Empty, kv.Value == null ? String.Empty : kv.Value.ToString());
             //            }
@@ -217,8 +264,8 @@ namespace ReportOverviewApp.Controllers
             //{
             //    await f.CopyToAsync(memoryStream);
             //}
-            //memoryStream.Position = 0;
-            //return File(memoryStream, "text/xml", fileName);
+            memoryStream.Position = 0;
+            return File(memoryStream, "text/xml", fileName);
         }
 
         private async Task<IActionResult> ExportAsSeparatedValues(string fileName, char delimiter, DateTime? begin, DateTime? end)
