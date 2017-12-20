@@ -128,11 +128,7 @@ namespace ReportOverviewApp.Controllers
                 workbook = new XSSFWorkbook();
                 ISheet excelSheet = workbook.CreateSheet($"Reports");
                 IRow row = excelSheet.CreateRow(0);
-                if(exportData.Count() == 0)
-                {
-                    row.CreateCell(0).SetCellValue("No Data");
-                }
-                else
+                if(exportData.Count() > 0)
                 {
                     var keys = exportData.ElementAt(0).Keys;
                     for (int i = 0; i < keys?.Count(); i++)
@@ -148,8 +144,9 @@ namespace ReportOverviewApp.Controllers
                             {
                                 if(exportData.ElementAt(i).ElementAt(j).Value != null && (exportData.ElementAt(i).ElementAt(j).Value as IEnumerable<Plan>).Any())
                                 {
-                                    row.CreateCell(j).SetCellValue((exportData.ElementAt(i).ElementAt(j).Value as IEnumerable<Plan>).Select(p => p.Name).Aggregate((a, b) => $"{a},{b}") ?? null);
-                                } else
+                                    row.CreateCell(j).SetCellValue((exportData.ElementAt(i).ElementAt(j).Value as IEnumerable<Plan>).Select(p => p.Name).Aggregate((a, b) => $"{a};{b}") ?? null);
+                                }
+                                else
                                 {
                                     row.CreateCell(j).SetCellValue(String.Empty);
                                 }    
@@ -168,13 +165,24 @@ namespace ReportOverviewApp.Controllers
             {
                 await fileStream.CopyToAsync(memoryStream);
             }
-            return File(memoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+            return File(memoryStream.GetBuffer(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
         }
         public async Task<IActionResult> ExportReportDeadlines(DateTime? begin, DateTime? end, string fileName, FileExtension fileAs = FileExtension.Excel)
         {
-            if (!string.IsNullOrEmpty(fileName) && !string.IsNullOrWhiteSpace(fileName))
+            
+            if (begin == null || !begin.HasValue)
             {
-                fileName = fileName.Replace("\\", "")
+                begin = DateTime.Today;
+            }
+            if(end == null || !end.HasValue)
+            {
+                end = DateTime.Today;
+            }
+            if (string.IsNullOrEmpty(fileName) && string.IsNullOrWhiteSpace(fileName))
+            {
+                fileName = $"ReportDeadlinesFrom{begin.Value.ToString("MM-dd-yyyy")}To{end.Value.ToString("MM-dd-yyyy")}";
+            }
+            fileName = fileName.Replace("\\", "")
                             .Replace("/", "-")
                             .Replace("\"", "-")
                             .Replace("*", "")
@@ -184,15 +192,6 @@ namespace ReportOverviewApp.Controllers
                             .Replace(">", "")
                             .Replace("|", "")
                             .Trim();
-            }
-            if (begin == null || !begin.HasValue)
-            {
-                begin = DateTime.Today;
-            }
-            if(end == null || !end.HasValue)
-            {
-                end = DateTime.Today;
-            }
             switch (fileAs)
             {
                 case FileExtension.Json:
@@ -242,7 +241,7 @@ namespace ReportOverviewApp.Controllers
         private async Task<IActionResult> ExportAsSeparatedValues(string fileName, char delimiter, DateTime? begin, DateTime? end)
         {
             string webRootPath = _hostingEnvironment.WebRootPath;
-            string extension = delimiter == ',' ? "csv" : delimiter == '\t' ? "tsv" : "file";
+            string extension = delimiter == ',' ? "csv" : delimiter == '\t' ? "txt" : "file";
             string mediaType = delimiter == ',' ? "text/csv" : delimiter == '\t' ? "text/tab-separated-values" : "text/plain";
             fileName = $@"{fileName}.{extension}";
             MemoryStream memoryStream = new MemoryStream();
@@ -253,7 +252,11 @@ namespace ReportOverviewApp.Controllers
                 {
                     var keys = exportData.ElementAt(0).Keys;
                     await streamWriter.WriteLineAsync(keys?.Select(k => k.Split('>')[0].Replace("<", String.Empty)).Aggregate((a, b) => $"{a}{delimiter}{b}"));
-                    exportData.ForEach(async dictionary => await streamWriter.WriteLineAsync(dictionary.Select(kv => kv.Value == null ? String.Empty : kv.Value is IEnumerable<Plan> ? ((kv.Value as IEnumerable<Plan>).Select(p => p.Name).Any() ? (kv.Value as IEnumerable<Plan>).Select(p => p.Name).Aggregate((a, b) => $"{a.Replace(",", String.Empty)};{b.Replace(",", String.Empty)}") : String.Empty) : kv.Value.ToString()).Aggregate((a, b) => $"{a.Replace(",", String.Empty)}{delimiter}{b.Replace(",", String.Empty)}")));
+                    exportData.ForEach(async dictionary => 
+                        await streamWriter.WriteLineAsync(
+                            dictionary.Select(
+                                kv => kv.Value == null ? String.Empty : 
+                                    kv.Value is IEnumerable<Plan> ? ((kv.Value as IEnumerable<Plan>).Select(p => p.Name).Any() ? $"\"{(kv.Value as IEnumerable<Plan>).Select(p => p.Name).Aggregate((a, b) => $"{a};{b}")}\"" : String.Empty) : kv.Value.ToString()).Aggregate((a, b) => $"{a}{delimiter}{b.Replace(delimiter.ToString(), String.Empty)}")));
                 }
                 await streamWriter.FlushAsync();
             }

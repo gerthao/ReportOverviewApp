@@ -16,7 +16,7 @@
     <button class="btn btn-primary" type="button" id="mag-glass" data-toggle="modal" data-target="#searchReportModal"><span class="fa fa-search"></span>&nbsp;&nbsp;Search</button>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createReportModal" aria-label="Left Align"><span class="fa fa-plus-square"></span>&nbsp;&nbsp;Create New</button>
     @Html.ActionLink(linkText: "Update Deadlines", actionName: "UpdateDeadlinesAsync", controllerName: "Reports", routeValues: new { }, htmlAttributes: new { @id = "updateDeadlines", @class = "btn btn-primary" })
-    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#exportModal" onclick="$('#exportFileName').val('exported_(' + new Date() + ')')"><span class="fa fa-files-o"></span>&nbsp;&nbsp;Export</button>
+    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#exportModal"><span class="fa fa-files-o"></span>&nbsp;&nbsp;Export</button>
 </h4>
 <hr />
 <div id="searchReportModal" class="modal fade">
@@ -50,7 +50,7 @@
                         <div class="form-row col-md-12">
                             <div class="form-group col-md-9">
                                 <label class="form-control-label">Name</label>
-                                <input type="text" class="form-control" id="exportFileName" name="fileName" placeholder="Enter Report Name" value='exported_(@DateTime.Now.ToString("MM.dd.yyyy hh.mm.ss tt"))' required />
+                                <input type="text" class="form-control" id="exportFileName" name="fileName" placeholder="Enter Report Name"/>
                             </div>
                             <div class="form-group col-md-3">
                                 <label class="form-control-label">File Type</label>
@@ -58,7 +58,7 @@
                                     <option selected value="@FileExtension.Excel">Excel (.xlsx)</option>
                                     <option value="@FileExtension.Json">JavaScript Object Notation (.json)</option>
                                     <option value="@FileExtension.Csv">Comma-Separated Values (.csv)</option>
-                                    <option value="@FileExtension.Tsv">Tab-Separated Values (.tsv)</option>
+                                    <option value="@FileExtension.Tsv">Tab-Separated Values (.txt)</option>
                                     <option value="@FileExtension.Xml">Extensible Markup Language (.xml)</option>
                                 </select>
                             </div>
@@ -66,7 +66,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary" type="submit"><span id="exportIcon" class="fa fa-arrow-down"></span> Export</button>
+                    <button class="btn btn-primary" type="submit" onmouseover="$('#exportIcon').addClass('ld ld-breath')" onmouseout="$('#exportIcon').removeClass('ld ld-breath')" formtarget="_blank"><span id="exportIcon" class="fa fa-arrow-down"></span> Export</button>
                 </div>
             </form>
         </div>
