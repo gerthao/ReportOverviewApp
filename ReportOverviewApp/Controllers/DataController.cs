@@ -30,6 +30,12 @@ namespace ReportOverviewApp.Controllers
             _context = context;
             _hostingEnvironment = hostingEnvironment;
         }
+        /// <summary>
+        ///  Exports report deadline information into JSON.
+        /// </summary>
+        /// <param name="begin"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
         [Produces("application/json")]
         private async Task<JsonResult> ExportAsJson(DateTime? begin, DateTime? end)
         {
@@ -105,21 +111,10 @@ namespace ReportOverviewApp.Controllers
         
         private async Task<IActionResult> ExportAsExcel(string fileName, DateTime? begin, DateTime? end)
         {
+            fileName = $"{fileName}.xlsx";
             string webRootPath = _hostingEnvironment.WebRootPath;
-            string URL;
-            FileInfo file;
-            try
-            {
-                fileName = $@"{fileName}.xlsx";
-                URL = $"{Request.Scheme}://{Request.Host}/{fileName}";
-                file = new FileInfo(Path.Combine(webRootPath, fileName));
-            }
-            catch (NotSupportedException)
-            {
-                fileName = $@"exported_({DateTime.Now.ToString("MM.dd.yyyy hh.mm.ss tt")}).xlsx";
-                URL = $"{Request.Scheme}://{Request.Host}/{fileName}";
-                file = new FileInfo(Path.Combine(webRootPath, fileName));
-            }
+            string URL = $"{Request.Scheme}://{Request.Host}/{fileName}";
+            FileInfo file = new FileInfo(Path.Combine(webRootPath, fileName));
             MemoryStream memoryStream = new MemoryStream();
             using (var fileStream = new FileStream(Path.Combine(webRootPath, fileName), FileMode.Create, FileAccess.Write))
             {
@@ -155,7 +150,6 @@ namespace ReportOverviewApp.Controllers
                             {
                                 row.CreateCell(j).SetCellValue(exportData.ElementAt(i).ElementAt(j).Value?.ToString());
                             }
-                           
                         }
                     }
                 }
@@ -165,11 +159,38 @@ namespace ReportOverviewApp.Controllers
             {
                 await fileStream.CopyToAsync(memoryStream);
             }
+            file.Delete();
             return File(memoryStream.GetBuffer(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
         }
+        /// <summary>
+        ///  Takes out invalid file name characters in a string.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        private string StripInvalidCharacters(string input) => 
+            input.Replace("\\", String.Empty)
+                .Replace("/", String.Empty)
+                .Replace("\"", String.Empty)
+                .Replace("*", String.Empty)
+                .Replace(":", String.Empty)
+                .Replace("?", String.Empty)
+                .Replace("<", String.Empty)
+                .Replace(">", String.Empty)
+                .Replace("|", String.Empty)
+                .Trim();
+
+        /// <summary>
+        ///  Exports report deadline information into a file.
+        /// </summary>
+        /// <param name="begin"></param>
+        /// <param name="end"></param>
+        /// <param name="fileName"></param>
+        /// <param name="fileAs"></param>
+        /// <returns>
+        /// 
+        /// </returns>
         public async Task<IActionResult> ExportReportDeadlines(DateTime? begin, DateTime? end, string fileName, FileExtension fileAs = FileExtension.Excel)
-        {
-            
+        { 
             if (begin == null || !begin.HasValue)
             {
                 begin = DateTime.Today;
@@ -182,16 +203,7 @@ namespace ReportOverviewApp.Controllers
             {
                 fileName = $"ReportDeadlinesFrom{begin.Value.ToString("MM-dd-yyyy")}To{end.Value.ToString("MM-dd-yyyy")}";
             }
-            fileName = fileName.Replace("\\", "")
-                            .Replace("/", "-")
-                            .Replace("\"", "-")
-                            .Replace("*", "")
-                            .Replace(":", ".")
-                            .Replace("?", "")
-                            .Replace("<", "")
-                            .Replace(">", "")
-                            .Replace("|", "")
-                            .Trim();
+            fileName = StripInvalidCharacters(fileName);
             switch (fileAs)
             {
                 case FileExtension.Json:
@@ -207,7 +219,13 @@ namespace ReportOverviewApp.Controllers
             }
             return View("Error");
         }
-
+        /// <summary>
+        ///  Exports report deadline information into an XML file.
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="begin"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
         private async Task<IActionResult> ExportAsXml(string fileName, DateTime? begin, DateTime? end)
         {
             fileName = $@"{fileName}.xml";
@@ -238,6 +256,14 @@ namespace ReportOverviewApp.Controllers
             }
             return String.Empty;
         }
+        /// <summary>
+        ///  Exports report deadline information into a delimited file (CSV or TSV).
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="delimiter"></param>
+        /// <param name="begin"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
         private async Task<IActionResult> ExportAsSeparatedValues(string fileName, char delimiter, DateTime? begin, DateTime? end)
         {
             string webRootPath = _hostingEnvironment.WebRootPath;

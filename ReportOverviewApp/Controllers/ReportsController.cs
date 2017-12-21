@@ -22,24 +22,24 @@ namespace ReportOverviewApp.Controllers
         private UserLogFactory userLogFactory;
 
         /// <summary>
-        ///  This method creates a ViewModel to displays records from the Report class.
+        ///  Creates a ReportListViewModel to displays records from the Report class.
         /// </summary>
-        /// <param name="search">
-        ///  Determines the list of records retrieved containing the search.
-        ///  parameter's values
-        /// </param>
-        /// <param name="column">
-        ///  Determines the sort order of the list of records by a certain Report field.
-        /// </param>
-        /// <param name="recordsPerPage">
-        ///  Determines the number of records displayed on a page.
-        /// </param>
-        /// <returns>
-        ///  Returns a ReportViewModel based on the parameters given.
+        /// <param name="search"> Determines the list of records retrieved containing the search.
+        ///  parameter's values</param>
+        /// <param name="column">Determines the sort order of the list of records by a certain Report field.</param>
+        /// <param name="recordsPerPage">Determines the number of records displayed on a page.</param>
+        /// <param name="pageIndex"></param>
+        /// <param name="state"></param>
+        /// <param name="plan"></param>
+        /// <param name="begin"></param>
+        /// <param name="end"></param>
+        /// <param name="frequency"></param>
+        /// <param name="businessContact"></param>
+        /// <param name="businessOwner"></param>
+        /// <param name="sourceDepartment"></param>
+        /// <returns>Returns a ReportViewModel based on the parameters given.
         ///  The returned object is used for the Index method.
         /// </returns>
-        /// 
-
         private async Task<ReportListViewModel> GetReportViewModelAsync(string search, string column, int recordsPerPage, int pageIndex, string state, string plan, string begin, string end, string frequency, string businessContact, string businessOwner, string sourceDepartment)
         {
             DropdownOptions options = new DropdownOptions()
@@ -106,47 +106,25 @@ namespace ReportOverviewApp.Controllers
             return ViewComponent("EditReportDeadline", new { deadlineId = id } );
         }
 
-        public IActionResult UpdateDeadlinesAsync()
+        public async Task<IActionResult> UpdateDeadlinesAsync()
         {
-            if (_context != null && _context.ReportDeadlines != null)
+            await _context.Reports.Include(r => r.Deadlines).ForEachAsync(async r =>
             {
-                //var mostRecent = await _context.Reports.Include(r => r.Deadlines).Select(r => r.Deadlines.Any()? r.Deadlines.OrderByDescending(rd => rd.Deadline).First() : null).ToListAsync();
-                //var list = mostRecent.Where(rd => rd != null && rd.Report != null && rd.Deadline < rd.Report.CurrentDeadline()).Select(rd => new ReportDeadline() { Deadline = rd.Report.CurrentDeadline().Value, ReportId = rd.ReportId });
-                //if (list.Count() > 0)
-                //{
-                //    await _context.ReportDeadlines.AddRangeAsync(list);
-                //    await _context.SaveChangesAsync();
-                //}
-                foreach(Report r in _context.Reports.Include(r => r.Deadlines))
+                DateTime? currentCalculatedDeadline = r.CurrentDeadline();
+                if (currentCalculatedDeadline != null && currentCalculatedDeadline.HasValue)
                 {
-                    DateTime? currentCalculatedDeadline = r.CurrentDeadline();
-                    if(!(currentCalculatedDeadline == null || !currentCalculatedDeadline.HasValue))
+                    DateTime? mostRecentReportDeadline = r.Deadlines.OrderByDescending(rd => rd.Deadline).First().Deadline as DateTime? ?? null;
+                    if (currentCalculatedDeadline > mostRecentReportDeadline)
                     {
-                        if(r.Deadlines == null || r.Deadlines.Count() == 0)
+                        await _context.ReportDeadlines.AddAsync(new ReportDeadline()
                         {
-                            ReportDeadline reportDeadline = new ReportDeadline()
-                            {
-                                ReportId = r.Id,
-                                Deadline = currentCalculatedDeadline.Value
-                            };
-                            _context.ReportDeadlines.Add(reportDeadline);
-                        } else
-                        {
-                            ReportDeadline mostRecentReportDeadline = r.Deadlines.OrderByDescending(rd => rd.Deadline).First();
-                            if (currentCalculatedDeadline > mostRecentReportDeadline.Deadline)
-                            {
-                                ReportDeadline reportDeadline = new ReportDeadline()
-                                {
-                                    ReportId = r.Id,
-                                    Deadline = currentCalculatedDeadline.Value
-                                };
-                                _context.ReportDeadlines.Add(reportDeadline);
-                            }
-                        }
+                            ReportId = r.Id,
+                            Deadline = currentCalculatedDeadline.Value
+                        });
                     }
                 }
-                _context.SaveChanges();
-            }
+            });
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -217,12 +195,12 @@ namespace ReportOverviewApp.Controllers
                     reportViewModel.Report.DateAdded = DateTime.Now;
                 }
                 reportViewModel.Report.BusinessContact = null;
-                _context.Add(reportViewModel.Report);
+                await _context.AddAsync(reportViewModel.Report);
                 await _context.SaveChangesAsync();
                 List<ReportPlanMap> list = reportViewModel.Plans is null || reportViewModel.Plans.Count() == 0 ? new List<ReportPlanMap>() : reportViewModel.Plans.Select(i => new ReportPlanMap() { PlanId = i, ReportId = reportViewModel.Report.Id }).ToList();
                 reportViewModel.Report.ReportPlanMapping = list;
                 _context.Update(reportViewModel.Report);
-                _context.Add(userLogFactory.Build(GetCurrentUserID(), $"\"{reportViewModel.Report.Name}\" has been created."));
+                await _context.AddAsync(userLogFactory.Build(GetCurrentUserID(), $"\"{reportViewModel.Report.Name}\" has been created."));
                 await _context.SaveChangesAsync();
                 toast = new ToastMessage(message: $"{reportViewModel.Report.Name} has been successfully created.", title: "Success", toasType: ToastEnums.ToastType.Success, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
                 ShowToast(toast);
@@ -256,7 +234,7 @@ namespace ReportOverviewApp.Controllers
                 try
                 {
                     var unmodifiedDeadline = _context.ReportDeadlines.AsNoTracking().Include(rd => rd.Report).SingleOrDefault(d => d.Id == id);
-                    _context.Add(userLogFactory.Build(GetCurrentUserID(), $"\"Status for {unmodifiedDeadline.Report.Name}\" has been updated.", CompareChanges(unmodifiedDeadline, reportDeadline)));
+                    await _context.AddAsync(userLogFactory.Build(GetCurrentUserID(), $"\"Status for {unmodifiedDeadline.Report.Name}\" has been updated.", CompareChanges(unmodifiedDeadline, reportDeadline)));
                     _context.Update(reportDeadline);
                     await _context.SaveChangesAsync();
                     toast = new ToastMessage(message: $"Deadline ({reportDeadline.Deadline.ToString("MM/dd/yyyy")}) for {unmodifiedDeadline.Report.Name} has been successfully edited.", title: "Success", toasType: ToastEnums.ToastType.Success, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
@@ -352,11 +330,21 @@ namespace ReportOverviewApp.Controllers
             return View(reportViewModel);
         }
         
+        /// <summary>
+        ///  Shows toast with given ToastMessage object.
+        /// </summary>
+        /// <param name="toastMessage"></param>
         private void ShowToast(ToastMessage toastMessage)
         {
             _toastNotification.AddToastMessage(toastMessage.Title, toastMessage.Message, toastMessage.ToastType, toastMessage.ToastOptions);
         }
 
+        /// <summary>
+        ///  Compares the changes between ReportDeadline objects.
+        /// </summary>
+        /// <param name="old"></param>
+        /// <param name="updated"></param>
+        /// <returns></returns>
         private string CompareChanges(ReportDeadline old, ReportDeadline updated)
         {
             if (old == null)
@@ -381,6 +369,12 @@ namespace ReportOverviewApp.Controllers
             }
             return messageBuilder.ToString();
         }
+        /// <summary>
+        ///  Compares the changes between Report objects.
+        /// </summary>
+        /// <param name="old"></param>
+        /// <param name="updated"></param>
+        /// <returns></returns>
         private string CompareChanges(Report old, Report updated)
         {
             if (old == null)
@@ -453,7 +447,7 @@ namespace ReportOverviewApp.Controllers
             ToastMessage toast = null;
             var report = await _context.Reports.Include(r => r.BusinessContact).Include(r => r.ReportPlanMapping).ThenInclude(rpm => rpm.Plan).ThenInclude(p => p.State).SingleOrDefaultAsync(m => m.Id == id);
             _context.Reports.Remove(report);
-            _context.Add(userLogFactory.Build(GetCurrentUserID(), $"\"{report.Name}\" has been deleted."));
+            await _context.AddAsync(userLogFactory.Build(GetCurrentUserID(), $"\"{report.Name}\" has been deleted."));
             toast = toast = new ToastMessage(message: $"{report.Name} has been successfully deleted.", title: "Success", toasType: ToastEnums.ToastType.Success, options: new ToastOption() { PositionClass = ToastPositions.BottomRight});
             await _context.SaveChangesAsync();
             ShowToast(toast);
