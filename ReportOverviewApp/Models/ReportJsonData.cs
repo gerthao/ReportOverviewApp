@@ -16,7 +16,8 @@ namespace ReportOverviewApp.Models
     public class ReportJsonData
     {
         private DateTime ExcelBaseDate = new DateTime(month: 12, day: 30, year: 1899);
-
+        [JsonProperty("ID")]
+        public int Id { get; set; }
         [JsonProperty("REPORT_NAME")]
         public string Name { get; set; }
         [JsonProperty("BUSINESS_CONTACT")]
@@ -111,15 +112,8 @@ namespace ReportOverviewApp.Models
         public (Report, Plan) ToReport()
         {
             Report report = new Report();
+            report.ReportPlanMapping = new List<ReportPlanMap>();
             Plan plan = new Plan();
-            if(plan == null)
-            {
-                plan = new Plan();
-            }
-            if(report == null)
-            {
-                report = new Report();
-            }
             if (String.IsNullOrEmpty(BusinessContact))
             {
                 report.BusinessContact = null;
@@ -150,10 +144,8 @@ namespace ReportOverviewApp.Models
             {
                 GroupName = $"N/A ({State})";
             }
-            plan.Name = GroupName?.Trim();
+            plan.Name = GroupName?.Replace("-", " - ").Replace("  ", " ").Trim();
             plan.WindwardId = WwGroupId?.Trim();
-            
-
             report.Name = Name?.Trim();
             report.DueDate1 = ToDate(DueDate1);
             report.DueDate2 = ToDate(DueDate2);
@@ -186,6 +178,17 @@ namespace ReportOverviewApp.Models
             report.ERSReportName = ERSReportName?.Trim();
             report.OtherReportLocation = OtherReportLocation?.Trim();
             report.OtherReportName = OtherReportName?.Trim();
+
+            report.Name = $"{Id}:{report.Name}";
+            //if(plan != null)
+            //{
+            //    report.ReportPlanMapping.Add(new ReportPlanMap()
+            //    {
+            //        Report = report,
+            //        Plan = plan
+            //    });
+            //}
+            
 
             return (report, plan);
         }

@@ -13,10 +13,10 @@
 </style>
 <h4>
     Reporting Catalogue
-    <button class="btn btn-primary" type="button" id="mag-glass" data-toggle="modal" data-target="#searchReportModal"><span class="fa fa-search"></span>&nbsp;&nbsp;Search</button>
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createReportModal" aria-label="Left Align"><span class="fa fa-plus-square"></span>&nbsp;&nbsp;Create New</button>
+    <button class="btn btn-primary" type="button" id="mag-glass" data-toggle="modal" data-target="#searchReportModal"><span class="fas fa-search"></span>&nbsp;&nbsp;Search</button>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createReportModal" aria-label="Left Align"><span class="fas fa-plus-square"></span>&nbsp;&nbsp;Create New</button>
     @Html.ActionLink(linkText: "Update Deadlines", actionName: "UpdateDeadlinesAsync", controllerName: "Reports", routeValues: new { }, htmlAttributes: new { @id = "updateDeadlines", @class = "btn btn-primary" })
-    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#exportModal"><span class="fa fa-files-o"></span>&nbsp;&nbsp;Export</button>
+    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#exportModal"><span class="far fa-file-excel"></span>&nbsp;&nbsp;Export</button>
 </h4>
 <hr />
 <div id="searchReportModal" class="modal fade">
@@ -29,46 +29,7 @@
 <div id="exportModal" class="modal fade">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <form asp-controller="Data" asp-action="ExportReportDeadlines">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        Export Report Deadlines...
-                    </h5>
-                </div>
-                <div class="modal-body">
-                    <div class="form-horizontal">
-                        <div class="form-row col-md-12">
-                            <div class="form-group col-md-6">
-                                <label class="form-control-label">Start</label>
-                                <input type="date" class="form-control" name="begin" placeholder="Enter Report Name" value='@DateTime.Today.ToString("yyyy-MM-dd")' required />
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label class="form-control-label">End</label>
-                                <input type="date" class="form-control" name="end" placeholder="Enter Report Name" value='@DateTime.Today.ToString("yyyy-MM-dd")' required />
-                            </div>
-                        </div>
-                        <div class="form-row col-md-12">
-                            <div class="form-group col-md-9">
-                                <label class="form-control-label">Name</label>
-                                <input type="text" class="form-control" id="exportFileName" name="fileName" placeholder="Enter Report Name"/>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="form-control-label">File Type</label>
-                                <select class="form-control" name="fileAs" required>
-                                    <option selected value="@FileExtension.Excel">Excel (.xlsx)</option>
-                                    <option value="@FileExtension.Json">JavaScript Object Notation (.json)</option>
-                                    <option value="@FileExtension.Csv">Comma-Separated Values (.csv)</option>
-                                    <option value="@FileExtension.Tsv">Tab-Separated Values (.txt)</option>
-                                    <option value="@FileExtension.Xml">Extensible Markup Language (.xml)</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary" type="submit" onmouseover="$('#exportIcon').addClass('ld ld-breath')" onmouseout="$('#exportIcon').removeClass('ld ld-breath')" formtarget="_blank"><span id="exportIcon" class="fa fa-arrow-down"></span> Export</button>
-                </div>
-            </form>
+            @await Component.InvokeAsync("Export")
         </div>
     </div>
 </div>
@@ -106,202 +67,203 @@ else
                     @Html.ActionLink("Id", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Id", begin = Model.Filters.Begin, end = Model.Filters.End }, new { })
                     @if (Model.Filters.Column == "Id" || String.IsNullOrEmpty(Model.Filters.Column))
                     {
-                        <i class="fa fa-filter"></i>
+                        <i class="fas fa-filter"></i>
                     }
                 </th>
                 <th>
                     @Html.ActionLink("Name", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Name", begin = Model.Filters.Begin, end = Model.Filters.End }, new { })
                     @if (Model.Filters.Column == "Name")
                     {
-                        <i class="fa fa-filter"></i>
+                        <i class="fas fa-filter"></i>
                     }
                 </th>
                 <th>
                     @Html.ActionLink("Deadline", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Deadline", begin = Model.Filters.Begin, end = Model.Filters.End }, new { })
                     @if (Model.Filters.Column == "Deadline")
                     {
-                        <i class="fa fa-filter"></i>
+                        <i class="fas fa-filter"></i>
                     }
                 </th>
                 <th>
                     @Html.ActionLink("Ran On", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Ran On", begin = Model.Filters.Begin, end = Model.Filters.End }, new { })
-                @if (Model.Filters.Column == "Ran On")
-                {
-                    <i class="fa fa-filter"></i>
-                }
-            </th>
-            <th>
-                @Html.ActionLink("Approved On", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Approved On", begin = Model.Filters.Begin, end = Model.Filters.End }, new { })
-                @if (Model.Filters.Column == "Approved On")
-                {
-                    <i class="fa fa-filter"></i>
-                }
-            </th>
-            <th>
-                @Html.ActionLink("Sent On", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Sent On", begin = Model.Filters.Begin, end = Model.Filters.End }, new { })
-                @if (Model.Filters.Column == "Sent On")
-                {
-                    <i class="fa fa-filter"></i>
-                }
-            </th>
-            <th>Options</th>
-        </tr>
-    </thead>
-    <tbody>
-        @for (int i = 0; i < Model.Reports.Count(); i++)
-        {
-            ReportDeadline currentReportDeadline = null;
-            <tr>
-                <td class="ReportID">@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Id)</td>
-                <td class="ReportName">@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Name)</td>
-                @if (Model.Reports.ElementAt(i).Deadlines != null && Model.Reports.ElementAt(i).Deadlines.Any())
-                {
-                    currentReportDeadline = Model.Reports.ElementAt(i).Deadlines.OrderByDescending(rd => rd.Deadline).First();
-                    <td>@currentReportDeadline.Deadline.ToString("MM/dd/yyyy")</td>
-                    @if (currentReportDeadline.RunDate != null && currentReportDeadline.RunDate.HasValue)
+                    @if (Model.Filters.Column == "Ran On")
                     {
-                        <td>@currentReportDeadline.RunDate.Value.ToString("MM/dd/yyyy hh:mm tt")</td>
+                        <i class="fas fa-filter"></i>
                     }
-                    else
+                </th>
+                <th>
+                    @Html.ActionLink("Approved On", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Approved On", begin = Model.Filters.Begin, end = Model.Filters.End }, new { })
+                    @if (Model.Filters.Column == "Approved On")
                     {
-                        <td></td>
+                        <i class="fas fa-filter"></i>
                     }
-                    @if (currentReportDeadline.ApprovalDate != null && currentReportDeadline.ApprovalDate.HasValue)
+                </th>
+                <th>
+                    @Html.ActionLink("Sent On", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Sent On", begin = Model.Filters.Begin, end = Model.Filters.End }, new { })
+                    @if (Model.Filters.Column == "Sent On")
                     {
-                        <td>@currentReportDeadline.RunDate.Value.ToString("MM/dd/yyyy hh:mm tt")</td>
+                        <i class="fas fa-filter"></i>
                     }
-                    else
-                    {
-                        <td></td>
-                    }
-                    @if (currentReportDeadline.SentDate != null && currentReportDeadline.SentDate.HasValue)
-                    {
-                        <td>@currentReportDeadline.RunDate.Value.ToString("MM/dd/yyyy hh:mm tt")</td>
-                    }
-                    else
-                    {
-                        <td></td>
-                    }
-                }
-                else if (Model.Reports.ElementAt(i).IsTermed(DateTime.Today))
-                {
-                    <td class="text-muted text-center" colspan="4">Termed</td>
-
-                }
-                else
-                {
-                    <td class="text-muted text-center" colspan="4">No Current Deadline Found</td>
-
-                }
-                <td style="text-align: center;">
-                    @*@if (currentReportDeadline == null)
-                    {
-                        <a class="disabled"><span class="fa fa-adjust text-muted" tabindex="0" data-toggle="tooltip" data-placement="top" title="No Deadline Found"></span></a>
-                    }
-                    else
-                    {*@
-                        <a id="editReportDeadline" data-toggle="modal" data-target="#editReportDeadlineModal"><span class="fa fa-adjust text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  Report Deadline (@Model.Reports.ElementAt(i).Name)"></span></a>
-                    @*}*@
-                    <a id="editReport" data-toggle="modal" data-target="#editReportModal"><span class="fa fa-edit text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  @Model.Reports.ElementAt(i).Name"></span></a>
-                    <a asp-action="Details" asp-route-id="@Model.Reports.ElementAt(i).Id"><span class="fa fa-book text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="View:  @Model.Reports.ElementAt(i).Name"></span></a>
-                    <a id="deleteReport" data-toggle="modal" data-target="#deleteReportModal"><span class="fa fa-remove text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Delete:  @Model.Reports.ElementAt(i).Name"></span></a>
-                </td>
+                </th>
+                <th>Options</th>
             </tr>
-        }
-    </tbody>
-</table>
-<div id="createReportModal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div id="createReportContainer">
-                @await Component.InvokeAsync("CreateReport")
-            </div>
-        </div>
-    </div>
-</div>
-<div id="editReportDeadlineModal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div id="editReportDeadlineContainer">
-                @await Component.InvokeAsync(name: "EditReportDeadline", arguments: new { })
-            </div>
-        </div>
-    </div>
-</div>
-<div id="editReportModal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            @*@await Html.PartialAsync("Edit", new Report())*@
-            <div id="editReportContainer">
-                @await Component.InvokeAsync(name: "EditReport", arguments: new { })
-            </div>
-
-        </div>
-    </div>
-</div>
-<div id="deleteReportModal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div id="deleteReportContainer">
-                @await Component.InvokeAsync(name: "DeleteReport", arguments: new { })
-            </div>
-        </div>
-    </div>
-</div>
-<nav aria-label="Pagination Bar">
-    <div class="row container">
-        <ul class="pagination col-sm-6">
-            @{int pagenavlimit = 3; }
-            @{ int pagelastlimit = 2;}
-            @if (Model.CurrentPage == 1)
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Reports.Count(); i++)
             {
-                pagenavlimit += 2;
-                <li class="page-item disabled"><span class="page-link"><span aria-hidden="true">Prev</span></span></li>
-            }
-            else
-            {
-                <li><span><span aria-hidden="true">@Html.ActionLink("Prev", "Index", new { search = Model.Filters.Search, column = Model.Filters.Column, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage - 1, begin = Model.Filters.Begin, end = Model.Filters.End }, new { @class = "page-link" }) </span></span></li>
-            }
-            @if (Model.CurrentPage == 2)
-            {
-                pagenavlimit += 1;
-            } @if (Model.CurrentPage == Model.PagesCount())
-            {
-                pagelastlimit += 2;
-            } @if (Model.CurrentPage == Model.PagesCount() - 1)
-            {
-                pagelastlimit += 1;
-            } @for (int i = Model.CurrentPage - pagelastlimit; i <= Model.PagesCount() && i <= Model.CurrentPage + pagenavlimit; i++)
-            {
-                if (i < 1) { i = 1; }
-                if (i == Model.CurrentPage + pagenavlimit)
-                {
-                    <li class="page-item disabled"><span class="page-link">...<span class="sr-only">(current)</span></span></li>
-                    <li class="page-item"><span>@Html.ActionLink((Model.PagesCount()).ToString(), "Index", new { search = Model.Filters.Search, column = Model.Filters.Column, plan = Model.Filters.Plan, pageIndex = Model.PagesCount(), begin = Model.Filters.Begin, end = Model.Filters.End }, new { @class = "page-link" })</span></li>
-                }
-                else
-                {
-                    if (i == Model.CurrentPage)
+                ReportDeadline currentReportDeadline = null;
+                <tr>
+                    <td class="ReportID">@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Id)</td>
+                    <td class="ReportName">@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Name)</td>
+                    @if (Model.Reports.ElementAt(i).Deadlines != null && Model.Reports.ElementAt(i).Deadlines.Any())
                     {
-                        <li class="page-item active"><span>@Html.ActionLink(@i.ToString(), "Index", new { search = Model.Filters.Search, column = Model.Filters.Column, plan = Model.Filters.Plan, pageIndex = @i, begin = Model.Filters.Begin, end = Model.Filters.End }, new { @class = "page-link" })</span></li>
+                        currentReportDeadline = Model.Reports.ElementAt(i).Deadlines.OrderByDescending(rd => rd.Deadline).First();
+                        <td>@currentReportDeadline.Deadline.ToString("MM/dd/yyyy")</td>
+                        @if (currentReportDeadline.RunDate != null && currentReportDeadline.RunDate.HasValue)
+                        {
+                            <td>@currentReportDeadline.RunDate.Value.ToString("MM/dd/yyyy hh:mm tt")</td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                        @if (currentReportDeadline.ApprovalDate != null && currentReportDeadline.ApprovalDate.HasValue)
+                        {
+                            <td>@currentReportDeadline.RunDate.Value.ToString("MM/dd/yyyy hh:mm tt")</td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                        @if (currentReportDeadline.SentDate != null && currentReportDeadline.SentDate.HasValue)
+                        {
+                            <td>@currentReportDeadline.RunDate.Value.ToString("MM/dd/yyyy hh:mm tt")</td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                    }
+                    else if (Model.Reports.ElementAt(i).IsTermed(DateTime.Today))
+                    {
+                        <td class="text-muted text-center" colspan="4">Termed</td>
+
                     }
                     else
                     {
-                        <li class="page-item"><span>@Html.ActionLink(@i.ToString(), "Index", new { search = Model.Filters.Search, column = Model.Filters.Column, plan = Model.Filters.Plan, pageIndex = @i, begin = Model.Filters.Begin, end = Model.Filters.End }, new { @class = "page-link" })</span></li>
+                        <td class="text-muted text-center" colspan="4">No Current Deadline Found</td>
+
+                    }
+                    <td style="text-align: center;">
+                        @*@if (currentReportDeadline == null)
+                            {
+                                <a class="disabled"><span class="fa fa-adjust text-muted" tabindex="0" data-toggle="tooltip" data-placement="top" title="No Deadline Found"></span></a>
+                            }
+                            else
+                            {*@
+                        <a id="editReportDeadline" data-toggle="modal" data-target="#editReportDeadlineModal"><span class="fas fa-adjust text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  Report Deadline (@Model.Reports.ElementAt(i).Name)"></span></a>
+                        @*}*@
+                        <a id="editReport" data-toggle="modal" data-target="#editReportModal"><span class="fas fa-edit text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  @Model.Reports.ElementAt(i).Name"></span></a>
+                        <a asp-action="Details" asp-route-id="@Model.Reports.ElementAt(i).Id"><span class="fas fa-book text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="View:  @Model.Reports.ElementAt(i).Name"></span></a>
+                        <a id="deleteReport" data-toggle="modal" data-target="#deleteReportModal"><span class="fas fa-eraser text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Delete:  @Model.Reports.ElementAt(i).Name"></span></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <nav aria-label="Pagination Bar">
+        <div class="row container">
+            <ul class="pagination col-sm-6">
+                @{int pagenavlimit = 3; }
+                @{ int pagelastlimit = 2;}
+                @if (Model.CurrentPage == 1)
+                {
+                    pagenavlimit += 2;
+                    <li class="page-item disabled"><span class="page-link"><span aria-hidden="true">Prev</span></span></li>
+                }
+                else
+                {
+                    <li><span><span aria-hidden="true">@Html.ActionLink("Prev", "Index", new { search = Model.Filters.Search, column = Model.Filters.Column, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage - 1, begin = Model.Filters.Begin, end = Model.Filters.End }, new { @class = "page-link" }) </span></span></li>
+                }
+                @if (Model.CurrentPage == 2)
+                {
+                    pagenavlimit += 1;
+                } @if (Model.CurrentPage == Model.PagesCount())
+                {
+                    pagelastlimit += 2;
+                } @if (Model.CurrentPage == Model.PagesCount() - 1)
+                {
+                    pagelastlimit += 1;
+                } @for (int i = Model.CurrentPage - pagelastlimit; i <= Model.PagesCount() && i <= Model.CurrentPage + pagenavlimit; i++)
+                {
+                    if (i < 1) { i = 1; }
+                    if (i == Model.CurrentPage + pagenavlimit)
+                    {
+                        <li class="page-item disabled"><span class="page-link">...<span class="sr-only">(current)</span></span></li>
+                        <li class="page-item"><span>@Html.ActionLink((Model.PagesCount()).ToString(), "Index", new { search = Model.Filters.Search, column = Model.Filters.Column, plan = Model.Filters.Plan, pageIndex = Model.PagesCount(), begin = Model.Filters.Begin, end = Model.Filters.End }, new { @class = "page-link" })</span></li>
+                    }
+                    else
+                    {
+                        if (i == Model.CurrentPage)
+                        {
+                            <li class="page-item active"><span>@Html.ActionLink(@i.ToString(), "Index", new { search = Model.Filters.Search, column = Model.Filters.Column, plan = Model.Filters.Plan, pageIndex = @i, begin = Model.Filters.Begin, end = Model.Filters.End }, new { @class = "page-link" })</span></li>
+                        }
+                        else
+                        {
+                            <li class="page-item"><span>@Html.ActionLink(@i.ToString(), "Index", new { search = Model.Filters.Search, column = Model.Filters.Column, plan = Model.Filters.Plan, pageIndex = @i, begin = Model.Filters.Begin, end = Model.Filters.End }, new { @class = "page-link" })</span></li>
+                        }
                     }
                 }
-            }
-            @if (Model.CurrentPage == Model.PagesCount())
-            {
-                <li class="page-item disabled"><span class="page-link"><span aria-hidden="true">Next</span></span></li>
-            }
-            else
-            {
-                <li class="page-item"><span><span aria-hidden="true">@Html.ActionLink("Next", "Index", new { search = Model.Filters.Search, column = Model.Filters.Column, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage + 1, begin = Model.Filters.Begin, end = Model.Filters.End }, new { @class = "page-link" }) </span></span></li>
-            }
-        </ul>
+                @if (Model.CurrentPage == Model.PagesCount())
+                {
+                    <li class="page-item disabled"><span class="page-link"><span aria-hidden="true">Next</span></span></li>
+                }
+                else
+                {
+                    <li class="page-item"><span><span aria-hidden="true">@Html.ActionLink("Next", "Index", new { search = Model.Filters.Search, column = Model.Filters.Column, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage + 1, begin = Model.Filters.Begin, end = Model.Filters.End }, new { @class = "page-link" }) </span></span></li>
+                }
+            </ul>
+        </div>
+    </nav>
+    <div id="createReportModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div id="createReportContainer">
+                    @await Component.InvokeAsync("CreateReport")
+                </div>
+            </div>
+        </div>
     </div>
-</nav>
+    <div id="editReportDeadlineModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div id="editReportDeadlineContainer">
+                    @await Component.InvokeAsync(name: "EditReportDeadline", arguments: new { })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="editReportModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                @*@await Html.PartialAsync("Edit", new Report())*@
+                <div id="editReportContainer">
+                    @await Component.InvokeAsync(name: "EditReport", arguments: new { })
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div id="deleteReportModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div id="deleteReportContainer">
+                    @await Component.InvokeAsync(name: "DeleteReport", arguments: new { })
+                </div>
+            </div>
+        </div>
+    </div>
+
 }
 
 @section scripts{

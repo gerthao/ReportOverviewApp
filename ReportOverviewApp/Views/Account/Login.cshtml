@@ -49,7 +49,7 @@
                             <div class="form-group">
                                 <label asp-for="Email" class="control-label sr-only"></label>
                                 <div class=" input-group">
-                                    <span class="input-group-addon"><i class="fa fa-user fa-2x"></i></span>
+                                    <span class="input-group-addon"><i class="fas fa-user fa-2x"></i></span>
                                     <input type="email" asp-for="Email" class="input-lg form-control" placeholder="Email" />
                                 </div>
                                 <span asp-validation-for="Email" class="text-danger"></span>
@@ -57,14 +57,14 @@
                             <div class="form-group">
                                 <label asp-for="Password" class="control-label sr-only"></label>
                                 <div class="input-group">
-                                    <span class="input-group-addon"><i class="fa fa-lock fa-2x"></i></span>
+                                    <span class="input-group-addon"><i class="fas fa-lock fa-2x"></i></span>
                                     <input type="password" asp-for="Password" class="input-lg form-control" placeholder="Password" />
                                 </div>
                                 <span asp-validation-for="Password" class="text-danger"></span>
                             </div>
                             <div class="form-group">
                                 <div class="input-group">
-                                    <button id="loginButton" type="submit" class="btn btn-lg btn-primary btn-block"><span id="loginIcon" class="fa fa-sign-in"></span> Log in</button>
+                                    <button id="loginButton" type="submit" class="btn btn-lg btn-primary btn-block"><span id="loginIcon" class="fas fa-sign-in-alt"></span> Log in</button>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -78,8 +78,8 @@
                             <div>
                                 @*<a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">Register</a> |*@ 
                                 <noscript><a class="btn btn-info" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">Register</a></noscript>
-                                <button type="button" class="btn btn-info" id="registerLink">Register</button>
-                                <a class="btn btn-info" asp-action="ForgotPassword">Forgot Password</a>
+                                <button type="button" class="btn btn-info" id="registerLink"><i class="fas fa-chevron-right"></i>&nbsp;&nbsp;Register</button>
+                                <a class="btn btn-info" asp-action="ForgotPassword"><i class="fas fa-question"></i>&nbsp;&nbsp;Forgot Password</a>
                             </div>
                         </form>
                     </section>            
@@ -104,7 +104,7 @@
                                             <div class="btn-group btn-block">
                                                 @if (provider.Name.Equals("Microsoft"))
                                                 {
-                                                    <span class="bg-primary text-light input-group-addon fa fa-2x text-center fa-windows">@*<img alt="Microsoft" src="https://assets.onestore.ms/cdnfiles/external/uhf/long/9a49a7e9d8e881327e81b9eb43dabc01de70a9bb/images/microsoft-gray.png" itemprop="logo" itemscope="itemscope" style="height:1.5rem;">*@</span>
+                                                    <span class="bg-primary text-light input-group-addon  text-center "><i class="fab fa-windows fa-2x"></i></span>
                                                 }
                                                 <button type="submit" class="btn btn-lg btn-block btn-primary" name="provider" value="@provider.Name" data-toggle="tooltip" data-placement="bottom" title="Log in using your @provider.DisplayName account">
                                                     @provider.Name
@@ -128,13 +128,17 @@
         $(document).ready(function () {
             $('.loginForm').hide(0, function () {
                 $(this).removeClass('sr-only');
-                $(this).show(500);
+                $(this).show(0, function () {
+                    //$(this).addClass('ldt ldt-power-on');
+                });
             });
             $('#registerPartialView').hide();
             $('#registerLink').click(function () {
                 $('#loginSection').fadeOut(500, function () {
                     $('#registerPartialView').removeClass('sr-only');
-                    $('#registerPartialView').show(500);
+                    $('#registerPartialView').show(500, function () {
+                        //$(this).addClass('ldt ldt-slide-right-in xhalf');
+                    });
                 });
             });
             $('#loginLink').click(function () {

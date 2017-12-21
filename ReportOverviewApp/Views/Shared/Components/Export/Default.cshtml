@@ -1,0 +1,40 @@
+﻿<form asp-controller="Data" asp-action="ExportReportDeadlines">
+    <div class="modal-header">
+        <h5 class="modal-title">
+            Export Report Deadlines...
+        </h5>
+    </div>
+    <div class="modal-body">
+        <div class="form-horizontal">
+            <div class="form-row col-md-12">
+                <div class="form-group col-md-6">
+                    <label class="form-control-label">Start</label>
+                    <input type="date" class="form-control" name="begin" placeholder="Enter Report Name" value='@DateTime.Today.ToString("yyyy-MM-dd")' required />
+                </div>
+                <div class="form-group col-md-6">
+                    <label class="form-control-label">End</label>
+                    <input type="date" class="form-control" name="end" placeholder="Enter Report Name" value='@DateTime.Today.ToString("yyyy-MM-dd")' required />
+                </div>
+            </div>
+            <div class="form-row col-md-12">
+                <div class="form-group col-md-9">
+                    <label class="form-control-label">Name</label>
+                    <input type="text" class="form-control" id="exportFileName" name="fileName" placeholder="Enter Report Name" />
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="form-control-label">File Type</label>
+                    <select class="form-control" name="fileAs" required>
+                        <option selected value="@FileExtension.Excel">Excel (.xlsx)</option>
+                        <option value="@FileExtension.Json">JavaScript Object Notation (.json)</option>
+                        <option value="@FileExtension.Csv">Comma-Separated Values (.csv)</option>
+                        <option value="@FileExtension.Tsv">Tab-Separated Values (.txt)</option>
+                        <option value="@FileExtension.Xml">Extensible Markup Language (.xml)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="submit" onmouseover="$('#exportIcon').addClass('ld ld-breath')" onmouseout="$('#exportIcon').removeClass('ld ld-breath')" formtarget="_blank"><span id="exportIcon" class="fas fa-arrow-down"></span> Export</button>
+    </div>
+</form>

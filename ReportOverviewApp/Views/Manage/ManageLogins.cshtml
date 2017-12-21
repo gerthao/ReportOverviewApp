@@ -13,10 +13,10 @@
         <div class="col-md-4">
             <div class="card">
                 <h5 class="card-header">
-                    <i id="iconRegistered@(Model.CurrentLogins[index].LoginProvider)" class="fa fa-windows"></i> @Model.CurrentLogins[index].LoginProvider
+                    <i id="iconRegistered@(Model.CurrentLogins[index].LoginProvider)" class="fas fa-windows"></i> @Model.CurrentLogins[index].LoginProvider
                 </h5>
                 <div class="card-body">
-                    <h5>Status: Currently Enabled <i id="iconStatus@(Model.CurrentLogins[index].LoginProvider)" class="fa fa-smile-o text-success"></i></h5>
+                    <h5>Status: Currently Enabled <i id="iconStatus@(Model.CurrentLogins[index].LoginProvider)" class="far fa-smile text-success"></i></h5>
                 </div>
                 <div class="card-footer">
                     @if ((bool)ViewData["ShowRemoveButton"])
@@ -51,7 +51,7 @@
                     <div class="col-md-4">
                         <div class="card">
                             <h5 class="card-header">
-                                <i id="iconUnregistered@(provider.Name)" class="fa fa-windows"></i> @provider.DisplayName
+                                <i id="iconUnregistered@(provider.Name)" class="fas fa-windows"></i> @provider.DisplayName
                             </h5>
                             <div class="card-body">
                                 <h5>Status: Currently Disabled</h5>

@@ -86,7 +86,7 @@ namespace ReportOverviewApp.Controllers
                                 })
                                 .OrderBy(rd => rd.ReportId).ToListAsync();
             return export;
-            
+
         }
 
         private async Task<List<Dictionary<string, object>>> GetExportedDataAsync(DateTime? begin, DateTime? end) =>
@@ -108,7 +108,7 @@ namespace ReportOverviewApp.Controllers
                                                 })
                                                 .OrderBy(r => r.ReportId)
                                                 .Select(rd => rd.GetType().GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public).ToDictionary(f => f.Name, f => f.GetValue(rd))).ToListAsync();
-        
+
         private async Task<IActionResult> ExportAsExcel(string fileName, DateTime? begin, DateTime? end)
         {
             fileName = $"{fileName}.xlsx";
@@ -123,7 +123,7 @@ namespace ReportOverviewApp.Controllers
                 workbook = new XSSFWorkbook();
                 ISheet excelSheet = workbook.CreateSheet($"Reports");
                 IRow row = excelSheet.CreateRow(0);
-                if(exportData.Count() > 0)
+                if (exportData.Count() > 0)
                 {
                     var keys = exportData.ElementAt(0).Keys;
                     for (int i = 0; i < keys?.Count(); i++)
@@ -135,16 +135,16 @@ namespace ReportOverviewApp.Controllers
                         row = excelSheet.CreateRow(i + 1);
                         for (int j = 0; j < exportData.ElementAt(i).Count(); j++)
                         {
-                            if(exportData.ElementAt(i).ElementAt(j).Value is IEnumerable<Plan>)
+                            if (exportData.ElementAt(i).ElementAt(j).Value is IEnumerable<Plan>)
                             {
-                                if(exportData.ElementAt(i).ElementAt(j).Value != null && (exportData.ElementAt(i).ElementAt(j).Value as IEnumerable<Plan>).Any())
+                                if (exportData.ElementAt(i).ElementAt(j).Value != null && (exportData.ElementAt(i).ElementAt(j).Value as IEnumerable<Plan>).Any())
                                 {
                                     row.CreateCell(j).SetCellValue((exportData.ElementAt(i).ElementAt(j).Value as IEnumerable<Plan>).Select(p => p.Name).Aggregate((a, b) => $"{a};{b}") ?? null);
                                 }
                                 else
                                 {
                                     row.CreateCell(j).SetCellValue(String.Empty);
-                                }    
+                                }
                             }
                             else
                             {
@@ -167,7 +167,7 @@ namespace ReportOverviewApp.Controllers
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        private string StripInvalidCharacters(string input) => 
+        private string StripInvalidCharacters(string input) =>
             input.Replace("\\", String.Empty)
                 .Replace("/", String.Empty)
                 .Replace("\"", String.Empty)
@@ -190,18 +190,18 @@ namespace ReportOverviewApp.Controllers
         /// 
         /// </returns>
         public async Task<IActionResult> ExportReportDeadlines(DateTime? begin, DateTime? end, string fileName, FileExtension fileAs = FileExtension.Excel)
-        { 
+        {
             if (begin == null || !begin.HasValue)
             {
                 begin = DateTime.Today;
             }
-            if(end == null || !end.HasValue)
+            if (end == null || !end.HasValue)
             {
                 end = DateTime.Today;
             }
             if (string.IsNullOrEmpty(fileName) && string.IsNullOrWhiteSpace(fileName))
             {
-                fileName = $"ReportDeadlinesFrom{begin.Value.ToString("MM-dd-yyyy")}To{end.Value.ToString("MM-dd-yyyy")}";
+                fileName = $"ReportDeadlines From {begin.Value.ToString("MM-dd-yyyy")} To {end.Value.ToString("MM-dd-yyyy")}";
             }
             fileName = StripInvalidCharacters(fileName);
             switch (fileAs)
@@ -246,10 +246,10 @@ namespace ReportOverviewApp.Controllers
         /// <returns></returns>
         private string HandleData(object data, char delimiter)
         {
-            if(data is IEnumerable<Plan>)
+            if (data is IEnumerable<Plan>)
             {
                 var plans = (data as IEnumerable<Plan>);
-                if(plans.Select(p => p.Name).Any())
+                if (plans.Select(p => p.Name).Any())
                 {
                     return plans.Select(p => p.Name).Aggregate((a, b) => $"{a}{delimiter}{b}");
                 }
@@ -278,10 +278,10 @@ namespace ReportOverviewApp.Controllers
                 {
                     var keys = exportData.ElementAt(0).Keys;
                     await streamWriter.WriteLineAsync(keys?.Select(k => k.Split('>')[0].Replace("<", String.Empty)).Aggregate((a, b) => $"{a}{delimiter}{b}"));
-                    exportData.ForEach(async dictionary => 
+                    exportData.ForEach(async dictionary =>
                         await streamWriter.WriteLineAsync(
                             dictionary.Select(
-                                kv => kv.Value == null ? String.Empty : 
+                                kv => kv.Value == null ? String.Empty :
                                     kv.Value is IEnumerable<Plan> ? ((kv.Value as IEnumerable<Plan>).Select(p => p.Name).Any() ? $"\"{(kv.Value as IEnumerable<Plan>).Select(p => p.Name).Aggregate((a, b) => $"{a};{b}")}\"" : String.Empty) : kv.Value.ToString()).Aggregate((a, b) => $"{a}{delimiter}{b.Replace(delimiter.ToString(), String.Empty)}")));
                 }
                 await streamWriter.FlushAsync();
@@ -303,7 +303,11 @@ namespace ReportOverviewApp.Controllers
         [Authorize]
         public async Task<JsonResult> GetReports(int? id_1, int? id_2) => Json(await _context.Reports.Where(r => r.Id >= id_1 && r.Id <= id_2).OrderBy(r => r.Id).ToListAsync());
         [Authorize]
-        public async Task<JsonResult> GetAllReports() => Json(await _context.Reports.OrderBy(r => r.Name).ToListAsync());
+        public async Task<JsonResult> GetAllReports(bool indent, bool omitNull)
+        {
+            var reports = await _context.Reports.OrderBy(e => e.Id).ToListAsync();
+            return Json(reports, new JsonSerializerSettings() {Formatting = indent ? Newtonsoft.Json.Formatting.Indented : Newtonsoft.Json.Formatting.None, NullValueHandling = omitNull ? NullValueHandling.Ignore : NullValueHandling.Include });
+        }
 
         //[Authorize]
         //public async Task<JsonResult> GetGraphData()
@@ -361,6 +365,18 @@ namespace ReportOverviewApp.Controllers
             }
         }
 
+        public async Task<JsonResult> UserExists(string email)
+        {
+            bool userExists = false;
+            await _context.Users.Select(usr => usr.Email).ForEachAsync(e =>
+            {
+                if (e.ToLowerInvariant() == email.ToLowerInvariant())
+                {
+                    userExists = true;
+                }
+            });
+            return Json(new { UserExists = userExists });
+        }
         //[Authorize]
         //public async Task<JsonResult> GetCurrentDateTime()
         //{

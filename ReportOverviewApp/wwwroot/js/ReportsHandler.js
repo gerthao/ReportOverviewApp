@@ -93,7 +93,7 @@ $(document).ready(function () {
         let retrievedID = $(this).parent().parent().find(".ReportID").html();
         let action = $(this).attr('id');
         let link = root + "/Reports/EditReport?id=" + retrievedID;
-        $('#editReportContainer').html('<div class="col-md-12" style="text-align: center; padding-top: 50%; padding-bottom: 50%; position: absolute;"><i class="fa fa-5x fa-refresh ld ld-spin"></i></div>');
+        $('#editReportContainer').html('<div class="col-md-12" style="text-align: center; padding-top: 50%; padding-bottom: 50%; position: absolute;"><i class="fas fa-5x fa-sync ld ld-spin"></i></div>');
         $.get(link, function (data) {
             $('#editReportContainer').fadeOut(500, function () {
                 $(this).html(data);
@@ -105,7 +105,7 @@ $(document).ready(function () {
         let retrievedID = $(this).parent().parent().find(".ReportID").html();
         let action = $(this).attr('id');
         let link = root + "/Reports/EditReportDeadline?id=" + retrievedID;
-        $('#editReportDeadlineContainer').html('<div class="col-md-12" style="text-align: center; padding-top: 50%; padding-bottom: 50%; position: absolute;"><i class="fa fa-5x fa-refresh ld ld-spin"></i></div>');
+        $('#editReportDeadlineContainer').html('<div class="col-md-12" style="text-align: center; padding-top: 50%; padding-bottom: 50%; position: absolute;"><i class="fas fa-5x fa-sync ld ld-spin"></i></div>');
         $.get(link, function (data) {
             $('#editReportDeadlineContainer').fadeOut(500, function () {
                 $(this).html(data);
@@ -117,7 +117,7 @@ $(document).ready(function () {
         let retrievedID = $(this).parent().parent().find(".ReportID").html();
         let action = $(this).attr('id');
         let link = root + "/Reports/DeleteReport?id=" + retrievedID;
-        $('#deleteReportContainer').html('<div class="col-md-12" style="text-align: center; padding-top: 50%; padding-bottom: 50%; position: absolute;"><i class="fa fa-5x fa-refresh ld ld-spin"></i></div>');
+        $('#deleteReportContainer').html('<div class="col-md-12" style="text-align: center; padding-top: 50%; padding-bottom: 50%; position: absolute;"><i class="fas fa-5x fa-sync ld ld-spin"></i></div>');
         $.get(link, function (data) {
             $('#deleteReportContainer').fadeOut(500, function () {
                 $(this).html(data);

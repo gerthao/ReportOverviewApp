@@ -13,7 +13,7 @@
             @*<label asp-for="Email" class="col-md-2 control-label"></label>*@
 
             <div class=" input-group">
-                <span class="input-group-addon"><i class="fa fa-user fa-2x"></i></span>
+                <span class="input-group-addon"><i class="fas fa-user fa-2x"></i></span>
                 <input type="email" asp-for="Email" class="input-lg form-control" placeholder="Email" />
             </div>
             <span asp-validation-for="Email" class="text-danger"></span>
@@ -23,7 +23,7 @@
             @*<label asp-for="Password" class="col-md-2 control-label"></label>*@
 
             <div class="input-group">
-                <span class="input-group-addon"><i class="fa fa-lock fa-2x"></i></span>
+                <span class="input-group-addon"><i class="fas fa-lock fa-2x"></i></span>
                 <input id="password" type="password" asp-for="Password" class="input-lg form-control" placeholder="Password" />
             </div>
             <span asp-validation-for="Password" class="text-danger"></span>
@@ -33,17 +33,17 @@
             @*<label asp-for="ConfirmPassword" class="col-md-2 control-label"></label>*@
 
             <div class="input-group" id="confirmPassword">
-                <span class="input-group-addon"><i class="fa fa-lock fa-2x"></i></span>
+                <span class="input-group-addon"><i class="fas fa-lock fa-2x"></i></span>
                 <input type="password" asp-for="ConfirmPassword" class="input-lg form-control" placeholder="Confirm Password" />
             </div>
             <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
 
         </div>
         <div class="form-group">
-            <button type="submit" id="registerButton" class="btn btn-primary btn-lg btn-block text-center"><i id="registerIcon" class="fa fa-sign-in"></i> Register</button>
+            <button type="submit" id="registerButton" class="btn btn-primary btn-lg btn-block text-center"><i id="registerIcon" class="fas fa-user-plus"></i> Register</button>
         </div>
         <div>
-            <button type="button" class="btn btn-info" id="loginLink">Go Back To Login</button>
+            <button type="button" class="btn btn-info" id="loginLink"><i id="registerIcon" class="fas fa-chevron-left"></i>&nbsp;&nbsp;Go back to login</button>
         </div>
     </form>
 </div>

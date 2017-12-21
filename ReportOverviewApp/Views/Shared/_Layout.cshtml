@@ -8,13 +8,14 @@
     <link rel="stylesheet" href="~/css/custom.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <link rel="stylesheet" href="~/lib/font-awesome-4.7.0/css/font-awesome.css" />
-    <link rel="stylesheet" type="text/css" href="~/lib/loading/loading.css" />
+    <link href="https://use.fontawesome.com/releases/v5.0.2/css/all.css" rel="stylesheet">
     <link rel="stylesheet" href="~/lib/toastr/toastr.css" />
-    <link rel="stylesheet" href="~/lib/c3/c3.css"/>
+    <link rel="stylesheet" href="~/lib/c3/c3.css" />
+    <link rel="stylesheet" type="text/css" href="~/lib/loading-io/loading/loading.css" />
+    <link rel="stylesheet" type="text/css" href="~/lib/loading-io/transition/transition.css" />
     @await Html.PartialAsync("_Theme")
     <style>
-        .navbar{
+        .navbar {
             padding: 3px;
         }
     </style>
@@ -25,7 +26,7 @@
             <div class="navbar-header">
                 @if (User.Identity.IsAuthenticated)
                 {
-                    <button class="navbar-toggler navbar-toggler-up" type="button" style="padding: 2px 4px 2px 4px;"  data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <button class="navbar-toggler navbar-toggler-up" type="button" style="padding: 2px 4px 2px 4px;" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                 }
@@ -82,6 +83,7 @@
     <script src="~/lib/d3/d3.min.js"></script>
     <script src="~/lib/c3/c3.min.js"></script>
     <script src="~/lib/animejs/anime.min.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.2/js/all.js"></script>
     <script>
         $(function () {
             $('[data-toggle="tooltip"]').tooltip()
