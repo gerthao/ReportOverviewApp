@@ -22,7 +22,7 @@
             </select>
         </div>
         <div class="form-group col-md-2">
-            <button type="button" id="businessContactSelectButton" class="btn btn-primary btn-block"><i id="businessContactSelectButtonIcon" class="fas fa-check-square"></i>&nbsp;&nbsp;Select</button>
+            <button type="button" id="businessContactSelectButton" class="btn btn-primary btn-block"><span><i id="businessContactSelectButtonIcon" class="fas fa-check-square"></i></span>&nbsp;&nbsp;Select</button>
         </div>
     </div>
     <div class="col-md-12">
@@ -62,14 +62,14 @@
         else
         {
             <div class="form-group col-md-12">
-                <h6 class="list-group-item list-group-item-warning">No Business Contacts Found</h6>
+                <h6 class="alert alert-warning" role="alert">No Business Contacts Found</h6>
             </div>
         }
     </div>
     <script>
     $('#businessContactSelectButton').click(function () {
         $('#businessContactSelectButtonIcon').removeClass();
-        $('#businessContactSelectButtonIcon').addClass('fas fa-sync text-light ld ld-spin');
+        $('#businessContactSelectButtonIcon').addClass('fa fa-cog text-light ld ld-spin');
         $(this).unbind();
         $.get("/Reports/SelectBusinessContact?id=" + @Model.Report.Id + "&contactId=" + $('#businessContactSelectList option:selected').val(), function (data) {
             $('#businessContactCard').fadeOut(500, function () {

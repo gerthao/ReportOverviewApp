@@ -16,7 +16,7 @@
     <button class="btn btn-primary" type="button" id="mag-glass" data-toggle="modal" data-target="#searchReportModal"><span class="fas fa-search"></span>&nbsp;&nbsp;Search</button>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createReportModal" aria-label="Left Align"><span class="fas fa-plus-square"></span>&nbsp;&nbsp;Create New</button>
     @Html.ActionLink(linkText: "Update Deadlines", actionName: "UpdateDeadlinesAsync", controllerName: "Reports", routeValues: new { }, htmlAttributes: new { @id = "updateDeadlines", @class = "btn btn-primary" })
-    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#exportModal"><span class="far fa-file-excel"></span>&nbsp;&nbsp;Export</button>
+    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#exportModal"><span class="fas fa-file-excel"></span>&nbsp;&nbsp;Export</button>
 </h4>
 <hr />
 <div id="searchReportModal" class="modal fade">
@@ -113,7 +113,7 @@ else
             {
                 ReportDeadline currentReportDeadline = null;
                 <tr>
-                    <td class="ReportID">@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Id)</td>
+                    <td class="reportId">@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Id)</td>
                     <td class="ReportName">@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Name)</td>
                     @if (Model.Reports.ElementAt(i).Deadlines != null && Model.Reports.ElementAt(i).Deadlines.Any())
                     {
@@ -155,17 +155,10 @@ else
 
                     }
                     <td style="text-align: center;">
-                        @*@if (currentReportDeadline == null)
-                            {
-                                <a class="disabled"><span class="fa fa-adjust text-muted" tabindex="0" data-toggle="tooltip" data-placement="top" title="No Deadline Found"></span></a>
-                            }
-                            else
-                            {*@
-                        <a id="editReportDeadline" data-toggle="modal" data-target="#editReportDeadlineModal"><span class="fas fa-adjust text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  Report Deadline (@Model.Reports.ElementAt(i).Name)"></span></a>
-                        @*}*@
-                        <a id="editReport" data-toggle="modal" data-target="#editReportModal"><span class="fas fa-edit text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  @Model.Reports.ElementAt(i).Name"></span></a>
+                        <a class="editReportDeadlineLink"  asp-action="EditReportDeadline" asp-route-id="@Model.Reports.ElementAt(i).Id" data-toggle="modal" data-target="#editReportDeadlineModal"><span class="fas fa-adjust text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  Report Deadline (@Model.Reports.ElementAt(i).Name)"></span></a>
+                        <a class="editReportLink" asp-action="EditReport" asp-route-id="@Model.Reports.ElementAt(i).Id" data-toggle="modal" data-target="#editReportModal"><span class="fas fa-edit text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  @Model.Reports.ElementAt(i).Name"></span></a>
                         <a asp-action="Details" asp-route-id="@Model.Reports.ElementAt(i).Id"><span class="fas fa-book text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="View:  @Model.Reports.ElementAt(i).Name"></span></a>
-                        <a id="deleteReport" data-toggle="modal" data-target="#deleteReportModal"><span class="fas fa-eraser text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Delete:  @Model.Reports.ElementAt(i).Name"></span></a>
+                        <a class="deleteReportLink" asp-action="DeleteReport" asp-route-id="@Model.Reports.ElementAt(i).Id" data-toggle="modal" data-target="#deleteReportModal"><span class="fas fa-eraser text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Delete:  @Model.Reports.ElementAt(i).Name"></span></a>
                     </td>
                 </tr>
             }

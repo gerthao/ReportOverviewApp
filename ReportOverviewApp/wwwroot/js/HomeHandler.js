@@ -213,7 +213,7 @@ function handleJsonUserLogs(data) {
             if (data[i]["changes"] === null || data[i]["changes"] === undefined) {
                 changesMessage = 'N/A';
             } else {
-                changesMessage = '<button type="button" class="btn btn-sm btn-block btn-link fas fa-list-ul"></i>';
+                changesMessage = '<button type="button" class="btn btn-sm btn-block btn-link fa fa-list-ul"></i>';
             }
             let changes = '<td class="text-center">' + changesMessage + '</td>';
             let usrID = '<td>' + data[i]["userID"] + '</td>';

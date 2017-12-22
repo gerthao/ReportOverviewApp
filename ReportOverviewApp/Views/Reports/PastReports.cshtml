@@ -3,14 +3,14 @@
 @{
     ViewData["Title"] = "Past Reports";
 }
-@{ 
+@{
     var yesterday = DateTime.Today.AddDays(-1);
 }
 <h4>
     Status of Past Reports
 </h4>
 <hr />
-@if(Model == null || Model.Count() == 0)
+@if (Model == null || Model.Count() == 0)
 {
 
     <h6>No Deadline Information Found</h6>
@@ -22,19 +22,20 @@
             <tr class="bg-darkblue text-light">
                 @if (d == yesterday)
                 {
-                    <th colspan="5">
+                    <th colspan="6">
                         Date:&nbsp;@d.ToShortDateString()&nbsp;(Yesterday)
                     </th>
                 }
                 else
                 {
-                    <th colspan="5">
+                    <th colspan="6">
                         Date:&nbsp;@d.ToShortDateString()
                     </th>
                 }
-                
+
             </tr>
             <tr>
+                <th>ReportId</th>
                 <th>Report</th>
                 <th>Ran On</th>
                 <th>Approved On</th>
@@ -45,20 +46,23 @@
         @foreach (ReportDeadline rd in Model.Select(rd => rd).Where(rd => rd.Deadline == d))
         {
             <tr class="text-dark">
+                <td class="ReportId">
+                    @Html.DisplayFor(modelItem => rd.ReportId)
+                </td>
                 <td>@Html.DisplayFor(modelItem => rd.Report.Name)</td>
                 @if (rd.RunDate != null)
                 {
                     <td>
                         @Html.DisplayFor(modelItem => rd.RunDate)&nbsp;
-                    @if (rd.RunDate > rd.Deadline)
-                    {
-                        <text>(LATE)&nbsp;<i class="far fa-thumbs-up text-warning"></i></text>
-                    }
-                    else
-                    {
-                        <i class="far fa-thumbs-up text-success"></i>
-                    }
-                </td>
+                        @if (rd.RunDate > rd.Deadline)
+                        {
+                            <text>(LATE)&nbsp;<i class="fas fa-thumbs-up text-warning"></i></text>
+                        }
+                        else
+                        {
+                            <i class="fas fa-thumbs-up text-success"></i>
+                        }
+                    </td>
                 }
                 else
                 {
@@ -68,14 +72,14 @@
                 {
                     <td>
                         @Html.DisplayFor(modelItem => rd.ApprovalDate)&nbsp;
-                    @if (rd.ApprovalDate > rd.Deadline)
-                    {  <text>(LATE)&nbsp;<i class="far fa-thumbs-up text-warning"></i></text>
+                        @if (rd.ApprovalDate > rd.Deadline)
+                        {<text>(LATE)&nbsp;<i class="fas fa-thumbs-up text-warning"></i></text>
                     }
                     else
                     {
-                        <i class="far fa-thumbs-up text-success"></i>
+                        <i class="fas fa-thumbs-up text-success"></i>
                     }
-                </td>
+                    </td>
                 }
                 else
                 {
@@ -85,38 +89,46 @@
                 {
                     <td>
                         @Html.DisplayFor(modelItem => rd.SentDate)&nbsp;
-                    @if (rd.SentDate > rd.Deadline)
-                    {  <text>(LATE)&nbsp;<i class="far fa-thumbs-up text-warning"></i></text>
+                        @if (rd.SentDate > rd.Deadline)
+                        {<text>(LATE)&nbsp;<i class="fas fa-thumbs-up text-warning"></i></text>
                     }
                     else
                     {
-                        <i class="far fa-thumbs-up text-success"></i>
+                        <i class="fas fa-thumbs-up text-success"></i>
                     }
-                </td>
+                    </td>
                 }
                 else
                 {
-                    <td class="text-danger">Not Sent&nbsp;<i class="far fa-exclamation-triangle text-danger" aria-hidden="true"></i></td>
+                    <td class="text-danger">Not Sent&nbsp;<i class="fas fa-exclamation-triangle text-danger" aria-hidden="true"></i></td>
                 }
-                <td style="text-align: center;">
-                    <a asp-action="EditDeadline" asp-route-id="@rd.Id"><span class="fas fa-adjust text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  Report Deadline (@rd.Deadline.ToShortDateString())"></span></a>
-                    <a id="editReport" data-toggle="modal" data-target="#editReportModal"><span class="fas fa-edit text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  @rd.Report.Name"></span></a>
-                    <a asp-action="Details" asp-route-id="@rd.Report.Id"><span class="fas fa-book text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="View:   @rd.Report.Name"></span></a>
-                    <a id="deleteReport" data-toggle="modal" data-target="#deleteReportModal"><span class="fas fa-eraser text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Delete:   @rd.Report.Name"></span></a>
-                </td>
+                    <td style="text-align: center;">
+                        <a class="editReportDeadlineLink" asp-action="EditReportDeadline" asp-route-id="@rd.ReportId" data-toggle="modal" data-target="#editReportDeadlineModal"><span class="fas fa-adjust text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  Report Deadline (@rd.Deadline.ToShortDateString())"></span></a>
+                        <a class="editReportLink" asp-action="EditReport" asp-route-id="@rd.ReportId" data-toggle="modal" data-target="#editReportModal"><span class="fas fa-edit text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  @rd.Report.Name"></span></a>
+                        <a asp-action="Details" asp-route-id="@rd.Report.Id"><span class="fas fa-book text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="View:   @rd.Report.Name"></span></a>
+                        <a class="deleteReportLink" asp-action="DeleteReport" asp-route-id="@rd.ReportId" data-toggle="modal" data-target="#deleteReportModal"><span class="fas fa-eraser text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Delete:   @rd.Report.Name"></span></a>
+                    </td>
             </tr>
-            
+
 
         }
     </table>
     <br />
 }
+<div id="editReportDeadlineModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div id="editReportDeadlineContainer">
+                @await Component.InvokeAsync(name: "EditReportDeadline", arguments: new { })
+            </div>
+        </div>
+    </div>
+</div>
 <div id="editReportModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            @*@await Html.PartialAsync("Edit", new Report())*@
             <div id="editReportContainer">
-                @await Component.InvokeAsync(name: "EditReport")
+                @await Component.InvokeAsync(name: "EditReport", arguments: new { })
             </div>
 
         </div>
@@ -125,10 +137,12 @@
 <div id="deleteReportModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            @await Html.PartialAsync("Delete", new Report())
+            <div id="deleteReportContainer">
+                @await Component.InvokeAsync(name: "DeleteReport", arguments: new { })
+            </div>
         </div>
     </div>
 </div>
-@section  scripts{
-<script src="~/js/ReportsHandler.js"></script>
+@section scripts{
+    <script src="~/js/ReportsHandler.js" type="text/javascript"></script>
 }

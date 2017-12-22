@@ -17,13 +17,12 @@
     </div>
     <div class="modal-body">
         <h5>
-            No Report Deadline Information Found.  Try Again.
+            No Report Deadline Information Found.
         </h5>
     </div>
 }
 else
 {
-
     <form asp-action="EditDeadline" asp-route-id=@Model.Id>
         <div class="modal-header"><h5 class="modal-title">Report Deadline Status: @Model.Report.Name</h5></div>
         <div class="modal-body">
@@ -52,9 +51,7 @@ else
             </div>
         </div>
         <div class="modal-footer">
-            <div class="col-md-2">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
+            <button type="submit" class="btn btn-block btn-primary col-md-2">Save</button>
         </div>
     </form>
 

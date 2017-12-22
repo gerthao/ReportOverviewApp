@@ -1,0 +1,24 @@
+﻿.input-lg {
+    max-width: 100%;
+}
+
+.btn-lg {
+    max-width: 100%;
+}
+
+.loginForm {
+    background-color: #F6F6F6;
+    padding-top: 5%;
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-bottom: 5%;
+}
+
+.vertical-divider {
+    border-left: 1px solid #E0E0E0;
+    min-width: 1px;
+    max-width: 1px;
+    max-height: 22rem;
+    min-height: 22rem;
+    align-self: center;
+}

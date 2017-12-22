@@ -9,9 +9,7 @@ h1, h2, h3, h4, h5, h6, p, td, th{
     background-color: #303032;
     color: #d2d2d2
 }*/
-.fa-refresh{
-    color: #246fcb;
-}
+
 table.table-bordered{
     border: 2px solid #37445f;
     border-bottom: 2px solid #37445f;
@@ -78,7 +76,7 @@ label {
 .card-footer {
     background-color: #3A4355;
 }
-.list-group-item, .list-group-item.list-group-item-action {
+.list-group-item:not(.list-group-item-warning), .list-group-item:not(.list-group-item-danger), .list-group-item:not(.list-group-item-success), .list-group-item.list-group-item-action {
     background-color: #404046;
     color: #DEDEDE;
 }
@@ -86,6 +84,10 @@ a.list-group-item:hover, a.list-group-item.list-group-item-action:hover, p.list-
     background-color: #505066;
     color: #C0C0C0;
 }
+/*.list-group-item.list-group-item-warning, .list-group-item.list-group-item-action {
+    background-color: #404011;
+    color: #DEDEDE;
+}*/
 .pagination li.page-item .page-link {
     background-color: #404046;
     border: 1px solid #3A3A3C;
@@ -112,4 +114,7 @@ input[readonly].form-control, input[readonly].form-control:focus {
 select.form-control, select.form-control:focus{
     color: #d2d2d2;
     background-color: #404046;   
+}
+.fas.fa-cog {
+    color: #246fcb !important;
 }

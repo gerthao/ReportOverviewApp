@@ -16,13 +16,14 @@ namespace ReportOverviewApp.ViewComponents
         {
             _context = context;
         }
-        public async Task<IViewComponentResult> InvokeAsync(int? deadlineId)
+        public async Task<IViewComponentResult> InvokeAsync(int? reportId, int? index)
         {
-            if (deadlineId == null) return View(new ReportDeadline());
-            if(await _context.Reports.FindAsync(deadlineId) != null)
+            if (reportId == null) return View(new ReportDeadline());
+            if (index == null) index = 0;
+            if(await _context.Reports.FindAsync(reportId) != null)
             {
-                ReportDeadline reportDeadline = await _context.ReportDeadlines.Include(rd => rd.Report).Where(rd => rd.ReportId == deadlineId).OrderByDescending(rd => rd.Deadline).FirstOrDefaultAsync();
-                return View(reportDeadline);
+                var deadlines = await _context.ReportDeadlines.Include(rd => rd.Report).Where(rd => rd.ReportId == reportId).OrderByDescending(rd => rd.Deadline).ToListAsync();
+                if (index.Value >= 0 && index.Value < deadlines.Count()) return View(deadlines[index.Value]);
             }
             return View(new ReportDeadline());
         }

@@ -101,9 +101,9 @@ namespace ReportOverviewApp.Controllers
         {
             return ViewComponent("Plans", new { reportId = id, planName = name, plans = planIds, changed = isModified, remove = removal });
         }
-        public IActionResult EditReportDeadline(int? id)
+        public IActionResult EditReportDeadline(int? id, int? index)
         {
-            return ViewComponent("EditReportDeadline", new { deadlineId = id } );
+            return ViewComponent("EditReportDeadline", new { reportId = id, index } );
         }
 
         public async Task<IActionResult> UpdateDeadlinesAsync()

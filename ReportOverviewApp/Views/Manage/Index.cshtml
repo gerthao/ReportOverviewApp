@@ -68,9 +68,39 @@
     </dl>
 </div>
 <div>
-        <label>
-            Themes: 
-        </label>
-        @Html.ActionLink(linkText: "Light", actionName: "ChangeTheme", routeValues: new { theme = "Light" }, htmlAttributes: new { @class = "btn btn-light border-dark" })
-        @Html.ActionLink(linkText: "Dark", actionName: "ChangeTheme", routeValues: new { theme = "Dark" }, htmlAttributes: new { @class = "btn btn-dark" })
+    <label>
+        Themes:
+    </label>
+    @*<button type="button" id="lightThemeButton" class="btn btn-light border-dark">Light</button>
+    <button type="button" id="darkThemeButton" class="btn btn-dark">Dark</button>*@
+    @Html.ActionLink(linkText: "Light", actionName: "ChangeTheme", routeValues: new { theme = "Light" }, htmlAttributes: new { @class = "btn btn-light border-dark" })
+    @Html.ActionLink(linkText: "Dark", actionName: "ChangeTheme", routeValues: new { theme = "Dark" }, htmlAttributes: new { @class = "btn btn-dark" })
 </div>
+@*@section scripts{ 
+<script>
+    $(document).ready(function () {
+        $('#darkThemeButton').click(function () {
+            $.ajax({
+                type: 'POST',
+                url: '/Manage/ChangeTheme?theme=Dark',
+                success: function (data) {
+                    if (data) {
+                        location.reload(true);
+                    }
+                }
+            });
+        });
+        $('#lightThemeButton').click(function () {
+            $.ajax({
+                type: 'POST',
+                url: '/Manage/ChangeTheme?theme=Light',
+                success: function (data) {
+                    if (data) {
+                        location.reload(true);
+                    }
+                }
+            });
+        });
+    });
+</script>
+}*@

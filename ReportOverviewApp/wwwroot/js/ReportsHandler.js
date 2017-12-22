@@ -89,11 +89,13 @@ $(document).ready(function () {
     //    }
     //    updateFrequencyFields();
     //});
-    $('#reportTable tr td #editReport').on("click", function () {
-        let retrievedID = $(this).parent().parent().find(".ReportID").html();
-        let action = $(this).attr('id');
-        let link = root + "/Reports/EditReport?id=" + retrievedID;
-        $('#editReportContainer').html('<div class="col-md-12" style="text-align: center; padding-top: 50%; padding-bottom: 50%; position: absolute;"><i class="fas fa-5x fa-sync ld ld-spin"></i></div>');
+    $('.editReportLink').on("click", function () {
+        //let retrievedID = $(this).parent().parent().find(".reportId").html();
+        //let retrievedID = $(this).attr('href');
+        //alert(retrievedID);
+        //let action = $(this).attr('id');
+        let link = $(this).attr('href');
+        $('#editReportContainer').html('<div class="col-md-12" style="text-align: center; padding-top: 50%; padding-bottom: 50%; position: absolute;"><i class="fas fa-5x fa-cog ld ld-spin"></i></div>');
         $.get(link, function (data) {
             $('#editReportContainer').fadeOut(500, function () {
                 $(this).html(data);
@@ -101,11 +103,9 @@ $(document).ready(function () {
             });
         });
     });
-    $('#reportTable tr td #editReportDeadline').on("click", function () {
-        let retrievedID = $(this).parent().parent().find(".ReportID").html();
-        let action = $(this).attr('id');
-        let link = root + "/Reports/EditReportDeadline?id=" + retrievedID;
-        $('#editReportDeadlineContainer').html('<div class="col-md-12" style="text-align: center; padding-top: 50%; padding-bottom: 50%; position: absolute;"><i class="fas fa-5x fa-sync ld ld-spin"></i></div>');
+    $('.editReportDeadlineLink').on("click", function () {
+        let link = $(this).attr('href');
+        $('#editReportDeadlineContainer').html('<div class="col-md-12" style="text-align: center; padding-top: 50%; padding-bottom: 50%; position: absolute;"><i class="loading-icon fa fa-5x fa-cog ld ld-spin"></i></div>');
         $.get(link, function (data) {
             $('#editReportDeadlineContainer').fadeOut(500, function () {
                 $(this).html(data);
@@ -113,11 +113,9 @@ $(document).ready(function () {
             });
         });
     });
-    $('#reportTable tr td #deleteReport').on("click", function () {
-        let retrievedID = $(this).parent().parent().find(".ReportID").html();
-        let action = $(this).attr('id');
-        let link = root + "/Reports/DeleteReport?id=" + retrievedID;
-        $('#deleteReportContainer').html('<div class="col-md-12" style="text-align: center; padding-top: 50%; padding-bottom: 50%; position: absolute;"><i class="fas fa-5x fa-sync ld ld-spin"></i></div>');
+    $('.deleteReportLink').on("click", function () {
+        let link = $(this).attr('href');
+        $('#deleteReportContainer').html('<div class="col-md-12" style="text-align: center; padding-top: 50%; padding-bottom: 50%; position: absolute;"><i class="loading-icon fa fa-5x fa-cog ld ld-spin"></i></div>');
         $.get(link, function (data) {
             $('#deleteReportContainer').fadeOut(500, function () {
                 $(this).html(data);

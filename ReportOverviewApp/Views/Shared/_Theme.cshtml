@@ -3,18 +3,16 @@
 
 @inject UserManager<ApplicationUser> UserManager
 @inject SignInManager<ApplicationUser> SignInManager
-
 @if (SignInManager.IsSignedIn(User))
 {
-    switch(UserManager.FindByNameAsync(User.Identity.Name).Result.Theme)
+    switch (UserManager.FindByNameAsync(User.Identity.Name).Result.Theme)
     {
         case ApplicationUser.Themes.Dark:
-            <div id="darkTheme">
-                <link rel="stylesheet" href="~/css/dark-theme.css" />
-            </div>
+            <link rel="stylesheet" id="darkTheme" href="~/css/dark-theme.css" />
             break;
         case ApplicationUser.Themes.Light:
             //default theme//
+            <link rel="stylesheet" id="lightTheme" />
             break;
     }
 }
