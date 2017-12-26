@@ -72,9 +72,11 @@
         Themes:
     </label>
     @*<button type="button" id="lightThemeButton" class="btn btn-light border-dark">Light</button>
-    <button type="button" id="darkThemeButton" class="btn btn-dark">Dark</button>*@
-    @Html.ActionLink(linkText: "Light", actionName: "ChangeTheme", routeValues: new { theme = "Light" }, htmlAttributes: new { @class = "btn btn-light border-dark" })
-    @Html.ActionLink(linkText: "Dark", actionName: "ChangeTheme", routeValues: new { theme = "Dark" }, htmlAttributes: new { @class = "btn btn-dark" })
+        <button type="button" id="darkThemeButton" class="btn btn-dark">Dark</button>*@
+    <a class="btn btn-light border-dark" asp-area="" asp-controller="Manage" asp-action="ChangeTheme" asp-route-theme="Light"><span><i class="far fa-sun"></i></span>&nbsp;Light</a>
+    <a class="btn btn-dark" asp-area="" asp-controller="Manage" asp-action="ChangeTheme" asp-route-theme="Dark"><span><i class="far fa-moon"></i></span>&nbsp;Dark</a>
+    @*@Html.ActionLink(linkText: "Light", actionName: "ChangeTheme", routeValues: new { theme = "Light" }, htmlAttributes: new { @class = "btn btn-light border-dark" })
+    @Html.ActionLink(linkText: "Dark", actionName: "ChangeTheme", routeValues: new { theme = "Dark" }, htmlAttributes: new { @class = "btn btn-dark" })*@
 </div>
 @*@section scripts{ 
 <script>

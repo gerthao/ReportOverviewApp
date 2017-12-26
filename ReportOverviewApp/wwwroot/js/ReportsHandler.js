@@ -65,35 +65,7 @@ $(document).ready(function () {
         }
         findForm[0].reset();
     });
-
-    let root = window.location.origin;
-    //$('#reportTable tr td a').on("click", function () {
-    //    let retrievedID = $(this).parent().parent().find(".ReportID").html();
-    //    let action = $(this).attr('id');
-    //    let link = root + "/Data/GetReport/" + retrievedID;
-    //    try {
-    //        $.ajax({
-    //            url: link,
-    //            type: "GET",
-    //            dataType: 'json',
-    //            contentType: 'application/json; charset=utf-8',
-    //            success: function (data) {
-    //                handleJSONReport(data, action);
-    //            },
-    //            error: function () {
-    //                console.error("failed: " + link);
-    //            }
-    //        });
-    //    } catch (err) {
-    //        console.error(err);
-    //    }
-    //    updateFrequencyFields();
-    //});
     $('.editReportLink').on("click", function () {
-        //let retrievedID = $(this).parent().parent().find(".reportId").html();
-        //let retrievedID = $(this).attr('href');
-        //alert(retrievedID);
-        //let action = $(this).attr('id');
         let link = $(this).attr('href');
         $('#editReportContainer').html('<div class="col-md-12" style="text-align: center; padding-top: 50%; padding-bottom: 50%; position: absolute;"><i class="fas fa-5x fa-cog ld ld-spin"></i></div>');
         $.get(link, function (data) {

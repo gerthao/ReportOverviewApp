@@ -115,6 +115,6 @@ select.form-control, select.form-control:focus{
     color: #d2d2d2;
     background-color: #404046;   
 }
-.fas.fa-cog {
-    color: #246fcb !important;
+.fa-cog {
+    color: #246fcb;
 }

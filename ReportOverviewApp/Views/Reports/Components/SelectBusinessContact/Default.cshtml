@@ -69,7 +69,7 @@
     <script>
     $('#businessContactSelectButton').click(function () {
         $('#businessContactSelectButtonIcon').removeClass();
-        $('#businessContactSelectButtonIcon').addClass('fa fa-cog text-light ld ld-spin');
+        $('#businessContactSelectButtonIcon').addClass('fa fa-sync text-light ld ld-spin');
         $(this).unbind();
         $.get("/Reports/SelectBusinessContact?id=" + @Model.Report.Id + "&contactId=" + $('#businessContactSelectList option:selected').val(), function (data) {
             $('#businessContactCard').fadeOut(500, function () {

@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="~/lib/toastr/toastr.css" />
     <link rel="stylesheet" href="~/lib/c3/c3.css" />
     <link rel="stylesheet" type="text/css" href="~/lib/loading-io/loading/loading.css" />
+    <link rel="stylesheet" type="text/css" href="~/lib/loading-io/loading-bar/loading-bar.css" />
     <link rel="stylesheet" type="text/css" href="~/lib/loading-io/transition/transition.css" />
     @await Html.PartialAsync("_Theme")
     <style>
@@ -44,20 +45,26 @@
             {
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Reports" asp-action="Index">Reporting Catalogue</a>
+                        <li class="dropdown nav-item">
+                            <a class="dropdown-toggle nav-link" id="reportsNavbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reports</a>
+                            <ul class="dropdown-menu border-dark navbar-dark bg-dark" aria-labelledby="reportsNavbarDropdown">
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="Reports" asp-action="Index">Reporting Catalogue</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="Reports" asp-action="SelectPlan">Find Reports Through Plan</a>
+                                </li>
+                                <li class="nav-item">
+                                     @Html.ActionLink(linkText: "Upcoming Reports", actionName: "UpcomingReports", controllerName: "Reports", routeValues: new { }, htmlAttributes: new { @class = "nav-link" })
+                                </li>
+                                <li class="nav-item">
+                                    @Html.ActionLink(linkText: "Past Reports", actionName: "PastReports", controllerName: "Reports", routeValues: new { }, htmlAttributes: new { @class = "nav-link" })
+                                </li>
+
+                            </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Reports" asp-action="SelectPlan">Select Plan</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Plans" asp-action="Index">View Plans</a>
-                        </li>
-                        <li class="nav-item">
-                            @Html.ActionLink(linkText: "Upcoming Reports", actionName: "UpcomingReports", controllerName: "Reports", routeValues: new { }, htmlAttributes: new { @class = "nav-link" })
-                        </li>
-                        <li class="nav-item">
-                            @Html.ActionLink(linkText: "Past Reports", actionName: "PastReports", controllerName: "Reports", routeValues: new { }, htmlAttributes: new { @class = "nav-link" })
+                            <a class="nav-link" asp-area="" asp-controller="Plans" asp-action="Index">Plans</a>
                         </li>
                         <li class="nav-item">
                             @Html.ActionLink(linkText: "Business Contacts", actionName: "Index", controllerName: "BusinessContacts", routeValues: new { }, htmlAttributes: new { @class = "nav-link" })
@@ -83,6 +90,7 @@
     <script src="~/lib/d3/d3.min.js"></script>
     <script src="~/lib/c3/c3.min.js"></script>
     <script src="~/lib/animejs/anime.min.js"></script>
+    <script src="~/lib/loading-io/loading-bar/loading-bar.min.js"></script>
     @*<script defer src="https://use.fontawesome.com/releases/v5.0.2/js/all.js"></script>*@
     <script>
         $(function () {
