@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="~/lib/toastr/toastr.css" />
     <link rel="stylesheet" href="~/lib/c3/c3.css" />
     <link rel="stylesheet" type="text/css" href="~/lib/loading-io/loading/loading.css" />
-    <link rel="stylesheet" type="text/css" href="~/lib/loading-io/loading-bar/loading-bar.css" />
+    
     <link rel="stylesheet" type="text/css" href="~/lib/loading-io/transition/transition.css" />
     @await Html.PartialAsync("_Theme")
     <style>
@@ -79,7 +79,6 @@
     <br />
     <div class="container body-content">@RenderBody()</div>
     <div>@await Component.InvokeAsync("NToastNotify.Toastr")</div>
-    @*<script src="~/lib/es6-shim/es6-shim.js"></script>*@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/site.min.js" asp-append-version="true"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
@@ -89,8 +88,6 @@
     <script src="~/lib/toastr/toastr.min.js"></script>
     <script src="~/lib/d3/d3.min.js"></script>
     <script src="~/lib/c3/c3.min.js"></script>
-    <script src="~/lib/animejs/anime.min.js"></script>
-    <script src="~/lib/loading-io/loading-bar/loading-bar.min.js"></script>
     @*<script defer src="https://use.fontawesome.com/releases/v5.0.2/js/all.js"></script>*@
     <script>
         $(function () {

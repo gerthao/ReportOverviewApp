@@ -18,35 +18,33 @@
     {
         DateTime d = Model.Select(rd => rd.Deadline).Distinct().ElementAt(i);
         var total = @Model.Where(rd => rd.Deadline == d).Count();
-                    var runs = @Model.Where(rd => rd.Deadline == d && rd.HasRun).Count();
-                    var approvals = @Model.Where(rd => rd.Deadline == d && rd.IsApproved).Count();
-                    var sends = @Model.Where(rd => rd.Deadline == d && rd.IsSent).Count();
+        var runs = @Model.Where(rd => rd.Deadline == d && rd.HasRun).Count();
+        var approvals = @Model.Where(rd => rd.Deadline == d && rd.IsApproved).Count();
+        var sends = @Model.Where(rd => rd.Deadline == d && rd.IsSent).Count();
         <div class="card">
             <div class="card-header">
                 <h6 style="display: inline-block;">
                     @if (d == today)
                     {
                         <text>Today</text>
-        }
+                    }
                     else if (d == tomorrow)
                     {
                         <text>Tomorrow</text>
-    }
+                    }
                     else
                     {
                         @d.ToShortDateString()
                     }
-                    
+
                 </h6>
-                <div style="display:inline-block;position:absolute; vertical-align:middle; right: 0.5rem;">
-                    <span ><i class="fas fa-check-circle"></i></span>
-                    <span class="hideButton" data-toggle="collapse" data-target="#list-@i" aria-expanded="true" aria-controls="list-@i"><i class="fas fa-chevron-down"></i></span>
+                <div class="options" style="display:inline-block;position:absolute; vertical-align:middle; right: 0.5rem;">
+                    <span><i class="fas fa-check-circle"></i></span>
+                    <span class="toggleIcon" data-toggle="collapse" data-target="#list-@i"><i class="fas fa-chevron-down"></i></span>
                     <span><i class="fas fa-times-circle"></i></span>
                 </div>
             </div>
             @*<div class="card-body">
-
-
                     <div class="progress">
                         <div class="progress-bar bg-info border-dark" role="progressbar" aria-valuenow="@Model.Where(rd => rd.Deadline == d && rd.IsApproved).Count()" aria-valuemin="0" aria-valuemax="@Model.Where(rd => rd.Deadline == d).Count()"></div>
                     </div>
@@ -54,166 +52,45 @@
                         <div class="progress-bar bg-warning border-dark" role="progressbar" aria-valuenow="@Model.Where(rd => rd.Deadline == d && rd.IsSent).Count()" aria-valuemin="0" aria-valuemax="@Model.Where(rd => rd.Deadline == d).Count()"></div>
                     </div>
                 </div>*@
-            <div class="collapse show" id="list-@i">
-                <ul class="list-group list-group-flush list-group-hidable collapse">
+            <div class="collapse show list-collapsable" id="list-@i">
+                <ul class="list-group list-group-flush">
                     @*<li class="list-group-item">
-                <div class="row col-12">
-                    <div class="progress col-4">
-                        <div class="progress-bar bg-secondary" role="progressbar" style="width:@runs.ToString()+'%'" aria-valuenow="@runs.ToString()" aria-valuemin="0" aria-valuemax="@total"></div>
-                    </div>
-                    <div class="progress col-4">
-                        <div class="progress-bar bg-info" role="progressbar" style="width:@approvals+'%'" aria-valuenow="@approvals" aria-valuemin="0" aria-valuemax="@total"></div>
-                    </div>
-                    <div class="progress col-4">
-                        <div class="progress-bar bg-success" role="progressbar" style="width:@sends+'%'" aria-valuenow="@sends" aria-valuemin="0" aria-valuemax="@total"></div>
-                    </div>
-                </div>
-            </li>*@
+                            <div class="row col-12">
+                                <div class="progress col-4">
+                                    <div class="progress-bar bg-secondary" role="progressbar" style="width:@runs.ToString()+'%'" aria-valuenow="@runs.ToString()" aria-valuemin="0" aria-valuemax="@total"></div>
+                                </div>
+                                <div class="progress col-4">
+                                    <div class="progress-bar bg-info" role="progressbar" style="width:@approvals+'%'" aria-valuenow="@approvals" aria-valuemin="0" aria-valuemax="@total"></div>
+                                </div>
+                                <div class="progress col-4">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width:@sends+'%'" aria-valuenow="@sends" aria-valuemin="0" aria-valuemax="@total"></div>
+                                </div>
+                            </div>
+                        </li>*@
                     @foreach (ReportDeadline rd in Model.Select(rd => rd).Where(rd => rd.Deadline == d))
-        {
-
-            <li class="list-group-item">
-                <ul class="list-inline">
-                    <li class="list-inline-item">
-                        @rd.Report.Name
-                    </li>
-                    <li class="list-inline-item">
-                        <span>
-                            <a class="editReportDeadlineLink" asp-action="EditReportDeadline" asp-route-id="@rd.ReportId" data-toggle="modal" data-target="#editReportDeadlineModal"><span class="fas fa-adjust text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  Report Deadline (@rd.Deadline.ToShortDateString())"></span></a>
-                            <a class="editReportLink" asp-action="EditReport" asp-route-id="@rd.ReportId" data-toggle="modal" data-target="#editReportModal"><span class="fas fa-edit text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  @rd.Report.Name"></span></a>
-                            <a asp-action="Details" asp-route-id="@rd.Report.Id"><span class="fas fa-book text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="View:   @rd.Report.Name"></span></a>
-                            <a class="deleteReportLink" asp-action="DeleteReport" asp-route-id="@rd.ReportId" data-toggle="modal" data-target="#deleteReportModal"><span class="fas fa-eraser text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Delete:   @rd.Report.Name"></span></a>
-                        </span>
-                    </li>
-                </ul>
-
-
-            </li>
-}
+                    {
+                        <li class="list-group-item">
+                            <ul class="list-inline">
+                                <li class="list-inline-item">
+                                    @rd.Report.Name
+                                </li>
+                                <li class="list-inline-item">
+                                    <span>
+                                        <a class="editReportDeadlineLink" asp-action="EditReportDeadline" asp-route-id="@rd.ReportId" data-toggle="modal" data-target="#editReportDeadlineModal"><span class="fas fa-adjust text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  Report Deadline (@rd.Deadline.ToShortDateString())"></span></a>
+                                        <a class="editReportLink" asp-action="EditReport" asp-route-id="@rd.ReportId" data-toggle="modal" data-target="#editReportModal"><span class="fas fa-edit text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  @rd.Report.Name"></span></a>
+                                        <a asp-action="Details" asp-route-id="@rd.Report.Id"><span class="fas fa-book text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="View:   @rd.Report.Name"></span></a>
+                                        <a class="deleteReportLink" asp-action="DeleteReport" asp-route-id="@rd.ReportId" data-toggle="modal" data-target="#deleteReportModal"><span class="fas fa-eraser text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Delete:   @rd.Report.Name"></span></a>
+                                    </span>
+                                </li>
+                            </ul>
+                        </li>
+                    }
                 </ul>
             </div>
-            
+
         </div>
     }
 </div>
-@*@foreach (DateTime d in Model.Select(rd => rd.Deadline).Distinct())
-{
-    <table class="table table-sm table-striped table-bordered">
-        <thead>
-            <tr class="bg-darkblue text-light">
-                @if (d == today)
-                {
-                    <th colspan="6">Date:&nbsp;@d.ToShortDateString()&nbsp;(Today)</th>
-                }
-                else if (d == tomorrow)
-                {
-                    <th colspan="6">Date:&nbsp;@d.ToShortDateString()&nbsp;(Tomorrow)</th>
-                }
-                else
-                {
-                    <th colspan="6">Date:&nbsp;@d.ToShortDateString()</th>
-                }
-
-            </tr>
-            <tr>
-                <th>ReportId</th>
-                <th>Report</th>
-                <th>Ran On</th>
-                <th>Approved On</th>
-                <th>Sent On</th>
-                <th>Options</th>
-            </tr>
-        </thead>
-        @foreach (ReportDeadline rd in Model.Select(rd => rd).Where(rd => rd.Deadline == d))
-        {
-            <tr class="text-dark">
-                <td class="reportId">
-                    @Html.DisplayFor(modelItem => rd.ReportId)
-                </td>
-                <td>@Html.DisplayFor(modelItem => rd.Report.Name)</td>
-                @if (rd.RunDate != null)
-                {
-                    <td>
-                        @Html.DisplayFor(modelItem => rd.RunDate)&nbsp;
-                        @if (rd.RunDate > rd.Deadline)
-                        {<text>(LATE)&nbsp;</text>}
-                        <i class="fas fa-thumbs-up text-success"></i>
-                    </td>
-                }
-                else
-                {
-                    if (d == today)
-                    {
-                        <td class="text-danger">Not Run&nbsp;<i class="fas fa-exclamation-triangle text-warning" aria-hidden="true"></i></td>
-                    }
-                    else if (d == tomorrow)
-                    {
-                        <td>Not Run&nbsp;<i class="fas fa-exclamation-triangle text-warning" aria-hidden="true"></i></td>
-                    }
-                    else
-                    {
-                        <td>Not Run</td>
-                    }
-                }
-                @if (rd.ApprovalDate != null)
-                {
-                    <td>
-                        @Html.DisplayFor(modelItem => rd.ApprovalDate)&nbsp;
-                        @if (rd.ApprovalDate > rd.Deadline)
-                        {<text>(LATE)&nbsp;</text>}
-                        <i class="fas fa-thumbs-up text-success"></i>
-                    </td>
-                }
-                else
-                {
-                    if (d == today)
-                    {
-                        <td class="text-danger">Not Approved&nbsp;<i class="fas fa-exclamation-triangle text-warning" aria-hidden="true"></i></td>
-                    }
-                    else if (d == tomorrow)
-                    {
-                        <td>Not Approved&nbsp;<i class="fas fa-exclamation-triangle text-warning" aria-hidden="true"></i></td>
-                    }
-                    else
-                    {
-                        <td>Not Approved</td>
-                    }
-                }
-                @if (rd.SentDate != null)
-                {
-                    <td>
-                        @Html.DisplayFor(modelItem => rd.SentDate)&nbsp;
-                        @if (rd.SentDate > rd.Deadline)
-                        {<text>(LATE)&nbsp;</text>}
-                        <i class="fas fa-thumbs-up text-success"></i>
-                    </td>
-                }
-                else
-                {
-                    if (d == today)
-                    {
-                        <td class="text-danger">Not Sent&nbsp;<i class="fas fa-exclamation-triangle text-warning" aria-hidden="true"></i></td>
-                    }
-                    else if (d == tomorrow)
-                    {
-                        <td>Not Sent&nbsp;<i class="fas fa-exclamation-triangle text-warning" aria-hidden="true"></i></td>
-                    }
-                    else
-                    {
-                        <td>Not Sent</td>
-                    }
-                }
-                <td style="text-align: center;">
-                    <a class="editReportDeadlineLink" asp-action="EditReportDeadline" asp-route-id="@rd.ReportId" data-toggle="modal" data-target="#editReportDeadlineModal"><span class="fas fa-adjust text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  Report Deadline (@rd.Deadline.ToShortDateString())"></span></a>
-                    <a class="editReportLink" asp-action="EditReport" asp-route-id="@rd.ReportId" data-toggle="modal" data-target="#editReportModal"><span class="fas fa-edit text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  @rd.Report.Name"></span></a>
-                    <a asp-action="Details" asp-route-id="@rd.Report.Id"><span class="fas fa-book text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="View:   @rd.Report.Name"></span></a>
-                    <a class="deleteReportLink" asp-action="DeleteReport" asp-route-id="@rd.ReportId" data-toggle="modal" data-target="#deleteReportModal"><span class="fas fa-eraser text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Delete:   @rd.Report.Name"></span></a>
-                </td>
-            </tr>
-        }
-    </table>
-    <br />
-}*@
 <div id="editReportDeadlineModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -245,4 +122,12 @@
 
 @section scripts{
     <script src="~/js/ReportsHandler.js"></script>
+    <script>
+        $('.list-collapsable').on('hidden.bs.collapse', function () {
+            $(this).prev('.card-header').children('.options').children('.toggleIcon').children('i').removeClass('fa-chevron-down').addClass('fa-chevron-up');
+        });
+        $('.list-collapsable').on('shown.bs.collapse', function () {
+            $(this).prev('.card-header').children('.options').children('.toggleIcon').children('i').removeClass('fa-chevron-up').addClass('fa-chevron-down');
+        });
+    </script>
 }

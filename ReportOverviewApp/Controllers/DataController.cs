@@ -167,7 +167,7 @@ namespace ReportOverviewApp.Controllers
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        private string StripInvalidCharacters(string input) =>
+        private string StripInvalidFileNameCharacters(string input) =>
             input.Replace("\\", String.Empty)
                 .Replace("/", String.Empty)
                 .Replace("\"", String.Empty)
@@ -203,7 +203,7 @@ namespace ReportOverviewApp.Controllers
             {
                 fileName = $"ReportDeadlines From {begin.Value.ToString("MM-dd-yyyy")} To {end.Value.ToString("MM-dd-yyyy")}";
             }
-            fileName = StripInvalidCharacters(fileName);
+            fileName = StripInvalidFileNameCharacters(fileName);
             switch (fileAs)
             {
                 case FileExtension.Json:
