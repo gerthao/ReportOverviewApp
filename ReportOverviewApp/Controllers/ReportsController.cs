@@ -108,22 +108,31 @@ namespace ReportOverviewApp.Controllers
 
         public async Task<IActionResult> UpdateDeadlinesAsync()
         {
-            await _context.Reports.Include(r => r.Deadlines).ForEachAsync(async r =>
+            DateTime date = new DateTime(year: 2017, month: 1, day: 1);
+            int updates = 0;
+            for (int i = 0; i < 365; i++)
             {
-                DateTime? currentCalculatedDeadline = r.CurrentDeadline();
-                if (currentCalculatedDeadline != null && currentCalculatedDeadline.HasValue)
+                DateTime checkDate = date.AddDays(i);
+                await _context.Reports.Include(r => r.Deadlines).ForEachAsync(async r =>
                 {
-                    DateTime? mostRecentReportDeadline = r.Deadlines.OrderByDescending(rd => rd.Deadline).First().Deadline as DateTime? ?? null;
-                    if (currentCalculatedDeadline > mostRecentReportDeadline)
+                    DateTime? currentCalculatedDeadline = r.Deadline(checkDate);
+                    if (currentCalculatedDeadline != null && currentCalculatedDeadline.HasValue)
                     {
-                        await _context.ReportDeadlines.AddAsync(new ReportDeadline()
+                        DateTime? mostRecentReportDeadline = r.Deadlines.OrderByDescending(rd => rd.Deadline).Select(rd => rd.Deadline as DateTime?).FirstOrDefault();
+                        if (currentCalculatedDeadline > mostRecentReportDeadline || mostRecentReportDeadline == null)
                         {
-                            ReportId = r.Id,
-                            Deadline = currentCalculatedDeadline.Value
-                        });
+                            await _context.ReportDeadlines.AddAsync(new ReportDeadline()
+                            {
+                                ReportId = r.Id,
+                                Deadline = currentCalculatedDeadline.Value
+                            });
+                            updates++;
+                        }
                     }
-                }
-            });
+                });
+                await _context.SaveChangesAsync();
+            }
+            await _context.UserLogs.AddAsync(new UserLog(GetCurrentUserID(), $"{updates} new deadlines created.", DateTime.Now));
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

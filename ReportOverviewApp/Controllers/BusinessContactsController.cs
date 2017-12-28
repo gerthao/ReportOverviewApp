@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ReportOverviewApp.Data;
 using ReportOverviewApp.Models;
+using ReportOverviewApp.Models.BusinessContactViewModels;
 
 namespace ReportOverviewApp.Controllers
 {
@@ -18,6 +19,44 @@ namespace ReportOverviewApp.Controllers
         {
             _context = context;
         }
+
+        public async Task<IActionResult> TransferReports(int? id)
+        {
+            if (id == null) return NotFound();
+
+            //if(ownerId == null || recipientId == null) return NotFound();
+            var owner = await _context.BusinessContacts.Include(bc => bc.Reports).SingleOrDefaultAsync(bc => bc.Id == id);
+            if (id == null) return NotFound();
+            //var recipient = await _context.BusinessContacts.Include(bc => bc.Reports).SingleOrDefaultAsync(bc => bc.Id == recipientId);
+            //if (owner == null || recipient == null) return NotFound();
+            var viewModel = new TransferReportsViewModel()
+            {
+                Owner = owner,
+                BusinessContacts = await _context.BusinessContacts.Include(bc => bc.Reports).ToListAsync()
+            };
+            return View(viewModel);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> TransferReports(int? id, [Bind("Owner, Recipient, ReportIds")] TransferReportsViewModel viewModel)
+        {
+            if(id != viewModel.Owner.Id) return NotFound();
+            if (ModelState.IsValid)
+            {
+                var reportsToTransfer = viewModel.ReportIds.Select(async i => (await _context.Reports.FindAsync(i))) as List<Report>;
+                for(int i = 0; i < reportsToTransfer.Count(); i++)
+                {
+                    reportsToTransfer[i].BusinessContactId = viewModel.Recipient.Id;
+                }
+                _context.UpdateRange(reportsToTransfer);
+                await _context.SaveChangesAsync();
+            }
+            //var owner = await _context.BusinessContacts.Include(bc => bc.Reports).SingleOrDefaultAsync(bc => bc.Id == ownerId);
+            //var recipient = await _context.BusinessContacts.Include(bc => bc.Reports).SingleOrDefaultAsync(bc => bc.Id == recipientId);
+            //if (owner == null || recipient == null) return NotFound();
+            return View(nameof(Index));
+        }
+
 
         // GET: BusinessContacts
         public async Task<IActionResult> Index()
@@ -33,7 +72,7 @@ namespace ReportOverviewApp.Controllers
                 return NotFound();
             }
 
-            var businessContact = await _context.BusinessContacts
+            var businessContact = await _context.BusinessContacts.Include(bc => bc.Reports)
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (businessContact == null)
             {

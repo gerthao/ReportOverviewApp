@@ -14,6 +14,10 @@ using ReportOverviewApp.Models.ReportViewModels;
 
 namespace XUnitTestProjectReportOverviewApp
 {
+    public enum FrequencyType
+    {
+        Quarterly, Weekly, Monthly, Biweekly, Semiannual, Annual
+    }
     public static class TestReportFactory
     {
         public static int Count { get; private set; } = 1;
@@ -48,6 +52,8 @@ namespace XUnitTestProjectReportOverviewApp
             Count++;
             return report;
         }
+
+        
     }
     public class ReportsControllerUnitTest
     {

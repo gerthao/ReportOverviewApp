@@ -1,0 +1,82 @@
+﻿@using ReportOverviewApp.Models.BusinessContactViewModels
+@model TransferReportsViewModel
+@{
+    ViewData["Title"] = "Transfer Reports";
+}
+<h3>Transfer Reports</h3>
+<hr />
+<div>
+    <form asp-action="TransferReports">
+        <div class="form-group col-md-12">
+            @*<div class="form-row" style="padding-top: 1rem;">
+                    <hr class="col-md-5" style="display: inline-block; text-align: left;" />
+                    <span class="col-md-1" style="text-align: center; display: inline-block;">Business Contacts</span>
+                    <hr class="col-md-5" style="display: inline-block; text-align: right;" />
+                </div>*@
+            <div class="form-row">
+                <label class="form-label col-md-7">Assigned Business Contact</label>
+                <label class="form-label col-md-5">Recipient</label>
+            </div>
+            <div class="form-row">
+                <select class="form-control  custom-select col-md-5" asp-for="Owner">
+                    @foreach (var businessContact in Model.BusinessContacts)
+                    {
+                        <option>@businessContact.Name</option>
+
+                    }
+                </select>
+                <div class="form-group col-md-2 align-self-center">
+                    <div class="form-row">
+                        <span class="col-md-3"></span>
+                        <span class="btn btn-primary col-md-6"><i class="fas fa-exchange-alt"></i></span>
+                        <span class="col-md-3"></span>
+                    </div>
+                </div>
+                <select class="form-control custom-select col-md-5" asp-for="Recipient">
+                    @foreach (var businessContact in Model.BusinessContacts)
+                    {
+                        <option>@businessContact.Name</option>
+
+                    }
+                </select>
+
+            </div>
+            <div class="form-row" style="padding-bottom: 1rem;">
+                <hr class="col-md-5" style="display: inline-block; text-align: left;" />
+                <h6 class="col-md-1 align-self-center" style="text-align: center; display: inline-block;">Reports</h6>
+                <hr class="col-md-5" style="display: inline-block; text-align: right;" />
+            </div>
+            <div class="form-row" style="padding-bottom: 1rem;">
+                <select size="24" class="form-control col-md-5" multiple asp-for="ReportIds">
+                    @foreach (var report in Model.Owner.Reports)
+                    {
+                        <option value="@report.Id">@report.Name</option>
+                    }
+                </select>
+                <div class="form-group col-md-2 align-self-center">
+                    <div class="form-row" style="padding-bottom: 0.25rem;">
+                        <span class="col-md-3"></span>
+                        <span class="btn btn-primary col-md-6"><i class="fas fa-arrow-right"></i></span>
+                        <span class="col-md-3"></span>
+                    </div>
+                    <div class="form-row">
+                        <span class="col-md-3"></span>
+                        <span class="btn btn-primary col-md-6"><i class="fas fa-arrow-left"></i></span>
+                        <span class="col-md-3"></span>
+                    </div>
+                </div>
+                <select size="24" class="form-control col-md-5" multiple asp-for="ReportIds">
+                    @foreach (var report in Model.Owner.Reports)
+                    {
+                        <option value="@report.Id">@report.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-row float-right">
+                <button class="btn btn-primary float-right" type="submit"><span><i class="fas fa-arrow-right"></i></span>&nbsp;Save</button>
+            </div>
+        </div>
+        
+    </form>
+</div>
+

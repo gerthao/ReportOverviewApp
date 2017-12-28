@@ -115,9 +115,9 @@ namespace ReportOverviewApp.Data{
                     context.UpdateRange(reportList);
                     context.SaveChanges();
 
-                    List<ReportDeadline> deadlines = context.Reports.Where(r => r.CurrentDeadline() != null && r.CurrentDeadline().HasValue).Select(r => new ReportDeadline() { ReportId = r.Id, Deadline = r.CurrentDeadline().Value }).ToList();
-                    context.ReportDeadlines.AddRange(deadlines);
-                    context.SaveChanges();
+                    //List<ReportDeadline> deadlines = context.Reports.Where(r => r.CurrentDeadline() != null && r.CurrentDeadline().HasValue).Select(r => new ReportDeadline() { ReportId = r.Id, Deadline = r.CurrentDeadline().Value }).ToList();
+                    //context.ReportDeadlines.AddRange(deadlines);
+                    //context.SaveChanges();
 
                     
                     //}

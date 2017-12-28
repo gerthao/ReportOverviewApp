@@ -5,14 +5,19 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @if (SignInManager.IsSignedIn(User))
 {
-    switch (UserManager.FindByNameAsync(User.Identity.Name).Result.Theme)
+    var user = UserManager.FindByNameAsync(User.Identity.Name);
+    if (user != null && user.Result != null)
     {
-        case ApplicationUser.Themes.Dark:
-            <link rel="stylesheet" id="darkTheme" href="~/css/dark-theme.css" />
-            break;
-        case ApplicationUser.Themes.Light:
-            //default theme//
-            <link rel="stylesheet" id="lightTheme" />
-            break;
+        switch (user.Result.Theme)
+        {
+            case ApplicationUser.Themes.Dark:
+                <link rel="stylesheet" id="darkTheme" href="~/css/dark-theme.css" />
+                break;
+            case ApplicationUser.Themes.Light:
+                //default theme//
+                
+                break;
+        }
+
     }
 }

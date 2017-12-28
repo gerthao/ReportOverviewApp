@@ -23,6 +23,12 @@
             @Html.DisplayFor(model => model.BusinessOwner)
         </dd>
     </dl>
+    <ul class="list-group">
+        @foreach(Report r in Model.Reports)
+        {
+            <li class="list-group-item">@r.Name</li>
+        }
+    </ul>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
