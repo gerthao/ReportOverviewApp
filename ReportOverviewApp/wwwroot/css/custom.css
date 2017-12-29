@@ -12,3 +12,10 @@
     max-height: 15rem;
     overflow: auto;
 }
+.grow {
+    transition: all .2s ease-in-out;
+}
+
+.grow:hover {
+    transform: scale(1.1);
+}

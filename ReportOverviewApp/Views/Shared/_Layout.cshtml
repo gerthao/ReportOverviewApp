@@ -47,7 +47,7 @@
                     <ul class="navbar-nav mr-auto">
                         <li class="dropdown nav-item">
                             <a class="dropdown-toggle nav-link" id="reportsNavbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reports</a>
-                            <ul class="dropdown-menu border-dark navbar-dark bg-dark" aria-labelledby="reportsNavbarDropdown">
+                            <ul class="dropdown-menu border-dark navbar-dark bg-dark" style="white-space:nowrap;" aria-labelledby="reportsNavbarDropdown">
                                 <li class="nav-item">
                                     <a class="nav-link" asp-area="" asp-controller="Reports" asp-action="Index">Reporting Catalogue</a>
                                 </li>
@@ -60,14 +60,22 @@
                                 <li class="nav-item">
                                     @Html.ActionLink(linkText: "Past Reports", actionName: "PastReports", controllerName: "Reports", routeValues: new { }, htmlAttributes: new { @class = "nav-link" })
                                 </li>
-
                             </ul>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Plans" asp-action="Index">Plans</a>
                         </li>
-                        <li class="nav-item">
-                            @Html.ActionLink(linkText: "Business Contacts", actionName: "Index", controllerName: "BusinessContacts", routeValues: new { }, htmlAttributes: new { @class = "nav-link" })
+                        <li class="dropdown nav-item">
+                            <a class="dropdown-toggle nav-link" id="businessContactsNavbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Business Contacts</a>
+                            <ul class="dropdown-menu border-dark navbar-dark bg-dark" style="white-space:nowrap;" aria-labelledby="businessContactsNavbarDropdown">
+                                <li class="nav-item">
+                                    @Html.ActionLink(linkText: "Business Contacts", actionName: "Index", controllerName: "BusinessContacts", routeValues: new { }, htmlAttributes: new { @class = "nav-link" })
+                                </li>
+                                <li class="nav-item">
+                                    @Html.ActionLink(linkText: "Transfer Reports", actionName: "TransferReports", controllerName: "BusinessContacts", routeValues: new { }, htmlAttributes: new { @class = "nav-link" })
+                                </li>
+                            </ul>
+                            
                         </li>
                     </ul>
                     @await Html.PartialAsync("_LoginPartial")

@@ -20,35 +20,37 @@ namespace ReportOverviewApp.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> TransferReports(int? id)
+        public async Task<IActionResult> TransferReports()
         {
-            if (id == null) return NotFound();
-
-            //if(ownerId == null || recipientId == null) return NotFound();
-            var owner = await _context.BusinessContacts.Include(bc => bc.Reports).SingleOrDefaultAsync(bc => bc.Id == id);
-            if (id == null) return NotFound();
             //var recipient = await _context.BusinessContacts.Include(bc => bc.Reports).SingleOrDefaultAsync(bc => bc.Id == recipientId);
             //if (owner == null || recipient == null) return NotFound();
             var viewModel = new TransferReportsViewModel()
             {
-                Owner = owner,
-                BusinessContacts = await _context.BusinessContacts.Include(bc => bc.Reports).ToListAsync()
+                BusinessContacts = await _context.BusinessContacts.Include(bc => bc.Reports).ToListAsync(),
+                FirstReportIds = new List<int>(),
+                SecondReportIds = new List<int>()
             };
             return View(viewModel);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> TransferReports(int? id, [Bind("Owner, Recipient, ReportIds")] TransferReportsViewModel viewModel)
+        public async Task<IActionResult> TransferReports([Bind("First, Second, FirstReportIds, SecondReportIds")] TransferReportsViewModel viewModel)
         {
-            if(id != viewModel.Owner.Id) return NotFound();
             if (ModelState.IsValid)
             {
-                var reportsToTransfer = viewModel.ReportIds.Select(async i => (await _context.Reports.FindAsync(i))) as List<Report>;
-                for(int i = 0; i < reportsToTransfer.Count(); i++)
+                var firstReportsToTransfer = viewModel?.FirstReportIds?.Select(async i => (await _context.Reports.FindAsync(i))) as List<Report>;
+                for(int i = 0; i < firstReportsToTransfer.Count(); i++)
                 {
-                    reportsToTransfer[i].BusinessContactId = viewModel.Recipient.Id;
+                    firstReportsToTransfer[i].BusinessContactId = viewModel.First.Id;
                 }
-                _context.UpdateRange(reportsToTransfer);
+                _context.UpdateRange(firstReportsToTransfer);
+                await _context.SaveChangesAsync();
+                var secondReportsToTransfer = viewModel?.SecondReportIds?.Select(async i => (await _context.Reports.FindAsync(i))) as List<Report>;
+                for (int i = 0; i < secondReportsToTransfer.Count(); i++)
+                {
+                    secondReportsToTransfer[i].BusinessContactId = viewModel.First.Id;
+                }
+                _context.UpdateRange(secondReportsToTransfer);
                 await _context.SaveChangesAsync();
             }
             //var owner = await _context.BusinessContacts.Include(bc => bc.Reports).SingleOrDefaultAsync(bc => bc.Id == ownerId);

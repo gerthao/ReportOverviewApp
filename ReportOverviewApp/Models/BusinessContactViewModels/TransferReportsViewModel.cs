@@ -7,9 +7,10 @@ namespace ReportOverviewApp.Models.BusinessContactViewModels
 {
     public class TransferReportsViewModel
     {
-        public BusinessContact Owner { get; set; }
-        public BusinessContact Recipient { get; set; }
+        public BusinessContact First { get; set; }
+        public BusinessContact Second { get; set; }
         public IEnumerable<BusinessContact> BusinessContacts { get; set; }
-        public IEnumerable<int> ReportIds { get; set; }
+        public IEnumerable<int> FirstReportIds { get; set; }
+        public IEnumerable<int> SecondReportIds { get; set; }
     }
 }

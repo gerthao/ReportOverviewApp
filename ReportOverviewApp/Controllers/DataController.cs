@@ -17,6 +17,7 @@ using Newtonsoft.Json;
 using System.Text;
 using System.Xml.Serialization;
 using System.Xml;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ReportOverviewApp.Controllers
 {
@@ -308,7 +309,18 @@ namespace ReportOverviewApp.Controllers
             var reports = await _context.Reports.OrderBy(e => e.Id).ToListAsync();
             return Json(reports, new JsonSerializerSettings() {Formatting = indent ? Newtonsoft.Json.Formatting.Indented : Newtonsoft.Json.Formatting.None, NullValueHandling = omitNull ? NullValueHandling.Ignore : NullValueHandling.Include });
         }
-
+        [Authorize]
+        public async Task<JsonResult> GetBusinessContactReports(int? id, bool indent, bool omitNull)
+        {
+            var reports = await _context.Reports.Where(r => r.BusinessContactId == id).ToDictionaryAsync(r => r.Id, r => r.Name);
+            return Json(reports, new JsonSerializerSettings() { Formatting = indent ? Newtonsoft.Json.Formatting.Indented : Newtonsoft.Json.Formatting.None, NullValueHandling = omitNull ? NullValueHandling.Ignore : NullValueHandling.Include });
+        }
+        [Authorize]
+        public async Task<SelectList> GetBusinessContactReportSelectList(int? id)
+        {
+            var reports = new SelectList(await _context.Reports.Where(r => r.BusinessContactId == id).Select(r => new { value = r.Id, text = r.Name }).ToListAsync(), "value", "text");
+            return reports;
+        }
         //[Authorize]
         //public async Task<JsonResult> GetGraphData()
         //{

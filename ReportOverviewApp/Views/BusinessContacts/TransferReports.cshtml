@@ -8,75 +8,163 @@
 <div>
     <form asp-action="TransferReports">
         <div class="form-group col-md-12">
-            @*<div class="form-row" style="padding-top: 1rem;">
-                    <hr class="col-md-5" style="display: inline-block; text-align: left;" />
-                    <span class="col-md-1" style="text-align: center; display: inline-block;">Business Contacts</span>
-                    <hr class="col-md-5" style="display: inline-block; text-align: right;" />
-                </div>*@
             <div class="form-row">
-                <label class="form-label col-md-7">Assigned Business Contact</label>
-                <label class="form-label col-md-5">Recipient</label>
+                <label class="form-label col-md-7">Business Contact</label>
+                <label class="form-label col-md-5">Business Contact</label>
             </div>
             <div class="form-row">
-                <select class="form-control  custom-select col-md-5" asp-for="Owner">
+                <select id="owner" class="form-control custom-select col-md-5" asp-for="First.Id">
                     @foreach (var businessContact in Model.BusinessContacts)
                     {
-                        <option>@businessContact.Name</option>
-
+                        <option value="@businessContact.Id">@businessContact.Name</option>
                     }
                 </select>
                 <div class="form-group col-md-2 align-self-center">
                     <div class="form-row">
                         <span class="col-md-3"></span>
-                        <span class="btn btn-primary col-md-6"><i class="fas fa-exchange-alt"></i></span>
+                        <span id="swapBusinessContacts" class="btn btn-primary col-md-6"><i class="fas fa-exchange-alt"></i></span>
                         <span class="col-md-3"></span>
                     </div>
                 </div>
-                <select class="form-control custom-select col-md-5" asp-for="Recipient">
+                <select id="recipient" class="form-control custom-select col-md-5" asp-for="Second.Id">
                     @foreach (var businessContact in Model.BusinessContacts)
                     {
-                        <option>@businessContact.Name</option>
-
+                        <option value="@businessContact.Id">@businessContact.Name</option>
                     }
                 </select>
 
             </div>
             <div class="form-row" style="padding-bottom: 1rem;">
                 <hr class="col-md-5" style="display: inline-block; text-align: left;" />
-                <h6 class="col-md-1 align-self-center" style="text-align: center; display: inline-block;">Reports</h6>
+                <h6 id="loading" class="col-md-1 align-self-center" style="text-align: center; display: inline-block;">Reports</h6>
                 <hr class="col-md-5" style="display: inline-block; text-align: right;" />
             </div>
-            <div class="form-row" style="padding-bottom: 1rem;">
-                <select size="24" class="form-control col-md-5" multiple asp-for="ReportIds">
-                    @foreach (var report in Model.Owner.Reports)
+            <div class="form-row" style="padding-bottom: 1rem;">   
+                <select id="ownerReports" size="24" class="form-control col-md-5" multiple asp-for="FirstReportIds">
+                    @if (Model.First == null || Model.First.Reports == null || !Model.First.Reports.Any())
                     {
-                        <option value="@report.Id">@report.Name</option>
+
+                    }
+                    else
+                    {
+                        @foreach (var report in Model.First.Reports)
+                        {
+                            <option value="@report.Id">@report.Name</option>
+                        }
                     }
                 </select>
+                
                 <div class="form-group col-md-2 align-self-center">
                     <div class="form-row" style="padding-bottom: 0.25rem;">
                         <span class="col-md-3"></span>
-                        <span class="btn btn-primary col-md-6"><i class="fas fa-arrow-right"></i></span>
+                        <span id="transferRight" class="btn btn-primary col-md-6"><i class="fas fa-arrow-right"></i></span>
+                        <span class="col-md-3"></span>
+                    </div>
+                    <div class="form-row" style="padding-bottom: 0.25rem;">
+                        <span class="col-md-3"></span>
+                        <span id="transferSwap" class="btn btn-primary col-md-6"><i class="fas fa-exchange-alt"></i></span>
                         <span class="col-md-3"></span>
                     </div>
                     <div class="form-row">
                         <span class="col-md-3"></span>
-                        <span class="btn btn-primary col-md-6"><i class="fas fa-arrow-left"></i></span>
+                        <span id="transferLeft" class="btn btn-primary col-md-6"><i class="fas fa-arrow-left"></i></span>
                         <span class="col-md-3"></span>
                     </div>
                 </div>
-                <select size="24" class="form-control col-md-5" multiple asp-for="ReportIds">
-                    @foreach (var report in Model.Owner.Reports)
+                <select id="recipientReports" size="24" class="form-control col-md-5" multiple asp-for="SecondReportIds">
+                    @if (Model.Second == null || Model.Second.Reports == null || !Model.Second.Reports.Any())
                     {
-                        <option value="@report.Id">@report.Name</option>
+
+                    }
+                    else
+                    {
+                        @foreach (var report in Model.Second.Reports)
+                        {
+                            <option value="@report.Id">@report.Name</option>
+                        }
                     }
                 </select>
             </div>
             <div class="form-row float-right">
-                <button class="btn btn-primary float-right" type="submit"><span><i class="fas fa-arrow-right"></i></span>&nbsp;Save</button>
+                <button id="save" class="btn btn-primary float-right" type="submit"><span><i class="fas fa-thumbs-up"></i></span>&nbsp;Save</button>
             </div>
         </div>
-        
     </form>
 </div>
+@section scripts{ 
+<script>
+        $(document).ready(function () {
+            function loadItems(origin, destination) {
+                $('#loading').html('<div>Loading...</div>');
+                $.ajax({
+                    type: 'GET',
+                    url: '/Data/GetBusinessContactReports?id=' + origin,
+                    dataType: 'json',
+                    success: function (data) {
+                        let items = [];
+                        $.each(data, function (key, value) {
+                            items.push('<option value="' + key + '">' + value + '</option>');
+                        });
+                        $(destination).html(items);
+                        $('#loading').html('Reports');
+                    },
+                    error: function () {
+                        $(destination).html('<option disabled>(Empty)</option>');
+                    }
+                });
+            }
+            loadItems($('#owner').find(':selected').val(), '#ownerReports');
+            loadItems($('#recipient').find(':selected').val(), '#recipientReports');
+
+            function moveItems(origin, destination) {
+                $(origin).find(':selected').prop('selected', false).appendTo(destination);
+            }
+            function moveAllItems(origin, destination) {
+                $(origin).children().appendTo(destination);
+            }
+            function swapItems(first, second) {
+                let items_1 = $(first).find(':selected');
+                let items_2 = $(second).find(':selected');
+                items_1.appendTo(second);
+                items_2.appendTo(first);
+            }
+            function save(first, second, firstIds, secondIds) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/BusinessContacts/TransferReports?id_1='+first+'&id_2='+second,
+                    success: function (data) {
+                        if (data) {
+                            location.reload(true);
+                        }
+                    }
+                });
+
+            }
+            $('#owner').change(function () {
+                loadItems($(this).find(':selected').val(), '#ownerReports');
+            })
+            $('#recipient').change(function () {
+                loadItems($(this).find(':selected').val(), '#recipientReports');
+            })
+            $('#transferRight').click(function () {
+                moveItems('#ownerReports', '#recipientReports');
+            });
+            $('#transferLeft').click(function () {
+                moveItems('#recipientReports', '#ownerReports');
+            });
+            $('#transferSwap').click(function () {
+                swapItems('#ownerReports', '#recipientReports');
+            });
+            $('#swapBusinessContacts').click(function () {
+                swapItems('#owner', '#recipient');
+            });
+            $('#save').hover(function () {
+                $('#ownerReports').children().prop('selected', true);
+                $('#recipientReports').children().prop('selected', true);
+                //save('#owner', "#recipient", "#ownerReports", "#recipientReports");
+            });
+
+        });
+</script>
+}
 
