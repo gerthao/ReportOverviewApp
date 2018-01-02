@@ -11,7 +11,7 @@
         </div>*@
         <div class="form-row col-md-12">
             <div class="form-group col-md-12">
-                <select id="planSelectList" size="8" asp-for="Plans" class="form-control col-md-12" multiple>
+                <select id="planSelectList" size="12" asp-for="Plans" class="form-control col-md-12" multiple>
                     @foreach (Plan planOption in Model.Options.Plans)
                     {
                         @if (Model.Report.ReportPlanMapping != null && Model.Report.ReportPlanMapping.Select(rpm => rpm.Plan).Any(p => p == planOption))

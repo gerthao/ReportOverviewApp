@@ -32,31 +32,34 @@ namespace ReportOverviewApp.Controllers
             };
             return View(viewModel);
         }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> TransferReports([Bind("First, Second, FirstReportIds, SecondReportIds")] TransferReportsViewModel viewModel)
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<JsonResult> TransferReports([Bind("First, Second, FirstReportIds, SecondReportIds")] TransferReportsViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                var firstReportsToTransfer = viewModel?.FirstReportIds?.Select(async i => (await _context.Reports.FindAsync(i))) as List<Report>;
-                for(int i = 0; i < firstReportsToTransfer.Count(); i++)
+                var firstReportsToTransfer = viewModel.FirstReportIds.Select(i => _context.Reports.Find(i)).ToList();
+            
+                for (int i = 0; i < firstReportsToTransfer.Count(); i++)
                 {
-                    firstReportsToTransfer[i].BusinessContactId = viewModel.First.Id;
+                    firstReportsToTransfer[i].BusinessContactId = viewModel.First;
                 }
                 _context.UpdateRange(firstReportsToTransfer);
                 await _context.SaveChangesAsync();
-                var secondReportsToTransfer = viewModel?.SecondReportIds?.Select(async i => (await _context.Reports.FindAsync(i))) as List<Report>;
+                var secondReportsToTransfer = viewModel.SecondReportIds.Select(i =>  _context.Reports.Find(i)).ToList();
                 for (int i = 0; i < secondReportsToTransfer.Count(); i++)
                 {
-                    secondReportsToTransfer[i].BusinessContactId = viewModel.First.Id;
+                    secondReportsToTransfer[i].BusinessContactId = viewModel.Second;
                 }
                 _context.UpdateRange(secondReportsToTransfer);
                 await _context.SaveChangesAsync();
+            } else
+            {
+                return Json(new { success = false });
             }
             //var owner = await _context.BusinessContacts.Include(bc => bc.Reports).SingleOrDefaultAsync(bc => bc.Id == ownerId);
             //var recipient = await _context.BusinessContacts.Include(bc => bc.Reports).SingleOrDefaultAsync(bc => bc.Id == recipientId);
             //if (owner == null || recipient == null) return NotFound();
-            return View(nameof(Index));
+            return Json(new { success = true });
         }
 
 

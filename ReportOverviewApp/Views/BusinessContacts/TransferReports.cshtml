@@ -6,14 +6,15 @@
 <h3>Transfer Reports</h3>
 <hr />
 <div>
-    <form asp-action="TransferReports">
+    <form id="transferForm" asp-action="TransferReports" method="post">
+        @Html.AntiForgeryToken()
         <div class="form-group col-md-12">
             <div class="form-row">
                 <label class="form-label col-md-7">Business Contact</label>
                 <label class="form-label col-md-5">Business Contact</label>
             </div>
             <div class="form-row">
-                <select id="owner" class="form-control custom-select col-md-5" asp-for="First.Id">
+                <select id="owner" class="form-control custom-select col-md-5" asp-for="First">
                     @foreach (var businessContact in Model.BusinessContacts)
                     {
                         <option value="@businessContact.Id">@businessContact.Name</option>
@@ -26,7 +27,7 @@
                         <span class="col-md-3"></span>
                     </div>
                 </div>
-                <select id="recipient" class="form-control custom-select col-md-5" asp-for="Second.Id">
+                <select id="recipient" class="form-control custom-select col-md-5" asp-for="Second">
                     @foreach (var businessContact in Model.BusinessContacts)
                     {
                         <option value="@businessContact.Id">@businessContact.Name</option>
@@ -40,18 +41,7 @@
                 <hr class="col-md-5" style="display: inline-block; text-align: right;" />
             </div>
             <div class="form-row" style="padding-bottom: 1rem;">   
-                <select id="ownerReports" size="24" class="form-control col-md-5" multiple asp-for="FirstReportIds">
-                    @if (Model.First == null || Model.First.Reports == null || !Model.First.Reports.Any())
-                    {
-
-                    }
-                    else
-                    {
-                        @foreach (var report in Model.First.Reports)
-                        {
-                            <option value="@report.Id">@report.Name</option>
-                        }
-                    }
+                <select id="ownerReports" asp-for="FirstReportIds" size="24" class="form-control col-md-5" multiple >
                 </select>
                 
                 <div class="form-group col-md-2 align-self-center">
@@ -71,22 +61,11 @@
                         <span class="col-md-3"></span>
                     </div>
                 </div>
-                <select id="recipientReports" size="24" class="form-control col-md-5" multiple asp-for="SecondReportIds">
-                    @if (Model.Second == null || Model.Second.Reports == null || !Model.Second.Reports.Any())
-                    {
-
-                    }
-                    else
-                    {
-                        @foreach (var report in Model.Second.Reports)
-                        {
-                            <option value="@report.Id">@report.Name</option>
-                        }
-                    }
+                <select id="recipientReports" asp-for="SecondReportIds" size="24" class="form-control col-md-5" multiple >
                 </select>
             </div>
             <div class="form-row float-right">
-                <button id="save" class="btn btn-primary float-right" type="submit"><span><i class="fas fa-thumbs-up"></i></span>&nbsp;Save</button>
+                <button id="save" type="button" class="btn btn-primary float-right"><span><i class="fas fa-thumbs-up"></i></span>&nbsp;Save</button>
             </div>
         </div>
     </form>
@@ -129,16 +108,39 @@
                 items_2.appendTo(first);
             }
             function save(first, second, firstIds, secondIds) {
-                $.ajax({
-                    type: 'POST',
-                    url: '/BusinessContacts/TransferReports?id_1='+first+'&id_2='+second,
-                    success: function (data) {
-                        if (data) {
-                            location.reload(true);
-                        }
-                    }
+                let firstReportIds = [];
+                let secondReportIds = [];
+                $(firstIds).children().each(function () {
+                    firstReportIds.push(parseInt($(this).val()));
                 });
+                $(secondIds).children().each(function () {
+                    secondReportIds.push(parseInt($(this).val()));
+                });
+                let token = '@Html.AntiForgeryToken()';
+                let viewModel = {
+                    __RequestVerificationToken: $(token).val(),
+                    first: parseInt($(first).val()),
+                    second: parseInt($(second).val()),
+                    firstReportIds : firstReportIds,
+                    secondReportIds: secondReportIds,
+                    businessContacts: null
+                };
+                alert(JSON.stringify({ viewModel: viewModel }));
+                let request = $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    url: '@Url.Action("TransferReports", "BusinessContacts")',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.parse(viewModel),
+                });
+                request.done(function (msg) {
+                    alert("okay");
 
+                })
+                request.fail(function (jqXHR, status, message) {
+                    alert(message);
+
+                })
             }
             $('#owner').change(function () {
                 loadItems($(this).find(':selected').val(), '#ownerReports');
@@ -161,7 +163,9 @@
             $('#save').hover(function () {
                 $('#ownerReports').children().prop('selected', true);
                 $('#recipientReports').children().prop('selected', true);
-                //save('#owner', "#recipient", "#ownerReports", "#recipientReports");
+            });
+            $('#save').click(function () {
+                save('#owner', "#recipient", "#ownerReports", "#recipientReports");
             });
 
         });
