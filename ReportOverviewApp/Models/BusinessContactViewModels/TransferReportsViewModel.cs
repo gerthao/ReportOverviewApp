@@ -10,7 +10,7 @@ namespace ReportOverviewApp.Models.BusinessContactViewModels
         public int First { get; set; }
         public int Second { get; set; }
         public List<BusinessContact> BusinessContacts { get; set; }
-        public List<int> FirstReportIds { get; set; }
-        public List<int> SecondReportIds { get; set; }
+        public List<int> FirstReports { get; set; }
+        public List<int> SecondReports { get; set; }
     }
 }

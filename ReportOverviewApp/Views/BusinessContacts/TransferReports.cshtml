@@ -3,73 +3,68 @@
 @{
     ViewData["Title"] = "Transfer Reports";
 }
-<h3>Transfer Reports</h3>
+<h4>Transfer Reports</h4>
 <hr />
-<div>
-    <form id="transferForm" asp-action="TransferReports" method="post">
-        @Html.AntiForgeryToken()
-        <div class="form-group col-md-12">
-            <div class="form-row">
-                <label class="form-label col-md-7">Business Contact</label>
-                <label class="form-label col-md-5">Business Contact</label>
-            </div>
-            <div class="form-row">
-                <select id="owner" class="form-control custom-select col-md-5" asp-for="First">
-                    @foreach (var businessContact in Model.BusinessContacts)
-                    {
-                        <option value="@businessContact.Id">@businessContact.Name</option>
-                    }
-                </select>
-                <div class="form-group col-md-2 align-self-center">
-                    <div class="form-row">
-                        <span class="col-md-3"></span>
-                        <span id="swapBusinessContacts" class="btn btn-primary col-md-6"><i class="fas fa-exchange-alt"></i></span>
-                        <span class="col-md-3"></span>
-                    </div>
-                </div>
-                <select id="recipient" class="form-control custom-select col-md-5" asp-for="Second">
-                    @foreach (var businessContact in Model.BusinessContacts)
-                    {
-                        <option value="@businessContact.Id">@businessContact.Name</option>
-                    }
-                </select>
-
-            </div>
-            <div class="form-row" style="padding-bottom: 1rem;">
-                <hr class="col-md-5" style="display: inline-block; text-align: left;" />
-                <h6 id="loading" class="col-md-1 align-self-center" style="text-align: center; display: inline-block;">Reports</h6>
-                <hr class="col-md-5" style="display: inline-block; text-align: right;" />
-            </div>
-            <div class="form-row" style="padding-bottom: 1rem;">   
-                <select id="ownerReports" asp-for="FirstReportIds" size="24" class="form-control col-md-5" multiple >
-                </select>
-                
-                <div class="form-group col-md-2 align-self-center">
-                    <div class="form-row" style="padding-bottom: 0.25rem;">
-                        <span class="col-md-3"></span>
-                        <span id="transferRight" class="btn btn-primary col-md-6"><i class="fas fa-arrow-right"></i></span>
-                        <span class="col-md-3"></span>
-                    </div>
-                    <div class="form-row" style="padding-bottom: 0.25rem;">
-                        <span class="col-md-3"></span>
-                        <span id="transferSwap" class="btn btn-primary col-md-6"><i class="fas fa-exchange-alt"></i></span>
-                        <span class="col-md-3"></span>
-                    </div>
-                    <div class="form-row">
-                        <span class="col-md-3"></span>
-                        <span id="transferLeft" class="btn btn-primary col-md-6"><i class="fas fa-arrow-left"></i></span>
-                        <span class="col-md-3"></span>
-                    </div>
-                </div>
-                <select id="recipientReports" asp-for="SecondReportIds" size="24" class="form-control col-md-5" multiple >
-                </select>
-            </div>
-            <div class="form-row float-right">
-                <button id="save" type="button" class="btn btn-primary float-right"><span><i class="fas fa-thumbs-up"></i></span>&nbsp;Save</button>
-            </div>
+<h5>Reports can be transferred between business contacts.</h5>
+<form id="transferReportsForm" asp-action="TransferReports" asp-controller="BusinessContacts" method="post" asp-antiforgery="true">
+    @Html.AntiForgeryToken()
+    <div class="form-group">
+        <div class="form-row">
+            <label class="form-label col-md-7">Business Contact</label>
+            <label class="form-label col-md-5">Business Contact</label>
         </div>
-    </form>
-</div>
+        <div class="form-row">
+            <select id="owner" class="form-control custom-select col-md-5" asp-for="First">
+                @foreach (var businessContact in Model.BusinessContacts)
+                {
+                    <option value="@businessContact.Id">@businessContact.Name</option>
+                }
+            </select>
+            <div class="form-group col-md-2">
+            </div>
+            <select id="recipient" class="form-control custom-select col-md-5" asp-for="Second">
+                @foreach (var businessContact in Model.BusinessContacts)
+                {
+                    <option value="@businessContact.Id">@businessContact.Name</option>
+                }
+            </select>
+
+        </div>
+        <div class="form-row" style="padding-bottom: 1rem;">
+            <hr class="col-md-5" style="display: inline-block; text-align: left;" />
+            <h6 id="loading" class="col-md-1 align-self-center" style="text-align: center; display: inline-block;">Reports</h6>
+            <hr class="col-md-5" style="display: inline-block; text-align: right;" />
+        </div>
+        <div class="form-row" style="padding-bottom: 1rem;">
+            <select id="ownerReports" asp-for="FirstReports" size="24" class="form-control col-md-5" multiple></select>
+
+            <div class="form-group col-md-2 align-self-center">
+                <div class="form-row" style="padding-bottom: 0.25rem;">
+                    <span class="col-md-3"></span>
+                    <button type="button" id="transferRight" class="btn btn-primary col-md-6"><i class="fas fa-arrow-right"></i></button>
+                    <span class="col-md-3"></span>
+                </div>
+                <div class="form-row" style="padding-bottom: 0.25rem;">
+                    <span class="col-md-3"></span>
+                    <button type="button" id="transferSwap" class="btn btn-primary col-md-6"><i class="fas fa-exchange-alt"></i></button>
+                    <span class="col-md-3"></span>
+                </div>
+                <div class="form-row">
+                    <span class="col-md-3"></span>
+                    <button type="button" id="transferLeft" class="btn btn-primary col-md-6"><i class="fas fa-arrow-left"></i></button>
+                    <span class="col-md-3"></span>
+                </div>
+            </div>
+            <select id="recipientReports" asp-for="SecondReports" size="24" class="form-control col-md-5" multiple></select>
+        </div>
+        <div class="form-row float-right">
+            <button id="save" type="button" class="btn btn-primary float-right"><span><i class="fas fa-save"></i></span>&nbsp;Save</button>
+        </div>
+    </div>
+</form>
+<br />
+<div id="status"></div>
+
 @section scripts{ 
 <script>
         $(document).ready(function () {
@@ -94,6 +89,7 @@
             }
             loadItems($('#owner').find(':selected').val(), '#ownerReports');
             loadItems($('#recipient').find(':selected').val(), '#recipientReports');
+            checkDuplicate();
 
             function moveItems(origin, destination) {
                 $(origin).find(':selected').prop('selected', false).appendTo(destination);
@@ -116,37 +112,51 @@
                 $(secondIds).children().each(function () {
                     secondReportIds.push(parseInt($(this).val()));
                 });
-                let token = '@Html.AntiForgeryToken()';
+
                 let viewModel = {
-                    __RequestVerificationToken: $(token).val(),
+                    __RequestVerificationToken: $("[name='__RequestVerificationToken']").val(),
                     first: parseInt($(first).val()),
                     second: parseInt($(second).val()),
-                    firstReportIds : firstReportIds,
-                    secondReportIds: secondReportIds,
-                    businessContacts: null
+                    firstReports: firstReportIds,
+                    secondReports: secondReportIds
                 };
-                alert(JSON.stringify({ viewModel: viewModel }));
                 let request = $.ajax({
                     type: 'POST',
                     dataType: 'json',
                     url: '@Url.Action("TransferReports", "BusinessContacts")',
+                    headers: {
+                        RequestVerificationToken: $("[name='__RequestVerificationToken']").val()
+                    },
                     contentType: 'application/json; charset=utf-8',
-                    data: JSON.parse(viewModel),
+                    data: JSON.stringify(viewModel),
                 });
-                request.done(function (msg) {
-                    alert("okay");
+                request.done(function (data) {
+                    $('#ownerReports').children().prop('selected', false);
+                    $('#recipientReports').children().prop('selected', false);
+                    $('#status').html('<div class="alert alert-success">Saved: ' + JSON.stringify(data) + '</div>');
 
                 })
                 request.fail(function (jqXHR, status, message) {
-                    alert(message);
-
+                    $('#status').html('<div class="alert alert-danger">' + status + ': ' + message + '</div>')
                 })
             }
+            function checkDuplicate() {
+                if ($('#owner').find(':selected').val() === $('#recipient').find(':selected').val()) {
+                    $('button').prop('disabled', true);
+                } else {
+                    $('button').prop('disabled', false);
+                }
+
+            }
             $('#owner').change(function () {
-                loadItems($(this).find(':selected').val(), '#ownerReports');
+                loadItems($('#owner').find(':selected').val(), '#ownerReports');
+                loadItems($('#recipient').find(':selected').val(), '#recipientReports');
+                checkDuplicate();
             })
             $('#recipient').change(function () {
-                loadItems($(this).find(':selected').val(), '#recipientReports');
+                loadItems($('#owner').find(':selected').val(), '#ownerReports');
+                loadItems($('#recipient').find(':selected').val(), '#recipientReports');
+                checkDuplicate();
             })
             $('#transferRight').click(function () {
                 moveItems('#ownerReports', '#recipientReports');
@@ -161,10 +171,10 @@
                 swapItems('#owner', '#recipient');
             });
             $('#save').hover(function () {
-                $('#ownerReports').children().prop('selected', true);
-                $('#recipientReports').children().prop('selected', true);
+                $(this).children(i).toggleClass('ld ld-heartbeat');
             });
             $('#save').click(function () {
+                $(status).fadeOut(1000);
                 save('#owner', "#recipient", "#ownerReports", "#recipientReports");
             });
 

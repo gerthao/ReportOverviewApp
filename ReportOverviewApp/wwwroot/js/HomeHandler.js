@@ -20,7 +20,7 @@ function getUserLogs() {
     });
 }
 function getReportCount() {
-    let link = "/Data/GetDeadlines/";
+    let link = "/Data/GetDeadlines";
     $.ajax({
         url: link,
         type: "GET",
@@ -29,7 +29,9 @@ function getReportCount() {
         success: function (data) {
             deadlineCount(data);
         },
-        error: console.error("failed: " + link)
+        error: function (a, b, c) {
+            console.error(c);
+        }
     });
 }
 function checkLessThanTen(number) {
