@@ -14,7 +14,8 @@ namespace ReportOverviewApp.Controllers
     public class BusinessContactsController : Controller
     {
         private readonly ApplicationDbContext _context;
-
+        private const string unassigned = "Unassigned";
+        private const int unassignedId = 0;
         public BusinessContactsController(ApplicationDbContext context)
         {
             _context = context;
@@ -30,36 +31,41 @@ namespace ReportOverviewApp.Controllers
                 FirstReports = new List<int>(),
                 SecondReports = new List<int>()
             };
+            viewModel.BusinessContacts.Add(new BusinessContact() { Name = unassigned, Id = unassignedId, Reports = await _context.Reports.Where(r => r.BusinessContactId == null || !r.BusinessContactId.HasValue).ToListAsync()});
             return View(viewModel);
         }
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> TransferReports([FromBody] TransferReportsViewModel viewModel)
         {
+            if (viewModel == null) return NotFound();
             if (ModelState.IsValid)
             {
-                var firstReportsToTransfer = viewModel.FirstReports.Select(i => _context.Reports.Find(i)).ToList();
-            
+                var firstReportsToTransfer = await _context.Reports.Where(r => r.BusinessContactId != viewModel.First && viewModel.FirstReports.Contains(r.Id)).ToListAsync();
+                var secondReportsToTransfer = await _context.Reports.Where(r => r.BusinessContactId != viewModel.Second && viewModel.SecondReports.Contains(r.Id)).ToListAsync();
+                if((firstReportsToTransfer == null || !firstReportsToTransfer.Any()) && (secondReportsToTransfer == null || !secondReportsToTransfer.Any()))
+                {
+                    return Json(new { success = true, update = false, message = "No changes detected." });
+                }
                 for (int i = 0; i < firstReportsToTransfer.Count(); i++)
                 {
-                    firstReportsToTransfer[i].BusinessContactId = viewModel.First;
+                    firstReportsToTransfer[i].BusinessContactId = (viewModel.First == unassignedId ? null : viewModel.First as int?);
                 }
-                _context.UpdateRange(firstReportsToTransfer);
-                await _context.SaveChangesAsync();
-                var secondReportsToTransfer = viewModel.SecondReports.Select(i =>  _context.Reports.Find(i)).ToList();
                 for (int i = 0; i < secondReportsToTransfer.Count(); i++)
                 {
-                    secondReportsToTransfer[i].BusinessContactId = viewModel.Second;
+                    secondReportsToTransfer[i].BusinessContactId = (viewModel.Second == unassignedId ? null : viewModel.Second as int?);
                 }
+                _context.UpdateRange(firstReportsToTransfer);
                 _context.UpdateRange(secondReportsToTransfer);
                 await _context.SaveChangesAsync();
-            } else
+            }
+            else
             {
                 return BadRequest(ModelState);
             }
             //var owner = await _context.BusinessContacts.Include(bc => bc.Reports).SingleOrDefaultAsync(bc => bc.Id == ownerId);
             //var recipient = await _context.BusinessContacts.Include(bc => bc.Reports).SingleOrDefaultAsync(bc => bc.Id == recipientId);
             //if (owner == null || recipient == null) return NotFound();
-            return Json(new { success = true });
+            return Json(new { success = true, update = true, message = "Save was successful"});
         }
 
 

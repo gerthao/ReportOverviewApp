@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReportOverviewApp.Models
 {
-
+    [JsonObject(IsReference = true)]
     public class Report
     {
         

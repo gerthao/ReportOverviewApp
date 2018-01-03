@@ -7,7 +7,7 @@
     </div>
     <div class="form-row col-md-12">
         <div class="form-group col-md-10">
-            <select id="businessContactSelectList" class="form-control col-md-12">
+            <select id="businessContactSelectList" class="form-control custom-select col-md-12">
                 @foreach (BusinessContact businessContactOption in Model.Options.BusinessContacts)
                 {
                     if (Model.Report.BusinessContact != null && businessContactOption == Model.Report.BusinessContact)

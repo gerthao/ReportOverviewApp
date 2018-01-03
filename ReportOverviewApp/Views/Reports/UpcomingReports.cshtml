@@ -3,9 +3,35 @@
 @{
     ViewData["Title"] = "Upcoming Reports";
 }
-<h4>
-    Status of Upcoming Reports
-</h4>
+<div class="row col-md-12">
+    <h4 style="display: inline-block">
+        Status of Upcoming Reports
+    </h4>
+</div>
+<div class="row col-md-12">
+    <select id="selectMonth" class="form-control custom-select form-inline col-md-2">
+        <option value="1">January</option>
+        <option value="2">February</option>
+        <option value="3">March</option>
+        <option value="4">April</option>
+        <option value="5">May</option>
+        <option value="6">June</option>
+        <option value="7">July</option>
+        <option value="8">August</option>
+        <option value="9">September</option>
+        <option value="10">October</option>
+        <option value="11">November</option>
+        <option value="12">December</option>
+    </select>
+    <div style="padding-left: 0.8rem;"></div>
+    <input id="selectYear" class="form-control form-inline col-md-2" type="number" value="@DateTime.Today.Year" />
+    <div style="padding-left: 0.8rem;"></div>
+    <button id="changeButton" type="button" class="btn btn-primary">Change</button>
+    <div style="padding-left: 0.8rem;"></div>
+    <button id="showAllButton" type="button" class="btn btn-primary">Show all</button>
+    <div style="padding-left: 0.8rem;"></div>
+    <button id="hideAllButton" type="button" class="btn btn-primary">Hide all</button>
+</div>
 <hr />
 @{
     var today = DateTime.Today;
@@ -13,22 +39,61 @@
 }
 @if (Model == null || Model.Count() == 0)
 {
-
     <h6 class="alert alert-warning">No Upcoming Reports Found</h6>
 }
-<div class="card-columns">
-
-
+<div id="status"></div>
+<div id="cardTemplate" style="display:none;">
+    <div class="card">
+        <div class="card-header">
+            <h6 class="deadline" style="display: inline-block;"></h6>
+            <div class="options" style="display:inline-block;position:absolute; vertical-align:middle; right: 0.5rem;">
+                <span><i class="fas fa-check-circle"></i></span>
+                <span class="toggleIcon" data-toggle="collapse"><i class="fas fa-chevron-down"></i></span>
+                <span><i class="fas fa-times-circle"></i></span>
+            </div>
+        </div>
+        <div class="collapse show list-collapsable">
+            <ul class="card-contents list-group list-group-flush">
+            </ul>
+        </div>
+    </div>
+</div>
+<div id="cardItemListTemplate" style="display:none;">
+    
+            <li class="list-group-item report-item">
+                <ul class="list-inline ">
+                    <li class="list-inline-item reportName">
+                    </li>
+                    <li class="list-inline-item">
+                        <span>
+                            <a class="editReportDeadlineLink" asp-action="EditReportDeadline" asp-route-id="" data-toggle="modal" data-target="#editReportDeadlineModal"><span class="fas fa-calendar-alt text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title=""></span></a>
+                            <a class="editReportLink" asp-action="EditReport" asp-route-id="" data-toggle="modal" data-target="#editReportModal"><span class="fas fa-edit text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title=""></span></a>
+                            <a class="viewReportLink" asp-action="Details" asp-route-id=""><span class="fas fa-book text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title=""></span></a>
+                            <a class="deleteReportLink" asp-action="DeleteReport" asp-route-id="" data-toggle="modal" data-target="#deleteReportModal"><span class="fas fa-eraser text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title=""></span></a>
+                        </span>
+                    </li>
+                </ul>
+                <ul class="list-inline report-item-status">
+                    <li class="list-inline-item">
+                        <p>Ran <span><i class="ran"></i></span></p>
+                    </li>
+                    <li class="list-inline-item">
+                        <p class->Approved <span><i class="approved"></i></span></p>
+                    </li>
+                    <li class="list-inline-item">
+                        <p>Sent <span><i class="sent"></i></span></p>
+                    </li>
+                </ul>
+            </li>
+        
+</div>
+<div id="cards" class="card-columns">
     @for (int i = 0; i < Model.Select(rd => rd.Deadline).Distinct().Count(); i++)
     {
         DateTime d = Model.Select(rd => rd.Deadline).Distinct().ElementAt(i);
-        //var total = @Model.Where(rd => rd.Deadline == d).Count();
-        //var runs = @Model.Where(rd => rd.Deadline == d && rd.HasRun).Count();
-        //var approvals = @Model.Where(rd => rd.Deadline == d && rd.IsApproved).Count();
-        //var sends = @Model.Where(rd => rd.Deadline == d && rd.IsSent).Count();
         <div class="card">
             <div class="card-header">
-                <h6 style="display: inline-block;">
+                <h6 class="title" style="display: inline-block;">
                     @if (d == today)
                     {
                         <text>Today</text>
@@ -41,7 +106,6 @@
                     {
                         @d.ToShortDateString()
                     }
-
                 </h6>
                 <div class="options" style="display:inline-block;position:absolute; vertical-align:middle; right: 0.5rem;">
                     <span><i class="fas fa-check-circle"></i></span>
@@ -51,32 +115,16 @@
             </div>
             <div class="collapse show list-collapsable" id="list-@i">
                 <ul class="list-group list-group-flush">
-                    @*<li class="list-group-item">
-                            <div class="row col-12">
-                                <div class="progress col-4">
-                                    <div class="progress-bar bg-secondary" role="progressbar" style="width:@runs.ToString()+'%'" aria-valuenow="@runs.ToString()" aria-valuemin="0" aria-valuemax="@total"></div>
-                                </div>
-                                <div class="progress col-4">
-                                    <div class="progress-bar bg-info" role="progressbar" style="width:@approvals+'%'" aria-valuenow="@approvals" aria-valuemin="0" aria-valuemax="@total"></div>
-                                </div>
-                                <div class="progress col-4">
-                                    <div class="progress-bar bg-success" role="progressbar" style="width:@sends+'%'" aria-valuenow="@sends" aria-valuemin="0" aria-valuemax="@total"></div>
-                                </div>
-                            </div>
-                        </li>*@
                     @foreach (ReportDeadline rd in Model.Select(rd => rd).Where(rd => rd.Deadline == d))
                     {
                         <li class="list-group-item report-item">
-                            @*<div class="report-item-options" style="display:inline-block;position:absolute; vertical-align:middle; right: 0.5rem;">
-                                    <span class="report-item-options-toggle"><i class="fas fa-chevron-down"></i></span>
-                                </div>*@
                             <ul class="list-inline ">
                                 <li class="list-inline-item">
                                     @rd.Report.Name
                                 </li>
                                 <li class="list-inline-item">
                                     <span>
-                                        <a class="editReportDeadlineLink" asp-action="EditReportDeadline" asp-route-id="@rd.ReportId" data-toggle="modal" data-target="#editReportDeadlineModal"><span class="fas fa-calendar-alt text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  Report Deadline (@rd.Deadline.ToShortDateString())"></span></a>
+                                        <a class="editReportDeadlineLink" asp-action="EditReportDeadline" asp-route-id="@rd.Id" data-toggle="modal" data-target="#editReportDeadlineModal"><span class="fas fa-calendar-alt text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  Report Deadline (@rd.Deadline.ToShortDateString())"></span></a>
                                         <a class="editReportLink" asp-action="EditReport" asp-route-id="@rd.ReportId" data-toggle="modal" data-target="#editReportModal"><span class="fas fa-edit text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  @rd.Report.Name"></span></a>
                                         <a asp-action="Details" asp-route-id="@rd.Report.Id"><span class="fas fa-book text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="View:   @rd.Report.Name"></span></a>
                                         <a class="deleteReportLink" asp-action="DeleteReport" asp-route-id="@rd.ReportId" data-toggle="modal" data-target="#deleteReportModal"><span class="fas fa-eraser text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Delete:   @rd.Report.Name"></span></a>
@@ -107,7 +155,6 @@
                     }
                 </ul>
             </div>
-
         </div>
     }
 </div>
@@ -149,14 +196,91 @@
         $('.list-collapsable').on('shown.bs.collapse', function () {
             $(this).prev('.card-header').children('.options').children('.toggleIcon').children('i').removeClass('fa-chevron-up').addClass('fa-chevron-down');
         });
-            //$(".report-item-options-toggle").click(
-            //    function () {
-            //        $(this).prev('report.children('.report-item-status').slideDown(200);
-            //        //$(this).children('.report-item-status').collapse('show');
-            //    },
-            //    function () {
-            //        $(this).children('.report-item-status').slideUp(200);
-            //    }
-            //);
+        $('#showAllButton').click(function () { $('.list-collapsable').collapse('show'); });
+        $('#hideAllButton').click(function () { $('.list-collapsable').collapse('hide'); });
+        $('#changeButton').click(function () {
+            $('#cards').html('<div class="fas fa-sync fa-5x ld ld-spin text-success align-self-center"></div>');
+            retriveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val());
+
+        });
+        function retriveReports(year, month) {
+            $.ajax({
+                type: 'GET',
+                url: '/Data/GetReportDeadlines?',
+                data: {year: year, month: month},
+                dataType: 'json',
+                success: function (data) {
+                    if ($(data).length > 0) {
+                        let groups = groupBy(data, 'Deadline');
+                        let items = [];
+                        $(groups).each(function (i, e) {
+                            $.each(e, function (j, f) {
+                                //$.each(f, function (k, g) {
+                                //    $('#status').append('<div class="alert alert-success">' + JSON.stringify(g.Report) + '</div>');
+
+                                //});
+                                //$('#status').append('<div class="alert alert-success">' + JSON.stringify(f) + '</div>');
+                                items.push(buildCard(j, f));
+
+                            });
+                        });
+                        $('#cards').html(items);
+                    } else {
+                        $('#status').html('<div class="alert alert-warning">No deadlines found</div>');
+                    }
+                    //let items = [];
+                    //$.each(data, function (key, value) {
+                    //    items.push('<option value="' + key + '">' + value + '</option>');
+                    //});
+                    //$(destination).html(items);
+                    //$('#loading').html('Reports');
+                },
+                error: function (a, b, c) {
+                    $('#status').html('<div class="alert alert-danger">' + c + '</div>');
+                    $('#cards').addClass('ldt ldt-fade-out');
+                }
+            });
+
+        }
+        function buildCard(key, data) {
+            let card = $('#cardTemplate').children().clone(true);
+            $(card).find('.deadline').text(key);
+            $(card).find('.toggleIcon').attr('data-target', '#'+key);
+            $(card).find('.list-collapsable').attr('id', key);
+            let reports = [];
+            $.each(data, function (k, l) { reports.push(buildCardContent(key, k, l));});
+            $(card).find('.card-contents').html(reports);
+            return card;
+        }
+        function buildCardContent(cardKey, key, report) {
+            let content = $('#cardItemListTemplate').children().clone(true);
+            //alert(report.Report.Name);
+            if (report.Report !== undefined) { $(content).find('.reportName').text(report.Report.Name);}
+            setIcon($(content).find('.ran'), report.Ran);
+            setIcon($(content).find('.approved'), report.Approved);
+            setIcon($(content).find('.sent'), report.Sent);
+            setRouteId($(content).find('.editReportDeadlineLink'), report.Id);
+            setRouteId($(content).find('.editReportLink'), report.ReportId);
+            setRouteId($(content).find('.viewReportLink'), report.ReportId);
+            setRouteId($(content).find('.deleteReportLink'), report.ReportId);
+            return content;
+        }
+        function groupBy(items, key) {
+            return items.reduce(
+                function (acc, x) { (acc[x[key]] = acc[x[key]] || []).push(x); return acc; }, {});
+        };
+        function setRouteId(link, id) {
+            let url = $(link).attr('href');
+            $(link).attr('href', url + '/' + id);
+
+        }
+        function setIcon(icon, data){
+            if (data == null) {
+                $(icon).html('<i class="far fa-circle text-info"></i>');
+            } else {
+                $(icon).html('<i class="far fa-check-circle text-success"></i>');
+
+            }
+        }
     </script>
 }

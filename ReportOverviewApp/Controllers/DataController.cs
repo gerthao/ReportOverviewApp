@@ -312,7 +312,15 @@ namespace ReportOverviewApp.Controllers
         [Authorize]
         public async Task<JsonResult> GetBusinessContactReports(int? id, bool indent, bool omitNull)
         {
-            var reports = await _context.Reports.Where(r => r.BusinessContactId == id).ToDictionaryAsync(r => r.Id, r => r.Name);
+            Dictionary<int, string> reports;
+            if (id == null || !id.HasValue || id == 0)
+            {
+                reports = await _context.Reports.Where(r => r.BusinessContactId == null).ToDictionaryAsync(r => r.Id, r => r.Name);
+            }
+            else
+            {
+                reports = await _context.Reports.Where(r => r.BusinessContactId == id).ToDictionaryAsync(r => r.Id, r => r.Name);
+            }
             return Json(reports, new JsonSerializerSettings() { Formatting = indent ? Newtonsoft.Json.Formatting.Indented : Newtonsoft.Json.Formatting.None, NullValueHandling = omitNull ? NullValueHandling.Ignore : NullValueHandling.Include });
         }
         [Authorize]
@@ -320,6 +328,12 @@ namespace ReportOverviewApp.Controllers
         {
             var reports = new SelectList(await _context.Reports.Where(r => r.BusinessContactId == id).Select(r => new { value = r.Id, text = r.Name }).ToListAsync(), "value", "text");
             return reports;
+        }
+        [Authorize]
+        public async Task<JsonResult> GetReportDeadlines(int? year, int? month, bool indent, bool omitNull)
+        {
+            var deadlines = await _context.ReportDeadlines.Include(rd => rd.Report).Where(rd => rd.Deadline.Year == year).Where(rd => rd.Deadline.Month == month).OrderBy(rd => rd.Deadline).ToListAsync();
+            return Json(deadlines, new JsonSerializerSettings() {DateFormatString="MM/dd/yyyy", Formatting = indent ? Newtonsoft.Json.Formatting.Indented : Newtonsoft.Json.Formatting.None, NullValueHandling = omitNull ? NullValueHandling.Ignore : NullValueHandling.Include });
         }
         //[Authorize]
         //public async Task<JsonResult> GetGraphData()

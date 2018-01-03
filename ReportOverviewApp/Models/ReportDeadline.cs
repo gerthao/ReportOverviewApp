@@ -1,12 +1,15 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace ReportOverviewApp.Models
 {
+    [JsonObject(IsReference = true)]
     public class ReportDeadline
     {
         public int Id { get; set; }
@@ -26,7 +29,9 @@ namespace ReportOverviewApp.Models
         
         public DateTime? SentDate { get; set; }
 
+        //[JsonIgnore, IgnoreDataMember]
         public Report Report { get; set; }
+
         public int ReportId { get; set; }
     }
 }
