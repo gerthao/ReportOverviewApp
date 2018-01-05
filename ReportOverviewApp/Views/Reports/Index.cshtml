@@ -78,6 +78,20 @@ else
                     }
                 </th>
                 <th>
+                    @Html.ActionLink("Frequency", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Frequency", begin = Model.Filters.Begin, end = Model.Filters.End }, new { })
+                    @if (Model.Filters.Column == "Frequency")
+                    {
+                        <i class="fas fa-filter"></i>
+                    }
+                </th>
+                <th>
+                    @Html.ActionLink("Termed", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Termed", begin = Model.Filters.Begin, end = Model.Filters.End }, new { })
+                    @if (Model.Filters.Column == "Termed")
+                    {
+                        <i class="fas fa-filter"></i>
+                    }
+                </th>
+                @*<th>
                     @Html.ActionLink("Deadline", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Deadline", begin = Model.Filters.Begin, end = Model.Filters.End }, new { })
                     @if (Model.Filters.Column == "Deadline")
                     {
@@ -104,18 +118,18 @@ else
                     {
                         <i class="fas fa-filter"></i>
                     }
-                </th>
+                </th>*@
                 <th>Options</th>
             </tr>
         </thead>
         <tbody>
             @for (int i = 0; i < Model.Reports.Count(); i++)
             {
-                ReportDeadline currentReportDeadline = null;
+                //ReportDeadline currentReportDeadline = null;
                 <tr>
                     <td class="reportId">@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Id)</td>
                     <td class="ReportName">@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Name)</td>
-                    @if (Model.Reports.ElementAt(i).Deadlines != null && Model.Reports.ElementAt(i).Deadlines.Any())
+                    @*@if (Model.Reports.ElementAt(i).Deadlines != null && Model.Reports.ElementAt(i).Deadlines.Any())
                     {
                         currentReportDeadline = Model.Reports.ElementAt(i).Deadlines.OrderByDescending(rd => rd.Deadline).First();
                         <td>@currentReportDeadline.Deadline.ToString("MM/dd/yyyy")</td>
@@ -143,19 +157,24 @@ else
                         {
                             <td></td>
                         }
-                    }
-                    else if (Model.Reports.ElementAt(i).IsTermed(DateTime.Today))
+                    }*@
+                    <td>@Model.Reports.ElementAt(i).Frequency</td>
+                    @if (Model.Reports.ElementAt(i).IsTermed(DateTime.Today))
                     {
-                        <td class="text-muted text-center" colspan="4">Termed</td>
+                        <td class="text-muted text-center"><i class="fas fa-check"></i></td>
 
                     }
                     else
                     {
+                        <td class="text-center"></td>
+                    }
+                        @*else
+                    {
                         <td class="text-muted text-center" colspan="4">No Current Deadline Found</td>
 
-                    }
+                    }*@
                     <td style="text-align: center;">
-                        <a class="editReportDeadlineLink"  asp-action="EditReportDeadline" asp-route-id="@Model.Reports.ElementAt(i).Id" data-toggle="modal" data-target="#editReportDeadlineModal"><span class="fas fa-adjust text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  Report Deadline (@Model.Reports.ElementAt(i).Name)"></span></a>
+                        @*<a class="editReportDeadlineLink"  asp-action="EditReportDeadline" asp-route-id="@Model.Reports.ElementAt(i).Id" data-toggle="modal" data-target="#editReportDeadlineModal"><span class="fas fa-adjust text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  Report Deadline (@Model.Reports.ElementAt(i).Name)"></span></a>*@
                         <a class="editReportLink" asp-action="EditReport" asp-route-id="@Model.Reports.ElementAt(i).Id" data-toggle="modal" data-target="#editReportModal"><span class="fas fa-edit text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  @Model.Reports.ElementAt(i).Name"></span></a>
                         <a asp-action="Details" asp-route-id="@Model.Reports.ElementAt(i).Id"><span class="fas fa-book text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="View:  @Model.Reports.ElementAt(i).Name"></span></a>
                         <a class="deleteReportLink" asp-action="DeleteReport" asp-route-id="@Model.Reports.ElementAt(i).Id" data-toggle="modal" data-target="#deleteReportModal"><span class="fas fa-eraser text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Delete:  @Model.Reports.ElementAt(i).Name"></span></a>

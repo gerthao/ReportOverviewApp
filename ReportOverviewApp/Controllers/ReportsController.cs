@@ -105,12 +105,11 @@ namespace ReportOverviewApp.Controllers
         {
             return ViewComponent("EditReportDeadline", new { deadlineId = id } );
         }
-
         public async Task<IActionResult> UpdateDeadlinesAsync()
         {
-            DateTime date = new DateTime(year: 2017, month: 1, day: 1);
+            DateTime date = DateTime.Today;
             int updates = 0;
-            for (int i = 0; i < 365; i++)
+            for (int i = 0; i < 1; i++)
             {
                 DateTime checkDate = date.AddDays(i);
                 await _context.Reports.Include(r => r.Deadlines).ForEachAsync(async r =>
@@ -228,42 +227,74 @@ namespace ReportOverviewApp.Controllers
             if (deadline == null) return NotFound();
             return View(deadline);
         }
-        [HttpPost, ValidateAntiForgeryToken, Authorize]
-        public async Task<IActionResult> EditDeadline(int? id, [Bind("Id,Deadline,RunDate,ApprovalDate,SentDate,ReportId")] ReportDeadline reportDeadline)
+        [HttpDelete, ValidateAntiForgeryToken, Authorize]
+        public async Task<IActionResult> DeleteDeadline([FromBody] int? id)
         {
-            ToastMessage toast = null;
-            if(id != reportDeadline.Id)
-            {
-                toast = new ToastMessage(message: $"IDs do not match", title: "Something Went Wrong...", toasType: ToastEnums.ToastType.Error, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
-                ShowToast(toast);
-                return NotFound();
-            }
+            if (id == null) return BadRequest("id parameter did not have a value");
+            var reportDeadline = await _context.ReportDeadlines.FindAsync(id);
+            if (reportDeadline == null) return NotFound("Value of id parameter not found in data table");
+            _context.ReportDeadlines.Remove(reportDeadline);
+            await _context.SaveChangesAsync();
+            return Json(new { success = true, update = true, message = "Deletion successful" });
+        }
+        [HttpPost, ValidateAntiForgeryToken, Authorize]
+        public async Task<IActionResult> EditDeadline([FromBody] ReportDeadline reportDeadline)
+        {
+            //ToastMessage toast = null;
+            //if(id != reportDeadline.Id)
+            //{
+            //    toast = new ToastMessage(message: $"IDs do not match", title: "Something Went Wrong...", toasType: ToastEnums.ToastType.Error, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
+            //    ShowToast(toast);
+            //    return NotFound();
+            //}
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var unmodifiedDeadline = _context.ReportDeadlines.AsNoTracking().Include(rd => rd.Report).SingleOrDefault(d => d.Id == id);
-                    await _context.AddAsync(userLogFactory.Build(GetCurrentUserID(), $"\"Status for {unmodifiedDeadline.Report.Name}\" has been updated.", CompareChanges(unmodifiedDeadline, reportDeadline)));
-                    _context.Update(reportDeadline);
+                    //var unmodifiedDeadline = _context.ReportDeadlines.AsNoTracking().Include(rd => rd.Report).SingleOrDefault(d => d.Id == id);
+                    //var deadline = await _context.ReportDeadlines.FindAsync(id);
+                    //await _context.AddAsync(userLogFactory.Build(GetCurrentUserID(), $"\"Status for {unmodifiedDeadline.Report.Name}\" has been updated.", CompareChanges(unmodifiedDeadline, reportDeadline)));
+                    //unmodifiedDeadline.Deadline = reportDeadline.Deadline;
+                    //unmodifiedDeadline.ApprovalDate = reportDeadline.ApprovalDate;
+                    //unmodifiedDeadline.SentDate = reportDeadline.SentDate;
+                    //unmodifiedDeadline.RunDate = reportDeadline.RunDate;
+                    //_context.Update(unmodifiedDeadline);
+                    //deadline.Deadline = reportDeadline.Deadline;
+                    //deadline.ApprovalDate = reportDeadline.ApprovalDate;
+                    //deadline.RunDate = reportDeadline.RunDate;
+                    //deadline.SentDate = reportDeadline.SentDate;
+                    Report report = await _context.Reports.FindAsync(reportDeadline.ReportId);
+                    if (report == null) throw new NullReferenceException($"Report is null and given {reportDeadline.ReportId} as Id for deadline of {reportDeadline.Deadline} with Id {reportDeadline.Id}");
+                    //ReportDeadline update = new ReportDeadline
+                    //{
+                    //    ReportId = report.Id,
+                    //    Deadline = reportDeadline.Deadline,
+                    //    ApprovalDate = reportDeadline.ApprovalDate,
+                    //    SentDate = reportDeadline.SentDate,
+                    //    RunDate = reportDeadline.RunDate
+                    //};
+                    //await _context.ReportDeadlines.AddAsync(update);
+                    //_context.ReportDeadlines.Remove((await _context.ReportDeadlines.FindAsync(reportDeadline.Id)));
+                    _context.ReportDeadlines.Update(reportDeadline);
                     await _context.SaveChangesAsync();
-                    toast = new ToastMessage(message: $"Deadline ({reportDeadline.Deadline.ToString("MM/dd/yyyy")}) for {unmodifiedDeadline.Report.Name} has been successfully edited.", title: "Success", toasType: ToastEnums.ToastType.Success, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
+                    //toast = new ToastMessage(message: $"Deadline ({reportDeadline.Deadline.ToString("MM/dd/yyyy")}) for {unmodifiedDeadline.Report.Name} has been successfully edited.", title: "Success", toasType: ToastEnums.ToastType.Success, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!ReportDeadlineExists(reportDeadline.Id))
                     {
-                        toast = new ToastMessage(message: $"Deadline ({reportDeadline.Deadline.ToString("MM/dd/yyyy")}) was not found in the database.", title: "Something Went Wrong...", toasType: ToastEnums.ToastType.Error, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
-                        ShowToast(toast);
+                        //toast = new ToastMessage(message: $"Deadline ({reportDeadline.Deadline.ToString("MM/dd/yyyy")}) was not found in the database.", title: "Something Went Wrong...", toasType: ToastEnums.ToastType.Error, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
+                        //ShowToast(toast);
                         return NotFound();
                     }
                     else throw;
                 }
-                ShowToast(toast);
-                return RedirectToAction("Index");
-            }
-            toast = new ToastMessage(message: $"One or more fields in the form are not valid.", title: "Changes Needed", toasType: ToastEnums.ToastType.Warning, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
-            ShowToast(toast);
-            return View(reportDeadline);
+                //ShowToast(toast);
+                return Json(new { success = true, update = true, message = "Save successful"});
+            } 
+            //toast = new ToastMessage(message: $"One or more fields in the form are not valid.", title: "Changes Needed", toasType: ToastEnums.ToastType.Warning, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
+            //ShowToast(toast);
+            return BadRequest(ModelState);
         }
         
         

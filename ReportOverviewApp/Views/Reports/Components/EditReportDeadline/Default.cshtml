@@ -9,7 +9,6 @@
         max-width: 100%
     }
 </style>
-
 @if (Model == null || Model.Id <= 0 || Model.Report == null)
 {
     <div class="modal-header">
@@ -23,7 +22,7 @@
 }
 else
 {
-    <form asp-action="EditDeadline" asp-route-id=@Model.Id>
+    <form id="editReportDeadlineForm" asp-action="EditDeadline" asp-route-id=@Model.Id>
         <div class="modal-header"><h5 class="modal-title">Report Deadline Status: @Model.Report.Name</h5></div>
         <div class="modal-body">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -36,23 +35,89 @@ else
             </div>
             <div class="form-group">
                 <label asp-for="RunDate" class="control-label"></label>
-                <input type="text" asp-for="RunDate" class="form-control" />
+                <div class="input-group">
+                    <input type="text" asp-for="RunDate" class="form-control" />
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-primary"><i class="fas fa-calendar-check"></i></button>
+                    </div>
+                </div>
                 <span asp-validation-for="RunDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ApprovalDate" class="control-label"></label>
-                <input type="text" asp-for="ApprovalDate" class="form-control" />
+                <div class="input-group">
+                    <input type="text" asp-for="ApprovalDate" class="form-control" />
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-primary"><i class="fas fa-calendar-check"></i></button>
+                    </div>
+                </div>
                 <span asp-validation-for="ApprovalDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="SentDate" class="control-label"></label>
-                <input type="text" asp-for="SentDate" class="form-control" />
+                <div class="input-group">
+                    <input type="text" asp-for="SentDate" class="form-control" />
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-primary"><i class="fas fa-calendar-check"></i></button>
+                    </div>
+                </div>
                 <span asp-validation-for="SentDate" class="text-danger"></span>
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-block btn-primary col-md-2">Save</button>
+            <button id="saveReportDeadline" type="button" class="btn btn-block btn-primary col-md-2"><i class="fas fa-save text-light"></i>&nbsp;Save</button>
         </div>
     </form>
-
+    <div id="editReportDeadlineStatus"></div>
+    <script type="text/javascript">
+        $('.input-group .input-group-append button').click(function () {
+            $(this).parent().prev('input').val(new Date().toLocaleString());
+        });
+        function save() {
+            $('button').prop('disabled', true);
+            let formData = $('#editReportDeadlineForm').serializeArray().reduce(function (a, x) { a[x.name] = x.value; return a; }, {});
+            let model = {
+                __RequestVerificationToken: $("[name='__RequestVerificationToken']").val(),
+                id : parseInt(formData.Id),
+                deadline: formData.Deadline,
+                runDate: formData.RunDate === "" ? null : formData.RunDate,
+                approvalDate: formData.ApprovalDate === "" ? null : formData.ApprovalDate,
+                sentDate: formData.SentDate === "" ? null : formData.SentDate,
+                reportId: parseInt(formData.ReportId)
+            };
+            let request = $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                url: '/Reports/EditDeadline/',
+                headers: {
+                    RequestVerificationToken: $("[name='__RequestVerificationToken']").val()
+                },
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(model)
+            });
+            request.done(function (data) {
+                if (data.success) {
+                    if (data.update) {
+                        $('#editReportDeadlineStatus').html('<div class="alert alert-success ldt ldt-fade-in">Message: ' + data.message + '</div>');
+                    } else {
+                        $('#editReportDeadlineStatus').html('<div class="alert alert-info ldt ldt-fade-in">Message: ' + data.message + '</div>');
+                    }
+                }
+                $('#saveReportDeadline').find('i').removeClass('ld ld-heartbeat');
+                $('button').prop('disabled', false);
+                let saveDate = new Date(model.deadline);
+                retriveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val(), convertDate(new Date(saveDate).toJSON()));
+            })
+            request.fail(function (jqXHR, status, message) {
+                $('#editReportDeadlineStatus').html('<div class="alert alert-danger ldt ldt-fade-in">' + status + ': ' + message + '\n' + JSON.stringify(model) + '</div>');
+                $('#saveReportDeadline').find('i').removeClass('ld ld-heartbeat');
+                $('button').prop('disabled', false);
+            })
+            
+        }
+        $('#saveReportDeadline').click(function () {
+            save();
+            
+        });
+    </script>
 }

@@ -14,21 +14,23 @@ namespace ReportOverviewApp.Models
     {
         public int Id { get; set; }
 
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime Deadline { get; set; }
 
-        public bool HasRun { get => RunDate != null && RunDate <= Deadline; }
+        public bool HasRun { get => RunDate != null; }
         
+        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy hh:mm tt}", ApplyFormatInEditMode = true)]
         public DateTime? RunDate { get; set; }
 
-        public bool IsApproved { get => ApprovalDate != null && ApprovalDate <= Deadline; }
-        
+        public bool IsApproved { get => ApprovalDate != null; }
+
+        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy hh:mm tt}", ApplyFormatInEditMode = true)]
         public DateTime? ApprovalDate { get; set; }
 
-        public bool IsSent { get => SentDate != null && SentDate <= Deadline; }
         
+        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy hh:mm tt}", ApplyFormatInEditMode = true)]
         public DateTime? SentDate { get; set; }
-
+        public bool IsSent { get => SentDate != null; }
         //[JsonIgnore, IgnoreDataMember]
         public Report Report { get; set; }
 

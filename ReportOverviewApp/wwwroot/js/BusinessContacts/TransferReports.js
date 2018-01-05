@@ -18,10 +18,6 @@
             }
         });
     }
-    loadItems($('#owner').find(':selected').val(), '#ownerReports');
-    loadItems($('#recipient').find(':selected').val(), '#recipientReports');
-    checkDuplicate();
-
     function moveItems(origin, destination) {
         $(origin).find(':selected').prop('selected', false).appendTo(destination);
     }
@@ -80,6 +76,16 @@
             $('button').prop('disabled', false);
         })
     }
+    function getStatus(id, mode, message) {
+        switch (mode) {
+            case 'danger':
+                break;
+            case 'warning':
+                break;
+            case 'success':
+                break;
+        }
+    }
     function checkDuplicate() {
         if ($('#owner').find(':selected').val() === $('#recipient').find(':selected').val()) {
             $('button').prop('disabled', true);
@@ -110,12 +116,14 @@
         swapItems('#owner', '#recipient');
     });
     $('#save').hover(function () {
-        $(this).children(i).toggleClass('ld ld-heartbeat');
+        $(this).children('i').toggleClass('ld ld-heartbeat');
     });
     $('#save').click(function () {
         $(this).find('i').addClass('ld ld-heartbeat');
         $('button').prop('disabled', true);
         save('#owner', "#recipient", "#ownerReports", "#recipientReports");
     });
-
+    loadItems($('#owner').find(':selected').val(), '#ownerReports');
+    loadItems($('#recipient').find(':selected').val(), '#recipientReports');
+    checkDuplicate();
 });

@@ -332,8 +332,8 @@ namespace ReportOverviewApp.Controllers
         [Authorize]
         public async Task<JsonResult> GetReportDeadlines(int? year, int? month, bool indent, bool omitNull)
         {
-            var deadlines = await _context.ReportDeadlines.Include(rd => rd.Report).Where(rd => rd.Deadline.Year == year).Where(rd => rd.Deadline.Month == month).OrderBy(rd => rd.Deadline).ToListAsync();
-            return Json(deadlines, new JsonSerializerSettings() {DateFormatString="MM/dd/yyyy", Formatting = indent ? Newtonsoft.Json.Formatting.Indented : Newtonsoft.Json.Formatting.None, NullValueHandling = omitNull ? NullValueHandling.Ignore : NullValueHandling.Include });
+            var deadlines = await _context.ReportDeadlines.Include(rd => rd.Report).Where(rd => rd.Deadline.Year == year).Where(rd => rd.Deadline.Month == month).OrderBy(rd => rd.Deadline).ThenBy(rd => rd.Report.Name).Select(rd => new {rd.Id, rd.Deadline, rd.RunDate, rd.ApprovalDate, rd.SentDate, rd.HasRun, rd.IsApproved, rd.IsSent, rd.ReportId, rd.Report.Name }).ToListAsync();
+            return Json(deadlines, new JsonSerializerSettings() {Formatting = indent ? Newtonsoft.Json.Formatting.Indented : Newtonsoft.Json.Formatting.None, NullValueHandling = omitNull ? NullValueHandling.Ignore : NullValueHandling.Include });
         }
         //[Authorize]
         //public async Task<JsonResult> GetGraphData()

@@ -1,36 +1,55 @@
 ﻿@using ReportOverviewApp.Models;
 @model IEnumerable<ReportDeadline>
 @{
-    ViewData["Title"] = "Upcoming Reports";
+    ViewData["Title"] = "Deadlines";
 }
 <div class="row col-md-12">
     <h4 style="display: inline-block">
-        Status of Upcoming Reports
+        Status of Reports
     </h4>
 </div>
 <div class="row col-md-12">
+    @{
+        Dictionary<int, string> months = new Dictionary<int, string>();
+        months.Add(1, "January");
+        months.Add(2, "February");
+        months.Add(3, "March");
+        months.Add(4, "April");
+        months.Add(5, "May");
+        months.Add(6, "June");
+        months.Add(7, "July");
+        months.Add(8, "August");
+        months.Add(9, "September");
+        months.Add(10, "October");
+        months.Add(11, "November");
+        months.Add(12, "December");
+        DateTime currentDate = DateTime.Today;
+    }
     <select id="selectMonth" class="form-control custom-select form-inline col-md-2">
-        <option value="1">January</option>
-        <option value="2">February</option>
-        <option value="3">March</option>
-        <option value="4">April</option>
-        <option value="5">May</option>
-        <option value="6">June</option>
-        <option value="7">July</option>
-        <option value="8">August</option>
-        <option value="9">September</option>
-        <option value="10">October</option>
-        <option value="11">November</option>
-        <option value="12">December</option>
+        @foreach (var month in months)
+        {
+            if (currentDate.Month == month.Key)
+            {
+                <option value="@month.Key" selected>@month.Value</option>
+            }
+            else
+            {
+                <option value="@month.Key">@month.Value</option>
+            }
+        }
     </select>
     <div style="padding-left: 0.8rem;"></div>
-    <input id="selectYear" class="form-control form-inline col-md-2" type="number" value="@DateTime.Today.Year" />
+    <input id="selectYear" class="form-control form-inline col-md-2" type="number" value="@currentDate.Year" />
     <div style="padding-left: 0.8rem;"></div>
-    <button id="changeButton" type="button" class="btn btn-primary">Change</button>
+    <button id="changeButton" type="button" class="btn btn-primary"><i class="fas fa-search text-light"></i>&nbsp;&nbsp;Search</button>
     <div style="padding-left: 0.8rem;"></div>
-    <button id="showAllButton" type="button" class="btn btn-primary">Show all</button>
+    <button id="showAllButton" type="button" class="btn btn-primary"><i class="fas fa-expand text-light"></i>&nbsp;&nbsp;Show all</button>
     <div style="padding-left: 0.8rem;"></div>
-    <button id="hideAllButton" type="button" class="btn btn-primary">Hide all</button>
+    <button id="hideAllButton" type="button" class="btn btn-primary"><i class="fas fa-minus text-light"></i>&nbsp;&nbsp;Hide all</button>
+    <div style="padding-left: 0.8rem;"></div>
+    <button id="viewButton" type="button" class="btn btn-primary"><i class="fas fa-th text-light"></i></button>
+    <div style="padding-left: 0.8rem;"></div>
+    <span id="loadingIcon"></span>
 </div>
 <hr />
 @{
@@ -48,11 +67,11 @@
             <h6 class="deadline" style="display: inline-block;"></h6>
             <div class="options" style="display:inline-block;position:absolute; vertical-align:middle; right: 0.5rem;">
                 <span><i class="fas fa-check-circle"></i></span>
-                <span class="toggleIcon" data-toggle="collapse"><i class="fas fa-chevron-down"></i></span>
+                <span class="toggleIcon" data-toggle="collapse"><i class="fas fa-chevron-up"></i></span>
                 <span><i class="fas fa-times-circle"></i></span>
             </div>
         </div>
-        <div class="collapse show list-collapsable">
+        <div class="panel-collapse collapse">
             <ul class="card-contents list-group list-group-flush">
             </ul>
         </div>
@@ -66,10 +85,10 @@
                     </li>
                     <li class="list-inline-item">
                         <span>
-                            <a class="editReportDeadlineLink" asp-action="EditReportDeadline" asp-route-id="" data-toggle="modal" data-target="#editReportDeadlineModal"><span class="fas fa-calendar-alt text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title=""></span></a>
-                            <a class="editReportLink" asp-action="EditReport" asp-route-id="" data-toggle="modal" data-target="#editReportModal"><span class="fas fa-edit text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title=""></span></a>
-                            <a class="viewReportLink" asp-action="Details" asp-route-id=""><span class="fas fa-book text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title=""></span></a>
-                            <a class="deleteReportLink" asp-action="DeleteReport" asp-route-id="" data-toggle="modal" data-target="#deleteReportModal"><span class="fas fa-eraser text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title=""></span></a>
+                            <a class="editReportDeadlineLink" asp-action="EditReportDeadline" data-toggle="modal" data-target="#editReportDeadlineModal"><span class="fas fa-calendar-alt text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title=""></span></a>
+                            <a class="editReportLink" asp-action="EditReport" data-toggle="modal" data-target="#editReportModal"><span class="fas fa-edit text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title=""></span></a>
+                            <a class="viewReportLink" asp-action="Details" ><span class="fas fa-book text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title=""></span></a>
+                            <a class="deleteReportLink" asp-action="DeleteReport" data-toggle="modal" data-target="#deleteReportModal"><span class="fas fa-eraser text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title=""></span></a>
                         </span>
                     </li>
                 </ul>
@@ -88,7 +107,8 @@
         
 </div>
 <div id="cards" class="card-columns">
-    @for (int i = 0; i < Model.Select(rd => rd.Deadline).Distinct().Count(); i++)
+    <noscript>
+            @for (int i = 0; i < Model.Select(rd => rd.Deadline).Distinct().Count(); i++)
     {
         DateTime d = Model.Select(rd => rd.Deadline).Distinct().ElementAt(i);
         <div class="card">
@@ -109,7 +129,7 @@
                 </h6>
                 <div class="options" style="display:inline-block;position:absolute; vertical-align:middle; right: 0.5rem;">
                     <span><i class="fas fa-check-circle"></i></span>
-                    <span class="toggleIcon" data-toggle="collapse" data-target="#list-@i"><i class="fas fa-chevron-down"></i></span>
+                    <span class="toggleIcon" data-toggle="collapse" data-target="#list-@i"><i class="fas fa-chevron-down" ></i></span>
                     <span><i class="fas fa-times-circle"></i></span>
                 </div>
             </div>
@@ -157,6 +177,8 @@
             </div>
         </div>
     }
+    </noscript>
+
 </div>
 <div id="editReportDeadlineModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
@@ -190,20 +212,24 @@
 @section scripts{
     <script src="~/js/ReportsHandler.js"></script>
     <script>
-        $('.list-collapsable').on('hidden.bs.collapse', function () {
+        $('#viewButton').click(function () {
+            $('#cards').toggleClass('card-columns');
+        });
+        $('.panel-collapse').on('hidden.bs.collapse', function () {
             $(this).prev('.card-header').children('.options').children('.toggleIcon').children('i').removeClass('fa-chevron-down').addClass('fa-chevron-up');
         });
-        $('.list-collapsable').on('shown.bs.collapse', function () {
+        $('.panel-collapse').on('shown.bs.collapse', function () {
             $(this).prev('.card-header').children('.options').children('.toggleIcon').children('i').removeClass('fa-chevron-up').addClass('fa-chevron-down');
         });
         $('#showAllButton').click(function () { $('.list-collapsable').collapse('show'); });
         $('#hideAllButton').click(function () { $('.list-collapsable').collapse('hide'); });
         $('#changeButton').click(function () {
-            $('#cards').html('<div class="fas fa-sync fa-5x ld ld-spin text-success align-self-center"></div>');
+            $('#status').children().fadeOut(200);
             retriveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val());
-
         });
-        function retriveReports(year, month) {
+        function retriveReports(year, month, lastEditedDate) {
+            $('#loadingIcon').html('<i class="fas fa-cog fa-2x ld ld-spin"></i>');
+            $('button').prop('disabled', true);
             $.ajax({
                 type: 'GET',
                 url: '/Data/GetReportDeadlines?',
@@ -215,50 +241,58 @@
                         let items = [];
                         $(groups).each(function (i, e) {
                             $.each(e, function (j, f) {
-                                //$.each(f, function (k, g) {
-                                //    $('#status').append('<div class="alert alert-success">' + JSON.stringify(g.Report) + '</div>');
-
-                                //});
-                                //$('#status').append('<div class="alert alert-success">' + JSON.stringify(f) + '</div>');
-                                items.push(buildCard(j, f));
-
+                                items.push(buildCard(j, f, lastEditedDate));
                             });
                         });
-                        $('#cards').html(items);
+                        $('#loadingIcon').find('i').fadeOut(200, function () {
+                            $('#cards').html(items);
+                        });
                     } else {
-                        $('#status').html('<div class="alert alert-warning">No deadlines found</div>');
-                    }
-                    //let items = [];
-                    //$.each(data, function (key, value) {
-                    //    items.push('<option value="' + key + '">' + value + '</option>');
-                    //});
-                    //$(destination).html(items);
-                    //$('#loading').html('Reports');
+                        $('#loadingIcon').find('i').fadeOut(200, function () {
+                            $('#status').html('<div class="alert alert-warning">Message: No deadlines found</div>');
+                            $('#cards').children().hide();
+                        });
+                    };
+                    $('button').prop('disabled', false);
                 },
                 error: function (a, b, c) {
-                    $('#status').html('<div class="alert alert-danger">' + c + '</div>');
-                    $('#cards').addClass('ldt ldt-fade-out');
+                    $('#loadingIcon').find('i').fadeOut(200, function () {
+                        $('#status').html('<div class="alert alert-danger">' + c + '</div>');
+                        $('#cards').children().hide();
+                    });
+                    $('button').prop('disabled', false);
                 }
             });
 
         }
-        function buildCard(key, data) {
+        function convertDate(inputFormat) {
+            function pad(s) { return (s < 10) ? '0' + s : s; }
+            var d = new Date(inputFormat);
+            return [pad(d.getMonth() + 1), pad(d.getDate()), d.getFullYear()].join('/');
+        }
+        function buildCard(key, data, lastEditedDate) {
+            let keyDate = new Date(key);
             let card = $('#cardTemplate').children().clone(true);
-            $(card).find('.deadline').text(key);
-            $(card).find('.toggleIcon').attr('data-target', '#'+key);
-            $(card).find('.list-collapsable').attr('id', key);
+            $(card).find('.toggleIcon').attr('data-target', '#' + 'list' + convertDate(key).replace('/', '-').replace('/', '-'));
+            $(card).find('.toggleIcon').attr('aria-controls', 'list' + convertDate(key).replace('/', '-').replace('/', '-'));
+            $(card).find('.panel-collapse').attr('id', 'list' + convertDate(key).replace('/', '-').replace('/', '-'));
+            $(card).find('.panel-collapse').addClass('list-collapsable');
+            if (convertDate(new Date(key)) === lastEditedDate) {
+                $(card).find('.panel-collapse').addClass('show');
+                $(card).find('.toggleIcon').find('i').removeClass('fas fa-chevron-up').addClass('fas fa-chevron-down');
+            }
             let reports = [];
-            $.each(data, function (k, l) { reports.push(buildCardContent(key, k, l));});
+            $.each(data, function (k, l) { reports.push(buildCardContent(k, l));});
             $(card).find('.card-contents').html(reports);
+            setCardStatus(card, key, data);
             return card;
         }
-        function buildCardContent(cardKey, key, report) {
+        function buildCardContent(key, report) {
             let content = $('#cardItemListTemplate').children().clone(true);
-            //alert(report.Report.Name);
-            if (report.Report !== undefined) { $(content).find('.reportName').text(report.Report.Name);}
-            setIcon($(content).find('.ran'), report.Ran);
-            setIcon($(content).find('.approved'), report.Approved);
-            setIcon($(content).find('.sent'), report.Sent);
+            $(content).find('.reportName').text(report.Name);
+            setIcon($(content).find('.ran'), report.HasRun);
+            setIcon($(content).find('.approved'), report.IsApproved);
+            setIcon($(content).find('.sent'), report.IsSent);
             setRouteId($(content).find('.editReportDeadlineLink'), report.Id);
             setRouteId($(content).find('.editReportLink'), report.ReportId);
             setRouteId($(content).find('.viewReportLink'), report.ReportId);
@@ -274,13 +308,53 @@
             $(link).attr('href', url + '/' + id);
 
         }
-        function setIcon(icon, data){
-            if (data == null) {
-                $(icon).html('<i class="far fa-circle text-info"></i>');
-            } else {
-                $(icon).html('<i class="far fa-check-circle text-success"></i>');
-
+        function setCardStatus(card, key, data) {
+            let date = new Date();
+            let dateKey = new Date(key);
+            let okay = true;
+            $.each(data, function (k, l) { okay = okay && checkMissing(l); });
+            $(card).find('.deadline').text(convertDate(dateKey))
+            if (convertDate(dateKey) === convertDate(date)) {
+                $(card).find('.deadline').append(' (Today)');
+                if (!okay) {
+                    $(card).find('.card-header').addClass('text-dark');
+                    $(card).addClass('bg-warning');
+                } else {
+                    $(card).find('.card-header').addClass('text-light');
+                    $(card).addClass('bg-success');
+                }
+                $(card).addClass('bg-warning');
+                $(card).find('.card-header').addClass('text-dark');
+            } else if (dateKey < date) {
+                if (!okay) {
+                    $(card).find('.card-header').addClass('text-light');
+                    $(card).addClass('bg-danger');
+                } else {
+                    $(card).find('.card-header').addClass('text-light');
+                    $(card).addClass('bg-success');
+                }
+            }
+            else {
+                if (okay) {
+                    $(card).find('.card-header').addClass('text-light');
+                    $(card).addClass('bg-success');
+                }
             }
         }
+        function checkMissing(report) {
+            return report.HasRun && report.IsApproved && report.IsSent;
+        }
+        function setIcon(icon, data) {
+            if (data) {
+                $(icon).html('<i class="far fa-check-circle text-success"></i>');
+            } else {
+                $(icon).html('<i class="far fa-circle text-info"></i>');
+            }
+        }
+        function initialize() {
+            retriveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val());
+        }
+        initialize();
     </script>
+
 }
