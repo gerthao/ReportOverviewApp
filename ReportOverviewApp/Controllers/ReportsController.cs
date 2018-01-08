@@ -179,16 +179,19 @@ namespace ReportOverviewApp.Controllers
         [Authorize]
         public IActionResult Create() => View();
         
-        public async Task<IActionResult> UpcomingReports()
+        public IActionResult UpcomingReports(int? month, int? year, string name)
         {
-            return View(await _context.ReportDeadlines.Where(rd => rd != null && rd.Deadline != null && rd.Deadline >= DateTime.Today && rd.Deadline <= DateTime.Today.AddDays(7)).Include(rd => rd.Report).OrderBy(rd => rd.Deadline).ThenBy(rd => rd.Report.Name).ToListAsync());
+            ViewData["month"] = month ?? DateTime.Today.Month as int?;
+            ViewData["year"] = year ?? DateTime.Today.Year as int?;
+            ViewData["name"] = name == null ? String.Empty : name;
+            return View();
         }
 
-        [Authorize]
-        public async Task<IActionResult> PastReports()
-        {
-            return View(await _context.ReportDeadlines.Where(rd => rd != null && rd.Deadline != null && rd.Deadline < DateTime.Today).Include(rd => rd.Report).OrderByDescending(rd => rd.Deadline).ThenBy(rd => rd.Report.Name).ToListAsync());
-        }
+        //[Authorize]
+        //public async Task<IActionResult> PastReports()
+        //{
+        //    return View(await _context.ReportDeadlines.Where(rd => rd != null && rd.Deadline != null && rd.Deadline < DateTime.Today).Include(rd => rd.Report).OrderByDescending(rd => rd.Deadline).ThenBy(rd => rd.Report.Name).ToListAsync());
+        //}
 
         // POST: Reports/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 

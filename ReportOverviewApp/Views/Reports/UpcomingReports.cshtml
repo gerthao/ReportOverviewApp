@@ -25,10 +25,12 @@
         months.Add(12, "December");
         DateTime currentDate = DateTime.Today;
     }
+    @{int? selectedYear = ViewData["year"] as int? == null ? currentDate.Year : ViewData["year"] as int?;}
+    @{int? selectedMonth = ViewData["month"] as int? == null ? currentDate.Month : ViewData["month"] as int?; }
     <select id="selectMonth" class="form-control custom-select form-inline col-md-2">
         @foreach (var month in months)
         {
-            if (currentDate.Month == month.Key)
+            if (selectedMonth == month.Key)
             {
                 <option value="@month.Key" selected>@month.Value</option>
             }
@@ -38,8 +40,9 @@
             }
         }
     </select>
+
     <div style="padding-left: 0.8rem;"></div>
-    <input id="selectYear" class="form-control form-inline col-md-2" type="number" value="@currentDate.Year" />
+    <input id="selectYear" class="form-control form-inline col-md-2" type="number" value="@selectedYear.Value" />
     <div style="padding-left: 0.8rem;"></div>
     <button id="changeButton" type="button" class="btn btn-primary"><i class="fas fa-search text-light"></i>&nbsp;&nbsp;Search</button>
     <div style="padding-left: 0.8rem;"></div>
@@ -56,10 +59,10 @@
     var today = DateTime.Today;
     var tomorrow = DateTime.Today.AddDays(1);
 }
-@if (Model == null || Model.Count() == 0)
+@*@if (Model == null || Model.Count() == 0)
 {
     <h6 class="alert alert-warning">No Upcoming Reports Found</h6>
-}
+}*@
 <div id="status"></div>
 <div id="cardTemplate" style="display:none;">
     <div class="card">
@@ -107,7 +110,7 @@
         
 </div>
 <div id="cards" class="card-columns">
-    <noscript>
+    @*<noscript>
             @for (int i = 0; i < Model.Select(rd => rd.Deadline).Distinct().Count(); i++)
     {
         DateTime d = Model.Select(rd => rd.Deadline).Distinct().ElementAt(i);
@@ -177,7 +180,7 @@
             </div>
         </div>
     }
-    </noscript>
+    </noscript>*@
 
 </div>
 <div id="editReportDeadlineModal" class="modal fade" tabindex="-1" role="dialog">
