@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using ReportOverviewApp.Models.BusinessContactViewModels;
 
 namespace ReportOverviewApp.Controllers
 {
+    [Authorize]
     public class BusinessContactsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -21,16 +23,24 @@ namespace ReportOverviewApp.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> TransferReports()
+        public async Task<IActionResult> TransferReports(int? first, int? second)
         {
-            //var recipient = await _context.BusinessContacts.Include(bc => bc.Reports).SingleOrDefaultAsync(bc => bc.Id == recipientId);
+            //var firstTransfer = await _context.BusinessContacts.Include(bc => bc.Reports).SingleOrDefaultAsync(bc => bc.Id == recipientId);
             //if (owner == null || recipient == null) return NotFound();
-            var viewModel = new TransferReportsViewModel()
+            TransferReportsViewModel viewModel = viewModel = new TransferReportsViewModel()
             {
                 BusinessContacts = await _context.BusinessContacts.Include(bc => bc.Reports).ToListAsync(),
                 FirstReports = new List<int>(),
                 SecondReports = new List<int>()
             };
+            if (first != null && first.HasValue)
+            {
+                viewModel.First = first.Value;
+            }
+            if (second != null && second.HasValue)
+            {
+                viewModel.Second = second.Value;
+            }
             viewModel.BusinessContacts.Add(new BusinessContact() { Name = unassigned, Id = unassignedId, Reports = await _context.Reports.Where(r => r.BusinessContactId == null || !r.BusinessContactId.HasValue).ToListAsync()});
             return View(viewModel);
         }
@@ -70,9 +80,23 @@ namespace ReportOverviewApp.Controllers
 
 
         // GET: BusinessContacts
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sort)
         {
-            return View(await _context.BusinessContacts.ToListAsync());
+            var businessContacts = await _context.BusinessContacts.ToListAsync();
+            switch (sort?.ToLower())
+            {
+                case "id":
+                    businessContacts = businessContacts.OrderBy(p => p.Id).ToList();
+                    break;
+                case "name":
+                    businessContacts = businessContacts.OrderBy(p => p.Name).ToList();
+                    break;
+                default:
+                    businessContacts = businessContacts.OrderBy(p => p.Id).ToList();
+                    break;
+
+            }
+            return View(businessContacts);
         }
 
         // GET: BusinessContacts/Details/5

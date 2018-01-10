@@ -239,6 +239,7 @@
                 data: {year: year, month: month},
                 dataType: 'json',
                 success: function (data) {
+                    history.replaceState(null, null, location.protocol.trim('/') + '?month=' + month + '&year=' + year);
                     if ($(data).length > 0) {
                         let groups = groupBy(data, 'Deadline');
                         let items = [];

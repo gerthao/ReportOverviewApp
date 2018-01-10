@@ -96,11 +96,13 @@
     $('#owner').change(function () {
         loadItems($('#owner').find(':selected').val(), '#ownerReports');
         loadItems($('#recipient').find(':selected').val(), '#recipientReports');
+        history.replaceState(null, null, location.protocol.trim('/') + '?first=' + $('#owner').find(':selected').val() + '&second=' + $('#recipient').find(':selected').val());
         checkDuplicate();
     })
     $('#recipient').change(function () {
         loadItems($('#owner').find(':selected').val(), '#ownerReports');
         loadItems($('#recipient').find(':selected').val(), '#recipientReports');
+        history.replaceState(null, null, location.protocol.trim('/') + '?first=' + $('#owner').find(':selected').val() + '&second=' + $('#recipient').find(':selected').val());
         checkDuplicate();
     })
     $('#transferRight').click(function () {
@@ -123,6 +125,9 @@
         $('button').prop('disabled', true);
         save('#owner', "#recipient", "#ownerReports", "#recipientReports");
     });
+
+    //let link = document.getElementById('click');
+    //link.addEventListener('click', change_my_url, false);
     loadItems($('#owner').find(':selected').val(), '#ownerReports');
     loadItems($('#recipient').find(':selected').val(), '#recipientReports');
     checkDuplicate();

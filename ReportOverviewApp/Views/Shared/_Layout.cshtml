@@ -55,11 +55,11 @@
                                     <a class="nav-link" asp-area="" asp-controller="Reports" asp-action="SelectPlan">Find Reports Through Plan</a>
                                 </li>
                                 <li class="nav-item">
-                                     @Html.ActionLink(linkText: "Upcoming Reports", actionName: "UpcomingReports", controllerName: "Reports", routeValues: new { }, htmlAttributes: new { @class = "nav-link" })
+                                    @Html.ActionLink(linkText: "Upcoming Reports", actionName: "UpcomingReports", controllerName: "Reports", routeValues: new { }, htmlAttributes: new { @class = "nav-link" })
                                 </li>
                                 @*<li class="nav-item">
-                                    @Html.ActionLink(linkText: "Past Reports", actionName: "PastReports", controllerName: "Reports", routeValues: new { }, htmlAttributes: new { @class = "nav-link" })
-                                </li>*@
+                                        @Html.ActionLink(linkText: "Past Reports", actionName: "PastReports", controllerName: "Reports", routeValues: new { }, htmlAttributes: new { @class = "nav-link" })
+                                    </li>*@
                             </ul>
                         </li>
                         <li class="nav-item">
@@ -72,10 +72,10 @@
                                     @Html.ActionLink(linkText: "Business Contacts", actionName: "Index", controllerName: "BusinessContacts", routeValues: new { }, htmlAttributes: new { @class = "nav-link" })
                                 </li>
                                 <li class="nav-item">
-                                    @Html.ActionLink(linkText: "Transfer Reports", actionName: "TransferReports", controllerName: "BusinessContacts", routeValues: new { }, htmlAttributes: new { @class = "nav-link" })
+                                    @Html.ActionLink(linkText: "Transfer Reports", actionName: "TransferReports", controllerName: "BusinessContacts", routeValues: null, htmlAttributes: new { @class = "nav-link" })
                                 </li>
                             </ul>
-                            
+
                         </li>
                     </ul>
                     @await Html.PartialAsync("_LoginPartial")

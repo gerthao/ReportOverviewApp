@@ -20,10 +20,32 @@ namespace ReportOverviewApp.Controllers
         }
 
         // GET: Plans
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sort)
         {
-            var applicationDbContext = _context.Plans.Include(p => p.State).Include(p => p.ReportPlanMapping).ThenInclude(rpm => rpm.Report);
-            return View(await applicationDbContext.ToListAsync());
+            var plans = await _context.Plans.Include(p => p.State).Include(p => p.ReportPlanMapping).ThenInclude(rpm => rpm.Report).ToListAsync();
+            switch (sort?.ToLower())
+            {
+                case "id":
+                    plans = plans.OrderBy(p => p.Id).ToList();
+                    break;
+                case "state":
+                    plans = plans.OrderBy(p => p.State.Name).ToList();
+                    break;
+                case "name":
+                    plans = plans.OrderBy(p => p.Name).ToList();
+                    break;
+                case "hastermedreports":
+                    plans = plans.OrderByDescending(p => p.HasTermedReports).ToList();
+                    break;
+                case "hasactivereports":
+                    plans = plans.OrderByDescending(p => p.HasActiveReports).ToList();
+                    break;
+                default:
+                    plans = plans.OrderBy(p => p.Id).ToList();
+                    break;
+                
+            }
+            return View(plans);
         }
 
         // GET: Plans/Details/5

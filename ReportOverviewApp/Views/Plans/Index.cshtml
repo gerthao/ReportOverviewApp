@@ -4,7 +4,13 @@
     ViewData["Title"] = "Plans";
 }
 
-<h4>Plans</h4>
+<h4>
+    Plans
+    @*<button class="btn btn-primary" type="button" id="mag-glass" data-toggle="modal" data-target="#searchReportModal"><span class="fas fa-search"></span>&nbsp;&nbsp;Search</button>*@
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createReportModal" aria-label="Left Align"><span class="fas fa-plus-square"></span>&nbsp;&nbsp;Create New</button>
+    @*@Html.ActionLink(linkText: "Update Deadlines", actionName: "UpdateDeadlinesAsync", controllerName: "Reports", routeValues: new { }, htmlAttributes: new { @id = "updateDeadlines", @class = "btn btn-primary" })
+    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#exportModal"><span class="fas fa-file-excel"></span>&nbsp;&nbsp;Export</button>*@
+</h4>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -14,28 +20,26 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Name)
-                </th>
-                @*<th>
-                    @Html.DisplayNameFor(model => model.WindwardId)
-                </th>*@
-            <th>
-                @Html.DisplayNameFor(model => model.State)
+                @Html.ActionLink("Id", "Index", new { sort = "Id" }, new { })
             </th>
             <th>
-                Has Active Reports?
+                @Html.ActionLink("Name", "Index", new { sort = "Name" }, new { })
+            </th>
+
+            <th>
+                @Html.ActionLink("State", "Index", new { sort = "State" }, new { })
             </th>
             <th>
-                Has Termed Reports?
+                @Html.ActionLink("Has Active Reports?", "Index", new { sort = "HasActiveReports" }, new { })
+            </th>
+            <th>
+                @Html.ActionLink("Has Termed Reports?", "Index", new { sort = "HasTermedReports" }, new { })
             </th>
             <th>Options</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.OrderBy(p => p.State.PostalAbbreviation)) {
+@foreach (var item in Model) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Id)
@@ -43,9 +47,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
-            @*<td>
-                @Html.DisplayFor(modelItem => item.WindwardId)
-            </td>*@
+            @**@
             <td>
                 @item.State.Name
             </td>
@@ -54,7 +56,7 @@
                 @hasActiveReports
             </td>
             <td>
-                
+
                 @{var hasTermedReports = item.HasTermedReports ? "Yes" : "No";}
                 @hasTermedReports
             </td>

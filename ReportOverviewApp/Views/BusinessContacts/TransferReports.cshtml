@@ -14,7 +14,7 @@
             <label class="form-label col-md-5">Business Contact</label>
         </div>
         <div class="form-row">
-            <select id="owner" class="form-control custom-select col-md-5" asp-for="First">
+            <select id="owner" class="form-control businessContactSelect custom-select col-md-5" asp-for="First">
                 @foreach (var businessContact in Model.BusinessContacts)
                 {
                     <option value="@businessContact.Id">@businessContact.Name</option>
@@ -22,7 +22,7 @@
             </select>
             <div class="form-group col-md-2">
             </div>
-            <select id="recipient" class="form-control custom-select col-md-5" asp-for="Second">
+            <select id="recipient" class="form-control businessContactSelect custom-select col-md-5" asp-for="Second">
                 @foreach (var businessContact in Model.BusinessContacts)
                 {
                     <option value="@businessContact.Id">@businessContact.Name</option>
