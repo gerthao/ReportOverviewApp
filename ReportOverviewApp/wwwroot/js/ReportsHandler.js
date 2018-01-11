@@ -3,7 +3,7 @@
 
 $(document).ready(function () {
     $('#updateDeadlines').click(function () {
-        $(this).text('Updating...');
+        $(this).find('i').addClass('ld ld-spin');
     });
     $("#clearSearchForm").click(function () {
         $('input').val(null);
@@ -46,39 +46,23 @@ $(document).ready(function () {
         dateString = month + '/' + day + '/' + year + ' ' + hour + ':' + minute + ':' + second;
         return dateString;
     }
-    //not implemented yet//
-    function handleCheckboxDateTimeOnClick(checkboxInput, dateInput) {
-        $(checkboxInput).click(function () {
-            if ($(dateInput).val() === '' && $(checkboxInput + ':checked').val()) {
-                $(dateInput).val(getDateTimeNow());
-                return;
-            }
-            if ($(dateInput).val() !== '' && !$(checkboxInput + ':checked').val()) {
-                $(dateInput).val('');
-            }
-        });
-    }
     $('.modal').on('hidden.bs.modal', function () {
         let findForm = $(this).find('form');
         if (findForm[0] === null || findForm[0] === undefined) {
             return;
         }
         findForm[0].reset();
-        if (history.state.foo == stateObj.foo) {
+        if (history.state !== undefined && history.state !== null && history.state.foo === stateObj.foo) {
             history.back();
         }
         
     });
-    //$('.modal').on('shown.bs.modal', function () {
-    //    //history.pushState(stateObj, "modal", 'Reports/#'+$(this).attr('id'));
-    //});
-    let stateObj = { foo: "bar" };
-    
+    var stateObj = { foo: "bar" };
     $('.editReportLink').on("click", function () {
         let link = $(this).attr('href');
         $('#editReportContainer').html('<div class="col-md-12" style="text-align: center; padding-top: 50%; padding-bottom: 50%; position: absolute;"><i class="fas fa-5x fa-cog ld ld-spin"></i></div>');
         $.get(link, function (data) {
-            history.pushState(stateObj, "edit", 'Reports/Edit/' + link.split('/')[link.split('/').length - 1]);
+            history.pushState(stateObj, "edit", '/Reports/Edit/' + link.split('/')[link.split('/').length - 1]);
             $('#editReportContainer').fadeOut(500, function () {
                 $(this).html(data);
                 $(this).fadeIn(500);
@@ -89,7 +73,7 @@ $(document).ready(function () {
         let link = $(this).attr('href');
         $('#editReportDeadlineContainer').html('<div class="col-md-12" style="text-align: center; padding-top: 50%; padding-bottom: 50%; position: absolute;"><i class="loading-icon fa fa-5x fa-cog ld ld-spin"></i></div>');
         $.get(link, function (data) {
-            
+            history.pushState(stateObj, "editdeadline", '/Reports/EditDeadline/' + link.split('/')[link.split('/').length - 1]);
             $('#editReportDeadlineContainer').fadeOut(500, function () {
                 $(this).html(data);
                 $(this).fadeIn(500);
@@ -97,20 +81,19 @@ $(document).ready(function () {
         });
     });
     $('.createLink').on("click", function () {
-        history.pushState(stateObj, "create", 'Reports/Create/');
+        history.pushState(stateObj, "create", '/Reports/Create/');
     });
-    //$('.searchLink').on("click", function () {
-    //    let word = location.pathname.endsWith('/') ? 'Search/' : '/Search/';
-    //    history.pushState(stateObj, "searc", location.pathname + word);
-    //});
+    $('.searchLink').on("click", function () {
+        history.pushState(stateObj, "search", '/Reports/Create/');
+    });
     $('.exportLink').on("click", function () {
-        history.pushState(stateObj, "export", 'Reports/Export/');
+        history.pushState(stateObj, "export", '/Reports/Export/');
     });
     $('.deleteReportLink').on("click", function () {
         let link = $(this).attr('href');
         $('#deleteReportContainer').html('<div class="col-md-12" style="text-align: center; padding-top: 50%; padding-bottom: 50%; position: absolute;"><i class="loading-icon fa fa-5x fa-cog ld ld-spin"></i></div>');
         $.get(link, function (data) {
-            history.pushState(stateObj, "delete", 'Reports/Delete/' + link.split('/')[link.split('/').length-1]);
+            history.pushState(stateObj, "delete", '/Reports/Delete/' + link.split('/')[link.split('/').length-1]);
             $('#deleteReportContainer').fadeOut(500, function () {
                 $(this).html(data);
                 $(this).fadeIn(500);

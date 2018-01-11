@@ -2,21 +2,21 @@
 @{
     ViewData["Title"] = "Manage your external logins";
 }
-<h2>@ViewData["Title"].</h2>
+<h4>@ViewData["Title"].</h4>
 <p class="text-success">@ViewData["StatusMessage"]</p>
 <hr />
 @if (Model.CurrentLogins.Count > 0)
 {
-    <h4>Registered Logins</h4>
+    <h5 style="padding-bottom: 1.0rem;">Registered Logins</h5>
     @for (var index = 0; index < Model.CurrentLogins.Count; index++)
     {
         <div class="col-md-4">
             <div class="card">
                 <h5 class="card-header">
-                    <i id="iconRegistered@(Model.CurrentLogins[index].LoginProvider)" class="fas fa-windows"></i> @Model.CurrentLogins[index].LoginProvider
+                    <i id="iconRegistered@(Model.CurrentLogins[index].LoginProvider)" class="fab fa-windows"></i> @Model.CurrentLogins[index].LoginProvider
                 </h5>
                 <div class="card-body">
-                    <h5>Status: Currently Enabled <i id="iconStatus@(Model.CurrentLogins[index].LoginProvider)" class="fas fa-smile text-success"></i></h5>
+                    <h5>Currently Enabled <i id="iconStatus@(Model.CurrentLogins[index].LoginProvider)" class="far fa-smile text-success"></i></h5>
                 </div>
                 <div class="card-footer">
                     @if ((bool)ViewData["ShowRemoveButton"])
@@ -51,7 +51,7 @@
                     <div class="col-md-4">
                         <div class="card">
                             <h5 class="card-header">
-                                <i id="iconUnregistered@(provider.Name)" class="fas fa-windows"></i> @provider.DisplayName
+                                <i id="iconUnregistered@(provider.Name)" class="fab fa-windows"></i> @provider.DisplayName
                             </h5>
                             <div class="card-body">
                                 <h5>Status: Currently Disabled</h5>
@@ -68,11 +68,12 @@
 }
 @section scripts{ 
     <script>
-        $("#enableButtonMicrosoft").hover(function () {
-            $("#iconUnregisteredMicrosoft").toggleClass("ld ld-spin");
-        });
         $("#removeButtonMicrosoft").hover(function () {
-            $("#iconStatusMicrosoft").toggleClass("fa-frown-o text-warning");
+            $("#iconStatusMicrosoft").removeClass("fa-smile text-success");
+            $("#iconStatusMicrosoft").addClass("fa-frown text-warning");
+        }, function () { 
+            $("#iconStatusMicrosoft").removeClass("fa-frown text-warning");
+            $("#iconStatusMicrosoft").addClass("fa-smile text-success");
         });
     </script>
 }

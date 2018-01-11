@@ -1,9 +1,36 @@
 ﻿@model IEnumerable<ReportOverviewApp.Models.UserLog>
 <div class="card">
-    <h6 class="card-header">
+    <div class="template" style="display:none;">
+        <i class="fas fa-sticky-note" tabindex="0" data-toggle="tooltip" data-placement="right"></i>
+    </div>
+    <div class="emptyTemplate" style="display:none;">
+        <tr>
+            <td colspan="4" class="text-info">No logs present</td>
+        </tr>
+    </div>
+    <div class="ulBodyTemplate" style="display:none;">
+        <tr>
+            <td class="ulMessage"></td>
+            <td class="ulTimeStamp"></td>
+            <td class="ulUser"></td>
+            <td class="ulNotes"></td>
+        </tr>
+    </div>
+    <h6 class="card-header" style="display:inline-block">
         User Logs
+        @{int? index = 1; int? total = Model.Count() % 10 != 0 ? Model.Count() / 10 + 1 : Model.Count() / 10;}
+        <span class="float-right">
+            <i id="ulPrev" class="fas fa-chevron-left"></i>
+            <span id="ulIndicator" style="padding-left:1.0rem; padding-right:1.0rem;">
+                <span id="ulIndex">@index</span>
+                /
+                <span id="ulTotal">@total</span>
+            </span>
+            <i id="ulNext" class="fas fa-chevron-right"></i>
+        </span>
     </h6>
-    <div >
+
+    <div>
         <table class="card-body table table-bordered table-sm">
             <thead>
                 <tr>
@@ -13,35 +40,42 @@
                     <th>Notes</th>
                 </tr>
             </thead>
-            <tbody >
-                @if(Model.Any())
-                {
-                    @foreach (UserLog ul in Model)
-                    {
-                        <tr>
-                            <td>@ul.Message</td>
-                            <td>@ul.TimeStamp</td>
-                            <td>@ul.User.UserName.Split('@')[0].Replace(".", " ")</td>
-                            @if (String.IsNullOrEmpty(ul.Notes))
-                            {
-                                <td><text>N/A</text></td>
-                            }
-                            else
-                            {
-                                <td><i class="fas fa-sticky-note-o" tabindex="0" data-toggle="tooltip" data-placement="right" title="@ul.Notes"></i></td>
-                            }
-                        </tr>
-                     }
-
-                } else
-                {
-                    <tr>
-                        <td colspan="4" class="text-info">No logs present</td>
-                    </tr>
-
-                }
-
+            <tbody id="ulBody">
+                <tr>
+                    <td colspan="4" class="text-info">No logs present</td>
+                </tr>
             </tbody>
         </table>
     </div>
 </div>
+@section scripts{
+    
+}
+<script>
+    $('#ulNext').click(function () {
+        $('#ulIndex').text(parseInt($('#ulIndex').text()) + 1);
+       
+            let request = $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                url: '/Data/UserLogs?page=' + $('#ulIndex').text(),
+                headers: {
+                    RequestVerificationToken: $("[name='__RequestVerificationToken']").val()
+                },
+                contentType: 'application/json; charset=utf-8',
+                data: parseInt($('#ulIndex').text())
+            });
+            request.done(function (data) {
+                if (data) {
+                    $('#ulBody').html('<tr><td colspan="4" class="text-info">Failed: ' + JSON.stringify(data) + '</td></tr>');
+
+                }
+
+            });
+            request.fail(function (jqXHR, status, message) {
+                $('#ulBody').html('<tr><td colspan="4" class="text-info">Failed: ' + message + '</td></tr>');
+            });
+        
+    });
+   
+</script>

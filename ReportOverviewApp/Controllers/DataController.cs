@@ -368,7 +368,56 @@ namespace ReportOverviewApp.Controllers
             }
             return Json(await _context.Reports.OrderBy(r => r.Name).Select(r => new ReportFragment(r)).Where(r => r.ReportDeadline == DateTime.Today.AddDays(days.Value)).ToListAsync());
         }
-
+        [HttpPost]
+        public async Task<IActionResult> MarkAll(DateTime dateTime, bool? complete)
+        {
+            if (dateTime == null || complete == null) return BadRequest();
+            List<ReportDeadline> list = await _context.ReportDeadlines.Where(rd => rd.Deadline.ToString("MM/dd/yyyy") == dateTime.ToString("MM/dd/yyyy")).ToListAsync();
+            if (list == null || !list.Any()) return NotFound();
+            string returnMessage;
+            if (complete.Value)
+            {
+                for (int i = 0; i < list.Count(); i++)
+                {
+                    if (list[i].ApprovalDate == null)
+                    {
+                        list[i].ApprovalDate = DateTime.Today;
+                    }
+                    if (list[i].RunDate == null)
+                    {
+                        list[i].RunDate = DateTime.Today;
+                    }
+                    if (list[i].SentDate == null)
+                    {
+                        list[i].SentDate = DateTime.Today;
+                    }
+                }
+                returnMessage = $"All deadlines for {dateTime.ToString("MM/dd/yyyy")} have been marked as complete";
+            } else
+            {
+                for (int i = 0; i < list.Count(); i++)
+                {
+                    list[i].ApprovalDate = null;
+                    list[i].RunDate = null;
+                    list[i].SentDate = null;
+                }
+                returnMessage = $"All deadlines for {dateTime.ToString("MM/dd/yyyy")} have been marked as incomplete";
+            }
+            
+            _context.ReportDeadlines.UpdateRange(list);
+            await _context.SaveChangesAsync();
+            return Json(new { success = true, message = returnMessage});
+        }
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAll(DateTime dateTime)
+        {
+            if (dateTime == null) return BadRequest();
+            List<ReportDeadline> list = await _context.ReportDeadlines.Where(rd => rd.Deadline.ToString("MM/dd/yyyy") == dateTime.ToString("MM/dd/yyyy")).ToListAsync();
+            if (list == null || !list.Any()) return NotFound();
+            _context.ReportDeadlines.RemoveRange(list);
+            await _context.SaveChangesAsync();
+            return Json(new { success = true, message = $"All deadlines for {dateTime.ToString("MM/dd/yyyy")} have been deleted" });
+        }
         /// <summary>
         /// Returs JSON-formatted data of UserLogs.
         /// </summary>
@@ -379,6 +428,15 @@ namespace ReportOverviewApp.Controllers
         public async Task<JsonResult> GetUserLogs()
         {
             return Json(await _context.UserLogs.OrderByDescending(ul => ul.TimeStamp).ToListAsync());
+        }
+        [Authorize, HttpGet]
+        public async Task<JsonResult> UserLogs(int? page)
+        {
+            if(page == null)
+            {
+                page = 1;
+            }
+            return Json(await _context.UserLogs.OrderByDescending(ul => ul.TimeStamp).Take(10).ToListAsync());
         }
         public class ReportFragment
         {

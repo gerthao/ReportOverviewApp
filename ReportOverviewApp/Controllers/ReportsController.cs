@@ -179,7 +179,7 @@ namespace ReportOverviewApp.Controllers
         [Authorize]
         public IActionResult Create() => View();
         
-        public IActionResult UpcomingReports(int? month, int? year, string name)
+        public IActionResult Deadlines(int? month, int? year, string name)
         {
             ViewData["month"] = month ?? DateTime.Today.Month as int?;
             ViewData["year"] = year ?? DateTime.Today.Year as int?;
@@ -231,7 +231,7 @@ namespace ReportOverviewApp.Controllers
             return View(deadline);
         }
         [HttpDelete, ValidateAntiForgeryToken, Authorize]
-        public async Task<IActionResult> DeleteDeadline([FromBody] int? id)
+        public async Task<IActionResult> DeleteDeadline(int? id)
         {
             if (id == null) return BadRequest("id parameter did not have a value");
             var reportDeadline = await _context.ReportDeadlines.FindAsync(id);
