@@ -6,9 +6,6 @@
         <div class="col-md-12">
             <label>Selection</label>
         </div>
-        @*<div id="idList"> 
-            <input class="form-control" asp-for="PlanIds" readonly>            
-        </div>*@
         <div class="form-row col-md-12">
             <div class="form-group col-md-12">
                 <select id="planSelectList" size="12" asp-for="Plans" class="form-control col-md-12" multiple>
@@ -26,9 +23,6 @@
                     }
                 </select>
             </div>
-            @*<div class="form-group col-md-2">
-                <button id="planAddButton" class="btn btn-primary btn-block" type="button"><i id="planAddButtonIcon" class="fas fa-plus-circle"></i>&nbsp;&nbsp;Add</button>
-            </div>*@
         </div>
     </div>
     <div class="form-group">
@@ -46,7 +40,7 @@
                             <div class="card">
                                 <div class="card-header btn-group btn-block" style="height: 3rem;">
                                     <p class="text-center card-title" style="display: inline;">@Model.Report.ReportPlanMapping.ElementAt(i).Plan.Name</p>
-                                    @*<button type="button" class="btn btn-primary planRemoveButton" style="height:inherit; max-height:inherit; min-height:inherit; top: 0px; bottom: inherit; position:absolute; right: 0px;"><i class="fas fa-remove"></i></button>*@
+                                   
                                 </div>
 
                                 <div class="card-body">
@@ -87,25 +81,5 @@
 
             }
         </div>
-       
-
     </div>
-    @*<script>
-    $('#planSelectList').click(function () {
-        $.get("/Reports/Plans?id=" + @Model.Report.Id + "&planIds=" + $('#planSelectList').val() + "&isModified=true" + "&removal=false", function (data) {
-            $('#planInformation').html(data);
-        });
-    });
-    $('.planRemoveButton').click(function () {
-        let planName = $(this).parent().children('.card-title').text();
-        $(this).parent().parent().parent().slideUp(250, function () {
-            $.get("/Reports/Plans?id=" + @Model.Report.Id + "&name=" + planName + "&isModified=true" + "&removal=true", function (data) {
-                $('#planInformation').html(data);
-                $('#empty').hide(0, function () {
-                    $('#empty').show(500);
-                });
-            });
-        });
-    });
-    </script>*@ 
 </div>

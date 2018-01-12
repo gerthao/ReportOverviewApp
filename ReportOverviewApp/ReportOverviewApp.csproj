@@ -45,9 +45,9 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="wwwroot\js\HomeHandler.js" />
+    <None Include="wwwroot\js\Home\HomeHandler.js" />
     <None Include="wwwroot\js\LogoutHandler.js" />
-    <None Include="wwwroot\js\ReportsHandler.js" />
+    <None Include="wwwroot\js\Reports\ReportsHandler.js" />
     <None Include="wwwroot\lib\loading-io\loading-bar\loading-bar.js" />
     <None Include="wwwroot\lib\loading-io\loading-bar\loading-bar.min.js" />
   </ItemGroup>

@@ -84,7 +84,7 @@ $(document).ready(function () {
         history.pushState(stateObj, "create", '/Reports/Create/');
     });
     $('.searchLink').on("click", function () {
-        history.pushState(stateObj, "search", '/Reports/Create/');
+        history.pushState(stateObj, "search", '/Reports/');
     });
     $('.exportLink').on("click", function () {
         history.pushState(stateObj, "export", '/Reports/Export/');

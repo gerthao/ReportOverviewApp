@@ -166,6 +166,7 @@ namespace ReportOverviewApp.Controllers
             return View(report);
         }
 
+        
         public IActionResult GetSelectPlanList(string state = null)
         {
             return ViewComponent("SelectPlanList", new { State = state });
@@ -186,6 +187,60 @@ namespace ReportOverviewApp.Controllers
             ViewData["name"] = name == null ? String.Empty : name;
             return View();
         }
+
+
+        [HttpPost, Route("Reports/Deadlines/Mark")]
+        public async Task<IActionResult> MarkAll(DateTime dateTime, bool? complete)
+        {
+            if (dateTime == null || complete == null) return BadRequest();
+            List<ReportDeadline> list = await _context.ReportDeadlines.Where(rd => rd.Deadline.ToString("MM/dd/yyyy") == dateTime.ToString("MM/dd/yyyy")).ToListAsync();
+            if (list == null || !list.Any()) return NotFound();
+            string returnMessage;
+            if (complete.Value)
+            {
+                for (int i = 0; i < list.Count(); i++)
+                {
+                    if (list[i].ApprovalDate == null)
+                    {
+                        list[i].ApprovalDate = DateTime.Today;
+                    }
+                    if (list[i].RunDate == null)
+                    {
+                        list[i].RunDate = DateTime.Today;
+                    }
+                    if (list[i].SentDate == null)
+                    {
+                        list[i].SentDate = DateTime.Today;
+                    }
+                }
+                returnMessage = $"All deadlines for {dateTime.ToString("MM/dd/yyyy")} have been marked as complete";
+            }
+            else
+            {
+                for (int i = 0; i < list.Count(); i++)
+                {
+                    list[i].ApprovalDate = null;
+                    list[i].RunDate = null;
+                    list[i].SentDate = null;
+                }
+                returnMessage = $"All deadlines for {dateTime.ToString("MM/dd/yyyy")} have been marked as incomplete";
+            }
+
+            _context.ReportDeadlines.UpdateRange(list);
+            await _context.SaveChangesAsync();
+            return Json(new { success = true, message = returnMessage });
+        }
+        [HttpDelete, Route("Reports/Deadlines/Delete/{dateTime:DateTime}")]
+        public async Task<IActionResult> DeleteAll(DateTime dateTime)
+        {
+            if (dateTime == null) return BadRequest();
+            List<ReportDeadline> list = await _context.ReportDeadlines.Where(rd => rd.Deadline.ToString("MM/dd/yyyy") == dateTime.ToString("MM/dd/yyyy")).ToListAsync();
+            if (list == null || !list.Any()) return NotFound();
+            _context.ReportDeadlines.RemoveRange(list);
+            await _context.SaveChangesAsync();
+            return Json(new { success = true, message = $"All deadlines for {dateTime.ToString("MM/dd/yyyy")} have been deleted" });
+        }
+
 
         //[Authorize]
         //public async Task<IActionResult> PastReports()
@@ -222,7 +277,7 @@ namespace ReportOverviewApp.Controllers
             return View(reportViewModel);
         }
 
-        [Authorize]
+        [Authorize, HttpGet, Route("Reports/Deadlines/Edit/{id:int}")]
         public async Task<IActionResult> EditDeadline(int? id)
         {
             if (id == null) return NotFound();
@@ -230,7 +285,7 @@ namespace ReportOverviewApp.Controllers
             if (deadline == null) return NotFound();
             return View(deadline);
         }
-        [HttpDelete, ValidateAntiForgeryToken, Authorize]
+        [HttpDelete, ValidateAntiForgeryToken, Authorize, Route("Reports/Deadlines/Delete/{id:int}")]
         public async Task<IActionResult> DeleteDeadline(int? id)
         {
             if (id == null) return BadRequest("id parameter did not have a value");
@@ -240,7 +295,7 @@ namespace ReportOverviewApp.Controllers
             await _context.SaveChangesAsync();
             return Json(new { success = true, update = true, message = "Deletion successful" });
         }
-        [HttpPost, ValidateAntiForgeryToken, Authorize]
+        [HttpPost, ValidateAntiForgeryToken, Authorize, Route("Reports/Deadlines/Edit/{id:int}")]
         public async Task<IActionResult> EditDeadline([FromBody] ReportDeadline reportDeadline)
         {
             //ToastMessage toast = null;

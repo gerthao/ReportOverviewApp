@@ -159,7 +159,7 @@ namespace ReportOverviewApp.Models.ReportViewModels
                 if (DateTime.TryParse(Filters.EndString, out endDate))
                 {
                     Filters.End = endDate;
-                    Reports = Reports.Where(r => r.Deadlines.Any(rd => rd.Deadline >= endDate));
+                    Reports = Reports.Where(r => r.Deadlines.Any(rd => rd.Deadline <= endDate));
                 }
             }
         }

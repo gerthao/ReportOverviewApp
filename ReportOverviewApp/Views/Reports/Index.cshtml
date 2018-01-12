@@ -33,15 +33,6 @@
         </div>
     </div>
 </div>
-
-@*<div id="findMatchReplaceReportModal" class="modal fade">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div id="findMatchReportContainer">
-                </div>
-            </div>
-        </div>
-    </div>*@
 @if (Model == null || Model.Reports == null || Model.Reports.Count() == 0)
 {<br />
     <h4 class="text-center" style="padding-top: 30px">No Records To Display</h4> }
@@ -91,73 +82,15 @@ else
                         <i class="fas fa-filter"></i>
                     }
                 </th>
-                @*<th>
-                    @Html.ActionLink("Deadline", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Deadline", begin = Model.Filters.Begin, end = Model.Filters.End }, new { })
-                    @if (Model.Filters.Column == "Deadline")
-                    {
-                        <i class="fas fa-filter"></i>
-                    }
-                </th>
-                <th>
-                    @Html.ActionLink("Ran On", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Ran On", begin = Model.Filters.Begin, end = Model.Filters.End }, new { })
-                    @if (Model.Filters.Column == "Ran On")
-                    {
-                        <i class="fas fa-filter"></i>
-                    }
-                </th>
-                <th>
-                    @Html.ActionLink("Approved On", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Approved On", begin = Model.Filters.Begin, end = Model.Filters.End }, new { })
-                    @if (Model.Filters.Column == "Approved On")
-                    {
-                        <i class="fas fa-filter"></i>
-                    }
-                </th>
-                <th>
-                    @Html.ActionLink("Sent On", "Index", new { search = Model.Filters.Search, plan = Model.Filters.Plan, pageIndex = Model.CurrentPage, column = "Sent On", begin = Model.Filters.Begin, end = Model.Filters.End }, new { })
-                    @if (Model.Filters.Column == "Sent On")
-                    {
-                        <i class="fas fa-filter"></i>
-                    }
-                </th>*@
                 <th>Options</th>
             </tr>
         </thead>
         <tbody>
             @for (int i = 0; i < Model.Reports.Count(); i++)
             {
-                //ReportDeadline currentReportDeadline = null;
                 <tr>
                     <td class="reportId">@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Id)</td>
                     <td class="ReportName">@Html.DisplayFor(modelItem => Model.Reports.ElementAt(i).Name)</td>
-                    @*@if (Model.Reports.ElementAt(i).Deadlines != null && Model.Reports.ElementAt(i).Deadlines.Any())
-                    {
-                        currentReportDeadline = Model.Reports.ElementAt(i).Deadlines.OrderByDescending(rd => rd.Deadline).First();
-                        <td>@currentReportDeadline.Deadline.ToString("MM/dd/yyyy")</td>
-                        @if (currentReportDeadline.RunDate != null && currentReportDeadline.RunDate.HasValue)
-                        {
-                            <td>@currentReportDeadline.RunDate.Value.ToString("MM/dd/yyyy hh:mm tt")</td>
-                        }
-                        else
-                        {
-                            <td></td>
-                        }
-                        @if (currentReportDeadline.ApprovalDate != null && currentReportDeadline.ApprovalDate.HasValue)
-                        {
-                            <td>@currentReportDeadline.RunDate.Value.ToString("MM/dd/yyyy hh:mm tt")</td>
-                        }
-                        else
-                        {
-                            <td></td>
-                        }
-                        @if (currentReportDeadline.SentDate != null && currentReportDeadline.SentDate.HasValue)
-                        {
-                            <td>@currentReportDeadline.RunDate.Value.ToString("MM/dd/yyyy hh:mm tt")</td>
-                        }
-                        else
-                        {
-                            <td></td>
-                        }
-                    }*@
                     <td>@Model.Reports.ElementAt(i).Frequency</td>
                     @if (Model.Reports.ElementAt(i).IsTermed(DateTime.Today))
                     {
@@ -168,11 +101,6 @@ else
                     {
                         <td class="text-center"></td>
                     }
-                        @*else
-                    {
-                        <td class="text-muted text-center" colspan="4">No Current Deadline Found</td>
-
-                    }*@
                     <td style="text-align: center;">
                         @*<a class="editReportDeadlineLink"  asp-action="EditReportDeadline" asp-route-id="@Model.Reports.ElementAt(i).Id" data-toggle="modal" data-target="#editReportDeadlineModal"><span class="fas fa-adjust text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  Report Deadline (@Model.Reports.ElementAt(i).Name)"></span></a>*@
                         <a class="editReportLink" asp-action="EditReport" asp-route-id="@Model.Reports.ElementAt(i).Id" data-toggle="modal" data-target="#editReportModal"><span class="fas fa-edit text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  @Model.Reports.ElementAt(i).Name"></span></a>
@@ -279,5 +207,5 @@ else
 }
 
 @section scripts{
-    <script src="~/js/ReportsHandler.js" type="text/javascript"></script>
+    <script src="~/js/Reports/ReportsHandler.js" type="text/javascript"></script>
 }

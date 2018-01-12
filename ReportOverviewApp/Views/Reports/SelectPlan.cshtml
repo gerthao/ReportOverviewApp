@@ -23,12 +23,7 @@
                     <p class="list-group-item"><strong>Select State</strong></p>
                     @foreach (var stateItem in Model.Plans.Select(p => p.State).OrderBy(s => s.PostalAbbreviation).Distinct())
                     {
-                        @*@Html.ActionLink(stateItem, "SelectPlan", new { state = @stateItem }, new { @class = "list-group-item list-group-item-action" })*@
                             <p class="list-group-item list-group-item-action">@stateItem.PostalAbbreviation</p>
-                    }
-                    @if (!String.IsNullOrEmpty(Model.State))
-                    {
-                        @*@Html.ActionLink("[Go Back]", "SelectPlan", new { }, new {@class = "list-group-item list-group-item-action" })*@
                     }
                 </div>
                 <div id="planListGroup" class="col-md-6 list-group">
@@ -45,35 +40,7 @@
 
 
 @section Scripts {
-    <script>
-        $(document).ready(function () {
-            $('p.list-group-item.list-group-item-action').on('click', function () {
-                let stateName = $(this).text();
-                if ($(this).hasClass('bg-primary')) {
-                    $(this).removeClass('bg-primary');
-                    $.get('/Reports/GetSelectPlanList/', function (data) {
-                        history.replaceState(null, null, '/Reports/SelectPlan/');
-                        $('#selectPlanListViewComponent').hide(100, function () {
-                            $('#selectPlanListViewComponent').html(data);
-                        });
-                        $('#selectPlanListViewComponent').show(333);
-
-                    });
-                    return;
-                }
-                $(this).addClass('bg-primary');
-                $(this).siblings().removeClass('bg-primary');
-                $.get('/Reports/GetSelectPlanList?State=' + stateName, function (data) {
-                    history.pushState(null, null, '/Reports/SelectPlan?State=' + stateName);
-                    $('#selectPlanListViewComponent').hide(100, function () {
-                        $('#selectPlanListViewComponent').html(data);
-                    });
-                    $('#selectPlanListViewComponent').show(333);
-                    
-                });
-            });
-        });
-    </script>
+    <script type="text/javascript" src="~/js/Reports/SelectPlan.js"></script>
     
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

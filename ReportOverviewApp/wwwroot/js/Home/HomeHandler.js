@@ -128,29 +128,10 @@ function handleReportsList(htmlElement) {
         $('#reportCard').html("<h5>No reports to display</h5>");
     }
 }
-var updateComponents = function () {
+let updateComponents = function () {
     getUserLogs();
     getReportCount();
-    setTimeout(updateComponents, 5000);
-};
-var getCurrentDateTime = function() {
-    $.get("/Home/GetCurrentDateTime", function (data) {
-        $("#currentDateTimeContainer").html(data);
-    });
-    //let link = "Home/GetCurrentDateTime";
-    //$.ajax({
-    //    url: link,
-    //    dataType: "html",
-    //    type: "GET",
-    //    success: function (data) {
-    //        $("#currentDateTimeContainer").html(data);
-    //    },
-    //    error: $("#currentDateTimeData").html("failed: " + link)
-    //});
-};
-var updateDateTime = function () {
-    getCurrentDateTime();
-    setTimeout(updateDateTime, 1000);
+    //setTimeout(updateComponents, 5000);
 };
 
 $(document).ready(function () {

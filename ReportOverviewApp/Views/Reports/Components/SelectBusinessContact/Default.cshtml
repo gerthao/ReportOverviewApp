@@ -66,39 +66,38 @@
             </div>
         }
     </div>
-    <script>
-    $('#businessContactSelectButton').click(function () {
-        $('#businessContactSelectButtonIcon').removeClass();
-        $('#businessContactSelectButtonIcon').addClass('fa fa-sync text-light ld ld-spin');
-        $(this).unbind();
-        $.get("/Reports/SelectBusinessContact?id=" + @Model.Report.Id + "&contactId=" + $('#businessContactSelectList option:selected').val(), function (data) {
-            $('#businessContactCard').fadeOut(500, function () {
-                $('#businessContactInformation').html(data);
-                $('#businessContactCard').hide(0, function () {
-                    $('#businessContactCard').fadeIn(500);
+    <script type="text/javascript">
+        $('#businessContactSelectButton').click(function () {
+            $('#businessContactSelectButtonIcon').removeClass();
+            $('#businessContactSelectButtonIcon').addClass('fa fa-sync text-light ld ld-spin');
+            $(this).unbind();
+            $.get("/Reports/SelectBusinessContact?id=" + @Model.Report.Id + "&contactId=" + $('#businessContactSelectList option:selected').val(), function (data) {
+                $('#businessContactCard').fadeOut(500, function () {
+                    $('#businessContactInformation').html(data);
+                    $('#businessContactCard').hide(0, function () {
+                        $('#businessContactCard').fadeIn(500);
+                    });
                 });
             });
         });
-    });
-    $('#businessContactRemoveButton').click(function () {
-        $('#businessContactCard').slideUp(250, function () {
-            $('#businessContactCard').remove();
-            $.get("/Reports/SelectBusinessContact?id=" + @Model.Report.Id + "&removal=" + "true", function (data) {
-                $('#businessContactInformation').html(data);
-                $('#businessContactCard').hide(0, function () {
-                    $('#businessContactCard').show(500);
-                });
+        $('#businessContactRemoveButton').click(function () {
+            $('#businessContactCard').slideUp(250, function () {
+                $('#businessContactCard').remove();
+                $.get("/Reports/SelectBusinessContact?id=" + @Model.Report.Id + "&removal=" + "true", function (data) {
+                    $('#businessContactInformation').html(data);
+                    $('#businessContactCard').hide(0, function () {
+                        $('#businessContactCard').show(500);
+                    });
 
-            });
+                });
+             });
         });
-    });
     </script>
-
 </div>
 
 
 
 @section scripts {
     
-    <script src="~/js/ReportsHandler.js" type="text/javascript"></script>
+    <script src="~/js/Reports/ReportsHandler.js" type="text/javascript"></script>
 }
