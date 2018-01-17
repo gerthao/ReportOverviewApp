@@ -25,7 +25,7 @@ $('.markAll').click(function () {
 function markAll(date) {
     $.ajax({
         type: 'POST',
-        url: '/Data/MarkAll',
+        url: '/Reports/Deadlines/Mark',
         data: { dateTime: new Date(date).toJSON(), complete: true },
         dataType: 'json',
         success: function (data) {

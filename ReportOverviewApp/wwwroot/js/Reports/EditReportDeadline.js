@@ -1,5 +1,5 @@
 ﻿$('.input-group .input-group-append button').click(function () {
-    $(this).parent().prev('input').val(new Date().toLocaleString());
+    $(this).parent().prev('input').val(formatDate(new Date()));
 });
 function deleteReportDeadline() {
     $('button').prop('disabled', true);
@@ -16,7 +16,7 @@ function deleteReportDeadline() {
     let request = $.ajax({
         type: 'DELETE',
         dataType: 'json',
-        url: '/Reports/Deadlines/Delete/' + model.id,
+        url: '/Reports/Deadlines/' + model.id,
         headers: {
             RequestVerificationToken: $("[name='__RequestVerificationToken']").val()
         },
@@ -42,7 +42,27 @@ function deleteReportDeadline() {
         $('#saveReportDeadline').find('i').removeClass('ld ld-heartbeat');
         $('button').prop('disabled', false);
     })
-
+}
+function formatDate(date, format) {
+    if (date === undefined || date === null) {
+        return null;
+    }
+    try {
+        date = new Date(date);
+    } catch (e) {
+        console.error(e);
+        return null;
+    }
+    if (typeof date !== typeof (new Date())) {
+        return null;
+    }
+    switch (format) {
+        case 'date':
+            return date.toLocaleDateString().replace(/[^A-Za-z 0-9 \.,\?""!@#\$%\^&\*\(\)-_=\+;:<>\/\\\|\}\{\[\]`~]*/g, '');
+        case 'time':
+            return  date.toLocaleTimeString().replace(/[^A-Za-z 0-9 \.,\?""!@#\$%\^&\*\(\)-_=\+;:<>\/\\\|\}\{\[\]`~]*/g, '');
+    }
+    return date.toLocaleString().replace(/[^A-Za-z 0-9 \.,\?""!@#\$%\^&\*\(\)-_=\+;:<>\/\\\|\}\{\[\]`~]*/g, '');
 }
 function save() {
     $('button').prop('disabled', true);
@@ -50,16 +70,16 @@ function save() {
     let model = {
         __RequestVerificationToken: $("[name='__RequestVerificationToken']").val(),
         id: parseInt(formData.Id),
-        deadline: formData.Deadline,
-        runDate: formData.RunDate === "" ? null : formData.RunDate,
-        approvalDate: formData.ApprovalDate === "" ? null : formData.ApprovalDate,
-        sentDate: formData.SentDate === "" ? null : formData.SentDate,
+        deadline: formatDate(new Date(formData.Deadline), 'date'),
+        runDate: formData.RunDate === "" ? null : formatDate(new Date(formData.RunDate)),
+        approvalDate: formData.ApprovalDate === "" ? null : formatDate(new Date(formData.RunDate)),
+        sentDate: formData.SentDate === "" ? null : formatDate(new Date(formData.SentDate)),
         reportId: parseInt(formData.ReportId)
     };
     let request = $.ajax({
-        type: 'POST',
+        type: 'PUT',
         dataType: 'json',
-        url: '/Reports/Deadlines/Edit/',
+        url: '/Reports/Deadlines/' + model.id,
         headers: {
             RequestVerificationToken: $("[name='__RequestVerificationToken']").val()
         },

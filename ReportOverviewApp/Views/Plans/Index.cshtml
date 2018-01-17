@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ReportOverviewApp.Models.Plan>
+﻿@*@model IEnumerable<ReportOverviewApp.Models.Plan>*@
 
 @{
     ViewData["Title"] = "Plans";
@@ -7,13 +7,112 @@
 <h4>
     Plans
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createReportModal" aria-label="Left Align"><span class="fas fa-plus-square"></span>&nbsp;&nbsp;Create New</button>
+    <span id="loading"></span>
 </h4>
+<div id="icon-template" style="display:none;">
+    <i class="loading-icon fas fa-cog ld ld-spin"></i>
+    <i class="sort-icon fas fa-filter"></i>
+    
+</div>
 
-<p>
+@*<p>
     <a asp-action="Create">Create New</a>
-</p>
+</p>*@
 <hr />
-<table class="table table-sm table-bordered table-striped table-hover ">
+<div id="tableTemplate" style="display:none;">
+    <table class="table table-sm table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <th class="sortOption">
+                    <a>Id</a>
+                </th>
+                <th class="sortOption">
+                    <a>Name</a>
+                </th>
+                <th class="sortOption">
+                    <a>State</a>
+                </th>
+                <th class="sortOption">
+                    <a>HasActiveReports</a>
+                </th>
+                <th class="sortOption">
+                    <a>HasTermedReports</a>
+                </th>
+                <th>Options</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+<div id="tableContentTemplate" style="display:none;">
+    <table>
+        <tbody>
+            <tr>
+                <td class="planId"></td>
+                <td class="planName"></td>
+                <td class="stateName"></td>
+                <td class="hasActiveReports"></td>
+                <td class="hasTermedReports"></td>
+                <td>
+                    <a class="manage"><i class="fas fa-edit"></i></a>
+                    <a class="details"><i class="fas fa-book"></i></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<table  class="table table-sm table-bordered" id="navigation" style="padding-bottom: 0rem;">
+    <thead>
+        <tr>
+            <th colspan="1">
+                Plans
+                <span class="float-right">
+                    <span class="input-group input-group-sm">
+                       <i class="prev btn btn-outline-primary input-group-addon fas fa-chevron-left "></i>
+                        <span class="input-group-addon">
+                            <span class="indicator" style="padding-left:1.5rem; padding-right:1.5rem;">
+                                <span class="index" style="padding-right:1.5rem;"> </span>
+                                /
+                                <span class="total" style="padding-left:1.5rem;padding-right:1.5rem;"> </span>
+                            </span>
+                        </span>
+                        <i class="next fas fa-chevron-right btn btn-outline-primary input-group-addon"></i>
+                    </span>
+                </span>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr></tr>
+    </tbody>
+</table>
+<div class="plansTable">
+    <table class="table table-sm table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <th>
+                    <a class="sortOption">Id</a>
+                </th>
+                <th>
+                    <a class="sortOption">Name</a>
+                </th>
+                <th>
+                    <a class="sortOption">State</a>
+                </th>
+                <th>
+                    <a class="sortOption">HasActiveReports</a>
+                </th>
+                <th>
+                    <a class="sortOption">HasTermedReports</a>
+                </th>
+                <th>Options</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+@*<table class="table table-sm table-bordered table-striped table-hover ">
     <thead>
         <tr>
             <th>
@@ -44,7 +143,6 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
-            @**@
             <td>
                 @item.State.Name
             </td>
@@ -65,4 +163,121 @@
         </tr>
 }
     </tbody>
-</table>
+</table>*@
+
+@section scripts{ 
+    <script>
+        $(document).ready(function () {
+            let _page = 1;
+            let _size = 20;
+            let _total;
+            let _id;
+            let _name;
+            let _sort;
+            function getWholeSize() {
+                let request = $.ajax({
+                    type: 'GET',
+                    url: 'api/Plans/',
+                    data: { id: null, name: null, sort: null, from: null, take: null },
+                    dataType: 'json',
+                    success: function (data) {
+                        if ($(data).length > 0) {
+                            let current = parseInt($(data).length % _size === 0 ? ($(data).length / _size) : ($(data).length / _size) + 1);
+                            $('.total').text(current);
+
+                        }
+                    },
+                    error: function (a, b, c) {
+                        //$('#loadingIcon').find('i').fadeOut(200, function () {
+                        //    $('#status').html('<div class="alert alert-danger">' + c + '</div>');
+                        //    $('#cards').children().hide();
+                        //});
+                        //$('button').prop('disabled', false);
+                    }
+                });
+
+            }
+            function getPlans(id = null, name = null, sort = null, start, take) {
+                _id = id;
+                _name = name;
+                _sort = sort;
+                let request = $.ajax({
+                    type: 'GET',
+                    url: 'api/Plans/',
+                    data: { id: _id, name: _name, sort: _sort, from: start, take: take},
+                    dataType: 'json',
+                    success: function (data) {
+                        //history.replaceState(null, null, '/Plans');
+                        if ($(data).length > 0) {
+                            let items = [];
+                            $(data).each(function (i, e) {
+                                items.push(buildRow(e));
+                            });
+                            $('.plansTable').find('tbody').html(items);
+                            $('#loading').find('i').fadeOut(200);
+                        } else {
+                            $('#loading').find('i').fadeOut(200, function () {
+                                //$('#status').html('<div class="alert alert-warning">Message: No plans found</div>');
+                                
+                            });
+                        };
+                        //$('button').prop('disabled', false);
+                    },
+                    error: function (a, b, c) {
+                        //$('#loadingIcon').find('i').fadeOut(200, function () {
+                        //    $('#status').html('<div class="alert alert-danger">' + c + '</div>');
+                        //    $('#cards').children().hide();
+                        //});
+                        //$('button').prop('disabled', false);
+                    }
+                });
+            }
+            function buildRow(plan) {
+                let row = $('#tableContentTemplate').find('tr').clone(true);
+                $(row).find('.planId').text(plan.id);
+                $(row).find('.planName').text(plan.name);
+                $(row).find('.stateName').text(plan.state);
+                $(row).find('.hasActiveReports').text(plan.hasActiveReports);
+                $(row).find('.hasTermedReports').text(plan.hasTermedReports);
+                $(row).find('.manage').attr('href', 'Plans/' + plan.id);
+                $(row).find('.details').attr('href', 'Plans/Details/' + plan.id);
+                return row;
+            }
+            function init() {
+                _page = 1;
+                $('.index').text(_page);
+                $('#loading').html($('#icon-template').find('.loading-icon').clone(false));
+                getWholeSize();
+                getPlans(null, null, null, (_page-1) * 20, 20);
+
+            }
+            $('.sortOption').click(function () {
+                let _sort = $(this).text();
+                $('.sortOption').find('i').hide();
+                $(this).append($('#icon-template').find('.sort-icon').clone(false))
+                $('#loading').html($('#icon-template').find('.loading-icon').clone(false));
+                getPlans(_id, _name, _sort, (_page - 1) * 20, 20);
+            });
+            $('.next').click(function () {
+                if (_page !== parseInt($('.total').text())) {
+                    _page = _page + 1;
+                    $('.index').text(_page);
+                    $('#loading').html($('#icon-template').find('.loading-icon').clone(false));
+                    getPlans(_id, _name, _sort, (_page - 1) * 20, 20);
+
+                }
+            })
+            $('.prev').click(function () {
+                if (_page > 1) {
+                    _page = _page - 1;
+                    $('.index').text(_page);
+                    $('#loading').html($('#icon-template').find('.loading-icon').clone(false));
+                    getPlans(_id, _name, _sort, (_page - 1) * 20, 20);
+                }
+            })
+            init();
+
+        });
+        
+    </script>
+}
