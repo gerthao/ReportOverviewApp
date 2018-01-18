@@ -106,6 +106,8 @@ else
                         <a class="editReportLink" asp-action="EditReport" asp-route-id="@Model.Reports.ElementAt(i).Id" data-toggle="modal" data-target="#editReportModal"><span class="fas fa-edit text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  @Model.Reports.ElementAt(i).Name"></span></a>
                         <a asp-action="Details" asp-route-id="@Model.Reports.ElementAt(i).Id"><span class="fas fa-book text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="View:  @Model.Reports.ElementAt(i).Name"></span></a>
                         <a class="deleteReportLink" asp-action="DeleteReport" asp-route-id="@Model.Reports.ElementAt(i).Id" data-toggle="modal" data-target="#deleteReportModal"><span class="fas fa-eraser text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Delete:  @Model.Reports.ElementAt(i).Name"></span></a>
+                        
+
                     </td>
                 </tr>
             }

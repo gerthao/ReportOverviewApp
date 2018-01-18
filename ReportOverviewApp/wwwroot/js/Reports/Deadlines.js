@@ -22,46 +22,46 @@ $('.markAll').click(function () {
     } else return false;
     return true;
 });
-//function markAll(date) {
-//    $.ajax({
-//        type: 'POST',
-//        url: '/api/Reports/Deadlines/MarkAsComplete',
-//        data: JSON.stringify({ dateTime: new Date(date).toJSON(), complete: true}),
-//        contentType: 'application/json; charset=UTF-8',
-//        dataType: 'json',
-//        success: function (data) {
-//            let alertMsg = $('#alertSuccessTemplate').children().clone(true);
-//            $(alertMsg).find('.alertMessage').html(data.message);
-//            $('#status').html(alertMsg);
-//            retriveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val());
-//        },
-//        error: function (a, b, c) {
-//            let alertMsg = $('#alertDangerTemplate').children().clone(true);
-//            $(alertMsg).find('.alertMessage').html(c);
-//            $('#status').html(alertMsg);
-//        }
-//    });
-//}
-//function unmarkAll(date) {
-//    $.ajax({
-//        type: 'POST',
-//        url: '/api/Reports/Deadlines/MarkAsComplete',
-//        data: JSON.stringify({ dateTime: new Date(date).toJSON(), complete: false }),
-//        dataType: 'json',
-//        contentType: 'application/json; charset=UTF-8',
-//        success: function (data) {
-//            let alertMsg = $('#alertSuccessTemplate').children().clone(true);
-//            $(alertMsg).find('.alertMessage').html(data.message);
-//            $('#status').html(alertMsg);
-//            retriveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val());
-//        },
-//        error: function (a, b, c) {
-//            let alertMsg = $('#alertDangerTemplate').children().clone(true);
-//            $(alertMsg).find('.alertMessage').html(c);
-//            $('#status').html(alertMsg);
-//        }
-//    });
-//}
+function markAll(date) {
+    $.ajax({
+        type: 'POST',
+        url: '/api/Reports/Deadlines/MarkAsComplete',
+        data: JSON.stringify({ dateTime: new Date(date).toJSON(), complete: true}),
+        contentType: 'application/json; charset=UTF-8',
+        dataType: 'json',
+        success: function (data) {
+            let alertMsg = $('#alertSuccessTemplate').children().clone(true);
+            $(alertMsg).find('.alertMessage').html(data.message);
+            $('#status').html(alertMsg);
+            retriveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val());
+        },
+        error: function (a, b, c) {
+            let alertMsg = $('#alertDangerTemplate').children().clone(true);
+            $(alertMsg).find('.alertMessage').html(c);
+            $('#status').html(alertMsg);
+        }
+    });
+}
+function unmarkAll(date) {
+    $.ajax({
+        type: 'POST',
+        url: '/api/Reports/Deadlines/MarkAsComplete',
+        data: JSON.stringify({ dateTime: new Date(date).toJSON(), complete: false }),
+        dataType: 'json',
+        contentType: 'application/json; charset=UTF-8',
+        success: function (data) {
+            let alertMsg = $('#alertSuccessTemplate').children().clone(true);
+            $(alertMsg).find('.alertMessage').html(data.message);
+            $('#status').html(alertMsg);
+            retriveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val());
+        },
+        error: function (a, b, c) {
+            let alertMsg = $('#alertDangerTemplate').children().clone(true);
+            $(alertMsg).find('.alertMessage').html(c);
+            $('#status').html(alertMsg);
+        }
+    });
+}
 function deleteAll(date) {
     $.ajax({
         type: 'DELETE',

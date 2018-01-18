@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -32,9 +33,24 @@ namespace ReportOverviewApp.Controllers
         }
 
         [HttpGet, Route("api/Plans"), Produces("application/json")]
-        public async Task<JsonResult> GetPlans(string name, string sort, int? from, int? take)
+        public async Task<JsonResult> GetPlans(string id, string name, string state, string windwardId, string sort, int? from, int? take)
         {
-            var plans = await _context.Plans.Include(p => p.State).ToListAsync();
+            var plans = await _context.Plans.Include(p => p.State).Include(p => p.ReportPlanMapping).ThenInclude(rpm => rpm.Report).ToListAsync();
+            if (!String.IsNullOrEmpty(id))
+            {
+                int value = 0;
+                id = id.Trim();
+                if(int.TryParse(id, out value))
+                {
+                    plans = plans.Where(p => p.Id == value).ToList();
+                } else
+                {
+                    id = id.Replace("_", "[0-9]");
+                    id = id.Replace("~", "[0-9]+?");
+                    Regex r = new Regex("^"+ id + "$");
+                    plans = plans.Where(p => r.IsMatch(p.Id.ToString())).ToList();
+                }
+            }
             switch (sort?.ToLower())
             {
                 case "id":
@@ -46,6 +62,9 @@ namespace ReportOverviewApp.Controllers
                 case "name":
                     plans = plans.OrderBy(p => p.Name).ToList();
                     break;
+                case "windwardid":
+                    plans = plans.OrderBy(p => p.WindwardId).ToList();
+                    break;
                 case "hastermedreports":
                     plans = plans.OrderByDescending(p => p.HasTermedReports).ToList();
                     break;
@@ -56,9 +75,29 @@ namespace ReportOverviewApp.Controllers
                     plans = plans.OrderBy(p => p.Id).ToList();
                     break;
             }
-            if (name != null)
+            if (!(String.IsNullOrEmpty(name)))
             {
-                plans = plans.Where(p => p.Name.ToLower().Contains(name.ToLower())).ToList();
+                name = name.ToLower().Trim();
+                plans = plans.Where(p => p.Name.ToLower().Contains(name)).ToList();
+            }
+            if (!(String.IsNullOrEmpty(state)))
+            {
+                state = state.ToLower().Trim();
+                plans = plans.Where(p => p.State.PostalAbbreviation.ToLower().Contains(state)).ToList();
+            }
+            if (!(String.IsNullOrEmpty(windwardId))){
+                windwardId = windwardId.Trim();
+                int value = 0;
+                if(int.TryParse(windwardId, out value))
+                {
+                    plans = plans.Where(p => p.WindwardId.Contains(windwardId)).ToList();
+                } else
+                {
+                    windwardId = windwardId.Replace("_", "[0-9]");
+                    windwardId = windwardId.Replace("~", "[0-9]+?");
+                    Regex r = new Regex("^" + windwardId + "$");
+                    plans = plans.Where(p => r.IsMatch(p.WindwardId)).ToList();
+                } 
             }
             if(from != null)
             {
