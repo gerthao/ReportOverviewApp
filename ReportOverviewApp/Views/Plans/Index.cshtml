@@ -1,6 +1,4 @@
-﻿@*@model IEnumerable<ReportOverviewApp.Models.Plan>*@
-
-@{
+﻿@{
     ViewData["Title"] = "Plans";
 }
 
@@ -9,15 +7,15 @@
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createReportModal" aria-label="Left Align"><span class="fas fa-plus-square"></span>&nbsp;&nbsp;Create New</button>
     <span id="loading"></span>
 </h4>
+<div id="alert-template" style="display:none;">
+    <div class="alert alert-danger"></div>
+    <div class="alert alert-warning"></div>
+    <div class="alert alert-success"></div>
+</div>
 <div id="icon-template" style="display:none;">
     <i class="loading-icon fas fa-cog ld ld-spin"></i>
     <i class="sort-icon fas fa-filter"></i>
-    
 </div>
-
-@*<p>
-    <a asp-action="Create">Create New</a>
-</p>*@
 <hr />
 <div id="tableTemplate" style="display:none;">
     <table class="table table-sm table-bordered table-striped table-hover">
@@ -87,6 +85,9 @@
         <tr></tr>
     </tbody>
 </table>
+<div id="status">
+
+</div>
 <div class="plansTable">
     <table class="table table-sm table-bordered table-striped table-hover">
         <thead>
@@ -112,59 +113,6 @@
         <tbody></tbody>
     </table>
 </div>
-@*<table class="table table-sm table-bordered table-striped table-hover ">
-    <thead>
-        <tr>
-            <th>
-                @Html.ActionLink("Id", "Index", new { sort = "Id" }, new { })
-            </th>
-            <th>
-                @Html.ActionLink("Name", "Index", new { sort = "Name" }, new { })
-            </th>
-
-            <th>
-                @Html.ActionLink("State", "Index", new { sort = "State" }, new { })
-            </th>
-            <th>
-                @Html.ActionLink("Has Active Reports?", "Index", new { sort = "HasActiveReports" }, new { })
-            </th>
-            <th>
-                @Html.ActionLink("Has Termed Reports?", "Index", new { sort = "HasTermedReports" }, new { })
-            </th>
-            <th>Options</th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @item.State.Name
-            </td>
-            <td>
-                @{var hasActiveReports = item.HasActiveReports ? "Yes" : "No";}
-                @hasActiveReports
-            </td>
-            <td>
-
-                @{var hasTermedReports = item.HasTermedReports ? "Yes" : "No";}
-                @hasTermedReports
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>*@
-
 @section scripts{ 
     <script>
         $(document).ready(function () {
@@ -184,20 +132,24 @@
                         if ($(data).length > 0) {
                             let current = parseInt($(data).length % _size === 0 ? ($(data).length / _size) : ($(data).length / _size) + 1);
                             $('.total').text(current);
+                        } else {
+                            $('#loadingIcon').find('i').fadeOut(200, function () {
+                                $('#status').html($('#alert-template').find('.alert-warning').clone(false));
+                                $('#status').find('.alert').text('No Plans Found');
+                            });
+                        };
 
-                        }
                     },
                     error: function (a, b, c) {
-                        //$('#loadingIcon').find('i').fadeOut(200, function () {
-                        //    $('#status').html('<div class="alert alert-danger">' + c + '</div>');
-                        //    $('#cards').children().hide();
-                        //});
-                        //$('button').prop('disabled', false);
+                        $('#loadingIcon').find('i').fadeOut(200, function () {
+                            $('#status').html($('#alert-template').find('.alert-danger').clone(false));
+                            $('#status').find('.alert').text(c);
+                        });
                     }
                 });
 
             }
-            function getPlans(id = null, name = null, sort = null, start, take) {
+            function getPlans(id, name, sort, start, take) {
                 _id = id;
                 _name = name;
                 _sort = sort;
@@ -216,19 +168,17 @@
                             $('.plansTable').find('tbody').html(items);
                             $('#loading').find('i').fadeOut(200);
                         } else {
-                            $('#loading').find('i').fadeOut(200, function () {
-                                //$('#status').html('<div class="alert alert-warning">Message: No plans found</div>');
-                                
+                            $('#loadingIcon').find('i').fadeOut(200, function () {
+                                $('#status').html($('#alert-template').find('.alert-warning').clone(false));
+                                $('#status').find('.alert').text('No Plans Found');
                             });
                         };
-                        //$('button').prop('disabled', false);
                     },
                     error: function (a, b, c) {
-                        //$('#loadingIcon').find('i').fadeOut(200, function () {
-                        //    $('#status').html('<div class="alert alert-danger">' + c + '</div>');
-                        //    $('#cards').children().hide();
-                        //});
-                        //$('button').prop('disabled', false);
+                        $('#loadingIcon').find('i').fadeOut(200, function () {
+                            $('#status').html($('#alert-template').find('.alert-danger').clone(false));
+                            $('#status').find('.alert').text(c);
+                        });
                     }
                 });
             }
@@ -249,7 +199,6 @@
                 $('#loading').html($('#icon-template').find('.loading-icon').clone(false));
                 getWholeSize();
                 getPlans(null, null, null, (_page-1) * 20, 20);
-
             }
             $('.sortOption').click(function () {
                 let _sort = $(this).text();
@@ -264,7 +213,6 @@
                     $('.index').text(_page);
                     $('#loading').html($('#icon-template').find('.loading-icon').clone(false));
                     getPlans(_id, _name, _sort, (_page - 1) * 20, 20);
-
                 }
             })
             $('.prev').click(function () {
@@ -276,8 +224,6 @@
                 }
             })
             init();
-
         });
-        
     </script>
 }

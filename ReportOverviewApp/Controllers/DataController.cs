@@ -48,8 +48,6 @@ namespace ReportOverviewApp.Controllers
             {
                 end = DateTime.Today;
             }
-            //var ser = JsonSerializer.Create();
-            //ser.Serialize(new StreamWriter(new MemoryStream()), null);
             return Json(await GetExportedDataXmlAsync(begin, end), new JsonSerializerSettings()
             {
                 Formatting = Newtonsoft.Json.Formatting.Indented
@@ -329,12 +327,7 @@ namespace ReportOverviewApp.Controllers
             var reports = new SelectList(await _context.Reports.Where(r => r.BusinessContactId == id).Select(r => new { value = r.Id, text = r.Name }).ToListAsync(), "value", "text");
             return reports;
         }
-        [Authorize]
-        public async Task<JsonResult> GetReportDeadlines(int? year, int? month, bool indent, bool omitNull)
-        {
-            var deadlines = await _context.ReportDeadlines.Include(rd => rd.Report).Where(rd => rd.Deadline.Year == year).Where(rd => rd.Deadline.Month == month).OrderBy(rd => rd.Deadline).ThenBy(rd => rd.Report.Name).Select(rd => new {rd.Id, rd.Deadline, rd.RunDate, rd.ApprovalDate, rd.SentDate, rd.HasRun, rd.IsApproved, rd.IsSent, rd.ReportId, rd.Report.Name }).ToListAsync();
-            return Json(deadlines, new JsonSerializerSettings() {Formatting = indent ? Newtonsoft.Json.Formatting.Indented : Newtonsoft.Json.Formatting.None, NullValueHandling = omitNull ? NullValueHandling.Ignore : NullValueHandling.Include });
-        }
+        private string GetCurrentUserID() => _context.Users.Where(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault().Id;
         //[Authorize]
         //public async Task<JsonResult> GetGraphData()
         //{

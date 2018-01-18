@@ -7,16 +7,17 @@ function deleteReportDeadline() {
     let model = {
         __RequestVerificationToken: $("[name='__RequestVerificationToken']").val(),
         id: parseInt(formData.Id),
-        deadline: formData.Deadline,
-        runDate: formData.RunDate === "" ? null : formData.RunDate,
-        approvalDate: formData.ApprovalDate === "" ? null : formData.ApprovalDate,
-        sentDate: formData.SentDate === "" ? null : formData.SentDate,
+        deadline: formatDate(new Date(formData.Deadline), 'date'),
+        runDate: formData.RunDate === "" ? null : formatDate(new Date(formData.RunDate)),
+        approvalDate: formData.ApprovalDate === "" ? null : formatDate(new Date(formData.RunDate)),
+        sentDate: formData.SentDate === "" ? null : formatDate(new Date(formData.SentDate)),
         reportId: parseInt(formData.ReportId)
     };
     let request = $.ajax({
         type: 'DELETE',
         dataType: 'json',
-        url: '/Reports/Deadlines/' + model.id,
+        url: '/api/Reports/Deadlines/' + model.id,
+        data: model.id,
         headers: {
             RequestVerificationToken: $("[name='__RequestVerificationToken']").val()
         },
@@ -79,7 +80,8 @@ function save() {
     let request = $.ajax({
         type: 'PUT',
         dataType: 'json',
-        url: '/Reports/Deadlines/' + model.id,
+        url: '/api/Reports/Deadlines/' + model.id,
+        data: model.id,
         headers: {
             RequestVerificationToken: $("[name='__RequestVerificationToken']").val()
         },

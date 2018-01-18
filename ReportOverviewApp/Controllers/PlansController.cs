@@ -22,8 +22,6 @@ namespace ReportOverviewApp.Controllers
         }
 
         // GET: Plans
-        
-        [HttpGet, Route("Plans")]
         public async Task<IActionResult> Index(int? id, string name, string sort)
         {
             //var plans = await _context.Plans.Include(p => p.State).Include(p => p.ReportPlanMapping).ThenInclude(rpm => rpm.Report).ToListAsync();
@@ -33,8 +31,8 @@ namespace ReportOverviewApp.Controllers
             return View();
         }
 
-        [HttpGet, Route("api/Plans")]
-        public async Task<JsonResult> GetPlans(int? id, string name, string sort, int? from, int? take)
+        [HttpGet, Route("api/Plans"), Produces("application/json")]
+        public async Task<JsonResult> GetPlans(string name, string sort, int? from, int? take)
         {
             var plans = await _context.Plans.Include(p => p.State).ToListAsync();
             switch (sort?.ToLower())
@@ -57,11 +55,6 @@ namespace ReportOverviewApp.Controllers
                 default:
                     plans = plans.OrderBy(p => p.Id).ToList();
                     break;
-
-            }
-            if(id != null)
-            {
-                plans = plans.Where(p => p.Id == id).ToList();
             }
             if (name != null)
             {
@@ -83,30 +76,35 @@ namespace ReportOverviewApp.Controllers
             }
             return Json(plans.Select(p => new { p.Id, p.Name, state = p.State.PostalAbbreviation, p.StateId, p.WindwardId, p.HasActiveReports, p.HasTermedReports }).ToList());
         }
+        [HttpGet, Route("api/Plans/{id}"), Produces("application/json")]
+        public async Task<JsonResult> GetPlan(int? id)
+        {
+            var plan = await _context.Plans.FindAsync(id);
+            return Json(plan);
+        }
 
 
         // GET: Plans/Details/5
-        [Route("Plans/Details/{id:int?}")]
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //[Route("Plans/Details/{id}")]
+        //public async Task<IActionResult> Details(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var plan = await _context.Plans
-                .Include(p => p.State)
-                .SingleOrDefaultAsync(m => m.Id == id);
-            if (plan == null)
-            {
-                return NotFound();
-            }
+        //    var plan = await _context.Plans
+        //        .Include(p => p.State)
+        //        .SingleOrDefaultAsync(m => m.Id == id);
+        //    if (plan == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(plan);
-        }
+        //    return View(plan);
+        //}
 
         // GET: Plans/Create
-        [HttpGet, Route("Plans/Create")]
         public IActionResult Create()
         {
             ViewData["StateId"] = new SelectList(_context.States, "Id", "Name");
@@ -131,7 +129,7 @@ namespace ReportOverviewApp.Controllers
         }
 
         // GET: Plans/Edit/5
-        [HttpGet("{id}"), Route("Plans/{id:int?}")]
+        [HttpGet, Route("Plans/{id}")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -151,7 +149,7 @@ namespace ReportOverviewApp.Controllers
         // POST: Plans/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost("{id}"), Route("api/Plans/{id:int}")]
+        [HttpPost, Route("api/Plans/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [FromBody] Plan plan)
         {
@@ -180,7 +178,7 @@ namespace ReportOverviewApp.Controllers
                 }
                 return Json(new { success = true, update = true, message = "Save successful" });
             }
-            ViewData["StateId"] = new SelectList(_context.States, "Id", "Name", plan.StateId);
+            //ViewData["StateId"] = new SelectList(_context.States, "Id", "Name", plan.StateId);
             return BadRequest();
         }
 
@@ -205,7 +203,7 @@ namespace ReportOverviewApp.Controllers
         //}
 
         // POST: Plans/Delete/5
-        [HttpDelete("{id}"), ActionName("Delete"), Route("api/Plans/{id:int?}")]
+        [HttpDelete("{id}"), ActionName("Delete"), Route("api/Plans/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

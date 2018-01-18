@@ -22,49 +22,52 @@ $('.markAll').click(function () {
     } else return false;
     return true;
 });
-function markAll(date) {
-    $.ajax({
-        type: 'POST',
-        url: '/Reports/Deadlines/Mark',
-        data: { dateTime: new Date(date).toJSON(), complete: true },
-        dataType: 'json',
-        success: function (data) {
-            let alertMsg = $('#alertSuccessTemplate').children().clone(true);
-            $(alertMsg).find('.alertMessage').html(data.message);
-            $('#status').html(alertMsg);
-            retriveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val());
-        },
-        error: function (a, b, c) {
-            let alertMsg = $('#alertDangerTemplate').children().clone(true);
-            $(alertMsg).find('.alertMessage').html(c);
-            $('#status').html(alertMsg);
-        }
-    });
-}
-function unmarkAll(date) {
-    $.ajax({
-        type: 'POST',
-        url: '/Reports/Deadlines/Mark',
-        data: { dateTime: new Date(date).toJSON(), complete: false },
-        dataType: 'json',
-        success: function (data) {
-            let alertMsg = $('#alertSuccessTemplate').children().clone(true);
-            $(alertMsg).find('.alertMessage').html(data.message);
-            $('#status').html(alertMsg);
-            retriveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val());
-        },
-        error: function (a, b, c) {
-            let alertMsg = $('#alertDangerTemplate').children().clone(true);
-            $(alertMsg).find('.alertMessage').html(c);
-            $('#status').html(alertMsg);
-        }
-    });
-}
+//function markAll(date) {
+//    $.ajax({
+//        type: 'POST',
+//        url: '/api/Reports/Deadlines/MarkAsComplete',
+//        data: JSON.stringify({ dateTime: new Date(date).toJSON(), complete: true}),
+//        contentType: 'application/json; charset=UTF-8',
+//        dataType: 'json',
+//        success: function (data) {
+//            let alertMsg = $('#alertSuccessTemplate').children().clone(true);
+//            $(alertMsg).find('.alertMessage').html(data.message);
+//            $('#status').html(alertMsg);
+//            retriveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val());
+//        },
+//        error: function (a, b, c) {
+//            let alertMsg = $('#alertDangerTemplate').children().clone(true);
+//            $(alertMsg).find('.alertMessage').html(c);
+//            $('#status').html(alertMsg);
+//        }
+//    });
+//}
+//function unmarkAll(date) {
+//    $.ajax({
+//        type: 'POST',
+//        url: '/api/Reports/Deadlines/MarkAsComplete',
+//        data: JSON.stringify({ dateTime: new Date(date).toJSON(), complete: false }),
+//        dataType: 'json',
+//        contentType: 'application/json; charset=UTF-8',
+//        success: function (data) {
+//            let alertMsg = $('#alertSuccessTemplate').children().clone(true);
+//            $(alertMsg).find('.alertMessage').html(data.message);
+//            $('#status').html(alertMsg);
+//            retriveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val());
+//        },
+//        error: function (a, b, c) {
+//            let alertMsg = $('#alertDangerTemplate').children().clone(true);
+//            $(alertMsg).find('.alertMessage').html(c);
+//            $('#status').html(alertMsg);
+//        }
+//    });
+//}
 function deleteAll(date) {
     $.ajax({
         type: 'DELETE',
-        url: '/Reports/Deadlines/Delete',
-        data: { dateTime: new Date(date).toJSON() },
+        url: '/api/Reports/Deadlines/DeleteAll',
+        data: JSON.stringify(new Date(date).toJSON()),
+        contentType: 'application/json',
         dataType: 'json',
         success: function (data) {
             let alertMsg = $('#alertWarningTemplate').children().clone(true);
@@ -91,11 +94,11 @@ function retriveReports(year, month, lastEditedDate) {
     $('button').prop('disabled', true);
     $.ajax({
         type: 'GET',
-        url: '/Data/GetReportDeadlines?',
+        url:  '/api/Reports/Deadlines',
         data: { year: year, month: month },
         dataType: 'json',
         success: function (data) {
-            history.replaceState(null, null, '/Reports/Deadlines?month=' + month + '&year=' + year);
+            //history.replaceState(null, null, '/Reports/Deadlines?month=' + month + '&year=' + year);
             if ($(data).length > 0) {
                 let groups = groupBy(data, 'Deadline');
                 let items = [];

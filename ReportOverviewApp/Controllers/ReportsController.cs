@@ -150,14 +150,14 @@ namespace ReportOverviewApp.Controllers
         }
 
         // GET: Reports
-        [Authorize]
+    
         public async Task<IActionResult> Index(string search, string column, int entriesPerPage, int pageIndex, string state, string plan, string frequency, string businessContact, string businessOwner, string sourceDepartment, string begin = null, string end = null)
         {
             //await UpdateDeadlinesAsync();
             return View(await GetReportViewModelAsync(search, column, entriesPerPage, pageIndex, state, plan, begin, end, frequency, businessContact, businessOwner, sourceDepartment));
         }
         // GET: Reports/Details/5
-        [Authorize]
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
@@ -172,12 +172,12 @@ namespace ReportOverviewApp.Controllers
             return ViewComponent("SelectPlanList", new { State = state });
         }
 
-        [Authorize]
+ 
         public async Task<IActionResult> SelectPlan(string state)
             => View(await GetSelectPlanViewModelAsync(state));
 
         // GET: Reports/Create
-        [Authorize]
+     
         public IActionResult Create() => View();
 
         [Authorize, HttpGet, Route("Reports/Deadlines/{year:int?}/{month:int?}")]
@@ -190,57 +190,14 @@ namespace ReportOverviewApp.Controllers
         }
 
 
-        [HttpPost, Route("Reports/Deadlines/Mark")]
-        public async Task<IActionResult> MarkAll(DateTime dateTime, bool? complete)
-        {
-            if (dateTime == null || complete == null) return BadRequest();
-            List<ReportDeadline> list = await _context.ReportDeadlines.Where(rd => rd.Deadline.ToString("MM/dd/yyyy") == dateTime.ToString("MM/dd/yyyy")).ToListAsync();
-            if (list == null || !list.Any()) return NotFound();
-            string returnMessage;
-            if (complete.Value)
-            {
-                for (int i = 0; i < list.Count(); i++)
-                {
-                    if (list[i].ApprovalDate == null)
-                    {
-                        list[i].ApprovalDate = DateTime.Today;
-                    }
-                    if (list[i].RunDate == null)
-                    {
-                        list[i].RunDate = DateTime.Today;
-                    }
-                    if (list[i].SentDate == null)
-                    {
-                        list[i].SentDate = DateTime.Today;
-                    }
-                }
-                returnMessage = $"All deadlines for {dateTime.ToString("MM/dd/yyyy")} have been marked as complete";
-            }
-            else
-            {
-                for (int i = 0; i < list.Count(); i++)
-                {
-                    list[i].ApprovalDate = null;
-                    list[i].RunDate = null;
-                    list[i].SentDate = null;
-                }
-                returnMessage = $"All deadlines for {dateTime.ToString("MM/dd/yyyy")} have been marked as incomplete";
-            }
-
-            _context.ReportDeadlines.UpdateRange(list);
-            await _context.SaveChangesAsync();
-            return Json(new { success = true, message = returnMessage });
-        }
-        [HttpDelete, Route("Reports/Deadlines/Delete/{dateTime:DateTime}")]
-        public async Task<IActionResult> DeleteAll(DateTime dateTime)
-        {
-            if (dateTime == null) return BadRequest();
-            List<ReportDeadline> list = await _context.ReportDeadlines.Where(rd => rd.Deadline.ToString("MM/dd/yyyy") == dateTime.ToString("MM/dd/yyyy")).ToListAsync();
-            if (list == null || !list.Any()) return NotFound();
-            _context.ReportDeadlines.RemoveRange(list);
-            await _context.SaveChangesAsync();
-            return Json(new { success = true, message = $"All deadlines for {dateTime.ToString("MM/dd/yyyy")} have been deleted" });
-        }
+        //[Authorize, HttpGet, Route("Reports/Deadlines/Edit/{id}")]
+        //public async Task<IActionResult> EditDeadline(int? id)
+        //{
+        //    if (id == null) return NotFound();
+        //    var deadline = await _context.ReportDeadlines.Include(rd => rd.Report).SingleOrDefaultAsync(d => d.Id == id);
+        //    if (deadline == null) return NotFound();
+        //    return View(deadline);
+        //}
 
         // POST: Reports/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -249,7 +206,8 @@ namespace ReportOverviewApp.Controllers
         public async Task<IActionResult> Create([Bind("Report, Plans")] ReportViewModel reportViewModel)
         {
             ToastMessage toast = null;
-            if (ModelState.IsValid) {
+            if (ModelState.IsValid)
+            {
                 if (reportViewModel.Report.DateAdded == null)
                 {
                     reportViewModel.Report.DateAdded = DateTime.Now;
@@ -271,58 +229,7 @@ namespace ReportOverviewApp.Controllers
             return View(reportViewModel);
         }
 
-        [Authorize, HttpGet, Route("Reports/Deadlines/{id:int?}")]
-        public async Task<IActionResult> EditDeadline(int? id)
-        {
-            if (id == null) return NotFound();
-            var deadline = await _context.ReportDeadlines.Include(rd => rd.Report).SingleOrDefaultAsync(d => d.Id == id);
-            if (deadline == null) return NotFound();
-            return View(deadline);
-        }
-        [HttpDelete, ValidateAntiForgeryToken, Authorize, Route("Reports/Deadlines/{id:int?}")]
-        public async Task<IActionResult> DeleteDeadline(int? id)
-        {
-            if (id == null) return BadRequest("id parameter did not have a value");
-            var reportDeadline = await _context.ReportDeadlines.FindAsync(id);
-            if (reportDeadline == null) return NotFound("Value of id parameter not found in data table");
-            _context.ReportDeadlines.Remove(reportDeadline);
-            await _context.SaveChangesAsync();
-            return Json(new { success = true, update = true, message = "Deletion successful" });
-        }
-        [HttpPost("{id}"), ValidateAntiForgeryToken, Authorize, Route("Reports/Deadlines/{id:int?}")]
-        public async Task<IActionResult> EditDeadline([FromRoute] int? id, [FromBody] ReportDeadline reportDeadline)
-        {
-            if(id == null)
-            {
-                return NotFound("Unable to get an id value.");
-            }
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    reportDeadline.Deadline = new DateTime(year: reportDeadline.Deadline.Year, month: reportDeadline.Deadline.Month, day: reportDeadline.Deadline.Day);
-                    var unmodifiedDeadline = _context.ReportDeadlines.AsNoTracking().Include(rd => rd.Report).SingleOrDefault(d => d.Id == id);
-                    await _context.AddAsync(userLogFactory.Build(GetCurrentUserID(), $"Status of \"{unmodifiedDeadline.Report.Name}\" for {reportDeadline.Deadline.ToString("MM/dd/yyyy")} has been updated.", CompareChanges(unmodifiedDeadline, reportDeadline)));
-                    Report report = await _context.Reports.FindAsync(reportDeadline.ReportId);
-                    if (report == null) throw new NullReferenceException($"Report is null and given {reportDeadline.ReportId} as Id for deadline of {reportDeadline.Deadline} with Id {reportDeadline.Id}");
-                    _context.ReportDeadlines.Update(reportDeadline);
-                    await _context.SaveChangesAsync();
-                    
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ReportDeadlineExists(reportDeadline.Id))
-                    {
-                        return NotFound();
-                    }
-                    else throw;
-                }
-                return Json(new { success = true, update = true, message = "Save successful"});
-            } 
-            return BadRequest(ModelState);
-        }
-        
-        
+
 
         // GET: Reports/Edit/5
         [Authorize]
