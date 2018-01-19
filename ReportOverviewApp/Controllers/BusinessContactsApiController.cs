@@ -11,57 +11,57 @@ using ReportOverviewApp.Models;
 namespace ReportOverviewApp.Controllers
 {
     [Produces("application/json")]
-    [Route("api/Reports")]
-    public class ReportsApiController : Controller
+    [Route("api/BusinessContacts")]
+    public class BusinessContactsApiController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public ReportsApiController(ApplicationDbContext context)
+        public BusinessContactsApiController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/ReportsApi
+        // GET: api/BusinessContactsApi
         [HttpGet]
-        public IEnumerable<Report> GetReports()
+        public IEnumerable<BusinessContact> GetBusinessContacts()
         {
-            return _context.Reports;
+            return _context.BusinessContacts;
         }
 
-        // GET: api/ReportsApi/5
+        // GET: api/BusinessContactsApi/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetReport([FromRoute] int id)
+        public async Task<IActionResult> GetBusinessContact([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var report = await _context.Reports.SingleOrDefaultAsync(m => m.Id == id);
+            var businessContact = await _context.BusinessContacts.SingleOrDefaultAsync(m => m.Id == id);
 
-            if (report == null)
+            if (businessContact == null)
             {
                 return NotFound();
             }
 
-            return Ok(report);
+            return Ok(businessContact);
         }
 
-        // PUT: api/Reports/5
+        // PUT: api/BusinessContactsApi/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutReport([FromRoute] int id, [FromBody] Report report)
+        public async Task<IActionResult> PutBusinessContact([FromRoute] int id, [FromBody] BusinessContact businessContact)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != report.Id)
+            if (id != businessContact.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(report).State = EntityState.Modified;
+            _context.Entry(businessContact).State = EntityState.Modified;
 
             try
             {
@@ -69,7 +69,7 @@ namespace ReportOverviewApp.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ReportExists(id))
+                if (!BusinessContactExists(id))
                 {
                     return NotFound();
                 }
@@ -82,45 +82,45 @@ namespace ReportOverviewApp.Controllers
             return NoContent();
         }
 
-        // POST: api/Reports
+        // POST: api/BusinessContactsApi
         [HttpPost]
-        public async Task<IActionResult> PostReport([FromBody] Report report)
+        public async Task<IActionResult> PostBusinessContact([FromBody] BusinessContact businessContact)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.Reports.Add(report);
+            _context.BusinessContacts.Add(businessContact);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetReport", new { id = report.Id }, report);
+            return CreatedAtAction("GetBusinessContact", new { id = businessContact.Id }, businessContact);
         }
 
-        // DELETE: api/Reports/5
+        // DELETE: api/BusinessContactsApi/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteReport([FromRoute] int id)
+        public async Task<IActionResult> DeleteBusinessContact([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var report = await _context.Reports.SingleOrDefaultAsync(m => m.Id == id);
-            if (report == null)
+            var businessContact = await _context.BusinessContacts.SingleOrDefaultAsync(m => m.Id == id);
+            if (businessContact == null)
             {
                 return NotFound();
             }
 
-            _context.Reports.Remove(report);
+            _context.BusinessContacts.Remove(businessContact);
             await _context.SaveChangesAsync();
 
-            return Ok(report);
+            return Ok(businessContact);
         }
 
-        private bool ReportExists(int id)
+        private bool BusinessContactExists(int id)
         {
-            return _context.Reports.Any(e => e.Id == id);
+            return _context.BusinessContacts.Any(e => e.Id == id);
         }
     }
 }

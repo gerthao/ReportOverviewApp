@@ -23,31 +23,46 @@ namespace ReportOverviewApp.Controllers
         }
 
         // GET: Plans
-        public async Task<IActionResult> Index(int? id, string name, string sort)
+        public async Task<IActionResult> Index(string id, string name, string state, string windwardId, string sort, int? page = 1 , int? take = 20)
         {
-            //var plans = await _context.Plans.Include(p => p.State).Include(p => p.ReportPlanMapping).ThenInclude(rpm => rpm.Report).ToListAsync();
+            var plans = await _context.Plans.Include(p => p.State).Include(p => p.ReportPlanMapping).ThenInclude(rpm => rpm.Report).ToListAsync();
+            if(page == null || page < 1)
+            {
+                page = 1;
+            }
+            if(take == null || take < 1)
+            {
+                take = 20;
+            }
+            var from = (page - 1) * take;
+            ViewData["max"] = plans.Count() % take == 0 ? plans.Count() / take : (plans.Count() / take) + 1;
+            plans = FilterPlans(plans, id, name, state, windwardId, sort, from, take);
             ViewData["id"] = id;
             ViewData["name"] = name;
             ViewData["sort"] = sort;
+            ViewData["windwardId"] = windwardId;
+            ViewData["state"] = state;
+            ViewData["page"] = page;
+            ViewData["take"] = take;
+            ViewData["StateId"] = new SelectList(_context.States.OrderBy(s => s.Name), "Id", "Name");
+
             return View();
         }
-
-        [HttpGet, Route("api/Plans"), Produces("application/json")]
-        public async Task<JsonResult> GetPlans(string id, string name, string state, string windwardId, string sort, int? from, int? take)
+        private List<Plan> FilterPlans(List<Plan> plans, string id, string name, string state, string windwardId, string sort, int? from, int? take)
         {
-            var plans = await _context.Plans.Include(p => p.State).Include(p => p.ReportPlanMapping).ThenInclude(rpm => rpm.Report).ToListAsync();
             if (!String.IsNullOrEmpty(id))
             {
                 int value = 0;
                 id = id.Trim();
-                if(int.TryParse(id, out value))
+                if (int.TryParse(id, out value))
                 {
                     plans = plans.Where(p => p.Id == value).ToList();
-                } else
+                }
+                else
                 {
                     id = id.Replace("_", "[0-9]");
                     id = id.Replace("~", "[0-9]+?");
-                    Regex r = new Regex("^"+ id + "$");
+                    Regex r = new Regex("^" + id + "$");
                     plans = plans.Where(p => r.IsMatch(p.Id.ToString())).ToList();
                 }
             }
@@ -85,35 +100,44 @@ namespace ReportOverviewApp.Controllers
                 state = state.ToLower().Trim();
                 plans = plans.Where(p => p.State.PostalAbbreviation.ToLower().Contains(state)).ToList();
             }
-            if (!(String.IsNullOrEmpty(windwardId))){
+            if (!(String.IsNullOrEmpty(windwardId)))
+            {
                 windwardId = windwardId.Trim();
                 int value = 0;
-                if(int.TryParse(windwardId, out value))
+                if (int.TryParse(windwardId, out value))
                 {
                     plans = plans.Where(p => p.WindwardId.Contains(windwardId)).ToList();
-                } else
+                }
+                else
                 {
                     windwardId = windwardId.Replace("_", "[0-9]");
                     windwardId = windwardId.Replace("~", "[0-9]+?");
                     Regex r = new Regex("^" + windwardId + "$");
                     plans = plans.Where(p => r.IsMatch(p.WindwardId)).ToList();
-                } 
+                }
             }
-            if(from != null)
+            if (from != null)
             {
                 if (take != null)
                 {
                     plans = plans.Skip(from.Value - 1).Take(take.Value).ToList();
                 }
                 else plans = plans.Skip(from.Value - 1).ToList();
-            } else
+            }
+            else
             {
                 if (take != null)
                 {
                     plans = plans.Take(take.Value).ToList();
                 }
             }
-            return Json(plans.Select(p => new { p.Id, p.Name, state = p.State.PostalAbbreviation, p.StateId, p.WindwardId, p.HasActiveReports, p.HasTermedReports }).ToList());
+            return plans;
+        }
+        [HttpGet, Route("api/Plans"), Produces("application/json")]
+        public async Task<JsonResult> GetPlans(string id, string name, string state, string windwardId, string sort, int? from, int? take)
+        {
+            var plans = await _context.Plans.Include(p => p.State).Include(p => p.ReportPlanMapping).ThenInclude(rpm => rpm.Report).ToListAsync();
+            return Json(FilterPlans(plans, id, name, state, windwardId, sort, from, take).Select(p => new { p.Id, p.Name, state = p.State.PostalAbbreviation, p.StateId, p.WindwardId, p.HasActiveReports, p.HasTermedReports }).ToList());
         }
         [HttpGet, Route("api/Plans/{id}"), Produces("application/json")]
         public async Task<JsonResult> GetPlan(int? id)
