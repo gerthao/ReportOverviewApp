@@ -3,9 +3,16 @@
 });
 $('.panel-collapse').on('hidden.bs.collapse', function () {
     $(this).prev('.card-header').children('.options').children('.toggleIcon').children('i').removeClass('fa-chevron-down').addClass('fa-chevron-up');
+    //$(this).parent('div.card').appendTo('#cards');
+    //if ($('#selectedCard').html()){
+    //    $('#selectedCard').css('padding-bottom', '0rem');
+    //}
+   
 });
 $('.panel-collapse').on('shown.bs.collapse', function () {
     $(this).prev('.card-header').children('.options').children('.toggleIcon').children('i').removeClass('fa-chevron-up').addClass('fa-chevron-down');
+    //$(this).parent('div.card').appendTo('#selectedCard');
+    //$('#selectedCard').css('padding-bottom', '1.2rem');
 });
 $('#showAllButton').click(function () { $('.list-collapsable').collapse('show'); });
 $('#hideAllButton').click(function () { $('.list-collapsable').collapse('hide'); });
@@ -22,69 +29,90 @@ $('.markAll').click(function () {
     } else return false;
     return true;
 });
-function markAll(date) {
-    $.ajax({
-        type: 'POST',
-        url: '/api/Reports/Deadlines/MarkAsComplete',
-        data: JSON.stringify({ dateTime: new Date(date).toJSON(), complete: true}),
-        contentType: 'application/json; charset=UTF-8',
-        dataType: 'json',
-        success: function (data) {
-            let alertMsg = $('#alertSuccessTemplate').children().clone(true);
-            $(alertMsg).find('.alertMessage').html(data.message);
-            $('#status').html(alertMsg);
-            retriveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val());
-        },
-        error: function (a, b, c) {
-            let alertMsg = $('#alertDangerTemplate').children().clone(true);
-            $(alertMsg).find('.alertMessage').html(c);
-            $('#status').html(alertMsg);
-        }
-    });
-}
-function unmarkAll(date) {
-    $.ajax({
-        type: 'POST',
-        url: '/api/Reports/Deadlines/MarkAsComplete',
-        data: JSON.stringify({ dateTime: new Date(date).toJSON(), complete: false }),
-        dataType: 'json',
-        contentType: 'application/json; charset=UTF-8',
-        success: function (data) {
-            let alertMsg = $('#alertSuccessTemplate').children().clone(true);
-            $(alertMsg).find('.alertMessage').html(data.message);
-            $('#status').html(alertMsg);
-            retriveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val());
-        },
-        error: function (a, b, c) {
-            let alertMsg = $('#alertDangerTemplate').children().clone(true);
-            $(alertMsg).find('.alertMessage').html(c);
-            $('#status').html(alertMsg);
-        }
-    });
-}
-function deleteAll(date) {
-    $.ajax({
-        type: 'DELETE',
-        url: '/api/Reports/Deadlines/DeleteAll',
-        data: JSON.stringify(new Date(date).toJSON()),
-        contentType: 'application/json',
-        dataType: 'json',
-        success: function (data) {
-            let alertMsg = $('#alertWarningTemplate').children().clone(true);
-            $(alertMsg).find('.alertMessage').html(data.message);
-            $('#status').html(alertMsg);
-            retriveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val());
-        },
-        error: function (a, b, c) {
-            let alertMsg = $('#alertDangerTemplate').children().clone(true);
-            $(alertMsg).find('.alertMessage').html(c);
-            $('#status').html(alertMsg);
-        }
-    });
-}
-$('.deleteAll').click(function () {
-    deleteAll($(this).parent().prev('.deadline').text());
-});
+//function markAll(date) {
+//    $.ajax({
+//        type: 'POST',
+//        url: '/api/Deadlines/MarkAsComplete/' + String(formatDate(new Date(date)), 'date') + '/true',
+//        data: JSON.stringify(formatDate(new Date(date), 'date')),
+//        contentType: 'application/json; charset=UTF-8',
+//        dataType: 'json',
+//        success: function (data) {
+//            let alertMsg = $('#alertSuccessTemplate').children().clone(true);
+//            $(alertMsg).find('.alertMessage').html(data.message);
+//            $('#status').html(alertMsg);
+//            retriveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val());
+//        },
+//        error: function (a, b, c) {
+//            let alertMsg = $('#alertDangerTemplate').children().clone(true);
+//            $(alertMsg).find('.alertMessage').html(c);
+//            $('#status').html(alertMsg);
+//        }
+//    });
+//}
+//function formatDate(date, format) {
+//    if (date === undefined || date === null) {
+//        return null;
+//    }
+//    try {
+//        date = new Date(date);
+//    } catch (e) {
+//        console.error(e);
+//        return null;
+//    }
+//    if (typeof date !== typeof (new Date())) {
+//        return null;
+//    }
+//    switch (format) {
+//        case 'date':
+//            return date.toLocaleDateString().replace(/[^A-Za-z 0-9 \.,\?""!@#\$%\^&\*\(\)-_=\+;:<>\/\\\|\}\{\[\]`~]*/g, '');
+//        case 'time':
+//            return date.toLocaleTimeString().replace(/[^A-Za-z 0-9 \.,\?""!@#\$%\^&\*\(\)-_=\+;:<>\/\\\|\}\{\[\]`~]*/g, '');
+//    }
+//    return date.toLocaleString().replace(/[^A-Za-z 0-9 \.,\?""!@#\$%\^&\*\(\)-_=\+;:<>\/\\\|\}\{\[\]`~]*/g, '');
+//}
+//function unmarkAll(date) {
+//    $.ajax({
+//        type: 'POST',
+//        url: '/api/Deadlines/MarkAsComplete/' + String(formatDate(new Date(date)), 'date') + '/false',
+//        data: JSON.stringify(formatDate(new Date(date), 'date')),
+//        dataType: 'json',
+//        contentType: 'application/json; charset=UTF-8',
+//        success: function (data) {
+//            let alertMsg = $('#alertSuccessTemplate').children().clone(true);
+//            $(alertMsg).find('.alertMessage').html(data.message);
+//            $('#status').html(alertMsg);
+//            retriveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val());
+//        },
+//        error: function (a, b, c) {
+//            let alertMsg = $('#alertDangerTemplate').children().clone(true);
+//            $(alertMsg).find('.alertMessage').html(c);
+//            $('#status').html(alertMsg);
+//        }
+//    });
+//}
+//function deleteAll(date) {
+//    $.ajax({
+//        type: 'DELETE',
+//        url: '/api/Deadlines/DeleteAll',
+//        data: JSON.stringify(formatDate(new Date(date))),
+//        contentType: 'application/json',
+//        dataType: 'json',
+//        success: function (data) {
+//            let alertMsg = $('#alertWarningTemplate').children().clone(true);
+//            $(alertMsg).find('.alertMessage').html(data.message);
+//            $('#status').html(alertMsg);
+//            retriveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val());
+//        },
+//        error: function (a, b, c) {
+//            let alertMsg = $('#alertDangerTemplate').children().clone(true);
+//            $(alertMsg).find('.alertMessage').html(c);
+//            $('#status').html(alertMsg);
+//        }
+//    });
+//}
+//$('.deleteAll').click(function () {
+//    deleteAll($(this).parent().prev('.deadline').text());
+//});
 $('#changeButton').click(function () {
     $('#status').children().fadeOut(200);
     retriveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val());
@@ -92,13 +120,32 @@ $('#changeButton').click(function () {
 function retriveReports(year, month, lastEditedDate) {
     $('#loadingIcon').html('<i class="fas fa-cog fa-2x ld ld-spin"></i>');
     $('button').prop('disabled', true);
+    let query = {
+        year: year,
+        month: month
+    };
     $.ajax({
         type: 'GET',
-        url:  '/api/Reports/Deadlines',
-        data: { year: year, month: month },
+        url:  '/api/Deadlines',
+        data: query,
         dataType: 'json',
         success: function (data) {
-            //history.replaceState(null, null, '/Reports/Deadlines?month=' + month + '&year=' + year);
+            let queryString = '';
+            let queryUrl = '/Reports/Deadlines';
+            let mapping = Object.keys(query).map(function (key) {
+                if (query[key] !== null)
+                    return key + '=' + query[key];
+                else return null;
+            });
+            queryString = mapping.reduce(function (a, c) {
+                if (a === null) return c;
+                if (c === null) return a;
+                return a + '&' + c;
+            });
+            if (queryString !== '') {
+                queryUrl += '?' + queryString;
+            }
+            history.replaceState(null, null, queryUrl);
             if ($(data).length > 0) {
                 let groups = groupBy(data, 'Deadline');
                 let items = [];
@@ -115,7 +162,7 @@ function retriveReports(year, month, lastEditedDate) {
                     $('#status').html('<div class="alert alert-warning">Message: No deadlines found</div>');
                     $('#cards').children().hide();
                 });
-            };
+            }
             $('button').prop('disabled', false);
         },
         error: function (a, b, c) {
@@ -129,7 +176,7 @@ function retriveReports(year, month, lastEditedDate) {
 
 }
 function convertDate(inputFormat) {
-    function pad(s) { return (s < 10) ? '0' + s : s; }
+    function pad(s) { return s < 10 ? '0' + s : s; }
     var d = new Date(inputFormat);
     return [pad(d.getMonth() + 1), pad(d.getDate()), d.getFullYear()].join('/');
 }
@@ -165,7 +212,7 @@ function buildCardContent(key, report) {
 function groupBy(items, key) {
     return items.reduce(
         function (acc, x) { (acc[x[key]] = acc[x[key]] || []).push(x); return acc; }, {});
-};
+}
 function setRouteId(link, id) {
     let url = $(link).attr('href');
     $(link).attr('href', url + '/' + id);
@@ -176,7 +223,7 @@ function setCardStatus(card, key, data) {
     let dateKey = new Date(key);
     let okay = true;
     $.each(data, function (k, l) { okay = okay && checkMissing(l); });
-    $(card).find('.deadline').text(convertDate(dateKey))
+    $(card).find('.deadline').text(convertDate(dateKey));
     if (convertDate(dateKey) === convertDate(date)) {
         $(card).find('.deadline').append(' (Today)');
         if (!okay) {
@@ -185,7 +232,7 @@ function setCardStatus(card, key, data) {
         } else {
             $(card).find('.card-header').addClass('text-light');
             $(card).addClass('bg-success');
-            $(card).find('.markAll').find('i').removeClass('fas fa-check-circle').addClass('fas fa-minus-circle');
+            //$(card).find('.markAll').find('i').removeClass('fas fa-check-circle').addClass('fas fa-minus-circle');
 
         }
         $(card).addClass('bg-warning');
@@ -197,7 +244,7 @@ function setCardStatus(card, key, data) {
         } else {
             $(card).find('.card-header').addClass('text-light');
             $(card).addClass('bg-success');
-            $(card).find('.markAll').find('i').removeClass('fas fa-check-circle').addClass('fas fa-minus-circle');
+            //$(card).find('.markAll').find('i').removeClass('fas fa-check-circle').addClass('fas fa-minus-circle');
 
         }
     }
@@ -205,7 +252,7 @@ function setCardStatus(card, key, data) {
         if (okay) {
             $(card).find('.card-header').addClass('text-light');
             $(card).addClass('bg-success');
-            $(card).find('.markAll').find('i').removeClass('fas fa-check-circle').addClass('fas fa-minus-circle');
+            //$(card).find('.markAll').find('i').removeClass('fas fa-check-circle').addClass('fas fa-minus-circle');
 
         }
     }

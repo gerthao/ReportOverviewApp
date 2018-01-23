@@ -37,13 +37,13 @@ namespace ReportOverviewApp.Controllers
             //var from = (page - 1) * take;
             //ViewData["max"] = plans.Count() % take == 0 ? plans.Count() / take : (plans.Count() / take) + 1;
             //plans = FilterPlans(plans, id, name, state, windwardId, sort, from, take);
-            //ViewData["id"] = id;
-            //ViewData["name"] = name;
-            //ViewData["sort"] = sort;
-            //ViewData["windwardId"] = windwardId;
-            //ViewData["state"] = state;
-            //ViewData["page"] = page;
-            //ViewData["take"] = take;
+            ViewData["id"] = id;
+            ViewData["name"] = name;
+            ViewData["sort"] = sort;
+            ViewData["windwardId"] = windwardId;
+            ViewData["state"] = state;
+            ViewData["page"] = page;
+            ViewData["take"] = take;
             ViewData["StateId"] = new SelectList(await _context.States.OrderBy(s => s.Name).ToListAsync(), "Id", "Name");
 
             return View();

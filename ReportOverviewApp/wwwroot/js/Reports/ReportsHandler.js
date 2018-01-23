@@ -52,9 +52,6 @@ $(document).ready(function () {
             return;
         }
         findForm[0].reset();
-        //if (history.state !== undefined && history.state !== null && history.state.foo === stateObj.foo) {
-        //    history.back();
-        //}
         
     });
     var stateObj = { foo: "bar" };
@@ -62,7 +59,6 @@ $(document).ready(function () {
         let link = $(this).attr('href');
         $('#editReportContainer').html('<div class="col-md-12" style="text-align: center; padding-top: 50%; padding-bottom: 50%; position: absolute;"><i class="fas fa-5x fa-cog ld ld-spin"></i></div>');
         $.get(link, function (data) {
-            //history.pushState(stateObj, "edit", '/Reports/Edit/' + link.split('/')[link.split('/').length - 1]);
             $('#editReportContainer').fadeOut(500, function () {
                 $(this).html(data);
                 $(this).fadeIn(500);
@@ -73,27 +69,16 @@ $(document).ready(function () {
         let link = $(this).attr('href');
         $('#editReportDeadlineContainer').html('<div class="col-md-12" style="text-align: center; padding-top: 50%; padding-bottom: 50%; position: absolute;"><i class="loading-icon fa fa-5x fa-cog ld ld-spin"></i></div>');
         $.get(link, function (data) {
-            //history.pushState(stateObj, "editdeadline", '/Reports/Deadlines/Edit' + link.split('/')[link.split('/').length - 1]);
             $('#editReportDeadlineContainer').fadeOut(500, function () {
                 $(this).html(data);
                 $(this).fadeIn(500);
             });
         });
     });
-    $('.createLink').on("click", function () {
-        history.pushState(stateObj, "create", '/Reports/Create/');
-    });
-    $('.searchLink').on("click", function () {
-        history.pushState(stateObj, "search", '/Reports/');
-    });
-    $('.exportLink').on("click", function () {
-        history.pushState(stateObj, "export", '/Reports/Export/');
-    });
     $('.deleteReportLink').on("click", function () {
         let link = $(this).attr('href');
         $('#deleteReportContainer').html('<div class="col-md-12" style="text-align: center; padding-top: 50%; padding-bottom: 50%; position: absolute;"><i class="loading-icon fa fa-5x fa-cog ld ld-spin"></i></div>');
         $.get(link, function (data) {
-            //history.pushState(stateObj, "delete", '/Reports/Delete/' + link.split('/')[link.split('/').length-1]);
             $('#deleteReportContainer').fadeOut(500, function () {
                 $(this).html(data);
                 $(this).fadeIn(500);

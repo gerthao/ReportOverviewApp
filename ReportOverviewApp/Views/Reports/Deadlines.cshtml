@@ -3,6 +3,14 @@
 @{
     ViewData["Title"] = "Deadlines";
 }
+@*<style>
+    .toggle{
+        transition: all 0.25s;
+    }
+    .toggle:hover{
+        transform: rotate(180deg);
+    }
+</style>*@
 <div class="row col-md-12">
     <h4 style="display: inline-block">
         Status of Reports
@@ -68,10 +76,10 @@
     <div class="card">
         <div class="card-header">
             <h6 class="deadline" style="display: inline-block;"></h6>
-            <div class="options" style="display:inline-block;position:absolute; vertical-align:middle; right: 0.5rem;">
-                <span class="markAll"><i class="fas fa-check-circle"></i></span>
-                <span class="toggleIcon" data-toggle="collapse"><i class="fas fa-chevron-up"></i></span>
-                <span class="deleteAll"><i class="fas fa-times-circle"></i></span>
+            <div class="options" style="display:inline-block;position:absolute; vertical-align:middle; right: 1.0rem;">
+                @*<span class="markAll"><i class="fas fa-check-circle"></i></span>*@
+                <span class="toggleIcon" data-toggle="collapse"><i class="fas fa-chevron-up toggle"></i></span>
+                @*<span class="deleteAll"><i class="fas fa-times-circle"></i></span>*@
             </div>
         </div>
         <div class="panel-collapse collapse">
@@ -131,6 +139,9 @@
             <span class="fas fa-times" aria-hidden="true"></span>
         </button>
     </div>
+</div>
+<div id="selectedCard">
+
 </div>
 <div id="cards" class="card-columns">
     @*<noscript>

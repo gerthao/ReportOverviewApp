@@ -108,6 +108,10 @@ a.list-group-item:hover, a.list-group-item.list-group-item-action:hover, p.list-
     background-color: #404046;
     border: 1px solid #3A3A3C;
 }
+    .pagination li.page-item span a.page-link {
+        background-color: #404046;
+        border: 1px solid #3A3A3C;
+    }
 .modal-content {
     background-color: #303032;
 }

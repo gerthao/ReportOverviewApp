@@ -4,33 +4,44 @@
     ViewData["Title"] = "Details";
 }
 
-<h2>Details</h2>
+<h5>@Model.Name</h5>
 
 <div>
-    <h4>BusinessContact</h4>
+    
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.BusinessOwner)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.BusinessOwner)
-        </dd>
-    </dl>
-    <ul class="list-group">
-        @foreach(Report r in Model.Reports)
+    <div class="row">
+        <div class="col-md-4">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Name)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Name)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.BusinessOwner)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.BusinessOwner)
+                </dd>
+            </dl>
+            <div>
+                <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+                <a class="btn btn-outline-primary" asp-action="Index">Back to List</a>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <h6>Reports</h6>
+            <ul class="list-group">
+
+                @foreach (Report r in Model.Reports)
         {
             <li class="list-group-item">@r.Name</li>
-        }
-    </ul>
+}
+            </ul>
+        </div>
+        
+    </div>
+    
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+

@@ -16,7 +16,7 @@ using ReportOverviewApp.Models.ReportViewModels;
 namespace ReportOverviewApp.Controllers
 {
     [Produces("application/json")]
-    [Route("api/Reports/Deadlines")]
+    [Route("api/Deadlines")]
     [Authorize]
     public class ReportDeadlinesApiController : Controller
     {
@@ -61,7 +61,7 @@ namespace ReportOverviewApp.Controllers
         [HttpGet]
         public async Task<JsonResult> GetReportDeadlines(int? year, int? month, int? day, DayOfWeek? dayOfWeek, string name, bool indent, bool omitNull)
         {
-            var deadlines = await _context.ReportDeadlines.Include(rd => rd.Report).ToListAsync();
+            var deadlines = await _context.ReportDeadlines.Include(rd => rd.Report).OrderByDescending(rd => rd.Deadline).ToListAsync();
             deadlines = (String.IsNullOrEmpty(name) ? deadlines : deadlines.Where(rd => rd.Report.Name.ToLower().Contains(name))).ToList();
             deadlines = (year == null ? deadlines : deadlines.Where(rd => rd.Deadline.Year == year)).ToList();
             deadlines = (month == null ? deadlines : deadlines.Where(rd => rd.Deadline.Month == month)).ToList();
@@ -79,14 +79,14 @@ namespace ReportOverviewApp.Controllers
             ).SingleOrDefaultAsync();
             return Json(result, new JsonSerializerSettings() { Formatting = indent ? Newtonsoft.Json.Formatting.Indented : Newtonsoft.Json.Formatting.None, NullValueHandling = omitNull ? NullValueHandling.Ignore : NullValueHandling.Include });
         }
-        //[HttpPost("{dateTime}"), Route("api/Deadlines/MarkAsComplete/{complete}")]
-        //public async Task<JsonResult> MarkAll([FromBody] DateTime dateTime,[FromRoute] bool? complete)
+        //[HttpPost, Route("api/Deadlines/MarkAsComplete/")]
+        //public async Task<JsonResult> MarkAll([FromRoute] bool complete, [FromRoute] DateTime dateTime)
         //{
-        //    if (dateTime == null || complete == null) return Json(new { success = false, message = "Not Found" });
+        //    if (dateTime == null) return Json(new { success = false, message = "Not Found" });
         //    List<ReportDeadline> list = await _context.ReportDeadlines.Where(rd => rd.Deadline.ToString("MM/dd/yyyy") == dateTime.ToString("MM/dd/yyyy")).ToListAsync();
         //    if (list == null || !list.Any()) return Json(new { success = false, message = "Empty" });
         //    string returnMessage;
-        //    if (complete.Value)
+        //    if (complete)
         //    {
         //        for (int i = 0; i < list.Count(); i++)
         //        {
@@ -120,30 +120,46 @@ namespace ReportOverviewApp.Controllers
         //    await _context.SaveChangesAsync();
         //    return Json(new { success = true, message = returnMessage });
         //}
-        [HttpDelete("{dateTime}"), Route("api/Reports/Deadlines/DeleteAll/{dateTime}")]
-        public async Task<IActionResult> DeleteAll([FromBody] DateTime dateTime)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteDeadline([FromRoute] int id)
         {
-            if (dateTime == null) return BadRequest();
-            List<ReportDeadline> list = await _context.ReportDeadlines.Where(rd => rd.Deadline.ToString("MM/dd/yyyy") == dateTime.ToString("MM/dd/yyyy")).ToListAsync();
-            if (list == null || !list.Any()) return NotFound();
-            _context.ReportDeadlines.RemoveRange(list);
-            await _context.SaveChangesAsync();
-            return Json(new { success = true, message = $"All deadlines for {dateTime.ToString("MM/dd/yyyy")} have been deleted" });
-        }
-
-
-
-
-        [HttpDelete("{id}"), ValidateAntiForgeryToken, Authorize]
-        public async Task<IActionResult> DeleteDeadline([FromRoute] int? id)
-        {
-            if (id == null) return BadRequest("id parameter did not have a value");
-            var reportDeadline = await _context.ReportDeadlines.FindAsync(id);
-            if (reportDeadline == null) return NotFound("Value of id parameter not found in data table");
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var reportDeadline = await _context.ReportDeadlines.SingleOrDefaultAsync(m => m.Id == id);
+            if (reportDeadline == null)
+            {
+                return NotFound();
+            }
             _context.ReportDeadlines.Remove(reportDeadline);
             await _context.SaveChangesAsync();
-            return Json(new { success = true, update = true, message = "Deletion successful" });
+
+            return Ok(reportDeadline);
+            //if (id == null) return BadRequest("id parameter did not have a value");
+            //var reportDeadline = await _context.ReportDeadlines.FindAsync(id);
+            //if (reportDeadline == null) return NotFound("Value of id parameter not found in data table");
+            //_context.ReportDeadlines.Remove(reportDeadline);
+            //await _context.SaveChangesAsync();
+            //return Json(new { success = true, update = true, message = "Deletion successful" });
         }
+
+
+        //[HttpDelete("{dateTime}"), Route("api/Deadlines/DeleteAll/{dateTime}")]
+        //public async Task<IActionResult> DeleteAll([FromBody] DateTime dateTime)
+        //{
+        //    if (dateTime == null) return BadRequest();
+        //    List<ReportDeadline> list = await _context.ReportDeadlines.Where(rd => rd.Deadline.ToString("MM/dd/yyyy") == dateTime.ToString("MM/dd/yyyy")).ToListAsync();
+        //    if (list == null || !list.Any()) return NotFound();
+        //    _context.ReportDeadlines.RemoveRange(list);
+        //    await _context.SaveChangesAsync();
+        //    return Json(new { success = true, message = $"All deadlines for {dateTime.ToString("MM/dd/yyyy")} have been deleted" });
+        //}
+
+
+
+
+        
         [HttpPut("{id}"), ValidateAntiForgeryToken, Authorize]
         public async Task<IActionResult> EditDeadline([FromRoute] int? id, [FromBody] ReportDeadline reportDeadline)
         {

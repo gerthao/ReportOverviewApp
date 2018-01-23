@@ -15,13 +15,14 @@ function deleteReportDeadline() {
     };
     let request = $.ajax({
         type: 'DELETE',
+        contentType: 'application/json; charset=utf-8',
         dataType: 'json',
-        url: '/api/Reports/Deadlines/' + model.id,
-        data: model.id,
+        data: JSON.stringify(model),
+        url: '/api/Deadlines/' + model.id,
         headers: {
             RequestVerificationToken: $("[name='__RequestVerificationToken']").val()
-        },
-        contentType: 'application/json; charset=utf-8'
+        }
+        
     });
     request.done(function (data) {
         if (data.success) {
@@ -37,12 +38,12 @@ function deleteReportDeadline() {
         retriveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val(), convertDate(new Date(saveDate).toJSON()));
         $("#editReportDeadlineForm").find('input').prop('readonly', true);
         $("#editReportDeadlineForm").html('<div class="modal-header"><h5>Deleted</h5></div><div class="modal-body"></div>');
-    })
+    });
     request.fail(function (jqXHR, status, message) {
         $('#editReportDeadlineStatus').html('<div class="alert alert-danger ldt ldt-fade-in">' + status + ': ' + message + '\n' + JSON.stringify(model) + '</div>');
         $('#saveReportDeadline').find('i').removeClass('ld ld-heartbeat');
         $('button').prop('disabled', false);
-    })
+    });
 }
 function formatDate(date, format) {
     if (date === undefined || date === null) {
@@ -54,7 +55,7 @@ function formatDate(date, format) {
         console.error(e);
         return null;
     }
-    if (typeof date !== typeof (new Date())) {
+    if (typeof date !== typeof new Date()) {
         return null;
     }
     switch (format) {
@@ -80,8 +81,7 @@ function save() {
     let request = $.ajax({
         type: 'PUT',
         dataType: 'json',
-        url: '/api/Reports/Deadlines/' + model.id,
-        data: model.id,
+        url: '/api/Deadlines/' + model.id,
         headers: {
             RequestVerificationToken: $("[name='__RequestVerificationToken']").val()
         },
@@ -100,16 +100,23 @@ function save() {
         $('button').prop('disabled', false);
         let saveDate = new Date(model.deadline);
         retriveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val(), convertDate(new Date(saveDate).toJSON()));
-    })
+    });
     request.fail(function (jqXHR, status, message) {
         $('#editReportDeadlineStatus').html('<div class="alert alert-danger ldt ldt-fade-in">' + status + ': ' + message + '\n' + JSON.stringify(model) + '</div>');
         $('#saveReportDeadline').find('i').removeClass('ld ld-heartbeat');
         $('button').prop('disabled', false);
-    })
+    });
 }
 $('#deleteReportDeadline').click(function () {
+    $('#collapseDelete').collapse('show');
+});
+$('#confirmDelete').click(function () {
     deleteReportDeadline();
 });
+$('#unconfirmDelete').click(function () {
+    $('#collapseDelete').collapse('hide');
+});
 $('#saveReportDeadline').click(function () {
+    $('#collapseDelete').collapse('hide');
     save();
 });

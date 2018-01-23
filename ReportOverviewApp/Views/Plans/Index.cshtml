@@ -6,6 +6,15 @@
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createModal" aria-label="Left Align"><span class="fas fa-plus-square"></span>&nbsp;&nbsp;Create New</button>
     <span id="loading"></span>
 </h4>
+<div id="inputs" style="display:none;">
+    <input id="viewId" value="@ViewData["id"]" />
+    <input id="viewName" value="@ViewData["name"]" />
+    <input id="viewWindwardId" value="@ViewData["windwardId"]" />
+    <input id="viewSort" value="@ViewData["sort"]" />
+    <input id="viewState" value="@ViewData["state"]" />
+    <input id="viewPage" value="@ViewData["page"]" />
+    <input id="viewTake" value="@ViewData["take"]" />
+</div>
 <div id="alert-template" style="display:none;">
     <div class="alert alert-danger"></div>
     <div class="alert alert-warning"></div>
@@ -71,7 +80,7 @@
                 Plans
                 <span class="float-right">
                     <span class="input-group input-group-sm">
-                        <i class="prev btn btn-outline-primary input-group-addon fas fa-chevron-left "></i>
+                        <button class="prev btn btn-outline-primary btn-sm input-group-addon "><i class="fas fa-chevron-left "></i></button>
                         <span class="input-group-addon">
                             <span class="indicator" style="padding-left:1.5rem; padding-right:1.5rem;">
                                 <span class="index" style="padding-right:1.5rem;"> </span>
@@ -79,7 +88,7 @@
                                 <span class="total" style="padding-left:1.5rem;padding-right:1.5rem;"> </span>
                             </span>
                         </span>
-                        <i class="next fas fa-chevron-right btn btn-outline-primary input-group-addon"></i>
+                        <button class="next btn btn-outline-primary btn-sm input-group-addon"><i class="fas fa-chevron-right"></i></button>
                         <i class="take btn btn-outline-primary input-group-addon dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="sr-only">Toggle Dropdown</span></i>
                         <span class="dropdown-menu">
                             <span class="dropdown-header">Display # of Results</span>
@@ -127,16 +136,16 @@
             </tr>
             <tr>
                 <th>
-                    <input id="searchId" class="form-control" placeholder="Id" type="text" style="max-width:5.0rem;max-height:2.5rem;">
+                    <input id="searchId" class="form-control" placeholder="Id" type="text" style="max-width:5.0rem;max-height:2.5rem;" value="@ViewData["id"]">
                 </th>
                 <th>
-                    <input id="searchName" class="form-control" placeholder="Name" type="text" style="max-width:100%;max-height:2.5rem;">
+                    <input id="searchName" class="form-control" placeholder="Name" type="text" style="max-width:100%;max-height:2.5rem;" value="@ViewData["name"]">
                 </th>
                 <th>
-                    <input id="searchState" class="form-control" placeholder="State" type="text" style="max-width:5.0rem;max-height:2.5rem;">
+                    <input id="searchState" class="form-control" placeholder="State" type="text" style="max-width:5.0rem;max-height:2.5rem;" value="@ViewData["state"]">
                 </th>
                 <th>
-                    <input id="searchWindwardId" class="form-control" placeholder="WWID" type="text" style="max-width:7.5rem;max-height:2.5rem;">
+                    <input id="searchWindwardId" class="form-control" placeholder="WWID" type="text" style="max-width:7.5rem;max-height:2.5rem;" value="@ViewData["windwardId"]">
                 </th>
                 <th>
                     @*<div class="form-group form-inline">
@@ -180,11 +189,14 @@
                             <select name="stateId" class="form-control custom-select planState" asp-items="ViewBag.StateId" style="min-width:100%"></select>
                         </div>
                         <div class="modal-footer">
-                            <div class="col-6"></div>
-                            <button id="post" type="button" class="btn btn-primary col-6"><i class="fas fa-save"></i> Save</button>
+                            <div class="btn-group btn-block" style="padding-left: 0px; padding-right: 0px;">
+                                <button id="clearCreateForm" type="button" class="btn btn-secondary col-6"><i class="fas fa-eraser"></i> Clear</button>
+                                <button id="post" type="button" class="btn btn-primary col-6"><i class="fas fa-save"></i> Save</button>
+                            </div>
+                            
                         </div>
                     </form>
-
+                    <div id="createStatus" class="col-md-12"></div>
                 </div>
             </div>
         </div>
@@ -198,7 +210,6 @@
                             <h6>Manage: <span class="planTitle"></span></h6>
                         </div>
                         <div class="modal-body">
-
                             <input name="id" class="form-control-label sr-only planId" type="number" />
                             <label class="form-control-label">Name</label>
                             <input name="name" class="form-control planName" type="text" style="min-width:100%" />
@@ -207,7 +218,6 @@
                             <label class="form-control-label">State</label>
                             <select name="stateId" class="form-control custom-select planState" asp-items="ViewBag.StateId" style="min-width:100%"></select>
                             @*<select class="form-control custom-select planState" style="min-width:100%"></select>*@
-
                         </div>
                         <div class="modal-footer">
                             <div class="btn-group btn-block" style="padding-left: 0px; padding-right:0px;">
@@ -225,9 +235,7 @@
                             </div>
                         </div>
                     </form>
-                    <div id="manageStatus" class="col-md-12">
-
-                    </div>
+                    <div id="manageStatus" class="col-md-12"></div>
                 </div>
             </div>
         </div>
@@ -237,21 +245,20 @@
 @section scripts{ 
     <script>
         $(document).ready(function () {
-            let _page = 1;
-            let _size = 20;
+            let _page = $('#viewPage').val() ? $('#viewPage').val() : 1;
+            let _size = $('#viewTake').val() ? $('#viewTake').val() : 20;
             let _total;
-            let _id;
-            let _name;
-            let _state;
-            let _windwardId;
-            let _sort;
+            let _id = $('#viewId').val() ? $('#viewId').val() : null;
+            let _name = $('#viewName').val() ? $('#viewName').val() : null;
+            let _state = $('#viewState').val() ? $('#viewState').val() : null;
+            let _windwardId = $('#viewWindwardId').val() ? $('#viewWindward').val() : null;
+            let _sort = $('#viewSort').val() ? $('#viewSort').val() : null;
             function getWholeSize(id, name, state, windwardId) {
                 let request = $.ajax({
                     type: 'GET',
                     url: 'api/Plans/',
                     data: { id: id, name: name, state: state, windwardId: windwardId, sort: null, from: null, take: null },
                     dataType: 'json',
-                    
                     success: function (data) {
                         if ($(data).length > 0) {
                             let current = parseInt($(data).length % _size === 0 ? ($(data).length / _size) : ($(data).length / _size) + 1);
@@ -262,7 +269,6 @@
                                 $('#status').find('.alert').text('No Plans Found');
                             });
                         };
-
                     },
                     error: function (a, b, c) {
                         $('#loadingIcon').find('i').fadeOut(200, function () {
@@ -275,37 +281,65 @@
             function updateRow(id) {
                 let row = $('.plansTable').find('tbody').find('.planId').filter(function () { return parseInt($(this).text()) === id
                 }).parent();
-                
                 let modelRequest = getPlan(id);
+                let stateRequest = getState(id);
+                let plan;
+                let state;
                 modelRequest.done(function (data) {
                     if (data) {
+                        let plan = data;
                         row.find('.planId').text(data.id);
                         row.find('.planName').text(data.name);
                         row.find('.windwardId').text(data.windwardId);
-
+                        $(row).find('.reports').attr('href', ('Reports?Plan=' + plan.name).replace(/ /g, '+'));
                     }
-                    //alert(JSON.stringify(data));
-                    
-
-                    //row.find('.hasActiveReports').text(data)
                 });
+                stateRequest.done(function (data) {
+                    let stateName = '';
+                    if (data) {
+                        let state = data;
+                        stateName = data.abbreviation;
+                    }
+                    $(row).find('.stateName').text(stateName);
+                })
                 modelRequest.fail(function (a, b, c) {
                     console.log(b + ' ' + c);
                     if (c === "Not Found") {
                         $(row).remove();
                     }
                 })
+                stateRequest.fail(function (a, b, c) {
+                    console.log(b + ' ' + c);
+                    if (c === "Not Found") {
+                        $(row).remove();
+                    }
+                })
+                $(row).find('.manage').attr('href', '#Manage');
+                
+                
                 //alert($(row).html());
                 getWholeSize(_id, _name, _state, _windwardId);
             }
             function appendRow(id) {
                 let modelRequest = getPlan(id);
                 modelRequest.done(function (data) {
+                    
                     let tableBody = $('.plansTable').find('tbody');
                     let newRow = buildRow(data);
-                    $(tableBody).prependTo('tr', newRow.html());
-                    $(tableBody).last('tr').remove();
+                    $(tableBody).prepend('<tr>' + newRow.html() + '</tr>');
+                    //$(tableBody).last('tr').remove();
+                    updateRow(id);
                 });
+                
+            }
+            function getState(id) {
+                let request = $.ajax({
+                    type: 'GET',
+                    contentType: 'application/json; charset-utf-8',
+                    dataType: 'json',
+                    url: 'api/Plans/' + id + '/State'
+                });
+                return request;
 
             }
             function getPlan(id) {
@@ -314,11 +348,11 @@
                     contentType: 'application/json; charset-utf-8',
                     dataType: 'json',
                     url: 'api/Plans/' + id
-
                 });
                 return request;
             }
             $('#post').click(function () {
+                $('#createForm button').prop('disabled', true);
                 let form = $('#createForm');
                 let formJSON = $(form).serializeArray().reduce(
                     function (a, x) {
@@ -344,18 +378,20 @@
                     dataType: 'json',
                     contentType: 'application/json; charset-utf-8',
                     success: function (data) {
+                        $('#createForm button').prop('disabled', false);
+                        $('#createStatus').html($('#alert-template').find('.alert-success').clone(false).text(model.name + " has been successfully created."));
                         appendRow(data.id);
-                        $(form).find('.planTitle').append(" (" + JSON.stringify(data) + ")");
+                        
                     },
                     error: function (a, b, c) {
-                        $('#loadingIcon').find('i').fadeOut(200, function () {
-                            $('#status').html($('#alert-template').find('.alert-danger').clone(false));
-                            $('#status').find('.alert').text(c);
-                        });
+                        $('#createForm button').prop('disabled', false);
+                        $('#createStatus').html($('#alert-template').find('.alert-danger').clone(false).text(c));
                     }
                 });
             })
             $('#put').click(function () {
+                $('#collapseDelete').collapse('hide');
+                $('#editForm button').prop('disabled', true);
                 let form = $('#editForm');
                 let formJSON = $(form).serializeArray().reduce(
                     function (a, x) {
@@ -382,23 +418,36 @@
                     contentType: 'application/json; charset-utf-8',
                     success: function (data) {
                         updateRow(model.id);
-                       
+                        $('#editForm button').prop('disabled', false);
                         $('#manageStatus').html($('#alert-template').find('.alert-success').clone(false).text("Save was successful"));
                     },
                     error: function (a, b, c) {
+                        $('#createForm button').prop('disabled', false);
                         $('#manageStatus').html($('#alert-template').find('.alert-danger').clone(false).text(c));
                     }
                 });
             })
             $('#delete').click(function () {
                 $('#collapseDelete').collapse('show');
-
             })
+            $('#clearCreateForm').click(function () {
+                $('#createForm')[0].reset();
+                $('#createStatus').html('');
+            });
             $('#unconfirmDelete').click(function () {
                 $('#collapseDelete').collapse('hide');
-
             })
+            $('#createModal').on('hidden.bs.modal', function (e) {
+                $('#createStatus').html('');
+            });
+            $('#editModal').on('hidden.bs.modal', function (e) {
+                $('#collapseDelete').collapse('hide');
+                $('#editForm')[0].reset();
+                $('#editForm button').prop('disabled', false);
+                $('#manageStatus').html('');
+            });
             $('#confirmDelete').click(function () {
+                $('#editForm button').prop('disabled', true);
                 let form = $('#editForm');
                 let formJSON = $(form).serializeArray().reduce(
                     function (a, x) {
@@ -430,9 +479,10 @@
                         $(form).find('input').val('');
                         $(form).find('select').val('');
                         $(form).find('.planTitle').text('');
+                        $('#editForm button').prop('disabled', true);
                     },
                     error: function (a, b, c) {
-                        
+                        $('#createForm button').prop('disabled', false);
                         $('#manageStatus').html($('#alert-template').find('.alert-danger').clone(false).text(c));
                        
                     }
@@ -470,32 +520,67 @@
             $('#search').click(function () {
                 search($('#searchId').val(), $('#searchName').val(), $('#searchState').val(), $('#searchWindwardId').val());            
             });
+            $(document).keypress(function (e) {
+                if (e.which == 13) {
+                    search($('#searchId').val(), $('#searchName').val(), $('#searchState').val(), $('#searchWindwardId').val());
+                }
+
+            });
+                
             $('#clear').click(function () {
                 $('input').val('');
                 $('.custom-checkbox').prop('checked', true);
                 search();      
             });
             function search(id, name, state, windwardId) {
-                _page = 1;
+                //_page = 1;
                 $('.index').text(_page);
                 $('#loading').html($('#icon-template').find('.loading-icon').clone(false));
                 getPlans(id, name, state, windwardId, _sort, getFrom(), _size);
                 getWholeSize(id, name, state, windwardId);
             }
             function getPlans(id, name, state, windwardId, sort, start, take) {
+                $('.next').prop('disabled', true);
+                $('.prev').prop('disabled', true);
                 _id = id;
                 _name = name;
                 _sort = sort;
                 _state = state;
                 _windwardId = windwardId;
+                let query = {
+                    id: !_id ? null : _id,
+                    name: !_name ? null : _name,
+                    sort: !_sort || _sort === undefined ? null : _sort,
+                    state: !_state ? null : _state,
+                    windwardId: !_windwardId ? null : _windwardId,
+                    page: _page,
+                    take: take
+                };
                 $('#status').html('');
                 let request = $.ajax({
                     type: 'GET',
                     url: 'api/Plans/',
                     data: { id: _id, name: _name, state: _state, windwardId: _windwardId, sort: _sort, from: start, take: take},
                     dataType: 'json',
-                    waitTime: 5000,
                     success: function (data) {
+                        let queryString = '';
+                        let queryUrl = '/Plans';
+                        let mapping = Object.keys(query).map(function(key) {
+                            if (query[key] !== null)
+                                return key + '=' + query[key];
+                            else return null;
+                        });
+                        queryString = mapping.reduce(function (a, c) {
+                            if (a === null) return c;
+                            if (c === null) return a;
+                            return a + '&' + c;
+                            
+
+                        });
+                        if (queryString !== '') {
+                            queryUrl += '?' + queryString;
+                        }
+                        history.replaceState(null, null, queryUrl);
                         //history.replaceState(null, null, '/Plans?id='+_id+'&name='+_name+'&state='+_state+'&windwardId='+_windwardId+'&sort='+_sort+'&from='+start+'&take='+take);
                         $('#status').html('');
                         if (data && $(data).length > 0) {
@@ -512,12 +597,16 @@
                             $('#status').html($('#alert-template').find('.alert-warning').clone(false));
                             $('#status').find('.alert').text('No Plans Found');
                         };
+                        $('.next').prop('disabled', false);
+                        $('.prev').prop('disabled', false);
                     },
                     error: function (a, b, c) {
                         $('#loadingIcon').find('i').fadeOut(200, function () {
                             $('#status').html($('#alert-template').find('.alert-danger').clone(false));
                             $('#status').find('.alert').text(c);
                         });
+                        $('.next').prop('disabled', false);
+                        $('.prev').prop('disabled', false);
                     }
                 });
             }
@@ -529,13 +618,12 @@
                 $(row).find('.hasActiveReports').text(plan.hasActiveReports);
                 $(row).find('.hasTermedReports').text(plan.hasTermedReports);
                 $(row).find('.windwardId').text(plan.windwardId);
-                $(row).find('.manage').attr('href', '#');
-                //$(row).find('.details').attr('href', 'Plans/Details/' + plan.id);
-                $(row).find('.reports').attr('href', ('Reports?State=' + plan.state + '&Plan=' + plan.name).replace(/ /g, '+'));
+                $(row).find('.manage').attr('href', '#Manage');
+                $(row).find('.reports').attr('href', ('Reports?Plan=' + plan.name).replace(/ /g, '+'));
                 return row;
             }
             function init() {
-                _page = 1;
+                //_page = 1;
                 $('.index').text(_page);
                 $('#loading').html($('#icon-template').find('.loading-icon').clone(false));
                 search($('#searchId').val(), $('#searchName').val(), $('#searchState').val(), $('#searchWindwardId').val());            
@@ -565,7 +653,7 @@
             });
             $('.next').click(function () {
                 if (_page !== parseInt($('.total').text())) {
-                    _page = _page + 1;
+                    _page = parseInt(_page) + 1;
                     $('.index').text(_page);
                     $('#loading').html($('#icon-template').find('.loading-icon').clone(false));
                     getPlans(_id, _name, _state, _windwardId, _sort, getFrom(), _size);
@@ -573,7 +661,7 @@
             })
             $('.prev').click(function () {
                 if (_page > 1) {
-                    _page = _page - 1;
+                    _page = parseInt(_page) + 1;
                     $('.index').text(_page);
                     $('#loading').html($('#icon-template').find('.loading-icon').clone(false));
                     getPlans(_id, _name, _state, _windwardId, _sort, getFrom(), _size);
