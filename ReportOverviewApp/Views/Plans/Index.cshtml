@@ -278,6 +278,16 @@
                     }
                 });
             }
+            function removeRow(id) {
+                let row = $('.plansTable').find('tbody').find('.planId').filter(function () {
+                    return parseInt($(this).text()) === id
+                }).parent();
+                if (row) {
+                    $(row).remove();
+                    return true;
+                }
+                return false;
+            }
             function updateRow(id) {
                 let row = $('.plansTable').find('tbody').find('.planId').filter(function () { return parseInt($(this).text()) === id
                 }).parent();
@@ -474,7 +484,7 @@
                     contentType: 'application/json; charset-utf-8',
                     success: function (data) {
                         $('#manageStatus').html($('#alert-template').find('.alert-success').clone(false).text("Plan was successfully removed."));
-                        updateRow(model.id);
+                        removeRow(model.id);
                         $('#collapseDelete').collapse('hide');
                         $(form).find('input').val('');
                         $(form).find('select').val('');
@@ -661,7 +671,7 @@
             })
             $('.prev').click(function () {
                 if (_page > 1) {
-                    _page = parseInt(_page) + 1;
+                    _page = parseInt(_page) - 1;
                     $('.index').text(_page);
                     $('#loading').html($('#icon-template').find('.loading-icon').clone(false));
                     getPlans(_id, _name, _state, _windwardId, _sort, getFrom(), _size);
