@@ -59,16 +59,21 @@ namespace ReportOverviewApp.Controllers
         //{
         //}
         [HttpGet]
-        public async Task<JsonResult> GetReportDeadlines(int? year, int? month, int? day, DayOfWeek? dayOfWeek, string name, bool indent, bool omitNull)
+        public async Task<JsonResult> GetReportDeadlines(int? year, int? month, int? day, DayOfWeek? dayOfWeek, string report, string plan, string groupBy, bool indent, bool omitNull)
         {
-            var deadlines = await _context.ReportDeadlines.Include(rd => rd.Report).OrderByDescending(rd => rd.Deadline).ToListAsync();
-            deadlines = (String.IsNullOrEmpty(name) ? deadlines : deadlines.Where(rd => rd.Report.Name.ToLower().Contains(name))).ToList();
+            var deadlines = await _context.ReportDeadlines.Include(rd => rd.Report)
+                                                                .ThenInclude(r => r.ReportPlanMapping)
+                                                                    .ThenInclude(rpm => rpm.Plan)
+                                                                        .ThenInclude(p => p.State)
+                                                          .OrderBy(rd => rd.Deadline).ToListAsync();
+            deadlines = (String.IsNullOrEmpty(report) ? deadlines : deadlines.Where(rd => rd.Report.Name.ToLower().Contains(report))).ToList();
             deadlines = (year == null ? deadlines : deadlines.Where(rd => rd.Deadline.Year == year)).ToList();
             deadlines = (month == null ? deadlines : deadlines.Where(rd => rd.Deadline.Month == month)).ToList();
             deadlines = (day == null ? deadlines : deadlines.Where(rd => rd.Deadline.Day == day)).ToList();
             deadlines = (dayOfWeek == null ? deadlines : deadlines.Where(rd => rd.Deadline.DayOfWeek == dayOfWeek)).ToList();
+            deadlines = (String.IsNullOrEmpty(plan) ? deadlines : deadlines.Where(rd => rd.Report.ReportPlanMapping.Select(rpm => rpm.Plan).Where(p => p.Name.ToLower().Contains(plan.ToLower())).Any())).ToList();
             var result = deadlines.Select(rd => new { rd.Id, rd.Deadline, rd.RunDate, rd.ApprovalDate, rd.SentDate, rd.HasRun, rd.IsApproved, rd.IsSent, rd.ReportId, rd.Report.Name }).ToList();
-            return Json(result, new JsonSerializerSettings() { Formatting = indent ? Newtonsoft.Json.Formatting.Indented : Newtonsoft.Json.Formatting.None, NullValueHandling = omitNull ? NullValueHandling.Ignore : NullValueHandling.Include });
+            return Json(result, new JsonSerializerSettings() { PreserveReferencesHandling = PreserveReferencesHandling.All, Formatting = indent ? Formatting.Indented : Formatting.None, NullValueHandling = omitNull ? NullValueHandling.Ignore : NullValueHandling.Include });
         }
         [HttpGet("{id}")]
         public async Task<JsonResult> GetReportDeadline(int? id, bool indent, bool omitNull)
@@ -120,7 +125,7 @@ namespace ReportOverviewApp.Controllers
         //    await _context.SaveChangesAsync();
         //    return Json(new { success = true, message = returnMessage });
         //}
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteDeadline([FromRoute] int id)
         {
             if (!ModelState.IsValid)
@@ -160,7 +165,7 @@ namespace ReportOverviewApp.Controllers
 
 
         
-        [HttpPut("{id}"), ValidateAntiForgeryToken, Authorize]
+        [HttpPut("{id}"), ValidateAntiForgeryToken]
         public async Task<IActionResult> EditDeadline([FromRoute] int? id, [FromBody] ReportDeadline reportDeadline)
         {
             if (id == null)

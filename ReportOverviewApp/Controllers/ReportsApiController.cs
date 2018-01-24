@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ namespace ReportOverviewApp.Controllers
 {
     [Produces("application/json")]
     [Route("api/Reports")]
+    [Authorize]
     public class ReportsApiController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -48,7 +50,7 @@ namespace ReportOverviewApp.Controllers
         }
 
         // PUT: api/Reports/5
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), ValidateAntiForgeryToken]
         public async Task<IActionResult> PutReport([FromRoute] int id, [FromBody] Report report)
         {
             if (!ModelState.IsValid)
@@ -83,7 +85,7 @@ namespace ReportOverviewApp.Controllers
         }
 
         // POST: api/Reports
-        [HttpPost]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> PostReport([FromBody] Report report)
         {
             if (!ModelState.IsValid)
@@ -98,7 +100,7 @@ namespace ReportOverviewApp.Controllers
         }
 
         // DELETE: api/Reports/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteReport([FromRoute] int id)
         {
             if (!ModelState.IsValid)

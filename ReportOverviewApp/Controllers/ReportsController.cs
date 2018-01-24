@@ -181,11 +181,21 @@ namespace ReportOverviewApp.Controllers
         public IActionResult Create() => View();
 
         [Authorize, HttpGet, Route("Reports/Deadlines/{year:int?}/{month:int?}")]
-        public IActionResult Deadlines(int? month, int? year, string name)
+        public IActionResult Deadlines(int? month, int? year, string name, string groupBy)
         {
+            List<string> groups = new List<string>()
+            {
+                "Plan", "State", "None"
+            };
+            bool checkBadString(string r)
+            {
+                return String.IsNullOrEmpty(r) || String.IsNullOrWhiteSpace(r);
+            }
             ViewData["month"] = month as int?;
             ViewData["year"] = year as int?;
-            ViewData["name"] = name == null ? String.Empty : name;
+            ViewData["name"] = checkBadString(name) ? null : name;
+            ViewData["groupBy"] = checkBadString(groupBy) ? null : groupBy;
+            ViewData["groups"] = groups;
             return View();
         }
 
