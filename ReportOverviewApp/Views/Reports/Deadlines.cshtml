@@ -90,31 +90,38 @@
 </div>
 <div id="cardItemListTemplate" style="display:none;">
     
-            <li class="list-group-item report-item">
-                <ul class="list-inline ">
-                    <li class="list-inline-item reportName">
-                    </li>
-                    <li class="list-inline-item">
-                        <span>
-                            <a class="editReportDeadlineLink" asp-action="EditReportDeadline" data-toggle="modal" data-target="#editReportDeadlineModal"><span class="fas fa-calendar-alt text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title=""></span></a>
-                            <a class="editReportLink" asp-action="EditReport" data-toggle="modal" data-target="#editReportModal"><span class="fas fa-edit text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title=""></span></a>
-                            <a class="viewReportLink" asp-action="Details" ><span class="fas fa-book text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title=""></span></a>
-                            <a class="deleteReportLink" asp-action="DeleteReport" data-toggle="modal" data-target="#deleteReportModal"><span class="fas fa-eraser text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title=""></span></a>
-                        </span>
-                    </li>
-                </ul>
-                <ul class="list-inline report-item-status">
-                    <li class="list-inline-item">
-                        <p>Ran <span><i class="ran"></i></span></p>
-                    </li>
-                    <li class="list-inline-item">
-                        <p class->Approved <span><i class="approved"></i></span></p>
-                    </li>
-                    <li class="list-inline-item">
-                        <p>Sent <span><i class="sent"></i></span></p>
-                    </li>
-                </ul>
+    <li class="list-group-item report-item">
+        <ul class="list-inline ">
+            <li class="list-inline-item reportName">
             </li>
+
+
+            <li class="list-inline-item">
+                <span>
+                    <a class="editReportDeadlineLink" asp-action="EditReportDeadline" data-toggle="modal" data-target="#editReportDeadlineModal"><span class="fas fa-calendar-alt text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title=""></span></a>
+                    <a class="editReportLink" asp-action="EditReport" data-toggle="modal" data-target="#editReportModal"><span class="fas fa-edit text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title=""></span></a>
+                    <a class="viewReportLink" asp-action="Details"><span class="fas fa-book text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title=""></span></a>
+                    <a class="deleteReportLink" asp-action="DeleteReport" data-toggle="modal" data-target="#deleteReportModal"><span class="fas fa-eraser text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title=""></span></a>
+                </span>
+
+            </li>
+            
+        </ul>
+        <ul class="list-inline report-item-status">
+            <li class="list-inline-item">
+                <p>Ran <span><i class="ran"></i></span></p>
+            </li>
+            <li class="list-inline-item">
+                <p class->Approved <span><i class="approved"></i></span></p>
+            </li>
+            <li class="list-inline-item">
+                <p>Sent <span><i class="sent"></i></span></p>
+            </li>
+            <li class="list-inline-item float-right align-top" style="padding-left: 1rem;">
+                    <span class="badge badge-pill badge-primary">Quarterly</span>
+            </li>
+        </ul>
+    </li>
 </div>
 <div id="alertSuccessTemplate" style="display:none;">
     <div class="alert alert-success alert-dismissible fade show col-md-12" role="alert">
