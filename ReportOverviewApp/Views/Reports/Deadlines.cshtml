@@ -3,14 +3,23 @@
 @{
     ViewData["Title"] = "Deadlines";
 }
-@*<style>
-    .toggle{
-        transition: all 0.25s;
+<style>
+    .card{
+        transition: all 0.20s;
     }
-    .toggle:hover{
-        transform: rotate(180deg);
+    /*.card.bg-danger:hover{
+        box-shadow: 0rem 0rem 0.45rem #e81c00
     }
-</style>*@
+    .card.bg-success:hover{
+        box-shadow: 0rem 0rem 0.45rem #0ec80b
+    }
+    .card.bg-warning:hover{
+        box-shadow: 0rem 0rem 0.45rem #dfc506
+    }*/
+    .card:hover{
+        box-shadow: 0rem 0rem 0.3rem #0073dc
+    }
+</style>
 <div class="row col-md-12">
     <h4 style="display: inline-block">
         Status of Reports
@@ -86,7 +95,22 @@
             <ul class="card-contents list-group list-group-flush">
             </ul>
         </div>
+        <div class="card-footer">
+            <h6><strong class="reportCount"></strong></h6>
+            <h6><strong class="completionCount"></strong></h6>
+            <h6><strong class="completionRate"></strong></h6>
+            <div class="progress progress-background-custom" style="height: 5px;">
+                <div class="progress-bar" role="progressbar">
+
+                </div>
+            </div>
+        </div>
     </div>
+</div>
+<div id="cardItemGroupTemplate" style="display:none;">
+    <li class="list-group-item">
+        <h6 class="text-center"><strong class="plans"></strong></h6>
+    </li>
 </div>
 <div id="cardItemListTemplate" style="display:none;">
     
@@ -118,7 +142,7 @@
                 <p>Sent <span><i class="sent"></i></span></p>
             </li>
             <li class="list-inline-item float-right align-top" style="padding-left: 1rem;">
-                    <span class="badge badge-pill badge-primary">Quarterly</span>
+                <span class="badge badge-pill badge-primary"><span class="frequency"></span></span>
             </li>
         </ul>
     </li>

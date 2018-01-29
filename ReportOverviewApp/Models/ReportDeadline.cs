@@ -17,20 +17,22 @@ namespace ReportOverviewApp.Models
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime Deadline { get; set; }
 
-        public bool HasRun { get => RunDate != null; }
-        
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy hh:mm tt}", ApplyFormatInEditMode = true)]
         public DateTime? RunDate { get; set; }
-
-        public bool IsApproved { get => ApprovalDate != null; }
+        public bool HasRun { get => RunDate != null; }
 
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy hh:mm tt}", ApplyFormatInEditMode = true)]
         public DateTime? ApprovalDate { get; set; }
+        public bool IsApproved { get => ApprovalDate != null; }
 
-        
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy hh:mm tt}", ApplyFormatInEditMode = true)]
         public DateTime? SentDate { get; set; }
         public bool IsSent { get => SentDate != null; }
+
+        public bool IsComplete { get => HasRun && IsApproved && IsSent; }
+        public bool IsLate { get => RunDate > Deadline || ApprovalDate > Deadline || SentDate > Deadline; }
+        public bool IsPastDue { get => !IsComplete && Deadline < DateTime.Today; }
+
         //[JsonIgnore, IgnoreDataMember]
         public Report Report { get; set; }
 

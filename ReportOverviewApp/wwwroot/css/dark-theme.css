@@ -134,3 +134,6 @@ select.form-control, select.form-control:focus{
 .fa-cog {
     color: #246fcb;
 }
+.progress-background-custom{
+    background-color: #2d333f;
+}

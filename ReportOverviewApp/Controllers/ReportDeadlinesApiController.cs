@@ -72,7 +72,7 @@ namespace ReportOverviewApp.Controllers
             deadlines = (day == null ? deadlines : deadlines.Where(rd => rd.Deadline.Day == day)).ToList();
             deadlines = (dayOfWeek == null ? deadlines : deadlines.Where(rd => rd.Deadline.DayOfWeek == dayOfWeek)).ToList();
             deadlines = (String.IsNullOrEmpty(plan) ? deadlines : deadlines.Where(rd => rd.Report.ReportPlanMapping.Select(rpm => rpm.Plan).Where(p => p.Name.ToLower().Contains(plan.ToLower())).Any())).ToList();
-            var result = deadlines.Select(rd => new { rd.Id, rd.Deadline, rd.RunDate, rd.ApprovalDate, rd.SentDate, rd.HasRun, rd.IsApproved, rd.IsSent, rd.ReportId, rd.Report.Name }).ToList();
+            var result = deadlines.Select(rd => new { rd.Id, rd.Deadline, rd.RunDate, rd.ApprovalDate, rd.SentDate, rd.HasRun, rd.IsApproved, rd.IsSent, rd.IsComplete, rd.IsLate, rd.IsPastDue, rd.ReportId, rd.Report.Name, rd.Report.Frequency, Plans = rd.Report.ReportPlanMapping.Select(rpm => rpm.Plan.Name) }).ToList();
             return Json(result, new JsonSerializerSettings() { Formatting = indent ? Formatting.Indented : Formatting.None, NullValueHandling = omitNull ? NullValueHandling.Ignore : NullValueHandling.Include });
         }
         [HttpGet("{id}")]

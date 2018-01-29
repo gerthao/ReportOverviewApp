@@ -1,5 +1,8 @@
 ﻿$('#viewButton').click(function () {
-    $('#cards').toggleClass('card-columns');
+      
+        $('#cards').toggleClass('card-columns');
+
+    
 });
 $('.panel-collapse').on('hidden.bs.collapse', function () {
     $(this).prev('.card-header').children('.options').children('.toggleIcon').children('i').removeClass('fa-chevron-down').addClass('fa-chevron-up');
@@ -16,19 +19,20 @@ $('.panel-collapse').on('shown.bs.collapse', function () {
 });
 $('#showAllButton').click(function () { $('.list-collapsable').collapse('show'); });
 $('#hideAllButton').click(function () { $('.list-collapsable').collapse('hide'); });
-$('.markIncomplete').click(function () {
-    unmarkAll($(this).parent().prev('.deadline').text());
-});
-$('.markAll').click(function () {
-    let icon = $(this).find('i').attr('class');
-    let date = $(this).parent().prev('.deadline').text();
-    if (icon === 'fas fa-check-circle') {
-        markAll(date);
-    } else if (icon === 'fas fa-minus-circle') {
-        unmarkAll(date);
-    } else return false;
-    return true;
-});
+
+//$('.markIncomplete').click(function () {
+//    unmarkAll($(this).parent().prev('.deadline').text());
+//});
+//$('.markAll').click(function () {
+//    let icon = $(this).find('i').attr('class');
+//    let date = $(this).parent().prev('.deadline').text();
+//    if (icon === 'fas fa-check-circle') {
+//        markAll(date);
+//    } else if (icon === 'fas fa-minus-circle') {
+//        unmarkAll(date);
+//    } else return false;
+//    return true;
+//});
 //function markAll(date) {
 //    $.ajax({
 //        type: 'POST',
@@ -147,7 +151,7 @@ function retriveReports(year, month, lastEditedDate) {
             }
             history.replaceState(null, null, queryUrl);
             if ($(data).length > 0) {
-                let groups = groupBy(data, 'Deadline');
+                let groups = groupBy(data, "Deadline");
                 let items = [];
                 $(groups).each(function (i, e) {
                     $.each(e, function (j, f) {
@@ -155,7 +159,10 @@ function retriveReports(year, month, lastEditedDate) {
                     });
                 });
                 $('#loadingIcon').find('i').fadeOut(200, function () {
+                    
                     $('#cards').html(items);
+
+                    
                 });
             } else {
                 $('#loadingIcon').find('i').fadeOut(200, function () {
@@ -187,6 +194,14 @@ function buildCard(key, data, lastEditedDate) {
     $(card).find('.toggleIcon').attr('aria-controls', 'list' + convertDate(key).replace('/', '-').replace('/', '-'));
     $(card).find('.panel-collapse').attr('id', 'list' + convertDate(key).replace('/', '-').replace('/', '-'));
     $(card).find('.panel-collapse').addClass('list-collapsable');
+    $(card).find('.reportCount').text('Reports:  ' + data.length);
+    let completionMap = data.map(rd => rd.IsComplete ? 1 : 0);
+    let completionCount = completionMap.reduce((a, c) => a + c);
+    let completionRate = completionCount / data.length * 100;
+    //alert(completionRate);
+    $(card).find('.completionCount').text('Completed:  ' + completionCount);
+    $(card).find('.completionRate').text('Completion Rate:  ' + String(completionRate).substring(0, 5) + '%');
+    $(card).find('.progress-bar').css('width', completionRate + '%').attr('aria-valuenow', completionRate).attr('aria-valuemin', 0).attr('aria-valuemax', 100);
     if (convertDate(new Date(key)) === lastEditedDate) {
         $(card).find('.panel-collapse').addClass('show');
         $(card).find('.toggleIcon').find('i').removeClass('fas fa-chevron-up').addClass('fas fa-chevron-down');
@@ -203,11 +218,40 @@ function buildCardContent(key, report) {
     setIcon($(content).find('.ran'), report.HasRun);
     setIcon($(content).find('.approved'), report.IsApproved);
     setIcon($(content).find('.sent'), report.IsSent);
+    $(content).find('.frequency').text(report.Frequency);
     setRouteId($(content).find('.editReportDeadlineLink'), report.Id);
     setRouteId($(content).find('.editReportLink'), report.ReportId);
     setRouteId($(content).find('.viewReportLink'), report.ReportId);
     setRouteId($(content).find('.deleteReportLink'), report.ReportId);
     return content;
+}
+function groupe(items, iKey, jKey) {
+    let arr = [];
+    let group = items.reduce((a, c) => {
+        (a[c[iKey]] = a[c[iKey]] || []).push(c);
+        return a;
+    }, {});
+    let pairs = Object.keys(group).map(e => group[e].reduce((a, c) => {
+        (a[c[jKey].reduce((t, r) => t + r, '')] = a[c[jKey].reduce((t, r) => t + r, '')] || []).push(c);
+        return a;
+    }, {}));
+    //for (let i = 0; i < group.length; i++) {
+    //    group[i] = pairs[i];
+    //}
+    console.log(pairs);
+    //let group2 = items.reduce((a, c) => {
+    //    (a[c[jKey].reduce((t, r) => t + r, '')] = a[c[jKey].reduce((t, r) => t + r, '')] || []).push(c);
+    //    return a;
+    //}, {});
+    //console.log(group2);
+    //let pairsd = Object.keys(group2).map(e => group2[e]);
+    //console.log(pairsd);
+    //group = group.map(e => e.reduce((a, c) => {
+    //    (a[c[jKey]] = a[c[jKey]] || []).push(c);
+    //    return a;
+    //}, []));
+    
+    return group;
 }
 function groupBy(items, key) {
     return items.reduce(
@@ -231,6 +275,7 @@ function setCardStatus(card, key, data) {
             $(card).addClass('bg-warning');
         } else {
             $(card).find('.card-header').addClass('text-light');
+            $(card).find('.card-footer').addClass('text-light');
             $(card).addClass('bg-success');
             //$(card).find('.markAll').find('i').removeClass('fas fa-check-circle').addClass('fas fa-minus-circle');
 
@@ -240,9 +285,11 @@ function setCardStatus(card, key, data) {
     } else if (dateKey < date) {
         if (!okay) {
             $(card).find('.card-header').addClass('text-light');
+            $(card).find('.card-footer').addClass('text-light');
             $(card).addClass('bg-danger');
         } else {
             $(card).find('.card-header').addClass('text-light');
+            $(card).find('.card-footer').addClass('text-light');
             $(card).addClass('bg-success');
             //$(card).find('.markAll').find('i').removeClass('fas fa-check-circle').addClass('fas fa-minus-circle');
 
@@ -251,6 +298,7 @@ function setCardStatus(card, key, data) {
     else {
         if (okay) {
             $(card).find('.card-header').addClass('text-light');
+            $(card).find('.card-footer').addClass('text-light');
             $(card).addClass('bg-success');
             //$(card).find('.markAll').find('i').removeClass('fas fa-check-circle').addClass('fas fa-minus-circle');
 
