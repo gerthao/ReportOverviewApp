@@ -117,6 +117,20 @@ $('#hideAllButton').click(function () { $('.list-collapsable').collapse('hide');
 //$('.deleteAll').click(function () {
 //    deleteAll($(this).parent().prev('.deadline').text());
 //});
+function groupByDeadline(data) {
+    return data.reduce((a, c) => { (a[c.deadline] = a[c.deadline] || []).push(c); return a; }, {});
+}
+function groupByPlan(data) {
+    let qwer =
+        data.reduce((a, c) => {
+            (a[c.report.plans.map(x => x.name).reduce((b, d) => b + d, '')] = a[c.report.plans.map(x => x.name).reduce((b, d) => b + d, '')] || []).push(c); return a;
+        }, {});
+    return Object.keys(qwer).map(function (e) {
+        let arr = {};
+        arr[e] = qwer[e];
+        return arr;
+    });
+}
 $('#changeButton').click(function () {
     $('#status').children().fadeOut(200);
     retriveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val());
@@ -130,7 +144,7 @@ function retriveReports(year, month, lastEditedDate) {
     };
     $.ajax({
         type: 'GET',
-        url:  '/api/Deadlines',
+        url: '/api/Deadlines',
         data: query,
         dataType: 'json',
         success: function (data) {
@@ -151,13 +165,25 @@ function retriveReports(year, month, lastEditedDate) {
             }
             history.replaceState(null, null, queryUrl);
             if ($(data).length > 0) {
-                let groups = groupBy(data, "Deadline");
+                //let groups = groupByDeadline(data);
+                //);
+                let groups = groupByDeadline(data);
+                //let groups = Object.values(groupData).reduce((a, c) => { (a[(c.map(e => e.deadline)[0])] = a[(c.map(e => e.deadline)[0])] || []).push(groupByPlan(c)); return a; }, {});
+                for (let i in groups) {
+                    let qwer = groupByPlan(groups[i]);
+                    groups[i] = qwer;
+                }
                 let items = [];
-                $(groups).each(function (i, e) {
-                    $.each(e, function (j, f) {
-                        items.push(buildCard(j, f, lastEditedDate));
-                    });
+                $.each(groups, function (deadline, plans) {
+                    console.log(plans);
+                    items.push(buildCard(deadline, plans, lastEditedDate));
                 });
+                //console.log(items);
+                //$(groups).each(function (i, e) {
+                //    $.each(e, function (j, f) {
+                //        items.push(buildCard(j, f, lastEditedDate));
+                //    });
+                //});
                 $('#loadingIcon').find('i').fadeOut(200, function () {
                     
                     $('#cards').html(items);
@@ -194,11 +220,13 @@ function buildCard(key, data, lastEditedDate) {
     $(card).find('.toggleIcon').attr('aria-controls', 'list' + convertDate(key).replace('/', '-').replace('/', '-'));
     $(card).find('.panel-collapse').attr('id', 'list' + convertDate(key).replace('/', '-').replace('/', '-'));
     $(card).find('.panel-collapse').addClass('list-collapsable');
-    $(card).find('.reportCount').text('Reports:  ' + data.length);
-    let completionMap = data.map(rd => rd.IsComplete ? 1 : 0);
-    let completionCount = completionMap.reduce((a, c) => a + c);
-    let completionRate = completionCount / data.length * 100;
-    //alert(completionRate);
+    $(card).find('.deadline').text(convertDate(key));
+    //console.log(data.reduce((a, c) => parseInt(Object.values(c).map(x => x.length)) + parseInt(a), 0));
+    $(card).find('.reportCount').text('Reports:  ' + data.reduce((a, c) => parseInt(Object.values(c).map(x => x.length)) + parseInt(a), 0));
+    //console.log(data.map(e => Object.values(e)[0]).map(f => f.map(c => c.isComplete ? 1 : 0).reduce((q, w) => q + w)).reduce((e, r) => e + r));
+    //let completionMap = data.map(rd => rd.isComplete ? 1 : 0);
+    let completionCount = data.map(e => Object.values(e)[0]).map(f => f.map(c => c.isComplete ? 1 : 0).reduce((q, w) => q + w)).reduce((e, r) => e + r);
+    let completionRate = completionCount / data.reduce((a, c) => parseInt(Object.values(c).map(x => x.length)) + parseInt(a), 0) * 100;
     $(card).find('.completionCount').text('Completed:  ' + completionCount);
     $(card).find('.completionRate').text('Completion Rate:  ' + String(completionRate).substring(0, 5) + '%');
     $(card).find('.progress-bar').css('width', completionRate + '%').attr('aria-valuenow', completionRate).attr('aria-valuemin', 0).attr('aria-valuemax', 100);
@@ -207,51 +235,33 @@ function buildCard(key, data, lastEditedDate) {
         $(card).find('.toggleIcon').find('i').removeClass('fas fa-chevron-up').addClass('fas fa-chevron-down');
     }
     let reports = [];
-    $.each(data, function (k, l) { reports.push(buildCardContent(k, l)); });
+    $.each(data, function (k, l) {
+        
+        $.each(l, function (m, n) {
+            reports.push('<li class="list-group-item" style="text-align:center;"><strong><span class="float-left">[' + (k+1) + ']</span>' +  (m === '' ? 'No Associated Plans Found' : m) + '</strong></li>');
+            $.each(n, function (o, p) {
+                
+                reports.push(buildCardContent(p));
+            });
+        });
+    });
     $(card).find('.card-contents').html(reports);
+    console.log(data);
     setCardStatus(card, key, data);
     return card;
 }
-function buildCardContent(key, report) {
+function buildCardContent(reportDeadline) {
     let content = $('#cardItemListTemplate').children().clone(true);
-    $(content).find('.reportName').text(report.Name);
-    setIcon($(content).find('.ran'), report.HasRun);
-    setIcon($(content).find('.approved'), report.IsApproved);
-    setIcon($(content).find('.sent'), report.IsSent);
-    $(content).find('.frequency').text(report.Frequency);
-    setRouteId($(content).find('.editReportDeadlineLink'), report.Id);
-    setRouteId($(content).find('.editReportLink'), report.ReportId);
-    setRouteId($(content).find('.viewReportLink'), report.ReportId);
-    setRouteId($(content).find('.deleteReportLink'), report.ReportId);
+    $(content).find('.reportName').text(reportDeadline.report.name);
+    setIcon($(content).find('.ran'), reportDeadline.hasRun);
+    setIcon($(content).find('.approved'), reportDeadline.isApproved);
+    setIcon($(content).find('.sent'), reportDeadline.isSent);
+    $(content).find('.frequency').text(reportDeadline.report.frequency);
+    setRouteId($(content).find('.editReportDeadlineLink'), reportDeadline.id);
+    setRouteId($(content).find('.editReportLink'), reportDeadline.report.id);
+    setRouteId($(content).find('.viewReportLink'), reportDeadline.report.id);
+    setRouteId($(content).find('.deleteReportLink'), reportDeadline.report.id);
     return content;
-}
-function groupe(items, iKey, jKey) {
-    let arr = [];
-    let group = items.reduce((a, c) => {
-        (a[c[iKey]] = a[c[iKey]] || []).push(c);
-        return a;
-    }, {});
-    let pairs = Object.keys(group).map(e => group[e].reduce((a, c) => {
-        (a[c[jKey].reduce((t, r) => t + r, '')] = a[c[jKey].reduce((t, r) => t + r, '')] || []).push(c);
-        return a;
-    }, {}));
-    //for (let i = 0; i < group.length; i++) {
-    //    group[i] = pairs[i];
-    //}
-    console.log(pairs);
-    //let group2 = items.reduce((a, c) => {
-    //    (a[c[jKey].reduce((t, r) => t + r, '')] = a[c[jKey].reduce((t, r) => t + r, '')] || []).push(c);
-    //    return a;
-    //}, {});
-    //console.log(group2);
-    //let pairsd = Object.keys(group2).map(e => group2[e]);
-    //console.log(pairsd);
-    //group = group.map(e => e.reduce((a, c) => {
-    //    (a[c[jKey]] = a[c[jKey]] || []).push(c);
-    //    return a;
-    //}, []));
-    
-    return group;
 }
 function groupBy(items, key) {
     return items.reduce(
@@ -265,8 +275,9 @@ function setRouteId(link, id) {
 function setCardStatus(card, key, data) {
     let date = new Date();
     let dateKey = new Date(key);
-    let okay = true;
-    $.each(data, function (k, l) { okay = okay && checkMissing(l); });
+    //let okay = true;
+    //$.each(data, function (k, l) { okay = okay && checkMissing(l); });
+    let okay = data.map(e => Object.values(e)[0]).map(f => f.map(c => c.isComplete).reduce((q, w) => q && w)).reduce((e, r) => e && r);
     $(card).find('.deadline').text(convertDate(dateKey));
     if (convertDate(dateKey) === convertDate(date)) {
         $(card).find('.deadline').append(' (Today)');
@@ -307,7 +318,7 @@ function setCardStatus(card, key, data) {
 
 }
 function checkMissing(report) {
-    return report.HasRun && report.IsApproved && report.IsSent;
+    return report.hasRun && report.isApproved && report.isSent;
 }
 function setIcon(icon, data) {
     if (data) {

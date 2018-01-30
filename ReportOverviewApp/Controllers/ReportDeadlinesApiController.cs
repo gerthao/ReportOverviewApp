@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using ReportOverviewApp.Data;
 using ReportOverviewApp.Helpers;
 using ReportOverviewApp.Models;
@@ -59,7 +60,7 @@ namespace ReportOverviewApp.Controllers
         //{
         //}
         [HttpGet]
-        public async Task<JsonResult> GetReportDeadlines(int? year, int? month, int? day, DayOfWeek? dayOfWeek, string report, string plan, string groupBy, bool indent, bool omitNull)
+        public async Task<JsonResult> GetReportDeadlines(int? year, int? month, int? day, DayOfWeek? dayOfWeek, string report, string plan, string groupBy, bool indent, bool omitNull, bool hateoas)
         {
             var deadlines = await _context.ReportDeadlines.Include(rd => rd.Report)
                                                                 .ThenInclude(r => r.ReportPlanMapping)
@@ -72,17 +73,103 @@ namespace ReportOverviewApp.Controllers
             deadlines = (day == null ? deadlines : deadlines.Where(rd => rd.Deadline.Day == day)).ToList();
             deadlines = (dayOfWeek == null ? deadlines : deadlines.Where(rd => rd.Deadline.DayOfWeek == dayOfWeek)).ToList();
             deadlines = (String.IsNullOrEmpty(plan) ? deadlines : deadlines.Where(rd => rd.Report.ReportPlanMapping.Select(rpm => rpm.Plan).Where(p => p.Name.ToLower().Contains(plan.ToLower())).Any())).ToList();
-            var result = deadlines.Select(rd => new { rd.Id, rd.Deadline, rd.RunDate, rd.ApprovalDate, rd.SentDate, rd.HasRun, rd.IsApproved, rd.IsSent, rd.IsComplete, rd.IsLate, rd.IsPastDue, rd.ReportId, rd.Report.Name, rd.Report.Frequency, Plans = rd.Report.ReportPlanMapping.Select(rpm => rpm.Plan.Name) }).ToList();
-            return Json(result, new JsonSerializerSettings() { Formatting = indent ? Formatting.Indented : Formatting.None, NullValueHandling = omitNull ? NullValueHandling.Ignore : NullValueHandling.Include });
+            if (hateoas)
+            {
+                var hateoasResult = deadlines.Select(rd =>
+                            new {
+                                rd.Id,
+                                rd.Deadline,
+                                rd.RunDate,
+                                rd.ApprovalDate,
+                                rd.SentDate,
+                                rd.HasRun,
+                                rd.IsApproved,
+                                rd.IsSent,
+                                rd.IsComplete,
+                                rd.IsLate,
+                                rd.IsPastDue,
+                                rd.ReportId,
+                                Report = new
+                                {
+                                    links = new
+                                    {
+                                         rel = "self",
+                                         href = $"/reports/{rd.ReportId}"
+                                    },
+                                    Plans = rd.Report.ReportPlanMapping.Select(
+                                        rpm => new
+                                        {
+                                            links = new
+                                            {
+                                                rel = "self",
+                                                href = $"/plans/{rpm.PlanId}"
+                                            }
+                                        }
+                                    )
+                                }
+                            }).ToList();
+                return Json(hateoasResult, new JsonSerializerSettings() { PreserveReferencesHandling = PreserveReferencesHandling.Objects, ContractResolver = new CamelCasePropertyNamesContractResolver(), Formatting = indent ? Formatting.Indented : Formatting.None, NullValueHandling = omitNull ? NullValueHandling.Ignore : NullValueHandling.Include });
+            }
+            var result = deadlines.Select(rd => new
+                                {
+                                     rd.Id, rd.Deadline, rd.RunDate, rd.ApprovalDate, rd.SentDate, rd.HasRun, rd.IsApproved, rd.IsSent, rd.IsComplete, rd.IsLate, rd.IsPastDue, rd.ReportId,
+                                        Report = new
+                                        {
+                                            rd.Report.Id,
+                                            rd.Report.Name,
+                                            rd.Report.Frequency,
+                                            Plans = rd.Report.ReportPlanMapping.Select(
+                                                rpm => new
+                                                {
+                                                    rpm.Plan.Id,
+                                                    rpm.Plan.Name,
+                                                    State = new
+                                                    {
+                                                        rpm.Plan.State.Id,
+                                                        rpm.Plan.State.Name,
+                                                        rpm.Plan.State.PostalAbbreviation
+                                                    }
+                                                })
+                                        }
+                                }).ToList();
+            return Json(result, new JsonSerializerSettings() { PreserveReferencesHandling = PreserveReferencesHandling.Objects, ContractResolver = new CamelCasePropertyNamesContractResolver() ,Formatting = indent ? Formatting.Indented : Formatting.None, NullValueHandling = omitNull ? NullValueHandling.Ignore : NullValueHandling.Include });
         }
         [HttpGet("{id}")]
         public async Task<JsonResult> GetReportDeadline(int? id, bool indent, bool omitNull)
         {
             if (id == null) return Json(new { });
             var result = await _context.ReportDeadlines.Include(rd => rd.Report).Where(rd => rd.Id == id).Select(rd =>
-                new { rd.Id, rd.Deadline, rd.RunDate, rd.ApprovalDate, rd.SentDate, rd.HasRun, rd.IsApproved, rd.IsSent, rd.ReportId, rd.Report.Name }
+                new
+                {
+                    rd.Id,
+                    rd.Deadline,
+                    rd.RunDate,
+                    rd.ApprovalDate,
+                    rd.SentDate,
+                    rd.HasRun,
+                    rd.IsApproved,
+                    rd.IsSent,
+                    rd.IsComplete,
+                    rd.IsLate,
+                    rd.IsPastDue,
+                    rd.ReportId,
+                    Report = new
+                    {
+                        rd.Report.Id,
+                        rd.Report.Name,
+                        rd.Report.Frequency,
+                        Plans = rd.Report.ReportPlanMapping.Select(rpm => new { rpm.Plan.Id, rpm.Plan.Name,
+                            State = new
+                            {
+                                rpm.Plan.State.Id,
+                                rpm.Plan.State.Name,
+                                rpm.Plan.State.PostalAbbreviation
+                            }
+                        })
+                    }
+                }
             ).SingleOrDefaultAsync();
-            return Json(result, new JsonSerializerSettings() { Formatting = indent ? Newtonsoft.Json.Formatting.Indented : Newtonsoft.Json.Formatting.None, NullValueHandling = omitNull ? NullValueHandling.Ignore : NullValueHandling.Include });
+            return Json(result, new JsonSerializerSettings() { ContractResolver = new CamelCasePropertyNamesContractResolver(), Formatting = indent ? Newtonsoft.Json.Formatting.Indented : Newtonsoft.Json.Formatting.None, NullValueHandling = omitNull ? NullValueHandling.Ignore : NullValueHandling.Include });
         }
         //[HttpPost, Route("api/Deadlines/MarkAsComplete/")]
         //public async Task<JsonResult> MarkAll([FromRoute] bool complete, [FromRoute] DateTime dateTime)
