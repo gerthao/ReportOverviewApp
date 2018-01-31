@@ -125,7 +125,7 @@ function groupByPlan(data) {
         data.reduce((a, c) => {
             (a[c.report.plans.map(x => x.name).reduce((b, d) => b + d, '')] = a[c.report.plans.map(x => x.name).reduce((b, d) => b + d, '')] || []).push(c); return a;
         }, {});
-    return Object.keys(qwer).map(function (e) {
+    return Object.keys(qwer).sort((a, b) => a > b).map(function (e) {
         let arr = {};
         arr[e] = qwer[e];
         return arr;
@@ -173,6 +173,7 @@ function retriveReports(year, month, lastEditedDate) {
                     let qwer = groupByPlan(groups[i]);
                     groups[i] = qwer;
                 }
+                
                 let items = [];
                 $.each(groups, function (deadline, plans) {
                     console.log(plans);
@@ -223,7 +224,7 @@ function buildCard(key, data, lastEditedDate) {
     $(card).find('.deadline').text(convertDate(key));
     //console.log(data.reduce((a, c) => parseInt(Object.values(c).map(x => x.length)) + parseInt(a), 0));
     $(card).find('.reportCount').text('Reports:  ' + data.reduce((a, c) => parseInt(Object.values(c).map(x => x.length)) + parseInt(a), 0));
-    //console.log(data.map(e => Object.values(e)[0]).map(f => f.map(c => c.isComplete ? 1 : 0).reduce((q, w) => q + w)).reduce((e, r) => e + r));
+    console.log(data.map(e => Object.values(e)[0]).map(f => f.map(c => c.isComplete).reduce((q, w) => q && w)));
     //let completionMap = data.map(rd => rd.isComplete ? 1 : 0);
     let completionCount = data.map(e => Object.values(e)[0]).map(f => f.map(c => c.isComplete ? 1 : 0).reduce((q, w) => q + w)).reduce((e, r) => e + r);
     let completionRate = completionCount / data.reduce((a, c) => parseInt(Object.values(c).map(x => x.length)) + parseInt(a), 0) * 100;
@@ -238,11 +239,14 @@ function buildCard(key, data, lastEditedDate) {
     $.each(data, function (k, l) {
         
         $.each(l, function (m, n) {
-            reports.push('<li class="list-group-item" style="text-align:center;"><strong><span class="float-left">[' + (k+1) + ']</span>' +  (m === '' ? 'No Associated Plans Found' : m) + '</strong></li>');
+            let planDeadlineComplete = n.map(c => c.isComplete).reduce((q, w) => q && w);
+            let planDeadlineStatusIcon = planDeadlineComplete ? '<span class="float-right"><i class="far fa-check-circle text-success"></i></span>' : '<span class="float-right"><i class="far fa-circle text-info"></i></span>'
+            reports.push('<li class="list-group-item" style="text-align:center;"><strong><span class="float-left">[' + (k + 1) + ']</span>' + (m === '' ? 'No Associated Plans Found' : m) + planDeadlineStatusIcon + '</strong></li>');
             $.each(n, function (o, p) {
                 
                 reports.push(buildCardContent(p));
             });
+            
         });
     });
     $(card).find('.card-contents').html(reports);
@@ -250,6 +254,7 @@ function buildCard(key, data, lastEditedDate) {
     setCardStatus(card, key, data);
     return card;
 }
+
 function buildCardContent(reportDeadline) {
     let content = $('#cardItemListTemplate').children().clone(true);
     $(content).find('.reportName').text(reportDeadline.report.name);

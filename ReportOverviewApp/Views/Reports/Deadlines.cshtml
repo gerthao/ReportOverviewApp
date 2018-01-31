@@ -4,8 +4,8 @@
     ViewData["Title"] = "Deadlines";
 }
 <style>
-    .card{
-        transition: all 0.20s;
+    #cards > .card{
+        transition: all 0.3s;
     }
     /*.card.bg-danger:hover{
         box-shadow: 0rem 0rem 0.45rem #e81c00
@@ -16,8 +16,12 @@
     .card.bg-warning:hover{
         box-shadow: 0rem 0rem 0.45rem #dfc506
     }*/
-    .card:hover{
+    #cards > .card:hover{
+        /*transform: scale(1.05);*/
         box-shadow: 0rem 0rem 0.3rem #0073dc
+    }
+    li.list-group-item {
+        transition: all 0.3s;
     }
 </style>
 <div class="row col-md-12">
