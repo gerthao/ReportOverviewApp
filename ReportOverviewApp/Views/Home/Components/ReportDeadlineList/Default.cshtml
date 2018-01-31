@@ -1,7 +1,7 @@
 ﻿@model ReportOverviewApp.Models.ReportViewModels.ReportDeadlineViewModel
 <div class="card">
     <h6 class="card-header">
-        Report Status: 
+        Deadlines: 
         @if(Model.Deadline != null && Model.Deadline.HasValue) {
             @Model.Deadline.Value.ToShortDateString() 
         }
@@ -9,59 +9,83 @@
         {
             <text>&nbsp;(Today)</text>
         }
+        @if (Model.HasDeadline() && Model.Deadline.Value == DateTime.Today.AddDays(-1))
+        {
+            <text>&nbsp;(Yesterday)</text>
+        }
+        @if (Model.HasDeadline() && Model.Deadline.Value == DateTime.Today.AddDays(1))
+        {
+            <text>&nbsp;(Tomorrow)</text>
+        }
     </h6>
     <div class="table-scrollable">
-        @if(Model.DisplayReports().Count() == 0)
-        {
-            <p class="text-center">&nbsp;</p>
-        }
-        else
-        {
             <table class="card-body table table-bordered table-sm">
                 <thead>
                     <tr>
-                        <th>
-                            Report
+                        <th style="width: 60%;">
+                            <span class="report"><i class="far fa-file-alt"></i> Reports</span>
                         </th>
-                        <th>
-                            Ran
+                        <th class="text-center" style="width: 10%">
+                            <span class="ran"><i class="far fa-caret-square-right"></i></span>
                         </th>
-                        <th>
-                            Approved
+                        <th class="text-center" style="width: 10%">
+                            <span class="aprroved"><i class="far fa-thumbs-up"></i></span>
                         </th>
-                        <th>
-                            Sent
+                        <th class="text-center" style="width: 10%">
+                            <span class="sent"><i class="far fa-paper-plane"></i></span>
                         </th>
                     </tr>
                 </thead>
                 <tbody>
+                    @if(Model.DisplayReports().Count() == 0)
+                    {
+                        <tr>
+                            <td colspan="4"><span><i class="fas fa-info-circle"></i></span>&nbsp;No reports found to be due.</td>
+                        </tr>
+
+                    }
                     @foreach (ReportDeadline rd in Model.DisplayReports())
                 {
                         <tr>
                             <td>
                                 @rd.Report.Name
                             </td>
-                            <td>
-                                @rd.RunDate
-                                @if (rd.RunDate != null && rd.RunDate > rd.Deadline)
-                                { <text>&nbsp;(Late)</text>}
+                            <td class="text-center">
+                                @if(rd.IsPastDue && rd.RunDate == null)
+                                {
+                                    <span class="text-danger"><i class="fas fa-exclamation-triangle"></i></span>
+                                }
+                                else if(rd.HasRun)
+                                {
+                                    <span class="text-success"><i class="far fa-check-circle"></i></span>
+                                }
                             </td>
-                            <td>
-                                @rd.ApprovalDate
-                                @if (rd.ApprovalDate != null && rd.ApprovalDate > rd.Deadline)
-                                { <text>&nbsp;(Late)</text>}
+                            <td class="text-center">
+                                @if(rd.IsPastDue && rd.ApprovalDate == null)
+                                {
+                                    <span class="text-danger"><i class="fas fa-exclamation-triangle"></i></span>
+                                }
+                                else if(rd.IsApproved)
+                                {
+                                    <span class="text-success"><i class="far fa-check-circle"></i></span>
+                                }
                             </td>
-                            <td>
-                                @rd.SentDate
-                                @if (rd.SentDate != null && rd.SentDate > rd.Deadline)
-                                { <text>&nbsp;(Late)</text>}
+                            <td class="text-center">
+                                @if(rd.IsPastDue && rd.SentDate == null)
+                                {
+                                    <span class="text-danger"><i class="fas fa-exclamation-triangle"></i></span>
+                                }
+                                else if(rd.IsSent)
+                                {
+                                    <span class="text-success"><i class="far fa-check-circle"></i></span>
+                                }
                             </td>
                         </tr>
                     }
                 </tbody>
             </table>
 
-}
+
         
     </div>
 </div>

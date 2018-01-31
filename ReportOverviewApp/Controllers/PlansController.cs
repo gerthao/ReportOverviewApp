@@ -147,25 +147,28 @@ namespace ReportOverviewApp.Controllers
         //}
 
 
-        //// GET: Plans/Details/5
-        ////[Route("Plans/Details/{id}")]
-        ////public async Task<IActionResult> Details(int? id)
-        ////{
-        ////    if (id == null)
-        ////    {
-        ////        return NotFound();
-        ////    }
+        //GET: Plans/Details/5
+        [Route("Plans/{id}/Details")]
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-        ////    var plan = await _context.Plans
-        ////        .Include(p => p.State)
-        ////        .SingleOrDefaultAsync(m => m.Id == id);
-        ////    if (plan == null)
-        ////    {
-        ////        return NotFound();
-        ////    }
+            var plan = await _context.Plans
+                .Include(p => p.State)
+                .Include(p => p.ReportPlanMapping)
+                    .ThenInclude(rpm => rpm.Report)
+                        .ThenInclude(r => r.Deadlines)
+                .SingleOrDefaultAsync(m => m.Id == id);
+            if (plan == null)
+            {
+                return NotFound();
+            }
 
-        ////    return View(plan);
-        ////}
+            return View(plan);
+        }
 
         //// GET: Plans/Create
         //public IActionResult Create()

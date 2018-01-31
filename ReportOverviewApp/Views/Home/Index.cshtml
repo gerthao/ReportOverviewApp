@@ -4,6 +4,7 @@
 @model ReportOverviewApp.Models.HomeViewModels.HomeViewModel
 <h3>Overview (Home Page)</h3>
 <hr/>
+
 <div> 
     <div class="row">
         @*<div id="currentDateTimeContainer" class="col-12" style="padding-bottom: 2.5rem;">
@@ -56,8 +57,12 @@
                 </div>
             </div>
         </div>*@
-        <div class="col-sm-12" style="padding-top: 2.5rem;">
+        <div class="card-group col-md-12" style="padding-top: 2.5rem;">
+            @await Component.InvokeAsync(name: "ReportDeadlineList", arguments: new { date = DateTime.Today.AddDays(-1) })
+        
             @await Component.InvokeAsync(name: "ReportDeadlineList", arguments: new { date = DateTime.Today })
+        
+            @await Component.InvokeAsync(name: "ReportDeadlineList", arguments: new { date = DateTime.Today.AddDays(1) })
         </div>
         <div class="col-sm-12" id="userLogListContainer" style="padding-top: 2.5rem;">
             @await Component.InvokeAsync(name: "UserLogList")
@@ -69,7 +74,7 @@
                     <div id="chart"></div>
                 </div>
             </div>
-            
+
         </div>
     </div>
 </div>

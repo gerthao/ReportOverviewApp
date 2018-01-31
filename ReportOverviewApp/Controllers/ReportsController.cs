@@ -11,6 +11,7 @@ using ReportOverviewApp.Models.ReportViewModels;
 using ReportOverviewApp.Helpers;
 using System.Text;
 using NToastNotify;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ReportOverviewApp.Controllers
 {
@@ -181,21 +182,16 @@ namespace ReportOverviewApp.Controllers
         public IActionResult Create() => View();
 
         [Authorize, HttpGet, Route("Reports/Deadlines/{year:int?}/{month:int?}")]
-        public IActionResult Deadlines(int? month, int? year, string name, string groupBy)
+        public async Task<IActionResult> Deadlines(int? month, int? year, string report, string plan)
         {
-            List<string> groups = new List<string>()
-            {
-                "Plan", "State", "None"
-            };
             bool checkBadString(string r)
             {
                 return String.IsNullOrEmpty(r) || String.IsNullOrWhiteSpace(r);
             }
             ViewData["month"] = month as int?;
             ViewData["year"] = year as int?;
-            ViewData["name"] = checkBadString(name) ? null : name;
-            ViewData["groupBy"] = checkBadString(groupBy) ? null : groupBy;
-            ViewData["groups"] = groups;
+            ViewData["report"] = checkBadString(report) ? null : report;
+            ViewData["selectPlan"] = new SelectList(await _context.Plans.OrderBy(s => s.Name).ToListAsync(), "Name", "Name", plan);
             return View();
         }
 

@@ -7,13 +7,13 @@
     <span id="loading"></span>
 </h4>
 <div id="inputs" style="display:none;">
-    <input id="viewId" value="@ViewData["id"]" />
+    <input id="viewId" value="@ViewData["id"]" hidden/>
     <input id="viewName" value="@ViewData["name"]" />
-    <input id="viewWindwardId" value="@ViewData["windwardId"]" />
-    <input id="viewSort" value="@ViewData["sort"]" />
-    <input id="viewState" value="@ViewData["state"]" />
-    <input id="viewPage" value="@ViewData["page"]" />
-    <input id="viewTake" value="@ViewData["take"]" />
+    <input id="viewWindwardId" value="@ViewData["windwardId"]"hidden />
+    <input id="viewSort" value="@ViewData["sort"]" hidden/>
+    <input id="viewState" value="@ViewData["state"]" hidden/>
+    <input id="viewPage" value="@ViewData["page"]" hidden/>
+    <input id="viewTake" value="@ViewData["take"]" hidden/>
 </div>
 <div id="alert-template" style="display:none;">
     <div class="alert alert-danger"></div>
@@ -64,9 +64,9 @@
                 <td class="windwardId"></td>
                 <td class="hasActiveReports"></td>
                 <td class="hasTermedReports"></td>
-                <td>
+                <td class="text-center">
                     <a class="manage" data-toggle="modal" data-target="#editModal"><i class="fas fa-edit"></i></a>
-                    @*<a class="details"><i class="fas fa-book"></i></a>*@
+                    <a class="details"><i class="fas fa-book"></i></a>
                     <a class="reports"><i class="fas fa-arrow-right"></i></a>
                 </td>
             </tr>
@@ -79,24 +79,24 @@
             <th colspan="1">
                 Plans
                 <span class="float-right">
-                    <span class="input-group input-group-sm">
-                        <button class="prev btn btn-outline-primary btn-sm input-group-addon "><i class="fas fa-chevron-left "></i></button>
-                        <span class="input-group-addon">
+                    <span class="input-group input-group-sm input-group-background-custom">
+                        <button class="prev btn btn-outline-primary btn-sm input-group-addon input-group-background-custom"><i class="fas fa-chevron-left "></i></button>
+                        <span class="input-group-addon input-group-background-custom ">
                             <span class="indicator" style="padding-left:1.5rem; padding-right:1.5rem;">
                                 <span class="index" style="padding-right:1.5rem;"> </span>
                                 /
                                 <span class="total" style="padding-left:1.5rem;padding-right:1.5rem;"> </span>
                             </span>
                         </span>
-                        <button class="next btn btn-outline-primary btn-sm input-group-addon"><i class="fas fa-chevron-right"></i></button>
-                        <i class="take btn btn-outline-primary input-group-addon dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="sr-only">Toggle Dropdown</span></i>
-                        <span class="dropdown-menu">
-                            <span class="dropdown-header">Display # of Results</span>
-                            <button class="pageSizeOption dropdown-item">20</button>
-                            <button class="pageSizeOption dropdown-item">50</button>
-                            <button class="pageSizeOption dropdown-item">75</button>
-                            <button class="pageSizeOption dropdown-item">100</button>
-                            <button class="pageSizeOption dropdown-item">200</button>
+                        <button class="next btn btn-outline-primary btn-sm input-group-addon input-group-background-custom"><i class="fas fa-chevron-right"></i></button>
+                        <i class="take btn btn-outline-primary input-group-addon dropdown-toggle input-group-background-custom" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="sr-only">Toggle Dropdown</span></i>
+                        <span class="dropdown-menu input-group-background-custom">
+                            <span class="dropdown-header input-group-background-custom">Display # of Results</span>
+                            <button class="pageSizeOption dropdown-item input-group-background-custom">20</button>
+                            <button class="pageSizeOption dropdown-item input-group-background-custom">50</button>
+                            <button class="pageSizeOption dropdown-item input-group-background-custom">75</button>
+                            <button class="pageSizeOption dropdown-item input-group-background-custom">100</button>
+                            <button class="pageSizeOption dropdown-item input-group-background-custom">200</button>
                         </span>
                     </span>
                 </span>
@@ -543,7 +543,6 @@
                 search();      
             });
             function search(id, name, state, windwardId) {
-                //_page = 1;
                 $('.index').text(_page);
                 $('#loading').html($('#icon-template').find('.loading-icon').clone(false));
                 getPlans(id, name, state, windwardId, _sort, getFrom(), _size);
@@ -629,6 +628,7 @@
                 $(row).find('.hasTermedReports').text(plan.hasTermedReports);
                 $(row).find('.windwardId').text(plan.windwardId);
                 $(row).find('.manage').attr('href', '#Manage');
+                $(row).find('.details').attr('href', 'Plans/Details/' + plan.id);
                 $(row).find('.reports').attr('href', ('Reports?Plan=' + plan.name).replace(/ /g, '+'));
                 return row;
             }

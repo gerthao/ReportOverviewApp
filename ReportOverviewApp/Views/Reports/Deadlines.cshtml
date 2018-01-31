@@ -5,7 +5,7 @@
 }
 <style>
     #cards > .card{
-        transition: all 0.3s;
+        transition: all 0.3s ease-in-out;
     }
     /*.card.bg-danger:hover{
         box-shadow: 0rem 0rem 0.45rem #e81c00
@@ -23,6 +23,9 @@
     li.list-group-item {
         transition: all 0.3s;
     }
+    input.form-control::placeholder{
+        font-family: 'Font Awesome 5 Free Solid';
+    }
 </style>
 <div class="row col-md-12">
     <h4 style="display: inline-block">
@@ -32,6 +35,7 @@
 <div class="row col-md-12">
     @{
         Dictionary<int, string> months = new Dictionary<int, string>();
+        months.Add(0, "[All Months]");
         months.Add(1, "January");
         months.Add(2, "February");
         months.Add(3, "March");
@@ -61,9 +65,12 @@
             }
         }
     </select>
-
     <div style="padding-left: 0.8rem;"></div>
     <input id="selectYear" class="form-control form-inline col-md-2" type="number" value="@selectedYear.Value" />
+    <div style="padding-left: 0.8rem;"></div>
+    <select id="selectPlan" class="form-control custom-select form-inline col-md-3" asp-items="ViewBag.selectPlan">
+        <option value="">[All Plans]</option>
+    </select>
     <div style="padding-left: 0.8rem;"></div>
     <button id="changeButton" type="button" class="btn btn-primary"><i class="fas fa-search text-light"></i>&nbsp;&nbsp;Search</button>
     <div style="padding-left: 0.8rem;"></div>
@@ -89,11 +96,10 @@
     <div class="card">
         <div class="card-header">
             <h6 class="deadline" style="display: inline-block;"></h6>
-            <div class="options" style="display:inline-block;position:absolute; vertical-align:middle; right: 1.0rem;">
-                @*<span class="markAll"><i class="fas fa-check-circle"></i></span>*@
+            <div class="options col-md-1" style="display:inline-block;position:absolute; vertical-align:middle; right: 1.0rem;">
                 <span class="toggleIcon" data-toggle="collapse"><i class="fas fa-chevron-up toggle"></i></span>
-                @*<span class="deleteAll"><i class="fas fa-times-circle"></i></span>*@
             </div>
+            <input class="card-search form-control align-self-center bg-dark text-light" type="text" style="display: inline-block; padding-top:0.25rem; padding-bottom:0.25rem; opacity: 0.85;" placeholder="&#xF002;" />
         </div>
         <div class="panel-collapse collapse">
             <ul class="card-contents list-group list-group-flush">
@@ -119,7 +125,7 @@
 <div id="cardItemListTemplate" style="display:none;">
     
     <li class="list-group-item report-item">
-        <ul class="list-inline ">
+        <ul class="list-inline">
             <li class="list-inline-item reportName">
             </li>
 

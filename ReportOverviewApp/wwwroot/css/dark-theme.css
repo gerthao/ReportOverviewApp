@@ -137,3 +137,11 @@ select.form-control, select.form-control:focus{
 .progress-background-custom{
     background-color: #2d333f;
 }
+.input-group-background-custom {
+    background-color: #404046;
+    color: #246fcb;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.6);
+}
