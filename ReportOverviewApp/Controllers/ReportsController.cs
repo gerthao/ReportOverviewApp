@@ -151,11 +151,23 @@ namespace ReportOverviewApp.Controllers
         }
 
         // GET: Reports
-    
-        public async Task<IActionResult> Index(string search, string column, int entriesPerPage, int pageIndex, string state, string plan, string frequency, string businessContact, string businessOwner, string sourceDepartment, string begin = null, string end = null)
+        [Route("Reports/Index/Old")]
+        public async Task<IActionResult> IndexOld(string search, string column, int entriesPerPage, int pageIndex, string state, string plan, string frequency, string businessContact, string businessOwner, string sourceDepartment, string begin = null, string end = null)
         {
             //await UpdateDeadlinesAsync();
             return View(await GetReportViewModelAsync(search, column, entriesPerPage, pageIndex, state, plan, begin, end, frequency, businessContact, businessOwner, sourceDepartment));
+        }
+        public async Task<IActionResult> Index(string id, string name, string frequency, bool isTermed, string sort, int? page = 1, int? take = 100)
+        {
+
+            ViewData["id"] = id;
+            ViewData["name"] = name;
+            ViewData["sort"] = sort;
+            ViewData["frequency"] = frequency;
+            ViewData["isTermed"] = isTermed;
+            ViewData["page"] = page;
+            ViewData["take"] = take;
+            return View(await _context.Reports.ToListAsync());
         }
         // GET: Reports/Details/5
 

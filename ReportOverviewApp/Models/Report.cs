@@ -1,9 +1,9 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace ReportOverviewApp.Models
 {
@@ -132,7 +132,7 @@ namespace ReportOverviewApp.Models
             {
                 if (compareDate == null)
                     compareDate = DateTime.Today;
-                if (IsTermed(compareDate))
+                if (IsTermedOn(compareDate))
                     return null;
                 switch (Frequency)
                 {
@@ -302,15 +302,15 @@ namespace ReportOverviewApp.Models
                         .OrderBy(date => date)
                         .First();
         }
-        public bool IsTermed(DateTime? compareDate)
+        public bool IsTermedOn(DateTime? compareDate = null)
         {
-            if(compareDate == null)
+            if (compareDate == null)
             {
                 compareDate = DateTime.Today;
             }
             return TerminationDate != null && TerminationDate.HasValue && TerminationDate.Value < compareDate;
         }
-
+        public bool IsTermed { get => TerminationDate != null && TerminationDate.HasValue && TerminationDate.Value < DateTime.Today; }
         public override string ToString() => Name;
     }
 }

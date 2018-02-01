@@ -1,6 +1,6 @@
-@using ReportOverviewApp.Models.ReportViewModels
+﻿@@using ReportOverviewApp.Models.ReportViewModels
 @using ReportOverviewApp.Models
-@model IEnumerable<Report>
+@model ReportListViewModel
 
 
 @{
@@ -11,7 +11,7 @@
 
 <h4>
     Reporting Catalogue
-    <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#createModal" aria-label="Left Align"><span class="fas fa-plus-square"></span>&nbsp;&nbsp;Create New</button>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createModal" aria-label="Left Align"><span class="fas fa-plus-square"></span>&nbsp;&nbsp;Create New</button>
     <span id="loading"></span>
 </h4>
 <div id="inputs" style="display:none;">

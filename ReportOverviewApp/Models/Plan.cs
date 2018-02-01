@@ -17,7 +17,7 @@ namespace ReportOverviewApp.Models
         public int StateId { get; set; }
 
         public virtual ICollection<ReportPlanMap> ReportPlanMapping { get; set; }
-        public bool HasTermedReports { get => ReportPlanMapping != null && ReportPlanMapping.Select(rpm => rpm.Report).Any(r => r.IsTermed(null)); }
-        public bool HasActiveReports { get => ReportPlanMapping != null && ReportPlanMapping.Select(rpm => rpm.Report).Any(r => !r.IsTermed(null)); }
+        public bool HasTermedReports { get => ReportPlanMapping != null && ReportPlanMapping.Select(rpm => rpm.Report).Any(r => r.IsTermedOn(null)); }
+        public bool HasActiveReports { get => ReportPlanMapping != null && ReportPlanMapping.Select(rpm => rpm.Report).Any(r => !r.IsTermedOn(null)); }
     }
 }

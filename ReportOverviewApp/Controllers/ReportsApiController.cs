@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -23,11 +24,76 @@ namespace ReportOverviewApp.Controllers
             _context = context;
         }
 
+        private List<Report> FilterReports(List<Report> reports, string id, string name, string frequency, bool isTermed, string sort, int? from, int? take)
+        {
+            if (!String.IsNullOrEmpty(id))
+            {
+                int value = 0;
+                id = id.Trim();
+                if (int.TryParse(id, out value))
+                {
+                    reports = reports.Where(p => p.Id == value).ToList();
+                }
+                else
+                {
+                    id = id.Replace("_", "[0-9]");
+                    id = id.Replace("~", "[0-9]+?");
+                    Regex r = new Regex("^" + id + "$");
+                    reports = reports.Where(report => r.IsMatch(report.Id.ToString())).ToList();
+                }
+            }
+            switch (sort?.ToLower())
+            {
+                case "id":
+                    reports = reports.OrderBy(report => report.Id).ToList();
+                    break;
+                case "frequency":
+                    reports = reports.OrderBy(report => report.Frequency).ToList();
+                    break;
+                case "name":
+                    reports = reports.OrderBy(report => report.Name).ToList();
+                    break;
+                case "istermed":
+                    reports = reports.OrderByDescending(report => report.IsTermed).ToList();
+                    break;
+                default:
+                    reports = reports.OrderBy(report => report.Id).ToList();
+                    break;
+            }
+            if (!(String.IsNullOrEmpty(name)))
+            {
+                name = name.ToLower().Trim();
+                reports = reports.Where(p => p.Name.ToLower().Contains(name)).ToList();
+            }
+            if (!(String.IsNullOrEmpty(frequency)))
+            {
+                frequency = frequency.ToLower().Trim();
+                reports = reports.Where(report => report.Frequency.Contains(frequency)).ToList();
+            }
+            if (from != null)
+            {
+                if (take != null)
+                {
+                    reports = reports.Skip(from.Value - 1).Take(take.Value).ToList();
+                }
+                else reports = reports.Skip(from.Value - 1).ToList();
+            }
+            else
+            {
+                if (take != null)
+                {
+                    reports = reports.Take(take.Value).ToList();
+                }
+            }
+            return reports;
+        }
+
         // GET: api/ReportsApi
         [HttpGet]
-        public IEnumerable<Report> GetReports()
+        public async Task<IEnumerable<Report>> GetReports(string id, string name, string frequency, bool isTermed, string sort, int? from, int? take)
         {
-            return _context.Reports;
+            var reports = await _context.Reports.ToListAsync();
+            return FilterReports(reports, id, name, frequency, isTermed, sort, from, take);
         }
 
         // GET: api/ReportsApi/5
@@ -45,8 +111,47 @@ namespace ReportOverviewApp.Controllers
             {
                 return NotFound();
             }
-
             return Ok(report);
+        }
+        [HttpGet("{id}/BusinessContact"), Route("api/Reports/{id}/BusinessContact")]
+        public async Task<IActionResult> GetBusinessContact([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var report = await _context.Reports.FindAsync(id);
+            var businessContact = await _context.BusinessContacts.Where(bc => bc.Id == report.Id).SingleOrDefaultAsync();
+            return Ok(businessContact);
+        }
+        [HttpGet("{id}/Plans"), Route("api/Reports/{id}/Plans")]
+        public async Task<IActionResult> GetPlans([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var mapping = await _context.ReportPlanMapping.Where(rpm => rpm.ReportId == id).Select(rpm => rpm.PlanId).ToListAsync();
+            List<Plan> plans = mapping.Select(async i => await _context.Plans.FindAsync(i)).Select(e => e.Result).ToList();
+            //if(mapping != null && mapping.Any())
+            //{
+            //    for (int i = 0; i < mapping.Count(); i++)
+            //    {
+            //        plans.Add(await _context.Plans.FindAsync(mapping[i]));
+            //    }
+            //}
+            
+            return Ok(plans);
+        }
+        [HttpGet("{id}/Deadlines"), Route("api/Reports/{id}/Deadlines")]
+        public async Task<IActionResult> GetDeadlines([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var plans = await _context.ReportDeadlines.Where(rd => rd.ReportId == id).ToListAsync();
+            return Ok(plans);
         }
 
         // PUT: api/Reports/5
