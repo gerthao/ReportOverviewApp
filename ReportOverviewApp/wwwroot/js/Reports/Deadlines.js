@@ -125,7 +125,7 @@
     }
     $('#changeButton').click(function () {
         $('#status').children().fadeOut(200);
-        retriveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val(), $('#selectPlan').find(':selected').val());
+        retrieveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val(), $('#selectPlan').find(':selected').val());
     });
     function retrieveReports(year, month, plan, lastEditedDate) {
         $('#loadingIcon').html('<i class="fas fa-cog fa-2x ld ld-spin"></i>');
