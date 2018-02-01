@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -23,11 +24,75 @@ namespace ReportOverviewApp.Controllers
             _context = context;
         }
 
+
+        private List<BusinessContact> FilterBusinessContacts(List<BusinessContact> businessContacts, string id, string name, string businessOwner, string sort, int? from, int? take)
+        {
+            if (!String.IsNullOrEmpty(id))
+            {
+                int value = 0;
+                id = id.Trim();
+                if (int.TryParse(id, out value))
+                {
+                    businessContacts = businessContacts.Where(p => p.Id == value).ToList();
+                }
+                else
+                {
+                    id = id.Replace("_", "[0-9]");
+                    id = id.Replace("~", "[0-9]+?");
+                    Regex r = new Regex("^" + id + "$");
+                    businessContacts = businessContacts.Where(p => r.IsMatch(p.Id.ToString())).ToList();
+                }
+            }
+            switch (sort?.ToLower())
+            {
+                case "id":
+                    businessContacts = businessContacts.OrderBy(bc => bc.Id).ToList();
+                    break;
+                case "businessOwner":
+                    businessContacts = businessContacts.OrderBy(bc => bc.BusinessOwner).ToList();
+                    break;
+                case "name":
+                    businessContacts = businessContacts.OrderBy(p => p.Name).ToList();
+                    break;
+                default:
+                    businessContacts = businessContacts.OrderBy(p => p.Id).ToList();
+                    break;
+            }
+            if (!(String.IsNullOrEmpty(name)))
+            {
+                name = name.ToLower().Trim();
+                businessContacts = businessContacts.Where(p => p.Name.ToLower().Contains(name)).ToList();
+            }
+            if (!(String.IsNullOrEmpty(businessOwner)))
+            {
+                businessOwner = businessOwner.ToLower().Trim();
+                businessContacts = businessContacts.Where(p => p.BusinessOwner.Contains(businessOwner)).ToList();
+            }
+            if (from != null)
+            {
+                if (take != null)
+                {
+                    businessContacts = businessContacts.Skip(from.Value - 1).Take(take.Value).ToList();
+                }
+                else businessContacts = businessContacts.Skip(from.Value - 1).ToList();
+            }
+            else
+            {
+                if (take != null)
+                {
+                    businessContacts = businessContacts.Take(take.Value).ToList();
+                }
+            }
+            return businessContacts;
+        }
+
+
         // GET: api/BusinessContactsApi
         [HttpGet]
-        public IEnumerable<BusinessContact> GetBusinessContacts()
+        public async Task<IEnumerable<BusinessContact>> GetBusinessContacts(string id, string name, string state,  string sort, int? from, int? take)
         {
-            return _context.BusinessContacts;
+            var businessContacts = await _context.BusinessContacts.ToListAsync();
+            return FilterBusinessContacts(businessContacts, id, name, state, sort, from, take);
         }
 
         // GET: api/BusinessContactsApi/5
@@ -81,7 +146,7 @@ namespace ReportOverviewApp.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok("Changes have been saved.");
         }
 
         // POST: api/BusinessContactsApi

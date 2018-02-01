@@ -146,7 +146,7 @@ namespace ReportOverviewApp.Controllers
         }
 
         // PUT: api/PlansApi/5
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), ValidateAntiForgeryToken]
         public async Task<IActionResult> PutPlan([FromRoute] int id, [FromBody] Plan plan)
         {
             if (!ModelState.IsValid)
@@ -181,7 +181,7 @@ namespace ReportOverviewApp.Controllers
         }
 
         // POST: api/PlansApi
-        [HttpPost]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> PostPlan([FromBody] Plan plan)
         {
             if (!ModelState.IsValid)
@@ -196,7 +196,7 @@ namespace ReportOverviewApp.Controllers
         }
 
         // DELETE: api/PlansApi/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), ValidateAntiForgeryToken]
         public async Task<IActionResult> DeletePlan([FromRoute] int id)
         {
             if (!ModelState.IsValid)

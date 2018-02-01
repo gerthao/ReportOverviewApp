@@ -180,7 +180,6 @@
                             <h6>New Plan <span class="planTitle"></span></h6>
                         </div>
                         <div class="modal-body">
-                            @*<input name="id" class="form-control-label sr-only planId" type="number" value="0" />*@
                             <label class="form-control-label">Name</label>
                             <input name="name" class="form-control planName" type="text" style="min-width:100%" />
                             <label class="form-control-label">WindwardId</label>
@@ -217,7 +216,6 @@
                             <input name="windwardId" class="form-control planWindwardId" type="text" style="min-width:100%" />
                             <label class="form-control-label">State</label>
                             <select name="stateId" class="form-control custom-select planState" asp-items="ViewBag.StateId" style="min-width:100%"></select>
-                            @*<select class="form-control custom-select planState" style="min-width:100%"></select>*@
                         </div>
                         <div class="modal-footer">
                             <div class="btn-group btn-block" style="padding-left: 0px; padding-right:0px;">
@@ -300,8 +298,38 @@
                         let plan = data;
                         row.find('.planId').text(data.id);
                         row.find('.planName').text(data.name);
-                        row.find('.windwardId').text(data.windwardId);
+                        row.find('.windwardId').text(data.windwardId);  
                         $(row).find('.reports').attr('href', ('Reports?Plan=' + plan.name).replace(/ /g, '+'));
+                        row.find('.manage').on('click', function () {
+                            let form = $('#modals').find('#editModal').find('form');
+                            let id = $(this).parent().parent().find('.planId').text();
+                            let request = $.ajax({
+                                type: 'GET',
+                                url: 'api/Plans/' + id,
+                                dataType: 'json',
+                                success: function (data) {
+                                    if ($(data).length > 0) {
+                                        $(form).find('.planTitle').text(data.name);
+                                        $(form).find('.planId').val(data.id);
+                                        $(form).find('.planName').val(data.name);
+                                        $(form).find('.planWindwardId').val(data.windwardId);
+                                        $(form).find('.planState').val(data.stateId);
+                                    } else {
+                                        $('#loadingIcon').find('i').fadeOut(200, function () {
+                                            $('#status').html($('#alert-template').find('.alert-warning').clone(false));
+                                            $('#status').find('.alert').text('No Plan Found');
+                                        });
+                                    };
+
+                                },
+                                error: function (a, b, c) {
+                                    $('#manageStatus').slideUp(100, function () {
+                                        $(this).html($('#alert-template').find('.alert-danger').clone(false).text(c));
+                                    });
+                                }
+                            });
+                        });
+
                     }
                 });
                 stateRequest.done(function (data) {
@@ -361,7 +389,7 @@
                 });
                 return request;
             }
-            $('#post').click(function () {
+            $('#post').on('click', function () {
                 $('#createForm button').prop('disabled', true);
                 let form = $('#createForm');
                 let formJSON = $(form).serializeArray().reduce(
@@ -372,7 +400,7 @@
                 );
                 let state = $(form).find('.planState');
                 let model = {
-                    _RequestVerificationToken: $("[name='__RequestVerificationToken']").val(),
+                    //_RequestVerificationToken: $("[name='__RequestVerificationToken']").val(),
                     id: 0,
                     stateId: $(state).val(),
                     name: formJSON.name,
@@ -383,7 +411,7 @@
                     url: 'api/Plans',
                     data: JSON.stringify(model),
                     headers: {
-                        __RequestVerificationToken: $("[name='__RequestVerificationToken']").val()
+                        RequestVerificationToken: $("[name='__RequestVerificationToken']").val()
                     },
                     dataType: 'json',
                     contentType: 'application/json; charset-utf-8',
@@ -399,7 +427,7 @@
                     }
                 });
             })
-            $('#put').click(function () {
+            $('#put').on('click', function () {
                 $('#collapseDelete').collapse('hide');
                 $('#editForm button').prop('disabled', true);
                 let form = $('#editForm');
@@ -411,7 +439,7 @@
                 );
                 let state = $(form).find('.planState');
                 let model = {
-                    __RequestVerificationToken: $("[name='__RequestVerificationToken']").val(),
+                    //__RequestVerificationToken: $("[name='__RequestVerificationToken']").val(),
                     id: parseInt(formJSON.id),
                     stateId: parseInt(state.val()),
                     name: formJSON.name,
@@ -422,7 +450,7 @@
                     url: 'api/Plans/' + formJSON.id,
                     data: JSON.stringify(model),
                     headers: {
-                        __RequestVerificationToken: $("[name='__RequestVerificationToken']").val()
+                        RequestVerificationToken: $("[name='__RequestVerificationToken']").val()
                     },
                     dataType: 'json',
                     contentType: 'application/json; charset-utf-8',
@@ -437,14 +465,14 @@
                     }
                 });
             })
-            $('#delete').click(function () {
+            $('#delete').on('click', function () {
                 $('#collapseDelete').collapse('show');
             })
-            $('#clearCreateForm').click(function () {
+            $('#clearCreateForm').on('click', function () {
                 $('#createForm')[0].reset();
                 $('#createStatus').html('');
             });
-            $('#unconfirmDelete').click(function () {
+            $('#unconfirmDelete').on('click', function () {
                 $('#collapseDelete').collapse('hide');
             })
             $('#createModal').on('hidden.bs.modal', function (e) {
@@ -456,7 +484,7 @@
                 $('#editForm button').prop('disabled', false);
                 $('#manageStatus').html('');
             });
-            $('#confirmDelete').click(function () {
+            $('#confirmDelete').on('click', function () {
                 $('#editForm button').prop('disabled', true);
                 let form = $('#editForm');
                 let formJSON = $(form).serializeArray().reduce(
@@ -467,7 +495,7 @@
                 );
                 let state = $(form).find('.planState');
                 let model = {
-                    __RequestVerificationToken: $("[name='__RequestVerificationToken']").val(),
+                    //__RequestVerificationToken: $("[name='__RequestVerificationToken']").val(),
                     id: parseInt(formJSON.id),
                     stateId: parseInt(state.val()),
                     name: formJSON.name,
@@ -478,12 +506,12 @@
                     url: 'api/Plans/' + formJSON.id,
                     data: JSON.stringify(model),
                     headers: {
-                        __RequestVerificationToken: $("[name='__RequestVerificationToken']").val()
+                        RequestVerificationToken: $("[name='__RequestVerificationToken']").val()
                     },
                     dataType: 'json',
                     contentType: 'application/json; charset-utf-8',
                     success: function (data) {
-                        $('#manageStatus').html($('#alert-template').find('.alert-success').clone(false).text("Plan was successfully removed."));
+                        $('#manageStatus').html($('#alert-template').find('.alert-success').clone(false).text(formJSON.name + " was successfully removed."));
                         removeRow(model.id);
                         $('#collapseDelete').collapse('hide');
                         $(form).find('input').val('');
@@ -498,7 +526,7 @@
                     }
                 });
             });
-            $('.manage').click(function () {
+            $('.manage').on('click', function () {
                 let form = $('#modals').find('#editModal').find('form');
                 let id = $(this).parent().parent().find('.planId').text();
                 let request = $.ajax({
@@ -526,8 +554,8 @@
                         });
                     }
                 });
-            })
-            $('#search').click(function () {
+            });
+            $('#search').on('click', function () {
                 search($('#searchId').val(), $('#searchName').val(), $('#searchState').val(), $('#searchWindwardId').val());            
             });
             $(document).keypress(function (e) {
@@ -537,7 +565,7 @@
 
             });
                 
-            $('#clear').click(function () {
+            $('#clear').on('click', function () {
                 $('input').val('');
                 $('.custom-checkbox').prop('checked', true);
                 search();      
@@ -638,7 +666,7 @@
                 $('#loading').html($('#icon-template').find('.loading-icon').clone(false));
                 search($('#searchId').val(), $('#searchName').val(), $('#searchState').val(), $('#searchWindwardId').val());            
             }
-            $('.sortOption').click(function () {
+            $('.sortOption').on('click', function () {
                 let _sort = $(this).text();
                 if ($(this).find('i').html() !== undefined) {
                     return;
@@ -650,7 +678,7 @@
                 $('#loading').html($('#icon-template').find('.loading-icon').clone(false));
                 getPlans(_id, _name, _state, _windwardId, _sort, getFrom(), _size);
             });
-            $('.pageSizeOption').click(function () {
+            $('.pageSizeOption').on('click', function () {
                 if (_size === parseInt($(this).text())) {
                     return;
                 }
@@ -661,7 +689,7 @@
                 getPlans(_id, _name, _state, _windwardId, _sort, getFrom(), _size);
                 getWholeSize(_id, _name, _state, _windwardId);
             });
-            $('.next').click(function () {
+            $('.next').on('click', function () {
                 if (_page !== parseInt($('.total').text())) {
                     _page = parseInt(_page) + 1;
                     $('.index').text(_page);
@@ -669,7 +697,7 @@
                     getPlans(_id, _name, _state, _windwardId, _sort, getFrom(), _size);
                 }
             })
-            $('.prev').click(function () {
+            $('.prev').on('click', function () {
                 if (_page > 1) {
                     _page = parseInt(_page) - 1;
                     $('.index').text(_page);

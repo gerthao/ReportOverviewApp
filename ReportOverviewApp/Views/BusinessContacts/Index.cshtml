@@ -3,47 +3,697 @@
 @{
     ViewData["Title"] = "Business Contacts";
 }
+<noscript>
+    <h4>Business Contacts</h4>
 
-<h4>Business Contacts</h4>
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+    <hr />
+    <table class="table table-sm table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>
+                    @Html.ActionLink("Id", "Index", new { sort = "Id" }, new { })
+                </th>
+                <th>
+                    @Html.ActionLink("Name", "Index", new { sort = "Name" }, new { })
+                </th>
+                <th>
+                        @Html.DisplayNameFor(model => model.BusinessOwner)
+                    </th>
+                <th>Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                            @Html.DisplayFor(modelItem => item.BusinessOwner)
+                        </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="TransferReports" asp-route-first="@item.Id">Transfer</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+</noscript>
+@{
+    ViewData["Title"] = "BusinessContacts";
+}
+<h4>
+    Business Contacts
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createModal" aria-label="Left Align"><span class="fas fa-plus-square"></span>&nbsp;&nbsp;Create New</button>
+    <span id="loading"></span>
+</h4>
+<div id="inputs" style="display:none;">
+    <input id="viewId" value="@ViewData["id"]" hidden />
+    <input id="viewName" value="@ViewData["name"]" />
+    <input id="viewSort" value="@ViewData["sort"]" hidden />
+    <input id="viewBusinessOwner" value="@ViewData["businessOwner"]" hidden />
+    <input id="viewPage" value="@ViewData["page"]" hidden />
+    <input id="viewTake" value="@ViewData["take"]" hidden />
+</div>
+<div id="alert-template" style="display:none;">
+    <div class="alert alert-danger"></div>
+    <div class="alert alert-warning"></div>
+    <div class="alert alert-success"></div>
+</div>
+<div id="icon-template" style="display:none;">
+    <i class="loading-icon fas fa-cog ld ld-spin"></i>
+    <i class="sort-icon fas fa-filter"></i>
+</div>
 <hr />
-<table class="table table-sm table-bordered table-striped">
+<div id="tableTemplate" style="display:none;">
+    <table class="table table-sm table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <th class="sortOption">
+                    <a>Id</a>
+                </th>
+                <th class="sortOption">
+                    <a>Name</a>
+                </th>
+                <th class="sortOption">
+                    <a>businessOwner</a>
+                </th>
+                <th>Options</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+<div id="tableContentTemplate" style="display:none;">
+    <table>
+        <tbody>
+            <tr>
+                <td class="businessContactId"></td>
+                <td class="businessContactName"></td>
+                <td class="businessOwnerName"></td>
+                <td class="text-center">
+                    <a class="manage" data-toggle="modal" data-target="#editModal"><i class="fas fa-edit"></i></a>
+                    <a class="details"><i class="fas fa-book"></i></a>
+                    <a class="transfer"><i class="fas fa-exchange-alt"></i></a>
+                    <a class="reports"><i class="fas fa-arrow-right"></i></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<table class="table table-sm table-bordered" id="navigation" style="padding-bottom: 0rem;">
     <thead>
         <tr>
-            <th>
-                @Html.ActionLink("Id", "Index", new { sort = "Id" }, new { })
+            <th colspan="1">
+                Business Contacts
+                <span class="float-right">
+                    <span class="input-group input-group-sm input-group-background-custom">
+                        <button class="prev btn btn-outline-primary btn-sm input-group-addon input-group-background-custom"><i class="fas fa-chevron-left "></i></button>
+                        <span class="input-group-addon input-group-background-custom ">
+                            <span class="indicator" style="padding-left:1.5rem; padding-right:1.5rem;">
+                                <span class="index" style="padding-right:1.5rem;"> </span>
+                                /
+                                <span class="total" style="padding-left:1.5rem;padding-right:1.5rem;"> </span>
+                            </span>
+                        </span>
+                        <button class="next btn btn-outline-primary btn-sm input-group-addon input-group-background-custom"><i class="fas fa-chevron-right"></i></button>
+                        <i class="take btn btn-outline-primary input-group-addon dropdown-toggle input-group-background-custom" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="sr-only">Toggle Dropdown</span></i>
+                        <span class="dropdown-menu input-group-background-custom">
+                            <span class="dropdown-header input-group-background-custom">Display # of Results</span>
+                            <button class="pageSizeOption dropdown-item input-group-background-custom">20</button>
+                            <button class="pageSizeOption dropdown-item input-group-background-custom">50</button>
+                            <button class="pageSizeOption dropdown-item input-group-background-custom">75</button>
+                            <button class="pageSizeOption dropdown-item input-group-background-custom">100</button>
+                            <button class="pageSizeOption dropdown-item input-group-background-custom">200</button>
+                        </span>
+                    </span>
+                </span>
             </th>
-            <th>
-                @Html.ActionLink("Name", "Index", new { sort = "Name" }, new { })
-            </th>
-            @*<th>
-            @Html.DisplayNameFor(model => model.BusinessOwner)
-        </th>*@
-            <th>Options</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            @*<td>
-                @Html.DisplayFor(modelItem => item.BusinessOwner)
-            </td>*@
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="TransferReports" asp-route-first="@item.Id">Transfer</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        <tr></tr>
     </tbody>
 </table>
+<div id="status">
+
+</div>
+<div class="businessContactsTable">
+    <table class="table table-sm table-bordered table-striped table-hover" style="table-layout:fixed;">
+        <thead>
+            <tr>
+                <th style="width: 15%">
+                    <a class="sortOption">Id</a>
+                </th>
+                <th style="width: 40%">
+                    <a class="sortOption">Name</a>
+                </th>
+                <th style="width: 35%">
+                    <a class="sortOption">BusinessOwner</a>
+                </th>
+                <th style="width: 10%">Options</th>
+            </tr>
+            <tr>
+                <th style="width: 20%">
+                    <input id="searchId" class="form-control" placeholder="Id" type="text" style="max-width:100%;max-height:2.5rem;" value="@ViewData["id"]">
+                </th>
+                <th style="width: 35%">
+                    <input id="searchName" class="form-control" placeholder="Name" type="text" style="max-width:100%;max-height:2.5rem;" value="@ViewData["name"]">
+                </th>
+                <th style="width: 35%">
+                    <input id="searchBusinessOwner" class="form-control" placeholder="BusinessOwner" type="text" style="max-width:100%;max-height:2.5rem;" value="@ViewData["businessOwner"]">
+                </th>
+                <th class="text-center" style="width: 10%">
+                    <div class="btn-group" role="group" aria-label="search button group">
+                        <button id="search" type="button" class="btn btn-outline-primary"><i class="fas fa-search"></i></button>
+                        <button id="clear" type="button" class="btn btn-outline-primary"><i class="fas fa-times"></i></button>
+                    </div>
+                </th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+<div id="modals">
+    <div id="createModal" class="modal fade" tabindex="-1" role="dialog" data-backdrop="true">
+        <div class="modal-dialog modal-lg  modal-dialog-centered" role="document">
+            <div class="container-fluid">
+                <div class="modal-content">
+                    <form id="createForm">
+                        <div class="modal-header">
+                            <h6>New Business Contact <span class="businessContactTitle"></span></h6>
+                        </div>
+                        <div class="modal-body">
+                            @*<input name="id" class="form-control-label sr-only businessContactId" type="number" value="0" />*@
+                            <label class="form-control-label">Name</label>
+                            <input name="name" class="form-control businessContactName" type="text" style="min-width:100%" />
+                            <label class="form-control-label">Business Owner</label>
+                            <input name="businessOwner" type="text" class="form-control businessContactBusinessOwner" style="min-width:100%">
+                        </div>
+                        <div class="modal-footer">
+                            <div class="btn-group btn-block" style="padding-left: 0px; padding-right: 0px;">
+                                <button id="clearCreateForm" type="button" class="btn btn-secondary col-6"><i class="fas fa-eraser"></i> Clear</button>
+                                <button id="post" type="button" class="btn btn-primary col-6"><i class="fas fa-save"></i> Save</button>
+                            </div>
+
+                        </div>
+                    </form>
+                    <div id="createStatus" class="col-md-12"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="editModal" class="modal fade" tabindex="-1" role="dialog" data-backdrop="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="container-fluid">
+                <div class="modal-content">
+                    <form id="editForm">
+                        <div class="modal-header">
+                            <h6>Manage: <span class="businessContactTitle"></span></h6>
+                        </div>
+                        <div class="modal-body">
+                            <input name="id" class="form-control-label sr-only businessContactId" type="number" />
+                            <label class="form-control-label">Name</label>
+                            <input name="name" class="form-control businessContactName" type="text" style="min-width:100%" />
+                            <label class="form-control-label">Business Owner</label>
+                            <input name="businessOwner" type="text" class="form-control businessContactBusinessOwner" style="min-width:100%">
+                        </div>
+                        <div class="modal-footer">
+                            <div class="btn-group btn-block" style="padding-left: 0px; padding-right:0px;">
+                                <button id="delete" type="button" class="btn btn-danger col-md-6"><i class="fas fa-times"></i> Delete</button>
+                                <button id="put" type="button" class="btn btn-primary col-md-6"><i class="fas fa-save"></i> Save</button>
+                            </div>
+                        </div>
+                        <div class="collapse" id="collapseDelete">
+                            <div class="col-md-12" style="padding-bottom: 1rem;">
+                                <h6>Are you sure you want to delete this Business Contact?</h6>
+                                <div class="btn-group btn-block">
+                                    <button type="button" id="unconfirmDelete" class="btn btn-outline-info col-md-6">No</button>
+                                    <button type="button" id="confirmDelete" class="btn btn-outline-danger col-md-6">Yes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="manageStatus" class="col-md-12"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            let _page = $('#viewPage').val() ? $('#viewPage').val() : 1;
+            let _size = $('#viewTake').val() ? $('#viewTake').val() : 20;
+            let _total;
+            let _id = $('#viewId').val() ? $('#viewId').val() : null;
+            let _name = $('#viewName').val() ? $('#viewName').val() : null;
+            let _businessOwner = $('#viewBusinessOwner').val() ? $('#viewBusinessOwner').val() : null;
+            let _sort = $('#viewSort').val() ? $('#viewSort').val() : null;
+            function getWholeSize(id, name, businessOwner) {
+                let request = $.ajax({
+                    type: 'GET',
+                    url: 'api/BusinessContacts/',
+                    data: { id: id, name: name, businessOwner: businessOwner, sort: null, from: null, take: null },
+                    dataType: 'json',
+                    success: function (data) {
+                        if ($(data).length > 0) {
+                            let current = parseInt($(data).length % _size === 0 ? ($(data).length / _size) : ($(data).length / _size) + 1);
+                            $('.total').text(current);
+                        } else {
+                            $('#loadingIcon').find('i').fadeOut(200, function () {
+                                $('#status').html($('#alert-template').find('.alert-warning').clone(false));
+                                $('#status').find('.alert').text('No Business Contacts Found');
+                            });
+                        };
+                    },
+                    error: function (a, b, c) {
+                        $('#loadingIcon').find('i').fadeOut(200, function () {
+                            $('#status').html($('#alert-template').find('.alert-danger').clone(false));
+                            $('#status').find('.alert').text(c);
+                        });
+                    }
+                });
+            }
+            function removeRow(id) {
+                let row = $('.businessContactsTable').find('tbody').find('.businessContactId').filter(function () {
+                    return parseInt($(this).text()) === id
+                }).parent();
+                if (row) {
+                    $(row).remove();
+                    return true;
+                }
+                return false;
+            }
+            function manage() {
+
+
+            }
+            function updateRow(id) {
+                let row = $('.businessContactsTable').find('tbody').find('.businessContactId').filter(function () { return parseInt($(this).text()) === id
+                }).parent();
+                let modelRequest = getBusinessContact(id);
+                let businessContact;
+                modelRequest.done(function (data) {
+                    if (data) {
+                        row.find('.businessContactId').text(data.id);
+                        row.find('.businessContactName').text(data.name);
+                        row.find('.businessContactBusinessOwner').text(data.businessOwner);
+                        $(row).find('.manage').on('click', function () {
+                            let form = $('#modals').find('#editModal').find('form');
+                            let id = $(this).parent().parent().find('.businessContactId').text();
+                            let request = $.ajax({
+                                type: 'GET',
+                                url: 'api/BusinessContacts/' + id,
+                                dataType: 'json',
+                                success: function (data) {
+                                    if ($(data).length > 0) {
+                                        $(form).find('.businessContactTitle').text(data.name);
+                                        $(form).find('.businessContactId').val(data.id);
+                                        $(form).find('.businessContactName').val(data.name);
+                                        $(form).find('.businessContactBusinessOwner').val(data.businessOwner);
+                                    } else {
+                                        $('#loadingIcon').find('i').fadeOut(200, function () {
+                                            $('#status').html($('#alert-template').find('.alert-warning').clone(false));
+                                            $('#status').find('.alert').text('No Business Contact Found');
+                                        });
+                                    };
+
+                                },
+                                error: function (a, b, c) {
+                                    $('#manageStatus').slideUp(100, function () {
+                                        $(this).html($('#alert-template').find('.alert-danger').clone(false).text(c));
+                                    });
+                                }
+                            });
+                        });
+                    }
+                });
+                modelRequest.fail(function (a, b, c) {
+                    console.log(b + ' ' + c);
+                    if (c === "Not Found") {
+                        $(row).remove();
+                    }
+                })
+                $(row).find('.manage').attr('href', '#Manage');
+                getWholeSize(_id, _name, _businessOwner);
+            }
+            function appendRow(id) {
+                let modelRequest = getBusinessContact(id);
+                modelRequest.done(function (data) {
+                    let tableBody = $('.businessContactsTable').find('tbody');
+                    let newRow = buildRow(data);
+                    $(tableBody).prepend('<tr>' + newRow.html() + '</tr>');
+                    updateRow(id);
+                });
+
+            }
+            //function getbusinessOwner(id) {
+            //    let request = $.ajax({
+            //        type: 'GET',
+            //        contentType: 'application/json; charset-utf-8',
+            //        dataType: 'json',
+            //        url: 'api/BusinessContacts/' + id + '/businessOwner'
+            //    });
+            //    return request;
+
+            //}
+            function getBusinessContact(id) {
+                let request = $.ajax({
+                    type: 'GET',
+                    contentType: 'application/json; charset-utf-8',
+                    dataType: 'json',
+                    url: 'api/BusinessContacts/' + id
+                });
+                return request;
+            }
+            $('#post').on('click', function () {
+                $('#createForm button').prop('disabled', true);
+                let form = $('#createForm');
+                let formJSON = $(form).serializeArray().reduce(
+                    function (a, x) {
+                        a[x.name] = x.value;
+                        return a;
+                    }, {}
+                );
+
+                let model = {
+                    //_RequestVerificationToken: $("[name='__RequestVerificationToken']").val(),
+                    id: 0,
+                    businessOwner: formJSON.businessOwner,
+                    name: formJSON.name
+                };
+                let request = $.ajax({
+                    type: 'POST',
+                    url: 'api/BusinessContacts',
+                    data: JSON.stringify(model),
+                    headers: {
+                        RequestVerificationToken: $("[name='__RequestVerificationToken']").val()
+                    },
+                    dataType: 'json',
+                    contentType: 'application/json; charset-utf-8',
+                    success: function (data) {
+                        $('#createForm button').prop('disabled', false);
+                        $('#createStatus').html($('#alert-template').find('.alert-success').clone(false).text(model.name + " has been successfully created."));
+                        appendRow(data.id);
+
+                    },
+                    error: function (a, b, c) {
+                        $('#createForm button').prop('disabled', false);
+                        $('#createStatus').html($('#alert-template').find('.alert-danger').clone(false).text(c));
+                    }
+                });
+            })
+            $('#put').on('click', function () {
+                $('#collapseDelete').collapse('hide');
+                $('#editForm button').prop('disabled', true);
+                let form = $('#editForm');
+                let formJSON = $(form).serializeArray().reduce(
+                    function (a, x) {
+                        a[x.name] = x.value;
+                        return a;
+                    }, {}
+                );
+                let model = {
+                    //__RequestVerificationToken: $("[name='__RequestVerificationToken']").val(),
+                    id: parseInt(formJSON.id),
+                    businessOwner: formJSON.businessOwner,
+                    name: formJSON.name
+                };
+                let request = $.ajax({
+                    type: 'PUT',
+                    url: 'api/BusinessContacts/' + formJSON.id,
+                    data: JSON.stringify(model),
+                    headers: {
+                        RequestVerificationToken: $("[name='__RequestVerificationToken']").val()
+                    },
+                    dataType: 'json',
+                    contentType: 'application/json; charset-utf-8',
+                    success: function (data) {
+                        updateRow(model.id);
+                        $('#editForm button').prop('disabled', false);
+                        $('#manageStatus').html($('#alert-template').find('.alert-success').clone(false).text("Save was successful"));
+                    },
+                    error: function (a, b, c) {
+                        $('#createForm button').prop('disabled', false);
+                        $('#manageStatus').html($('#alert-template').find('.alert-danger').clone(false).text(c));
+                    }
+                });
+            })
+            $('#delete').on('click', function () {
+                $('#collapseDelete').collapse('show');
+            })
+            $('#clearCreateForm').on('click', function () {
+                $('#createForm')[0].reset();
+                $('#createStatus').html('');
+            });
+            $('#unconfirmDelete').on('click', function () {
+                $('#collapseDelete').collapse('hide');
+            })
+            $('#createModal').on('hidden.bs.modal', function (e) {
+                $('#createStatus').html('');
+            });
+            $('#editModal').on('hidden.bs.modal', function (e) {
+                $('#collapseDelete').collapse('hide');
+                $('#editForm')[0].reset();
+                $('#editForm button').prop('disabled', false);
+                $('#manageStatus').html('');
+            });
+            $('#confirmDelete').on('click', function () {
+                $('#editForm button').prop('disabled', true);
+                let form = $('#editForm');
+                let formJSON = $(form).serializeArray().reduce(
+                    function (a, x) {
+                        a[x.name] = x.value;
+                        return a;
+                    }, {}
+                );
+                let model = {
+                    //__RequestVerificationToken: $("[name='__RequestVerificationToken']").val(),
+                    id: parseInt(formJSON.id),
+                    businessOwner: formJSON.businessOwner,
+                    name: formJSON.name,
+                };
+                let request = $.ajax({
+                    type: 'DELETE',
+                    url: 'api/BusinessContacts/' + formJSON.id,
+                    data: JSON.stringify(model),
+                    headers: {
+                        RequestVerificationToken: $("[name='__RequestVerificationToken']").val()
+                    },
+                    dataType: 'json',
+                    contentType: 'application/json; charset-utf-8',
+                    success: function (data) {
+                        $('#manageStatus').html($('#alert-template').find('.alert-success').clone(false).text(formJSON.name + " was successfully removed."));
+                        removeRow(model.id);
+                        $('#collapseDelete').collapse('hide');
+                        $(form).find('input').val('');
+                        $(form).find('select').val('');
+                        $(form).find('.businessContactTitle').text('');
+                        $('#editForm button').prop('disabled', true);
+                    },
+                    error: function (a, b, c) {
+                        $('#createForm button').prop('disabled', false);
+                        $('#manageStatus').html($('#alert-template').find('.alert-danger').clone(false).text(c));
+
+                    }
+                });
+            });
+            $('.manage').on('click', function () {
+                let form = $('#modals').find('#editModal').find('form');
+                let id = $(this).parent().parent().find('.businessContactId').text();
+                let request = $.ajax({
+                    type: 'GET',
+                    url: 'api/BusinessContacts/' + id,
+                    dataType: 'json',
+                    success: function (data) {
+                        if ($(data).length > 0) {
+                            $(form).find('.businessContactTitle').text(data.name);
+                            $(form).find('.businessContactId').val(data.id);
+                            $(form).find('.businessContactName').val(data.name);
+                            $(form).find('.businessContactBusinessOwner').val(data.businessOwner);
+                        } else {
+                            $('#loadingIcon').find('i').fadeOut(200, function () {
+                                $('#status').html($('#alert-template').find('.alert-warning').clone(false));
+                                $('#status').find('.alert').text('No Business Contact Found');
+                            });
+                        };
+
+                    },
+                    error: function (a, b, c) {
+                        $('#manageStatus').slideUp(100, function () {
+                            $(this).html($('#alert-template').find('.alert-danger').clone(false).text(c));
+                        });
+                    }
+                });
+            })
+            $('#search').on('click', function () {
+                search($('#searchId').val(), $('#searchName').val(), $('#searchBusinessOwner').val());
+            });
+            $(document).keypress(function (e) {
+                if (e.which == 13) {
+                    search($('#searchId').val(), $('#searchName').val(), $('#searchBusinessOwner').val());
+                }
+
+            });
+
+            $('#clear').on('click', function () {
+                $('input').val('');
+                $('.custom-checkbox').prop('checked', true);
+                search();
+            });
+            function search(id, name, businessOwner) {
+                $('.index').text(_page);
+                $('#loading').html($('#icon-template').find('.loading-icon').clone(false));
+                getbusinessContacts(id, name, businessOwner, _sort, getFrom(), _size);
+                getWholeSize(id, name, businessOwner);
+            }
+            function getbusinessContacts(id, name, businessOwner, sort, start, take) {
+                $('.next').prop('disabled', true);
+                $('.prev').prop('disabled', true);
+                _id = id;
+                _name = name;
+                _sort = sort;
+                _businessOwner = businessOwner;
+                let query = {
+                    id: !_id ? null : _id,
+                    name: !_name ? null : _name,
+                    sort: !_sort || _sort === undefined ? null : _sort,
+                    businessOwner: !_businessOwner ? null : _businessOwner,
+                    page: _page,
+                    take: take
+                };
+                $('#status').html('');
+                let request = $.ajax({
+                    type: 'GET',
+                    url: 'api/BusinessContacts/',
+                    data: { id: _id, name: _name, businessOwner: _businessOwner, sort: _sort, from: start, take: take},
+                    dataType: 'json',
+                    success: function (data) {
+                        let queryString = '';
+                        let queryUrl = '/BusinessContacts';
+                        let mapping = Object.keys(query).map(function(key) {
+                            if (query[key] !== null)
+                                return key + '=' + query[key];
+                            else return null;
+                        });
+                        queryString = mapping.reduce(function (a, c) {
+                            if (a === null) return c;
+                            if (c === null) return a;
+                            return a + '&' + c;
+
+
+                        });
+                        if (queryString !== '') {
+                            queryUrl += '?' + queryString;
+                        }
+                        history.replaceState(null, null, queryUrl);
+                        $('#status').html('');
+                        if (data && $(data).length > 0) {
+                            let items = [];
+                            $(data).each(function (i, e) {
+                                items.push(buildRow(e));
+                            });
+                            $('.businessContactsTable').find('tbody').html(items);
+                            $('#loading').find('i').fadeOut(200);
+                        }
+                        if(data.length === 0){
+                            $('#loading').find('i').fadeOut(200);
+                            $('.businessContactsTable').find('tbody').children().hide();
+                            $('#status').html($('#alert-template').find('.alert-warning').clone(false));
+                            $('#status').find('.alert').text('No Business Contacts Found');
+                        };
+                        $('.next').prop('disabled', false);
+                        $('.prev').prop('disabled', false);
+                    },
+                    error: function (a, b, c) {
+                        $('#loadingIcon').find('i').fadeOut(200, function () {
+                            $('#status').html($('#alert-template').find('.alert-danger').clone(false));
+                            $('#status').find('.alert').text(c);
+                        });
+                        $('.next').prop('disabled', false);
+                        $('.prev').prop('disabled', false);
+                    }
+                });
+            }
+            function buildRow(businessContact) {
+                let row = $('#tableContentTemplate').find('tr').clone(true);
+                $(row).find('.businessContactId').text(businessContact.id);
+                $(row).find('.businessContactName').text(businessContact.name);
+                $(row).find('.businessOwnerName').text(businessContact.businessOwner);
+                $(row).find('.manage').attr('href', '#Manage');
+                $(row).find('.transfer').attr('href', 'BusinessContacts/TransferReports?first=' + businessContact.id);
+                $(row).find('.details').attr('href', 'BusinessContacts/Details/' + businessContact.id);
+                $(row).find('.reports').attr('href', ('Reports?BusinessContact=' + businessContact.name).replace(/ /g, '+'));
+                return row;
+            }
+            function init() {
+                //_page = 1;
+                $('.index').text(_page);
+                $('#loading').html($('#icon-template').find('.loading-icon').clone(false));
+                search($('#searchId').val(), $('#searchName').val(), $('#searchBusinessOwner').val());
+            }
+            $('.sortOption').on('click', function () {
+                let _sort = $(this).text();
+                if ($(this).find('i').html() !== undefined) {
+                    return;
+                }
+                $('.sortOption').find('i').fadeOut(200, function () {
+                    $(this).remove();
+                });
+                $(this).append($('#icon-template').find('.sort-icon').clone(false).addClass('ldt ldt-flip-v'));
+                $('#loading').html($('#icon-template').find('.loading-icon').clone(false));
+                getbusinessContacts(_id, _name, _businessOwner, _sort, getFrom(), _size);
+            });
+            $('.pageSizeOption').on('click', function () {
+                if (_size === parseInt($(this).text())) {
+                    return;
+                }
+                _size = parseInt($(this).text());
+                _page = 1;
+                $('.index').text(_page);
+                $('#loading').html($('#icon-template').find('.loading-icon').clone(false));
+                getbusinessContacts(_id, _name, _businessOwner, _sort, getFrom(), _size);
+                getWholeSize(_id, _name, _businessOwner);
+            });
+            $('.next').on('click', function () {
+                if (_page !== parseInt($('.total').text())) {
+                    _page = parseInt(_page) + 1;
+                    $('.index').text(_page);
+                    $('#loading').html($('#icon-template').find('.loading-icon').clone(false));
+                    getbusinessContacts(_id, _name, _businessOwner, _sort, getFrom(), _size);
+                }
+            })
+            $('.prev').on('click', function () {
+                if (_page > 1) {
+                    _page = parseInt(_page) - 1;
+                    $('.index').text(_page);
+                    $('#loading').html($('#icon-template').find('.loading-icon').clone(false));
+                    getbusinessContacts(_id, _name, _businessOwner, _sort, getFrom(), _size);
+                }
+            })
+            function getFrom() {
+                if (_page === NaN || _page === undefined || _page === null) {
+                    return null;
+                }
+                if (_page === 1) {
+                    return (_page - 1) * _size;
+                } else return ((_page - 1) * _size) + 1;
+
+            }
+            init();
+        });
+    </script>
+}

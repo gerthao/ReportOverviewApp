@@ -80,7 +80,7 @@ namespace ReportOverviewApp.Controllers
 
 
         // GET: BusinessContacts
-        public async Task<IActionResult> Index(string sort)
+        public async Task<IActionResult> Index(string id, string name, string businessOwner, string sort, int? page = 1, int? take = 20)
         {
             var businessContacts = await _context.BusinessContacts.ToListAsync();
             switch (sort?.ToLower())
@@ -96,6 +96,14 @@ namespace ReportOverviewApp.Controllers
                     break;
 
             }
+            ViewData["id"] = id;
+            ViewData["name"] = name;
+            ViewData["sort"] = sort;
+            ViewData["businessOwner"] = businessOwner;
+            ViewData["page"] = page;
+            ViewData["take"] = take;
+           
+
             return View(businessContacts);
         }
 
