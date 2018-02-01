@@ -204,10 +204,10 @@
         $(card).find('.panel-collapse').attr('id', 'list' + convertDate(key, '-'));
         $(card).find('.panel-collapse').addClass('list-collapsable');
         $(card).find('.deadline').text(convertDate(key, '/'));
-        $(card).find('.reportCount').text('Reports:  ' + data.reduce(function (a, c) { return parseInt(Object.values(c).map(function (x) { return x.length; })) + parseInt(a); }, 0));
-        let completionCount = data.map(function (e) { return Object.values(e)[0]; }).map(function (f) { return f.map(function (c) { return c.isComplete ? 1 : 0; }).reduce(function (q, w) { return q + w; }); }).reduce(function (e, r) { return e + r; });
+        $(card).find('.reportCount').text('Reports:  ' + data.reduce(function (a, c) { return parseInt(objectValues(c).map(function (x) { return x.length; })) + parseInt(a); }, 0));
+        let completionCount = data.map(function (e) { return objectValues(e)[0]; }).map(function (f) { return f.map(function (c) { return c.isComplete ? 1 : 0; }).reduce(function (q, w) { return q + w; }); }).reduce(function (e, r) { return e + r; });
         //doesn't seem to work in IE11//
-        let completionRate = completionCount / data.reduce(function (a, c) { return parseInt(Object.values(c).map(function (x) { return x.length; })) + parseInt(a);}, 0) * 100;
+        let completionRate = completionCount / data.reduce(function (a, c) { return parseInt(objectValues(c).map(function (x) { return x.length; })) + parseInt(a);}, 0) * 100;
         $(card).find('.completionCount').text('Completed:  ' + completionCount);
         $(card).find('.completionRate').text('Completion Rate:  ' + String(completionRate).substring(0, 5) + '%');
         $(card).find('.progress-bar').css('width', completionRate + '%').attr('aria-valuenow', completionRate).attr('aria-valuemin', 0).attr('aria-valuemax', 100);
@@ -229,6 +229,9 @@
         $(card).find('.card-contents').html(reports);
         setCardStatus(card, key, data);
         return card;
+    }
+    function objectValues(object) {
+        return Object.keys(object).map(function (key) { return object[key]; });
     }
     function buildCardContent(reportDeadline) {
         let content = $('#cardItemListTemplate').children().clone(true);
@@ -255,7 +258,7 @@
     function setCardStatus(card, key, data) {
         let date = new Date();
         let dateKey = new Date(key);
-        let okay = data.map(function (e) { return Object.values(e)[0]; }).map(function (f) { return f.map(function (c) { return c.isComplete; }).reduce(function (q, w) { return q && w; }); }).reduce(function (e, r) { return e && r; });
+        let okay = data.map(function (e) { return objectValues(e)[0]; }).map(function (f) { return f.map(function (c) { return c.isComplete; }).reduce(function (q, w) { return q && w; }); }).reduce(function (e, r) { return e && r; });
         $(card).find('.deadline').text(convertDate(dateKey, '/'));
         if (convertDate(dateKey, '/') === convertDate(date, '/')) {
             $(card).find('.deadline').append(' (Today)');
@@ -310,7 +313,7 @@
     }
     $('.card-search').on('keyup', function () {
         let value = $(this).val().toLowerCase();
-        $(this).parent().parent().find('.report-item').filter(function () {
+        $(this).parents('.card').find('.report-item').filter(function () {
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
         });
     });
