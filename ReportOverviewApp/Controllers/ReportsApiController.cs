@@ -133,15 +133,52 @@ namespace ReportOverviewApp.Controllers
             }
             var mapping = await _context.ReportPlanMapping.Where(rpm => rpm.ReportId == id).Select(rpm => rpm.PlanId).ToListAsync();
             List<Plan> plans = mapping.Select(async i => await _context.Plans.FindAsync(i)).Select(e => e.Result).ToList();
-            //if(mapping != null && mapping.Any())
-            //{
-            //    for (int i = 0; i < mapping.Count(); i++)
-            //    {
-            //        plans.Add(await _context.Plans.FindAsync(mapping[i]));
-            //    }
-            //}
-            
             return Ok(plans);
+        }
+        //[HttpGet("{id}/Plans/{planId}"), Route("api/Reports/{id}/Plans/{planId}")]
+        //public async Task<IActionResult> GetPlan([FromRoute] int id, [FromRoute] int planId)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+        //    var map = await _context.ReportPlanMapping.Where(rpm => rpm.ReportId == id && rpm.PlanId == planId).SingleOrDefaultAsync();
+        //    var plan = await _context.Plans.FindAsync(map.PlanId);
+        //    return Ok(plan);
+        //}
+        //[HttpGet("{id}/Plans/States"), Route("api/Reports/{id}/Plans/States")]
+        //public async Task<IActionResult> GetStates([FromRoute] int id)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+        //    var mapping = await _context.ReportPlanMapping.Where(rpm => rpm.ReportId == id).Select(rpm => rpm.PlanId).ToListAsync();
+        //    List<Plan> plans = mapping.Select(async i => await _context.Plans.FindAsync(i)).Select(e => e.Result).ToList();
+        //    List<State> states = await _context.States.Where(s => plans.Where(p => p.StateId == s.Id) != null).ToListAsync();
+        //    return Ok(states);
+        //}
+        //[HttpGet("{id}/Plans/{planId}/State"), Route("api/Reports/{id}/Plans/{planId}/State")]
+        //public async Task<IActionResult> GetState([FromRoute] int id, [FromRoute] int planId)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+        //    var map = await _context.ReportPlanMapping.Where(rpm => rpm.ReportId == id && rpm.PlanId == planId).SingleOrDefaultAsync();
+        //    var plan = await _context.Plans.FindAsync(map.PlanId);
+        //    var state = await _context.States.FindAsync(plan.StateId);
+        //    return Ok(state);
+        //}
+        [HttpGet("{id}/ReportPlanMapping"), Route("api/Reports/{id}/ReportPlanMapping")]
+        public async Task<IActionResult> GetReportPlanMapping([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var mapping = await _context.ReportPlanMapping.Where(rpm => rpm.ReportId == id).ToListAsync();
+            return Ok(mapping);
         }
         [HttpGet("{id}/Deadlines"), Route("api/Reports/{id}/Deadlines")]
         public async Task<IActionResult> GetDeadlines([FromRoute] int id)
@@ -167,9 +204,18 @@ namespace ReportOverviewApp.Controllers
             {
                 return BadRequest();
             }
-
+            foreach(ReportPlanMap rpm in _context.ReportPlanMapping)
+            {
+                if(rpm.ReportId == id)
+                {
+                    _context.Entry(rpm).State = EntityState.Deleted;
+                }
+            }
+            foreach(ReportPlanMap rpm in report.ReportPlanMapping)
+            {
+                _context.Entry(rpm).State = EntityState.Added;
+            }
             _context.Entry(report).State = EntityState.Modified;
-
             try
             {
                 await _context.SaveChangesAsync();
@@ -186,7 +232,7 @@ namespace ReportOverviewApp.Controllers
                 }
             }
 
-            return NoContent();
+            return Json(report);
         }
 
         // POST: api/Reports

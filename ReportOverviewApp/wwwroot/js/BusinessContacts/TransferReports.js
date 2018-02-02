@@ -55,7 +55,7 @@
                 RequestVerificationToken: $("[name='__RequestVerificationToken']").val()
             },
             contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify(viewModel),
+            data: JSON.stringify(viewModel)
         });
         request.done(function (data) {
             $('#ownerReports').children().prop('selected', false);
@@ -69,12 +69,12 @@
             }
             $('#save').find('i').removeClass('ld ld-heartbeat');
             $('button').prop('disabled', false);
-        })
+        });
         request.fail(function (jqXHR, status, message) {
             $('#status').html('<div class="alert alert-danger ldt ldt-fade-in">' + status + ': ' + message + '</div>');
             $('#save').find('i').removeClass('ld ld-heartbeat');
             $('button').prop('disabled', false);
-        })
+        });
     }
     function getStatus(id, mode, message) {
         switch (mode) {
@@ -98,13 +98,13 @@
         loadItems($('#recipient').find(':selected').val(), '#recipientReports');
         history.replaceState(null, null, location.protocol.trim('/') + '?first=' + $('#owner').find(':selected').val() + '&second=' + $('#recipient').find(':selected').val());
         checkDuplicate();
-    })
+    });
     $('#recipient').change(function () {
         loadItems($('#owner').find(':selected').val(), '#ownerReports');
         loadItems($('#recipient').find(':selected').val(), '#recipientReports');
         history.replaceState(null, null, location.protocol.trim('/') + '?first=' + $('#owner').find(':selected').val() + '&second=' + $('#recipient').find(':selected').val());
         checkDuplicate();
-    })
+    });
     $('#transferRight').click(function () {
         moveItems('#ownerReports', '#recipientReports');
     });

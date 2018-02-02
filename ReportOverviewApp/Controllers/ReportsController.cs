@@ -167,6 +167,8 @@ namespace ReportOverviewApp.Controllers
             ViewData["isTermed"] = isTermed;
             ViewData["page"] = page;
             ViewData["take"] = take;
+            ViewData["BusinessContacts"] = new SelectList(await _context.BusinessContacts.ToListAsync(), "Id", "Name");
+            ViewData["Plans"] = new SelectList(await _context.Plans.ToListAsync(), "Id", "Name");
             return View(await _context.Reports.ToListAsync());
         }
         // GET: Reports/Details/5
