@@ -16,8 +16,12 @@ namespace ReportOverviewApp.ViewComponents
         {
             _context = context;
         }
-        public async Task<IViewComponentResult> InvokeAsync()
+        public async Task<IViewComponentResult> InvokeAsync(string name)
         {
+            if(name.ToLower() == "plans")
+            {
+                return View("Plans");
+            }
             return View();
         }
     }

@@ -12,10 +12,32 @@
     input:not([type="checkbox"]), textarea, select{
         min-width: 100%;
     }
+    input.search::placeholder {
+        font-family: 'Font Awesome 5 Free Solid';
+    }
+    input.search::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+        font-family: 'Font Awesome 5 Free Solid';
+    }
+
+    input.search::-moz-placeholder { /* Firefox 19+ */
+        font-family: 'Font Awesome 5 Free Solid';
+    }
+
+    input.search:-ms-input-placeholder { /* IE 10+ */
+        font-family: 'Font Awesome 5 Free Solid';
+    }
+
+    input.search:-moz-placeholder { /* Firefox 18- */
+        font-family: 'Font Awesome 5 Free Solid';
+    }
 </style>
 <h4>
     Reporting Catalogue
-    <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#createModal" aria-label="Left Align"><span class="fas fa-plus-square"></span>&nbsp;&nbsp;Create New</button>
+    <span class="float-right">
+        <button id="create" type="button" class="btn btn-primary" data-toggle="modal" data-target="#createModal" aria-label="Left Align"><span class="fas fa-plus-square"></span>&nbsp;&nbsp;Create New</button>
+        <button class="btn btn-primary exportLink" type="button" data-toggle="modal" data-target="#exportModal"><span class="fas fa-file-excel"></span>&nbsp;&nbsp;Export</button>
+    </span>
+    
     <span id="loading"></span>
 </h4>
 <div id="inputs" style="display:none;">
@@ -166,34 +188,6 @@
                             <h6>New Report <span class="reportTitle"></span></h6>
                         </div>
                         <div class="modal-body">
-                            @*<input name="id" class="form-control-label sr-only reportId" type="number" value="0" />*@
-                            <label class="form-control-label">Name</label>
-                            <input name="name" class="form-control reportName" type="text" style="min-width:100%" />
-                            <label class="form-control-label">Frequency</label>
-                            <input name="frequency" type="text" class="form-control reportFrequency" style="min-width:100%">
-                        </div>
-                        <div class="modal-footer">
-                            <div class="btn-group btn-block" style="padding-left: 0px; padding-right: 0px;">
-                                <button id="clearCreateForm" type="button" class="btn btn-secondary col-6"><i class="fas fa-eraser"></i> Clear</button>
-                                <button id="post" type="button" class="btn btn-primary col-6"><i class="fas fa-save"></i> Save</button>
-                            </div>
-
-                        </div>
-                    </form>
-                    <div id="createStatus" class="col-md-12"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="editModal" class="modal fade" tabindex="-1" role="dialog" data-backdrop="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-            <div class="container-fluid">
-                <div class="modal-content">
-                    <form id="editForm">
-                        <div class="modal-header">
-                            <h6>Manage: <span class="reportTitle"></span></h6>
-                        </div>
-                        <div class="modal-body">
                             <h6 class="font-italic">Report Information</h6>
                             <input name="id" class="form-control-label sr-only report-id" type="number" />
                             <div class="form-group">
@@ -211,7 +205,19 @@
                             <h6 class="font-italic">Plan Information</h6>
                             <div class="form-group">
                                 <div class="form-group">
-                                    <label class="form-control-label">Selection of Plans</label>
+                                    <div class="form-group row">
+                                        <label class="form-control-label col-md-3 col-form-label">Selection of Plans</label>
+                                        <div class="col-md-4">
+                                            <div class="col-md-6">
+
+                                            </div>
+                                            <div class="badge badge-pill badge-info align-items-center col-md-6 search-plans-results float-right" style="top: 25%; bottom: 75%;"></div>
+                                        </div>
+
+                                        <div class="col-md-5">
+                                            <input type="text" class="search form-control search-plans" style="border-radius: 2rem;" placeholder="&#xF002;" />
+                                        </div>
+                                    </div>
                                     <select name="selectPlans" class="form-control report-selectPlans" size=10 asp-items="ViewBag.Plans" multiple></select>
                                 </div>
                                 <div class="form-group">
@@ -225,7 +231,7 @@
                                     <select name="reportPlanMapping" class="form-control report-plans" size=10 multiple></select>
                                 </div>
                             </div>
-                            
+
                             <hr />
                             <h6 class="font-italic">Deadline Information</h6>
                             <div class="form-group">
@@ -272,19 +278,19 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-control-label">Run With</label>
-                                <input name="runWith" type="text" class="form-control report-runWith"/>
+                                <input name="runWith" type="text" class="form-control report-runWith" />
                             </div>
                             <hr />
                             <h6 class="font-italic">Delivery Information</h6>
                             <div class="form-group">
                                 <label class="form-control-label">Delivery Method</label>
-                                <input name="deliveryMethod" class="form-control report-deliveryMethod"/>
+                                <input name="deliveryMethod" class="form-control report-deliveryMethod" />
                             </div>
                             <div class="form-group">
                                 <label class="form-control-label">Deliver To</label>
                                 <input name="deliverTo" class="form-control report-deliverTo" style="min-width: 100%" />
                             </div>
-                            
+
                             <hr />
                             <h6 class="font-italic">Date Information</h6>
                             <div class="form-row">
@@ -296,7 +302,7 @@
                                     <label class="form-control-label">Termination Date</label>
                                     <input name="terminationDate" type="date" class="form-control report-terminationDate" />
                                 </div>
-                                
+
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
@@ -308,7 +314,7 @@
                                     <input name="systemRefreshDate" type="date" class="form-control report-systemRefreshDate" />
                                 </div>
                             </div>
-                           
+
                             <hr />
                             <h6 class="font-italic">Report Information (Continued)</h6>
                             <div class="form-group">
@@ -357,8 +363,206 @@
                                     <input name="legacyReportIDR2" type="text" class="form-control report-legacyReportIDR2" />
                                 </div>
                             </div>
-                           
-                          
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <div class="btn-group btn-block" style="padding-left: 0px; padding-right: 0px;">
+                                <button id="clearCreateForm" type="button" class="btn btn-secondary col-6"><i class="fas fa-eraser"></i> Clear</button>
+                                <button id="post" type="button" class="btn btn-primary col-6"><i class="fas fa-save"></i> Save</button>
+                            </div>
+
+                        </div>
+                    </form>
+                    <div id="createStatus" class="col-md-12"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="editModal" class="modal fade" tabindex="-1" role="dialog" data-backdrop="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="container-fluid">
+                <div class="modal-content">
+                    <form id="editForm">
+                        <div class="modal-header">
+                            <h6>Manage: <span class="reportTitle"></span></h6>
+                        </div>
+                        <div class="modal-body">
+                            <h6 class="font-italic">Report Information</h6>
+                            <input name="id" class="form-control-label sr-only report-id" type="number" />
+                            <div class="form-group">
+                                <label class="form-control-label">Name</label>
+                                <input name="name" class="form-control report-name" type="text" />
+                            </div>
+                            <hr />
+                            <h6 class="font-italic businessContactInformation">Business Contact Information</h6>
+                            <div class="form-group">
+                                <label class="form-control-label">Business Contacts</label>
+                                <select name="businessContactId" class="form-control custom-select report-businessContact"></select>
+                            </div>
+                            <hr />
+                            <h6 class="font-italic planInformation">Plan Information</h6>
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <div class="form-group row">
+                                        <label class="form-control-label col-md-3 col-form-label">Selection of Plans</label>
+                                        <div class="col-md-4">
+                                            <div class="col-md-6">
+
+                                            </div>
+                                            <div class="badge badge-pill badge-info align-items-center col-md-6 search-plans-results float-right" style="top: 25%; bottom: 75%;"></div>
+                                        </div>
+
+                                        <div class="col-md-5">
+                                            <input type="text" class="search form-control search-plans" style="border-radius: 2rem;" placeholder="&#xF002;" />
+                                        </div>
+                                    </div>
+                                    <select name="selectPlans" class="form-control report-selectPlans" size=10 multiple></select>
+                                </div>
+                                <div class="form-group">
+                                    <div class="btn-group btn-block" role="group" aria-label="planButtonGroup">
+                                        <button class="btn btn-outline-primary col-md-6 assignPlans" type="button"><i class="fas fa-arrow-down"></i></button>
+                                        <button class="btn btn-outline-primary col-md-6 unassignPlans" type="button"><i class="fas fa-arrow-up"></i></button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-control-label">Assigned Plans</label>
+                                    <select name="reportPlanMapping" class="form-control report-plans" size=10 multiple></select>
+                                </div>
+                            </div>
+                            <hr />
+                            <h6 class="font-italic">Deadline Information</h6>
+                            <div class="form-group">
+                                <label class="form-control-label">Frequency</label>
+                                <input name="frequency" type="text" class="form-control report-frequency">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label class="form-control-label">Due Date 1</label>
+                                    <input name="dueDate1" type="date" class="form-control report-dueDate1" />
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="form-control-label">Due Date 2</label>
+                                    <input name="dueDate2" type="date" class="form-control report-dueDate2" />
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label class="form-control-label">Due Date 3</label>
+                                    <input name="dueDate3" type="date" class="form-control report-dueDate3" />
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="form-control-label">Due Date 4</label>
+                                    <input name="dueDate4" type="date" class="form-control report-dueDate4" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">Day Due</label>
+                                <input name="dayDue" type="text" class="form-control report-dayDue" />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">Days After Quarter</label>
+                                <input name="daysAfterQuarter" type="number" class="form-control report-daysAfterQuarter" />
+                            </div>
+                            <hr />
+                            <h6 class="font-italic">Instructions &amp; Notes</h6>
+                            <div class="form-group">
+                                <label class="form-control-label">Work Instructions</label>
+                                <textarea name="workInstructions" class="form-control report-workInstructions" rows="10"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">Notes</label>
+                                <textarea name="notes" class="form-control report-notes" rows="10"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">Run With</label>
+                                <input name="runWith" type="text" class="form-control report-runWith" />
+                            </div>
+                            <hr />
+                            <h6 class="font-italic">Delivery Information</h6>
+                            <div class="form-group">
+                                <label class="form-control-label">Delivery Method</label>
+                                <input name="deliveryMethod" class="form-control report-deliveryMethod" />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">Deliver To</label>
+                                <input name="deliverTo" class="form-control report-deliverTo" style="min-width: 100%" />
+                            </div>
+
+                            <hr />
+                            <h6 class="font-italic">Date Information</h6>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label class="form-control-label">Effective Date</label>
+                                    <input name="effectiveDate" type="date" class="form-control report-effectiveDate" />
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="form-control-label">Termination Date</label>
+                                    <input name="terminationDate" type="date" class="form-control report-terminationDate" />
+                                </div>
+
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label class="form-control-label">Date Added</label>
+                                    <input name="dateAdded" type="date" class="form-control report-dateAdded" />
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="form-control-label">System Refresh Date</label>
+                                    <input name="systemRefreshDate" type="date" class="form-control report-systemRefreshDate" />
+                                </div>
+                            </div>
+
+                            <hr />
+                            <h6 class="font-italic">Report Information (Continued)</h6>
+                            <div class="form-group">
+                                <label class="form-control-label">Source Department</label>
+                                <input name="sourceDepartment" type="text" class="form-control report-sourceDepartment" />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">Report Path</label>
+                                <input name="reportPath" type="text" class="form-control report-reportPath" />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">Folder Location</label>
+                                <input name="folderLocation" type="text" class="form-control report-folderLocation" />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">ERS Report Location</label>
+                                <input name="ersReportLocation" type="text" class="form-control report-ersReportLocation" />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">ERS Report name</label>
+                                <input name="ersReportName" type="text" class="form-control report-ersReportName" />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">Other Report Location</label>
+                                <input name="otherReportLocation" type="text" class="form-control report-otherReportLocation" />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">Report Type</label>
+                                <input name="reportType" type="text" class="form-control report-reportType" />
+                            </div>
+                            <div class="form-check" style="padding-left: 1.2rem;">
+                                <input name="isQualityIndicator" type="checkbox" class="form-check-input report-isQualityIndicator" />
+                                <label class="form-check-label">Quality Indicator</label>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">ERR Status</label>
+                                <input name="errStatus" type="text" class="form-control report-errStatus" />
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label class="form-control-label">Legacy Report ID</label>
+                                    <input name="legacyReportID" type="text" class="form-control report-reportType" />
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="form-control-label">Legacy Report ID R2</label>
+                                    <input name="legacyReportIDR2" type="text" class="form-control report-legacyReportIDR2" />
+                                </div>
+                            </div>
+
+
                         </div>
                         <div class="modal-footer">
                             <div class="btn-group btn-block" style="padding-left: 0px; padding-right:0px;">
@@ -381,7 +585,13 @@
             </div>
         </div>
     </div>
-
+    <div id="exportModal" class="modal fade">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                @await Component.InvokeAsync("Export", "")
+            </div>
+        </div>
+    </div>
 </div>
 
 
@@ -443,7 +653,7 @@
                 let row = $('.reportsTable').find('tbody').find('.reportId').filter(function () {
                     return parseInt($(this).text()) === id
                 }).parent();
-                let modelRequest = getreport(id);
+                let modelRequest = getReport(id);
                 let report;
                 modelRequest.done(function (data) {
                     if (data) {
@@ -460,6 +670,42 @@
                                 success: function (data) {
                                     if ($(data).length > 0) {
                                         $(form).find('.reportTitle').text(data.name);
+                                        Object.keys(data).forEach(k => {
+                                            if (k === '$id') {
+                                            } else if (k.includes('Date')) {
+                                                $(form).find('.report-' + k).val(convertDate((data[k])));
+                                            } else {
+                                                $(form).find('.report-' + k).val(data[k]);
+                                            }
+                                        });
+                                        let businessContactRequest = getBusinessContactRequest(data.businessContactId);
+                                        $(form).find('.businessContactInformation').text('Business Contact Information (Loading...)');
+                                        businessContactRequest.done(function (businessContact) {
+                                            $(form).find('.report-businessContact').val(businessContact.id);
+                                            $(form).find('.businessContactInformation').text('Business Contact Information');
+                                        });
+                                        businessContactRequest.fail(function (a, b, c) {
+                                            console.log(JSON.stringify(a) + b + c);
+                                            $(form).find('.businessContactInformation').text('Business Contact Information');
+                                        })
+                                        let mappingRequest = getReportPlanMappingRequest(data.id);
+                                        let plansRequest = getPlansRequest();
+                                        $(form).find('.planInformation').text('Plan Information (Loading...)');
+                                        mappingRequest.done(function (mapping) {
+                                            if (mapping) {
+                                                plansRequest.done(function (plans) {
+                                                    if (plans) {
+                                                        $(form).find('.report-plans').html(plans.filter(function (plan) { return mapping.map(m => m.planId).includes(plan.id); }).sort(function (x, y) { return x.name.toLowerCase() > y.name.toLowerCase(); }).map(function (plan) { return '<option value="' + plan.id + '">' + plan.name + '</option>'; }));
+                                                        $(form).find('.report-selectPlans').html(plans.filter(function (plan) { return !mapping.map(m => m.planId).includes(plan.id); }).sort(function (x, y) { return x.name.toLowerCase() > y.name.toLowerCase(); }).map(function (plan) { return '<option value="' + plan.id + '">' + plan.name + '</option>'; }));
+                                                        $(form).find('.planInformation').text('Plan Information');
+                                                    }
+                                                });
+                                                plansRequest.fail(function (a, b, c) {
+                                                    console.log(JSON.stringify(a) + b + c);
+                                                    $(form).find('.planInformation').text('Plan Information');
+                                                })
+                                            }
+                                        });
                                         $(form).find('.report-id').val(data.id);
                                         $(form).find('.report-name').val(data.name);
                                         $(form).find('.report-frequency').val(data.frequency);
@@ -469,7 +715,6 @@
                                             $('#status').find('.alert').text('No Report Found');
                                         });
                                     };
-
                                 },
                                 error: function (a, b, c) {
                                     $('#manageStatus').slideUp(100, function () {
@@ -490,7 +735,7 @@
                 getWholeSize(_id, _name, _frequency);
             }
             function appendRow(id) {
-                let modelRequest = getreport(id);
+                let modelRequest = getReport(id);
                 modelRequest.done(function (data) {
                     let tableBody = $('.reportsTable').find('tbody');
                     let newRow = buildRow(data);
@@ -499,17 +744,7 @@
                 });
 
             }
-            //function getfrequency(id) {
-            //    let request = $.ajax({
-            //        type: 'GET',
-            //        contentType: 'application/json; charset-utf-8',
-            //        dataType: 'json',
-            //        url: 'api/Reports/' + id + '/frequency'
-            //    });
-            //    return request;
-
-            //}
-            function getreport(id) {
+            function getReport(id) {
                 let request = $.ajax({
                     type: 'GET',
                     contentType: 'application/json; charset-utf-8',
@@ -521,23 +756,23 @@
             $('#post').on('click', function () {
                 $('#createForm button').prop('disabled', true);
                 let form = $('#createForm');
+                let plans = [];
+                $('.report-plans').children().each(function () {
+                    plans.push(parseInt($(this).val()));
+                });
+                console.log(plans);
                 let formJSON = $(form).serializeArray().reduce(
                     function (a, x) {
                         a[x.name] = x.value;
                         return a;
                     }, {}
                 );
-
-                let model = {
-                    //_RequestVerificationToken: $("[name='__RequestVerificationToken']").val(),
-                    id: 0,
-                    frequency: formJSON.frequency,
-                    name: formJSON.name
-                };
+                formJSON.id = 0;
+                formJSON.reportPlanMapping = plans.map(p => ({ id: 0, reportId: parseInt(formJSON.id), planId: p }));
                 let request = $.ajax({
                     type: 'POST',
                     url: 'api/Reports',
-                    data: JSON.stringify(model),
+                    data: JSON.stringify(formJSON),
                     headers: {
                         RequestVerificationToken: $("[name='__RequestVerificationToken']").val()
                     },
@@ -545,7 +780,7 @@
                     contentType: 'application/json; charset-utf-8',
                     success: function (data) {
                         $('#createForm button').prop('disabled', false);
-                        $('#createStatus').html($('#alert-template').find('.alert-success').clone(false).text(model.name + " has been successfully created."));
+                        $('#createStatus').html($('#alert-template').find('.alert-success').clone(false).text(data.name + " has been successfully created."));
                         appendRow(data.id);
 
                     },
@@ -572,13 +807,6 @@
                 );
                 formJSON.reportPlanMapping = plans.map(p => ({ id: 0, reportId : parseInt(formJSON.id), planId : p }));
                 console.log(formJSON);
-                //return;
-                //let model = {
-                //    //__RequestVerificationToken: $("[name='__RequestVerificationToken']").val(),
-                //    id: parseInt(formJSON.id),
-                //    frequency: formJSON.frequency,
-                //    name: formJSON.name
-                //};
                 let request = $.ajax({
                     type: 'PUT',
                     url: 'api/Reports/' + formJSON.id,
@@ -591,34 +819,10 @@
                     success: function (data) {
                         updateRow(parseInt(formJSON.id));
                         $('#editForm button').prop('disabled', false);
-
-                        //formJSON.reportPlanMapping.map(rpm => {
-                        //    let mappingPostRequest = $.ajax({
-                        //        type: 'POST',
-                        //        url: 'api/ReportPlanMapping',
-                        //        data: JSON.stringify(rpm),
-                        //        headers: {
-                        //            RequestVerificationToken: $("[name='__RequestVerificationToken']").val()
-                        //        },
-                        //        dataType: 'json',
-                        //        contentType: 'application/json; charset-utf-8',
-                        //        success: function (mapData) {
-
-
-                        //        },
-                        //        error: function (d, e, f) {
-                        //            console.log(JSON.stringify(d) + e + f);
-
-                        //        }
-                        //    })
-                        //});
-
-
-
                         $('#manageStatus').html($('#alert-template').find('.alert-success').clone(false).text("Save was successful"));
                     },
                     error: function (a, b, c) {
-                        $('#createForm button').prop('disabled', false);
+                        $('#editForm button').prop('disabled', false);
                         $('#manageStatus').html($('#alert-template').find('.alert-danger').clone(false).text(c));
                     }
                 });
@@ -653,7 +857,6 @@
                     }, {}
                 );
                 let model = {
-                    //__RequestVerificationToken: $("[name='__RequestVerificationToken']").val(),
                     id: parseInt(formJSON.id),
                     frequency: formJSON.frequency,
                     name: formJSON.name,
@@ -702,6 +905,16 @@
                 let selection = $(this).parents('form').find('.report-plans').find(':selected');
                 selection.appendTo($(this).parents('form').find('.report-selectPlans'));
             });
+            function getBusinessContactsRequest() {
+                let request = $.ajax({
+                    type: 'GET',
+                    url: 'api/BusinessContacts',
+                    dataType: 'json',
+                    contentType: 'application/json; charset-utf-8'
+                });
+                return request;
+
+            }
             function getBusinessContactRequest(id) {
                 let request = $.ajax({
                     type: 'GET',
@@ -711,15 +924,6 @@
                 });
                 return request;
             }
-            //function getPlansRequest(id) {
-            //    let request = $.ajax({
-            //        type: 'GET',
-            //        url: 'api/Reports/' + id + '/Plans',
-            //        dataType: 'json',
-            //        contentType: 'application/json; charset-utf-8'
-            //    });
-            //    return request;
-            //}
             function getPlansRequest(id) {
                 let request = $.ajax({
                     type: 'GET',
@@ -738,6 +942,18 @@
                 });
                 return request;
             }
+            $('.search-plans').on('input', function () {
+                let value = $(this).val().toLowerCase();
+                $(this).parents('form').find('.report-selectPlans > option').filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+                if ($(this).val() !== '') {
+                    let resultsCount = $(this).parents('form').find('.report-selectPlans > option:visible').length;
+                    $(this).parents('form').find('.search-plans-results').text(resultsCount + ' results');
+                } else {
+                    $(this).parents('form').find('.search-plans-results').text('');
+                }
+            });
             $('.manage').on('click', function () {
                 let form = $('#modals').find('#editModal').find('form');
                 let id = $(this).parent().parent().find('.reportId').text();
@@ -748,8 +964,6 @@
                     success: function (data) {
                         if ($(data).length > 0) {
                             $(form).find('.reportTitle').text(data.name);
-                            //console.log(data);
-                            //console.log(Object.values(data));
                             Object.keys(data).forEach(k => {
                                 if (k === '$id') {
                                 } else if (k.includes('Date')) {
@@ -759,28 +973,33 @@
                                 }
                             });
                             let businessContactRequest = getBusinessContactRequest(data.businessContactId);
+                            $(form).find('.businessContactInformation').text('Business Contact Information (Loading...)');
                             businessContactRequest.done(function (businessContact) {
                                 $(form).find('.report-businessContact').val(businessContact.id);
+                                $(form).find('.businessContactInformation').text('Business Contact Information');
                             });
                             businessContactRequest.fail(function (a, b, c) {
                                 console.log(JSON.stringify(a) + b + c);
+                                $(form).find('.businessContactInformation').text('Business Contact Information');
                             })
                             let mappingRequest = getReportPlanMappingRequest(data.id);
                             let plansRequest = getPlansRequest();
+                            $(form).find('.planInformation').text('Plan Information (Loading...)');
                             mappingRequest.done(function (mapping) {
                                 if (mapping) {
                                     plansRequest.done(function (plans) {
                                         if (plans) {
                                             $(form).find('.report-plans').html(plans.filter(function (plan) { return mapping.map(m => m.planId).includes(plan.id); }).sort(function (x, y) { return x.name.toLowerCase() > y.name.toLowerCase(); }).map(function (plan) { return '<option value="' + plan.id + '">' + plan.name + '</option>'; }));
                                             $(form).find('.report-selectPlans').html(plans.filter(function (plan) { return !mapping.map(m => m.planId).includes(plan.id); }).sort(function (x, y) { return x.name.toLowerCase() > y.name.toLowerCase(); }).map(function (plan) { return '<option value="' + plan.id + '">' + plan.name + '</option>'; }));
+                                            $(form).find('.planInformation').text('Plan Information');
                                         } 
                                     });
                                     plansRequest.fail(function (a, b, c) {
                                         console.log(JSON.stringify(a) + b + c);
+                                        $(form).find('.planInformation').text('Plan Information');
                                     })
                                 }
                             });
-                            
                             $(form).find('.report-id').val(data.id);
                             $(form).find('.report-name').val(data.name);
                             $(form).find('.report-frequency').val(data.frequency);
@@ -810,7 +1029,6 @@
 
             $('#clear').on('click', function () {
                 $('input').val('');
-                
                 search();
             });
             function search(id, name, frequency, isTermed) {
@@ -897,15 +1115,29 @@
                 if (report.isTermed) {
                     $(row).find('.reportIsTermed').html('<i class="fas fa-check text-muted"></i>');
                 }
-
                 $(row).find('.manage').attr('href', '#Manage');
-                //$(row).find('.transfer').attr('href', 'Reports/TransferReports?first=' + report.id);
                 $(row).find('.details').attr('href', 'Reports/Details/' + report.id);
-                //$(row).find('.reports').attr('href', ('Reports?report=' + report.name).replace(/ /g, '+'));
                 return row;
             }
             function init() {
                 //_page = 1;
+                let plansRequest = getPlansRequest();
+                plansRequest.done(function (plans) {
+                    let form = $('#modals').find('#createModal').find('form');
+                    if (plans) {
+                        $(form).find('.report-selectPlans').html(plans.sort(function (x, y) { return x.name.toLowerCase() > y.name.toLowerCase(); }).map(function (plan) { return '<option value="' + plan.id + '">' + plan.name + '</option>'; }));
+                    }
+                });
+                plansRequest.fail(function (a, b, c) {
+                    console.log('plan request failed: ' + c);
+                });
+                let businessContactsRequest = getBusinessContactsRequest();
+                businessContactsRequest.done(function (contacts) {
+                    $('.report-businessContact').html(contacts.sort(function (x, y) { return x.name.toLowerCase() > y.name.toLowerCase(); }).map(function (contact) { return '<option value="' + contact.id + '">' + contact.name + '</option>'; }));
+                })
+                businessContactsRequest.fail(function (a, b, c) {
+                    console.log('businesscontacts request failed: ' + c);
+                })
                 $('.index').text(_page);
                 $('#loading').html($('#icon-template').find('.loading-icon').clone(false));
                 search($('#searchId').val(), $('#searchName').val(), $('#searchfrequency').val());

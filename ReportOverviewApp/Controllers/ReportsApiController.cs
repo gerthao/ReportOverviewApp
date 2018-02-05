@@ -135,41 +135,6 @@ namespace ReportOverviewApp.Controllers
             List<Plan> plans = mapping.Select(async i => await _context.Plans.FindAsync(i)).Select(e => e.Result).ToList();
             return Ok(plans);
         }
-        //[HttpGet("{id}/Plans/{planId}"), Route("api/Reports/{id}/Plans/{planId}")]
-        //public async Task<IActionResult> GetPlan([FromRoute] int id, [FromRoute] int planId)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-        //    var map = await _context.ReportPlanMapping.Where(rpm => rpm.ReportId == id && rpm.PlanId == planId).SingleOrDefaultAsync();
-        //    var plan = await _context.Plans.FindAsync(map.PlanId);
-        //    return Ok(plan);
-        //}
-        //[HttpGet("{id}/Plans/States"), Route("api/Reports/{id}/Plans/States")]
-        //public async Task<IActionResult> GetStates([FromRoute] int id)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-        //    var mapping = await _context.ReportPlanMapping.Where(rpm => rpm.ReportId == id).Select(rpm => rpm.PlanId).ToListAsync();
-        //    List<Plan> plans = mapping.Select(async i => await _context.Plans.FindAsync(i)).Select(e => e.Result).ToList();
-        //    List<State> states = await _context.States.Where(s => plans.Where(p => p.StateId == s.Id) != null).ToListAsync();
-        //    return Ok(states);
-        //}
-        //[HttpGet("{id}/Plans/{planId}/State"), Route("api/Reports/{id}/Plans/{planId}/State")]
-        //public async Task<IActionResult> GetState([FromRoute] int id, [FromRoute] int planId)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-        //    var map = await _context.ReportPlanMapping.Where(rpm => rpm.ReportId == id && rpm.PlanId == planId).SingleOrDefaultAsync();
-        //    var plan = await _context.Plans.FindAsync(map.PlanId);
-        //    var state = await _context.States.FindAsync(plan.StateId);
-        //    return Ok(state);
-        //}
         [HttpGet("{id}/ReportPlanMapping"), Route("api/Reports/{id}/ReportPlanMapping")]
         public async Task<IActionResult> GetReportPlanMapping([FromRoute] int id)
         {
@@ -246,6 +211,12 @@ namespace ReportOverviewApp.Controllers
 
             _context.Reports.Add(report);
             await _context.SaveChangesAsync();
+
+            foreach (ReportPlanMap rpm in report.ReportPlanMapping)
+            {
+                rpm.ReportId = report.Id;
+                _context.Entry(rpm).State = EntityState.Added;
+            }
 
             return CreatedAtAction("GetReport", new { id = report.Id }, report);
         }

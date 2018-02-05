@@ -219,7 +219,7 @@
         $.each(data, function (k, l) {
             $.each(l, function (m, n) {
                 let planDeadlineComplete = n.map(function (c) { return c.isComplete; }).reduce(function (q, w) { return q && w; });
-                let planDeadlineStatusIcon = planDeadlineComplete ? '<span class="float-right"><i class="far fa-check-circle text-success"></i></span>' : '<span class="float-right"><i class="far fa-circle text-info"></i></span>'
+                let planDeadlineStatusIcon = planDeadlineComplete ? '<span class="float-right"><i class="far fa-check-circle text-success"></i></span>' : '<span class="float-right"><i class="far fa-circle text-info"></i></span>';
                 reports.push('<li class="list-group-item plan-item bg-dark text-light" style="text-align:center; opacity:0.9;"><strong><span class="float-left">' + (k + 1) + '.</span>' + (m === '' ? 'No Associated Plans Found' : m) + planDeadlineStatusIcon + '</strong></li>');
                 $.each(n, function (o, p) {
                     reports.push(buildCardContent(p));
@@ -314,7 +314,7 @@
     $('.card-search').on('keyup', function () {
         let value = $(this).val().toLowerCase();
         $(this).parents('.card').find('.report-item').filter(function () {
-            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
         });
     });
     initialize();

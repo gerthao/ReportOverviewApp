@@ -41,8 +41,8 @@ namespace ReportOverviewApp.Data{
                     context.SaveChanges();
 
                     string jsonReportData;
-                    try { jsonReportData = File.ReadAllText(@"C:\Users\gthao\Desktop\crc4.json"); }
-                    catch { jsonReportData = File.ReadAllText(@"C:\Users\Ger\Desktop\crc4.json"); }
+                    try { jsonReportData = File.ReadAllText(@"C:\Users\gthao\Desktop\crc5.json"); }
+                    catch { jsonReportData = File.ReadAllText(@"C:\Users\Ger\Desktop\crc5.json"); }
                     var results = JsonConvert.DeserializeObject<List<ReportJsonData>>(jsonReportData);
                     List<(Report, Plan)> reportPairs = results.Select(jsonReport => jsonReport.ToReport()).ToList();
                     List<Report> reports = reportPairs.Select(pair => pair.Item1).ToList();

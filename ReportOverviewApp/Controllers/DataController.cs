@@ -87,7 +87,18 @@ namespace ReportOverviewApp.Controllers
             return export;
 
         }
+        private async Task<List<Dictionary<string, object>>> GetExportedPlanData()
+        {
+            var data = await _context.Plans.Include(p => p.ReportPlanMapping).ThenInclude(rpm => rpm.Report)
+                           .Select(p => new
+                           {
+                               p.Name,
+                               ReportCount = p.ReportPlanMapping.Count()
 
+                           }).ToListAsync();
+            data.Add(new { Name = "Total", ReportCount = _context.Reports.Count() });
+            return data.OrderBy(p => p.Name).Select(p => p.GetType().GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public).ToDictionary(f => f.Name, f => f.GetValue(p))).ToList();
+        }
         private async Task<List<Dictionary<string, object>>> GetExportedDataAsync(DateTime? begin, DateTime? end) =>
             await _context.ReportDeadlines.Include(rd => rd.Report)
                                                 .ThenInclude(r => r.ReportPlanMapping)
@@ -108,7 +119,7 @@ namespace ReportOverviewApp.Controllers
                                                 .OrderBy(r => r.ReportId)
                                                 .Select(rd => rd.GetType().GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public).ToDictionary(f => f.Name, f => f.GetValue(rd))).ToListAsync();
 
-        private async Task<IActionResult> ExportAsExcel(string fileName, DateTime? begin, DateTime? end)
+        private async Task<IActionResult> ExportAsExcel(string fileName, List<Dictionary<string, object>> exportData)
         {
             fileName = $"{fileName}.xlsx";
             string webRootPath = _hostingEnvironment.WebRootPath;
@@ -117,7 +128,6 @@ namespace ReportOverviewApp.Controllers
             MemoryStream memoryStream = new MemoryStream();
             using (var fileStream = new FileStream(Path.Combine(webRootPath, fileName), FileMode.Create, FileAccess.Write))
             {
-                var exportData = await GetExportedDataAsync(begin, end);
                 IWorkbook workbook;
                 workbook = new XSSFWorkbook();
                 ISheet excelSheet = workbook.CreateSheet($"Reports");
@@ -214,10 +224,34 @@ namespace ReportOverviewApp.Controllers
                 case FileExtension.Xml:
                     return await ExportAsXml(fileName, begin, end);
                 case FileExtension.Excel:
-                    return await ExportAsExcel(fileName, begin, end);
+                    return await ExportAsExcel(fileName, await GetExportedDataAsync(begin, end));
             }
             return View("Error");
         }
+
+        public async Task<IActionResult> ExportPlans(string fileName, FileExtension fileAs = FileExtension.Excel)
+        {
+            if (string.IsNullOrEmpty(fileName) && string.IsNullOrWhiteSpace(fileName))
+            {
+                fileName = $"Report Count By Plans";
+            }
+            fileName = StripInvalidFileNameCharacters(fileName);
+            switch (fileAs)
+            {
+                //case FileExtension.Json:
+                //    return await ExportAsJson(begin, end);
+                //case FileExtension.Csv:
+                //    return await ExportAsSeparatedValues(fileName, ',', begin, end);
+                //case FileExtension.Tsv:
+                //    return await ExportAsSeparatedValues(fileName, '\t', begin, end);
+                //case FileExtension.Xml:
+                //    return await ExportAsXml(fileName, begin, end);
+                case FileExtension.Excel:
+                    return await ExportAsExcel(fileName, await GetExportedPlanData());
+            }
+            return View("Error");
+        }
+
         /// <summary>
         ///  Exports report deadline information into an XML file.
         /// </summary>
