@@ -1,61 +1,14 @@
 ﻿@model IEnumerable<ReportOverviewApp.Models.BusinessContact>
 
-@{
-    ViewData["Title"] = "Business Contacts";
-}
-<noscript>
-    <h4>Business Contacts</h4>
 
-    <p>
-        <a asp-action="Create">Create New</a>
-    </p>
-    <hr />
-    <table class="table table-sm table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>
-                    @Html.ActionLink("Id", "Index", new { sort = "Id" }, new { })
-                </th>
-                <th>
-                    @Html.ActionLink("Name", "Index", new { sort = "Name" }, new { })
-                </th>
-                <th>
-                        @Html.DisplayNameFor(model => model.BusinessOwner)
-                    </th>
-                <th>Options</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Id)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                            @Html.DisplayFor(modelItem => item.BusinessOwner)
-                        </td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-action="TransferReports" asp-route-first="@item.Id">Transfer</a> |
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-</noscript>
 @{
     ViewData["Title"] = "BusinessContacts";
 }
 <h4>
     Business Contacts
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createModal" aria-label="Left Align"><span class="fas fa-plus-square"></span>&nbsp;&nbsp;Create New</button>
+    <span class="float-right">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createModal" aria-label="Left Align"><span class="fas fa-plus-square"></span>&nbsp;&nbsp;Create New</button>
+    </span>
     <span id="loading"></span>
 </h4>
 <div id="inputs" style="display:none;">
@@ -195,7 +148,6 @@
                             <h6>New Business Contact <span class="businessContactTitle"></span></h6>
                         </div>
                         <div class="modal-body">
-                            @*<input name="id" class="form-control-label sr-only businessContactId" type="number" value="0" />*@
                             <label class="form-control-label">Name</label>
                             <input name="name" class="form-control businessContactName" type="text" style="min-width:100%" />
                             <label class="form-control-label">Business Owner</label>

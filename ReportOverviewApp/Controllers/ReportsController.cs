@@ -106,6 +106,10 @@ namespace ReportOverviewApp.Controllers
         {
             return ViewComponent("EditReportDeadline", new { deadlineId = id });
         }
+        public IActionResult ReportForm(string form)
+        {
+            return ViewComponent("ReportForm", new { form });
+        }
         public async Task<IActionResult> UpdateDeadlinesAsync()
         {
             DateTime date = DateTime.Today;

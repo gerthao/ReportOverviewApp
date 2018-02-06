@@ -1,0 +1,48 @@
+﻿@model IEnumerable<BusinessContact>
+@{
+    ViewData["Title"] = "Business Contacts";
+}
+<h4>Business Contacts</h4>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<hr />
+<table class="table table-sm table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>
+                @Html.ActionLink("Id", "Index", new { sort = "Id" }, new { })
+            </th>
+            <th>
+                @Html.ActionLink("Name", "Index", new { sort = "Name" }, new { })
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BusinessOwner)
+            </th>
+            <th>Options</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BusinessOwner)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="TransferReports" asp-route-first="@item.Id">Transfer</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

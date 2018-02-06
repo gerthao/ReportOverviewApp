@@ -58,9 +58,6 @@
                                 <li class="nav-item">
                                     @Html.ActionLink(linkText: "View Deadlines", actionName: "Deadlines", controllerName: "Reports", routeValues: new { }, htmlAttributes: new { @class = "nav-link" })
                                 </li>
-                                @*<li class="nav-item">
-                                        @Html.ActionLink(linkText: "Past Reports", actionName: "PastReports", controllerName: "Reports", routeValues: new { }, htmlAttributes: new { @class = "nav-link" })
-                                    </li>*@
                             </ul>
                         </li>
                         <li class="nav-item">
@@ -88,6 +85,7 @@
     <br />
     <div class="container body-content">@RenderBody()</div>
     <div>@await Component.InvokeAsync("NToastNotify.Toastr")</div>
+    <script src="~/lib/core.js/client/shim.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/site.min.js" asp-append-version="true"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
@@ -97,7 +95,7 @@
     <script src="~/lib/toastr/toastr.min.js"></script>
     <script src="~/lib/d3/d3.min.js"></script>
     <script src="~/lib/c3/c3.min.js"></script>
-    @*<script defer src="https://use.fontawesome.com/releases/v5.0.2/js/all.js"></script>*@
+
     <script>
         $(function () {
             $('[data-toggle="tooltip"]').tooltip()

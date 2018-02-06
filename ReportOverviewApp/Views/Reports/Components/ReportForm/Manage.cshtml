@@ -1,0 +1,207 @@
+﻿@model Report
+<div id="editModal" class="modal fade" tabindex="-1" role="dialog" data-backdrop="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="container-fluid">
+            <div class="modal-content">
+                <form id="editForm">
+                    <div class="modal-header">
+                        <h6>Manage: <span class="reportTitle"></span></h6>
+                    </div>
+                    <div class="modal-body">
+                        <h6 class="font-italic">Report Information</h6>
+                        <input name="id" class="form-control-label sr-only report-id" type="number" />
+                        <div class="form-group">
+                            <label class="form-control-label">Name</label>
+                            <input name="name" class="form-control report-name" type="text" />
+                        </div>
+                        <hr />
+                        <h6 class="font-italic businessContactInformation">Business Contact Information</h6>
+                        <div class="form-group">
+                            <label class="form-control-label">Business Contacts</label>
+                            <select name="businessContactId" class="form-control custom-select report-businessContact"></select>
+                        </div>
+                        <hr />
+                        <h6 class="font-italic planInformation">Plan Information</h6>
+                        <div class="form-group">
+                            <div class="form-group">
+                                <div class="form-group row">
+                                    <label class="form-control-label col-md-3 col-form-label">Selection of Plans</label>
+                                    <div class="col-md-4">
+                                        <div class="col-md-6">
+
+                                        </div>
+                                        <div class="badge badge-pill badge-info align-items-center col-md-6 search-plans-results float-right" style="top: 25%; bottom: 75%;"></div>
+                                    </div>
+
+                                    <div class="col-md-5">
+                                        <input type="text" class="search form-control search-plans" style="border-radius: 2rem;" placeholder="&#xF002;" />
+                                    </div>
+                                </div>
+                                <select name="selectPlans" class="form-control report-selectPlans" size=10 multiple></select>
+                            </div>
+                            <div class="form-group">
+                                <div class="btn-group btn-block" role="group" aria-label="planButtonGroup">
+                                    <button class="btn btn-outline-primary col-md-6 assignPlans" type="button"><i class="fas fa-arrow-down"></i></button>
+                                    <button class="btn btn-outline-primary col-md-6 unassignPlans" type="button"><i class="fas fa-arrow-up"></i></button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">Assigned Plans</label>
+                                <select name="reportPlanMapping" class="form-control report-plans" size=10 multiple></select>
+                            </div>
+                        </div>
+                        <hr />
+                        <h6 class="font-italic">Deadline Information</h6>
+                        <div class="form-group">
+                            <label class="form-control-label">Frequency</label>
+                            <input name="frequency" type="text" class="form-control report-frequency">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label class="form-control-label">Due Date 1</label>
+                                <input name="dueDate1" type="date" class="form-control report-dueDate1" />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="form-control-label">Due Date 2</label>
+                                <input name="dueDate2" type="date" class="form-control report-dueDate2" />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label class="form-control-label">Due Date 3</label>
+                                <input name="dueDate3" type="date" class="form-control report-dueDate3" />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="form-control-label">Due Date 4</label>
+                                <input name="dueDate4" type="date" class="form-control report-dueDate4" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-control-label">Day Due</label>
+                            <input name="dayDue" type="text" class="form-control report-dayDue" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-control-label">Days After Quarter</label>
+                            <input name="daysAfterQuarter" type="number" class="form-control report-daysAfterQuarter" />
+                        </div>
+                        <hr />
+                        <h6 class="font-italic">Instructions &amp; Notes</h6>
+                        <div class="form-group">
+                            <label class="form-control-label">Work Instructions</label>
+                            <textarea name="workInstructions" class="form-control report-workInstructions" rows="10"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-control-label">Notes</label>
+                            <textarea name="notes" class="form-control report-notes" rows="10"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-control-label">Run With</label>
+                            <input name="runWith" type="text" class="form-control report-runWith" />
+                        </div>
+                        <hr />
+                        <h6 class="font-italic">Delivery Information</h6>
+                        <div class="form-group">
+                            <label class="form-control-label">Delivery Method</label>
+                            <input name="deliveryMethod" class="form-control report-deliveryMethod" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-control-label">Deliver To</label>
+                            <input name="deliverTo" class="form-control report-deliverTo" style="min-width: 100%" />
+                        </div>
+
+                        <hr />
+                        <h6 class="font-italic">Date Information</h6>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label class="form-control-label">Effective Date</label>
+                                <input name="effectiveDate" type="date" class="form-control report-effectiveDate" />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="form-control-label">Termination Date</label>
+                                <input name="terminationDate" type="date" class="form-control report-terminationDate" />
+                            </div>
+
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label class="form-control-label">Date Added</label>
+                                <input name="dateAdded" type="date" class="form-control report-dateAdded" />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="form-control-label">System Refresh Date</label>
+                                <input name="systemRefreshDate" type="date" class="form-control report-systemRefreshDate" />
+                            </div>
+                        </div>
+
+                        <hr />
+                        <h6 class="font-italic">Report Information (Continued)</h6>
+                        <div class="form-group">
+                            <label class="form-control-label">Source Department</label>
+                            <input name="sourceDepartment" type="text" class="form-control report-sourceDepartment" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-control-label">Report Path</label>
+                            <input name="reportPath" type="text" class="form-control report-reportPath" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-control-label">Folder Location</label>
+                            <input name="folderLocation" type="text" class="form-control report-folderLocation" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-control-label">ERS Report Location</label>
+                            <input name="ersReportLocation" type="text" class="form-control report-ersReportLocation" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-control-label">ERS Report name</label>
+                            <input name="ersReportName" type="text" class="form-control report-ersReportName" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-control-label">Other Report Location</label>
+                            <input name="otherReportLocation" type="text" class="form-control report-otherReportLocation" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-control-label">Report Type</label>
+                            <input name="reportType" type="text" class="form-control report-reportType" />
+                        </div>
+                        <div class="form-check" style="padding-left: 1.2rem;">
+                            <input name="isQualityIndicator" type="checkbox" class="form-check-input report-isQualityIndicator" />
+                            <label class="form-check-label">Quality Indicator</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-control-label">ERR Status</label>
+                            <input name="errStatus" type="text" class="form-control report-errStatus" />
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label class="form-control-label">Legacy Report ID</label>
+                                <input name="legacyReportID" type="text" class="form-control report-reportType" />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="form-control-label">Legacy Report ID R2</label>
+                                <input name="legacyReportIDR2" type="text" class="form-control report-legacyReportIDR2" />
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <div class="btn-group btn-block" style="padding-left: 0px; padding-right:0px;">
+                            <button id="delete" type="button" class="btn btn-danger col-md-6"><i class="fas fa-times"></i> Delete</button>
+                            <button id="put" type="button" class="btn btn-primary col-md-6"><i class="fas fa-save"></i> Save</button>
+                        </div>
+                    </div>
+                    <div class="collapse" id="collapseDelete">
+                        <div class="col-md-12" style="padding-bottom: 1rem;">
+                            <h6>Are you sure you want to delete this Report?</h6>
+                            <div class="btn-group btn-block">
+                                <button type="button" id="unconfirmDelete" class="btn btn-outline-info col-md-6">No</button>
+                                <button type="button" id="confirmDelete" class="btn btn-outline-danger col-md-6">Yes</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div id="manageStatus" class="col-md-12"></div>
+            </div>
+        </div>
+    </div>
+</div>
