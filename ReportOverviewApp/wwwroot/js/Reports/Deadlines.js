@@ -11,104 +11,6 @@
     });
     $('#showAllButton').click(function () { $('.list-collapsable').collapse('show'); });
     $('#hideAllButton').click(function () { $('.list-collapsable').collapse('hide'); });
-
-    //$('.markIncomplete').click(function () {
-    //    unmarkAll($(this).parent().prev('.deadline').text());
-    //});
-    //$('.markAll').click(function () {
-    //    let icon = $(this).find('i').attr('class');
-    //    let date = $(this).parent().prev('.deadline').text();
-    //    if (icon === 'fas fa-check-circle') {
-    //        markAll(date);
-    //    } else if (icon === 'fas fa-minus-circle') {
-    //        unmarkAll(date);
-    //    } else return false;
-    //    return true;
-    //});
-    //function markAll(date) {
-    //    $.ajax({
-    //        type: 'POST',
-    //        url: '/api/Deadlines/MarkAsComplete/' + String(formatDate(new Date(date)), 'date') + '/true',
-    //        data: JSON.stringify(formatDate(new Date(date), 'date')),
-    //        contentType: 'application/json; charset=UTF-8',
-    //        dataType: 'json',
-    //        success: function (data) {
-    //            let alertMsg = $('#alertSuccessTemplate').children().clone(true);
-    //            $(alertMsg).find('.alertMessage').html(data.message);
-    //            $('#status').html(alertMsg);
-    //            retriveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val());
-    //        },
-    //        error: function (a, b, c) {
-    //            let alertMsg = $('#alertDangerTemplate').children().clone(true);
-    //            $(alertMsg).find('.alertMessage').html(c);
-    //            $('#status').html(alertMsg);
-    //        }
-    //    });
-    //}
-    //function formatDate(date, format) {
-    //    if (date === undefined || date === null) {
-    //        return null;
-    //    }
-    //    try {
-    //        date = new Date(date);
-    //    } catch (e) {
-    //        console.error(e);
-    //        return null;
-    //    }
-    //    if (typeof date !== typeof (new Date())) {
-    //        return null;
-    //    }
-    //    switch (format) {
-    //        case 'date':
-    //            return date.toLocaleDateString().replace(/[^A-Za-z 0-9 \.,\?""!@#\$%\^&\*\(\)-_=\+;:<>\/\\\|\}\{\[\]`~]*/g, '');
-    //        case 'time':
-    //            return date.toLocaleTimeString().replace(/[^A-Za-z 0-9 \.,\?""!@#\$%\^&\*\(\)-_=\+;:<>\/\\\|\}\{\[\]`~]*/g, '');
-    //    }
-    //    return date.toLocaleString().replace(/[^A-Za-z 0-9 \.,\?""!@#\$%\^&\*\(\)-_=\+;:<>\/\\\|\}\{\[\]`~]*/g, '');
-    //}
-    //function unmarkAll(date) {
-    //    $.ajax({
-    //        type: 'POST',
-    //        url: '/api/Deadlines/MarkAsComplete/' + String(formatDate(new Date(date)), 'date') + '/false',
-    //        data: JSON.stringify(formatDate(new Date(date), 'date')),
-    //        dataType: 'json',
-    //        contentType: 'application/json; charset=UTF-8',
-    //        success: function (data) {
-    //            let alertMsg = $('#alertSuccessTemplate').children().clone(true);
-    //            $(alertMsg).find('.alertMessage').html(data.message);
-    //            $('#status').html(alertMsg);
-    //            retriveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val());
-    //        },
-    //        error: function (a, b, c) {
-    //            let alertMsg = $('#alertDangerTemplate').children().clone(true);
-    //            $(alertMsg).find('.alertMessage').html(c);
-    //            $('#status').html(alertMsg);
-    //        }
-    //    });
-    //}
-    //function deleteAll(date) {
-    //    $.ajax({
-    //        type: 'DELETE',
-    //        url: '/api/Deadlines/DeleteAll',
-    //        data: JSON.stringify(formatDate(new Date(date))),
-    //        contentType: 'application/json',
-    //        dataType: 'json',
-    //        success: function (data) {
-    //            let alertMsg = $('#alertWarningTemplate').children().clone(true);
-    //            $(alertMsg).find('.alertMessage').html(data.message);
-    //            $('#status').html(alertMsg);
-    //            retriveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val());
-    //        },
-    //        error: function (a, b, c) {
-    //            let alertMsg = $('#alertDangerTemplate').children().clone(true);
-    //            $(alertMsg).find('.alertMessage').html(c);
-    //            $('#status').html(alertMsg);
-    //        }
-    //    });
-    //}
-    //$('.deleteAll').click(function () {
-    //    deleteAll($(this).parent().prev('.deadline').text());
-    //});
     function groupByDeadline(data) {
         return data.reduce(function (a, c) { (a[c.deadline] = a[c.deadline] || []).push(c); return a; }, {});
     }
@@ -125,15 +27,42 @@
     }
     $('#changeButton').click(function () {
         $('#status').children().fadeOut(200);
-        retrieveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val(), $('#selectPlan').find(':selected').val());
+        retrieveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val(), $('#selectPlan').find(':selected').val(), $('#selectReport').val());
     });
-    function retrieveReports(year, month, plan, lastEditedDate) {
-        $('#loadingIcon').html('<i class="fas fa-cog fa-2x ld ld-spin"></i>');
+    $('#generateButton').on('click', function () {
+        $('#generateIcon').addClass('ld ld-spin');
+        let request = $.ajax({
+            type: 'POST',
+            url: '/api/Deadlines/Generate',
+            headers: {
+                RequestVerificationToken: $("[name='__RequestVerificationToken']").val()
+            },
+            dataType: 'json',
+            success: function (data) {
+                if (data && data.success && data.updates > 0) {
+                    $('#generateStatus').html('<div class="alert alert-success"><span>' + data.updates + ' deadlines have been created.</span><ul>' + data.updatedReports.map(r => '<li>' + r + '</li>').toString() + '</ul></div>');
+                } else if (data && data.success && data.updates === 0) {
+                    $('#generateStatus').html('<div class="alert alert-info">No reports were needed to have a new deadline at this time.</ul></div>');
+                } else {
+                    $('#generateStatus').html('<div class="alert alert-warning">Something went wrong:  Contact your developer.</ul></div>');
+                }
+                $('#generateIcon').removeClass('ld ld-spin');
+            },
+            error: function (a, b, c) {
+                $('#generateStatus').html('<div class="alert alert-danger">Something went wrong: ' + c + '.  Contact your developer.</div>');
+                $('#generateIcon').removeClass('ld ld-spin');
+            }
+
+        });
+    });
+    function retrieveReports(year, month, plan, report, lastEditedDate) {
+        $('#loadingIcon').html('<i class="fas fa-cog ld ld-spin"></i>');
         $('button').prop('disabled', true);
         let query = {
             year: year,
             month: month === '0' ? null : month,
-            plan: plan === '' ? null : plan
+            plan: plan === '' ? null : plan,
+            report: report === '' ? null : report
         };
         $.ajax({
             type: 'GET',
@@ -206,7 +135,6 @@
         $(card).find('.deadline').text(convertDate(key, '/'));
         $(card).find('.reportCount').text('Reports:  ' + data.reduce(function (a, c) { return parseInt(objectValues(c).map(function (x) { return x.length; })) + parseInt(a); }, 0));
         let completionCount = data.map(function (e) { return objectValues(e)[0]; }).map(function (f) { return f.map(function (c) { return c.isComplete ? 1 : 0; }).reduce(function (q, w) { return q + w; }); }).reduce(function (e, r) { return e + r; });
-        //doesn't seem to work in IE11//
         let completionRate = completionCount / data.reduce(function (a, c) { return parseInt(objectValues(c).map(function (x) { return x.length; })) + parseInt(a);}, 0) * 100;
         $(card).find('.completionCount').text('Completed:  ' + completionCount);
         $(card).find('.completionRate').text('Completion Rate:  ' + String(completionRate).substring(0, 5) + '%');
@@ -269,8 +197,6 @@
                 $(card).find('.card-header').addClass('text-light');
                 $(card).find('.card-footer').addClass('text-light');
                 $(card).addClass('bg-success');
-                //$(card).find('.markAll').find('i').removeClass('fas fa-check-circle').addClass('fas fa-minus-circle');
-
             }
             $(card).addClass('bg-warning');
             $(card).find('.card-header').addClass('text-dark');
@@ -283,8 +209,6 @@
                 $(card).find('.card-header').addClass('text-light');
                 $(card).find('.card-footer').addClass('text-light');
                 $(card).addClass('bg-success');
-                //$(card).find('.markAll').find('i').removeClass('fas fa-check-circle').addClass('fas fa-minus-circle');
-
             }
         }
         else {
@@ -292,8 +216,6 @@
                 $(card).find('.card-header').addClass('text-light');
                 $(card).find('.card-footer').addClass('text-light');
                 $(card).addClass('bg-success');
-                //$(card).find('.markAll').find('i').removeClass('fas fa-check-circle').addClass('fas fa-minus-circle');
-
             }
         }
 
@@ -309,7 +231,7 @@
         }
     }
     function initialize() {
-        retrieveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val(), $('#selectPlan').find(':selected').val());
+        retrieveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val(), $('#selectPlan').find(':selected').val(), $('#selectReport').val());
     }
     $('.card-search').on('keyup', function () {
         let value = $(this).val().toLowerCase();

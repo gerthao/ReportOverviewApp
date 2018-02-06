@@ -67,7 +67,7 @@ namespace ReportOverviewApp.Controllers
                                                                     .ThenInclude(rpm => rpm.Plan)
                                                                         .ThenInclude(p => p.State)
                                                           .OrderBy(rd => rd.Deadline).ToListAsync();
-            deadlines = (String.IsNullOrEmpty(report) ? deadlines : deadlines.Where(rd => rd.Report.Name.ToLower().Contains(report))).ToList();
+            deadlines = (String.IsNullOrEmpty(report) ? deadlines : deadlines.Where(rd => rd.Report.Name.ToLower().Contains(report.ToLower()))).ToList();
             deadlines = (year == null ? deadlines : deadlines.Where(rd => rd.Deadline.Year == year)).ToList();
             deadlines = (month == null ? deadlines : deadlines.Where(rd => rd.Deadline.Month == month)).ToList();
             deadlines = (day == null ? deadlines : deadlines.Where(rd => rd.Deadline.Day == day)).ToList();
@@ -134,6 +134,40 @@ namespace ReportOverviewApp.Controllers
                                 }).ToList();
             return Json(result, new JsonSerializerSettings() { PreserveReferencesHandling = PreserveReferencesHandling.Objects, ContractResolver = new CamelCasePropertyNamesContractResolver() ,Formatting = indent ? Formatting.Indented : Formatting.None, NullValueHandling = omitNull ? NullValueHandling.Ignore : NullValueHandling.Include });
         }
+        [HttpPost("Generate"), Route("api/Deadlines/Generate"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> GenerateDeadlines()
+        {
+            DateTime date = DateTime.Today;
+            int updates = 0;
+            List<string> updatedReports = new List<string>();
+            for (int i = 0; i < 1; i++)
+            {
+                DateTime checkDate = date.AddDays(i);
+                await _context.Reports.Include(r => r.Deadlines).ForEachAsync(async r =>
+                {
+                    DateTime? currentCalculatedDeadline = r.Deadline(checkDate);
+                    if (currentCalculatedDeadline != null && currentCalculatedDeadline.HasValue)
+                    {
+                        DateTime? mostRecentReportDeadline = r.Deadlines.OrderByDescending(rd => rd.Deadline).Select(rd => rd.Deadline as DateTime?).FirstOrDefault();
+                        if (currentCalculatedDeadline > mostRecentReportDeadline || mostRecentReportDeadline == null)
+                        {
+                            await _context.ReportDeadlines.AddAsync(new ReportDeadline()
+                            {
+                                ReportId = r.Id,
+                                Deadline = currentCalculatedDeadline.Value
+                            });
+                            updatedReports.Add(r.Name);
+                            updates++;
+                        }
+                    }
+                });
+                await _context.SaveChangesAsync();
+            }
+            await _context.UserLogs.AddAsync(new UserLog(GetCurrentUserID(), $"{updates} new deadlines created.", DateTime.Now));
+            await _context.SaveChangesAsync();
+            return Json(new { success = true, updates, updatedReports });
+        }
+
         [HttpGet("{id}")]
         public async Task<JsonResult> GetReportDeadline(int? id, bool indent, bool omitNull)
         {

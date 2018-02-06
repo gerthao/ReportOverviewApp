@@ -5,10 +5,12 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ReportOverviewApp.Data;
 using ReportOverviewApp.Models;
+using Newtonsoft.Json.Serialization;
 
 namespace ReportOverviewApp.Controllers
 {
@@ -24,7 +26,7 @@ namespace ReportOverviewApp.Controllers
             _context = context;
         }
 
-        private List<Report> FilterReports(List<Report> reports, string id, string name, string frequency, bool isTermed, string sort, int? from, int? take)
+        private List<Report> FilterReports(List<Report> reports, string id, string name, string frequency, string plan, bool? isTermed, string sort, int? from, int? take)
         {
             if (!String.IsNullOrEmpty(id))
             {
@@ -60,15 +62,23 @@ namespace ReportOverviewApp.Controllers
                     reports = reports.OrderBy(report => report.Id).ToList();
                     break;
             }
-            if (!(String.IsNullOrEmpty(name)))
+            if (!String.IsNullOrEmpty(name))
             {
                 name = name.ToLower().Trim();
                 reports = reports.Where(p => p.Name.ToLower().Contains(name)).ToList();
             }
-            if (!(String.IsNullOrEmpty(frequency)))
+            if (!String.IsNullOrEmpty(frequency))
             {
                 frequency = frequency.ToLower().Trim();
                 reports = reports.Where(report => report.Frequency.Contains(frequency)).ToList();
+            }
+            if (!String.IsNullOrEmpty(plan))
+            {
+                reports = reports.Where(r => r.ReportPlanMapping.Select(rpm => rpm.Plan.Name.ToLower()).Contains(plan.ToLower())).ToList();
+            }
+            if(isTermed != null && isTermed.HasValue)
+            {
+                reports = reports.Where(r => r.IsTermed == isTermed).ToList();
             }
             if (from != null)
             {
@@ -90,10 +100,32 @@ namespace ReportOverviewApp.Controllers
 
         // GET: api/ReportsApi
         [HttpGet]
-        public async Task<IEnumerable<Report>> GetReports(string id, string name, string frequency, bool isTermed, string sort, int? from, int? take)
+        public async Task<JsonResult> GetReports(string id, string name, string frequency, string plan, bool? isTermed, string sort, int? from, int? take)
         {
-            var reports = await _context.Reports.ToListAsync();
-            return FilterReports(reports, id, name, frequency, isTermed, sort, from, take);
+            var reports = await _context.Reports.Include(r => r.BusinessContact).Include(r => r.ReportPlanMapping).ThenInclude(rpm => rpm.Plan).ThenInclude(p => p.State).ToListAsync();
+            return Json(FilterReports(reports, id, name, frequency, plan, isTermed, sort, from, take).Select(r => new
+            {
+                r.Id, r.Name, r.WorkInstructions, r.Notes, r.Frequency, r.IsTermed,
+                BusinessContact = new
+                {
+                    r.BusinessContact.Id, r.BusinessContact.Name
+                },
+                Plans = r.ReportPlanMapping.Select(
+                                                rpm => new
+                                                {
+                                                    rpm.Plan.Id,
+                                                    rpm.Plan.Name,
+                                                    State = new
+                                                    {
+                                                        rpm.Plan.State.Id,
+                                                        rpm.Plan.State.Name,
+                                                        rpm.Plan.State.PostalAbbreviation
+                                                    }
+                                                })
+            }).ToList(), new JsonSerializerSettings()
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            });
         }
 
         // GET: api/ReportsApi/5

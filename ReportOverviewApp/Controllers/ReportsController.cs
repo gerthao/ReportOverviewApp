@@ -110,36 +110,7 @@ namespace ReportOverviewApp.Controllers
         {
             return ViewComponent("ReportForm", new { form });
         }
-        public async Task<IActionResult> UpdateDeadlinesAsync()
-        {
-            DateTime date = DateTime.Today;
-            int updates = 0;
-            for (int i = 0; i < 1; i++)
-            {
-                DateTime checkDate = date.AddDays(i);
-                await _context.Reports.Include(r => r.Deadlines).ForEachAsync(async r =>
-                {
-                    DateTime? currentCalculatedDeadline = r.Deadline(checkDate);
-                    if (currentCalculatedDeadline != null && currentCalculatedDeadline.HasValue)
-                    {
-                        DateTime? mostRecentReportDeadline = r.Deadlines.OrderByDescending(rd => rd.Deadline).Select(rd => rd.Deadline as DateTime?).FirstOrDefault();
-                        if (currentCalculatedDeadline > mostRecentReportDeadline || mostRecentReportDeadline == null)
-                        {
-                            await _context.ReportDeadlines.AddAsync(new ReportDeadline()
-                            {
-                                ReportId = r.Id,
-                                Deadline = currentCalculatedDeadline.Value
-                            });
-                            updates++;
-                        }
-                    }
-                });
-                await _context.SaveChangesAsync();
-            }
-            await _context.UserLogs.AddAsync(new UserLog(GetCurrentUserID(), $"{updates} new deadlines created.", DateTime.Now));
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+        
 
         public ReportsController(ApplicationDbContext context, IToastNotification toastNotification)
         {
@@ -161,7 +132,7 @@ namespace ReportOverviewApp.Controllers
             //await UpdateDeadlinesAsync();
             return View(await GetReportViewModelAsync(search, column, entriesPerPage, pageIndex, state, plan, begin, end, frequency, businessContact, businessOwner, sourceDepartment));
         }
-        public async Task<IActionResult> Index(string id, string name, string frequency, bool isTermed, string sort, int? page = 1, int? take = 100)
+        public async Task<IActionResult> Index(string id, string name, string frequency, string plan, bool isTermed, string sort, int? page = 1, int? take = 100)
         {
 
             ViewData["id"] = id;
@@ -171,8 +142,9 @@ namespace ReportOverviewApp.Controllers
             ViewData["isTermed"] = isTermed;
             ViewData["page"] = page;
             ViewData["take"] = take;
+            //ViewData["plan"] = plan;
             ViewData["BusinessContacts"] = new SelectList(await _context.BusinessContacts.ToListAsync(), "Id", "Name");
-            ViewData["Plans"] = new SelectList(await _context.Plans.ToListAsync(), "Id", "Name");
+            ViewData["selectPlans"] = new SelectList(await _context.Plans.OrderBy(p => p.Name).ToListAsync(), "Name", "Name", plan);
             return View(await _context.Reports.ToListAsync());
         }
         // GET: Reports/Details/5

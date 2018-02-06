@@ -36,7 +36,7 @@
             $('#deleteReportDeadline').find('i').removeClass('ld ld-heartbeat');
             $('button').prop('disabled', true);
             let saveDate = new Date(model.deadline);
-            retrieveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val(), $('#selectPlan').find(':selected').val(), convertDate(new Date(saveDate).toJSON()));
+            retrieveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val(), $('#selectPlan').find(':selected').val(), $('#selectReport').val(), convertDate(new Date(saveDate).toJSON()));
             $("#editReportDeadlineForm").find('input').prop('readonly', true);
             $("#editReportDeadlineForm").html('<div class="modal-header"><h5>Deleted</h5></div><div class="modal-body"></div>');
         });
@@ -100,10 +100,10 @@
             $('#saveReportDeadline').find('i').removeClass('ld ld-heartbeat');
             $('button').prop('disabled', false);
             let saveDate = new Date(model.deadline);
-            //retrieveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val(), $('#selectPlan').find(':selected').val());
             retrieveReports($('#selectYear').val(),
                 $('#selectMonth').find(':selected').val(),
                 $('#selectPlan').find(':selected').val(),
+                $('#selectReport').val(),
                 convertDate(new Date(saveDate).toJSON())
             );
         });

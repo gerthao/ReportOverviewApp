@@ -23,30 +23,29 @@
     li.list-group-item {
         transition: all 0.3s;
     }
-    input.form-control::placeholder{
-        font-family: 'Font Awesome 5 Free Solid';
-    }
-    input.form-control::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-        font-family: 'Font Awesome 5 Free Solid';
-    }
-    input.form-control::-moz-placeholder { /* Firefox 19+ */
-        font-family: 'Font Awesome 5 Free Solid';
-    }
-
-    input.form-control:-ms-input-placeholder { /* IE 10+ */
-        font-family: 'Font Awesome 5 Free Solid';
-    }
-
-    input.form-control:-moz-placeholder { /* Firefox 18- */
-        font-family: 'Font Awesome 5 Free Solid';
-    }
 </style>
-<div class="row col-md-12">
-    <h4 style="display: inline-block">
+    <h4>
         Status of Reports
+        <i id="loadingIcon"></i>
+        <span class="float-right">
+
+            <span class="btn-group">
+                <button id="changeButton" type="button" class="btn btn-primary"><i class="fas fa-search text-light"></i>&nbsp;&nbsp;Search</button>
+                <button id="showAllButton" type="button" class="btn btn-primary"><i class="fas fa-expand text-light"></i>&nbsp;&nbsp;Show all</button>
+                <button id="hideAllButton" type="button" class="btn btn-primary"><i class="fas fa-minus text-light"></i>&nbsp;&nbsp;Hide all</button>
+                <button id="viewButton" type="button" class="btn btn-primary"><i class="fas fa-th text-light"></i></button>
+            </span>
+            <span>
+                <button class="btn btn-primary updateLink" type="button" data-toggle="modal" data-target="#updateModal"><span class="fas fa-sync"></span>&nbsp;&nbsp;Generate Deadlines</button>
+            </span>
+            <span>
+                <button class="btn btn-primary exportLink" type="button" data-toggle="modal" data-target="#exportModal"><span class="fas fa-file-excel"></span>&nbsp;&nbsp;Export</button>
+            </span>
+        </span>
+        
     </h4>
-</div>
-<div class="row col-md-12">
+<hr />
+<div class="row col-md-12" style="padding-bottom: 1.0rem;">
     @{
         Dictionary<int, string> months = new Dictionary<int, string>();
         months.Add(0, "[All Months]");
@@ -86,20 +85,9 @@
     <select id="selectPlan" class="form-control custom-select form-inline col-md-2" asp-items="ViewBag.selectPlan">
         <option value="">[All Plans]</option>
     </select>
-    <div class="btn-group col-md-5" style="padding-left: 0.4rem;">
-        <button id="changeButton" type="button" class="btn btn-primary"><i class="fas fa-search text-light"></i>&nbsp;&nbsp;Search</button>
-
-        <button id="showAllButton" type="button" class="btn btn-primary"><i class="fas fa-expand text-light"></i>&nbsp;&nbsp;Show all</button>
-
-        <button id="hideAllButton" type="button" class="btn btn-primary"><i class="fas fa-minus text-light"></i>&nbsp;&nbsp;Hide all</button>
-
-        <button id="viewButton" type="button" class="btn btn-primary"><i class="fas fa-th text-light"></i></button>
-    </div>
-    <div class="float-right" style="position:relative;">
-        <span id="loadingIcon"></span>
-    </div>
+    <div style="padding-left: 0.4rem;"></div>
+    <input id="selectReport" class="form-control form-inline col-md-4" type="text" value="@ViewData["report"]" placeholder="Search Report" />
 </div>
-<hr />
 @{
     var today = DateTime.Today;
     var tomorrow = DateTime.Today.AddDays(1);
@@ -117,7 +105,7 @@
                 <span class="toggleIcon" data-toggle="collapse"><i class="fas fa-chevron-up toggle"></i></span>
             </div>
             <div class="card-search-container">
-                <input class="card-search form-control align-self-center bg-dark text-light" type="text" style="display: inline-block; padding-top:0.25rem; padding-bottom:0.25rem; opacity: 0.85; border-radius: 1rem;" placeholder="&#xF002;" />
+                <input class="card-search form-control align-self-center bg-dark text-light" type="text" style="display: inline-block; padding-top:0.25rem; padding-bottom:0.25rem; opacity: 0.85; border-radius: 1rem;" placeholder="Search Report" />
             </div>
             
         </div>
@@ -205,78 +193,6 @@
 
 </div>
 <div id="cards" class="card-columns">
-    @*<noscript>
-            @for (int i = 0; i < Model.Select(rd => rd.Deadline).Distinct().Count(); i++)
-    {
-        DateTime d = Model.Select(rd => rd.Deadline).Distinct().ElementAt(i);
-        <div class="card">
-            <div class="card-header">
-                <h6 class="title" style="display: inline-block;">
-                    @if (d == today)
-                    {
-                        <text>Today</text>
-                    }
-                    else if (d == tomorrow)
-                    {
-                        <text>Tomorrow</text>
-                    }
-                    else
-                    {
-                        @d.ToShortDateString()
-                    }
-                </h6>
-                <div class="options" style="display:inline-block;position:absolute; vertical-align:middle; right: 0.5rem;">
-                    <span><i class="fas fa-check-circle"></i></span>
-                    <span class="toggleIcon" data-toggle="collapse" data-target="#list-@i"><i class="fas fa-chevron-down" ></i></span>
-                    <span><i class="fas fa-times-circle"></i></span>
-                </div>
-            </div>
-            <div class="collapse show list-collapsable" id="list-@i">
-                <ul class="list-group list-group-flush">
-                    @foreach (ReportDeadline rd in Model.Select(rd => rd).Where(rd => rd.Deadline == d))
-                    {
-                        <li class="list-group-item report-item">
-                            <ul class="list-inline ">
-                                <li class="list-inline-item">
-                                    @rd.Report.Name
-                                </li>
-                                <li class="list-inline-item">
-                                    <span>
-                                        <a class="editReportDeadlineLink" asp-action="EditReportDeadline" asp-route-id="@rd.Id" data-toggle="modal" data-target="#editReportDeadlineModal"><span class="fas fa-calendar-alt text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  Report Deadline (@rd.Deadline.ToShortDateString())"></span></a>
-                                        <a class="editReportLink" asp-action="EditReport" asp-route-id="@rd.ReportId" data-toggle="modal" data-target="#editReportModal"><span class="fas fa-edit text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Edit:  @rd.Report.Name"></span></a>
-                                        <a asp-action="Details" asp-route-id="@rd.Report.Id"><span class="fas fa-book text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="View:   @rd.Report.Name"></span></a>
-                                        <a class="deleteReportLink" asp-action="DeleteReport" asp-route-id="@rd.ReportId" data-toggle="modal" data-target="#deleteReportModal"><span class="fas fa-eraser text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title="Delete:   @rd.Report.Name"></span></a>
-                                    </span>
-                                </li>
-                            </ul>
-                            <ul class="list-inline report-item-status">
-                                <li class="list-inline-item">
-                                    <p>Ran <span>@if (rd.HasRun)
-                                    {<i class="far fa-check-circle text-success"></i> }
-                                    else
-                                    {<i class="far fa-circle text-info"></i>}</span></p>
-                                </li>
-                                <li class="list-inline-item">
-                                    <p>Approved <span>@if (rd.IsApproved)
-                                    {<i class="far fa-check-circle text-success"></i> }
-                                    else
-                                    {<i class="far fa-circle text-info"></i>}</span></p>
-                                </li>
-                                <li class="list-inline-item">
-                                    <p>Sent <span>@if (rd.IsSent)
-                                    {<i class="far fa-check-circle text-success"></i> }
-                                    else
-                                    {<i class="far fa-circle text-info"></i>}</span></p>
-                                </li>
-                            </ul>
-                        </li>
-                    }
-                </ul>
-            </div>
-        </div>
-    }
-    </noscript>*@
-
 </div>
 <div id="editReportDeadlineModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
@@ -303,6 +219,37 @@
             <div id="deleteReportContainer">
                 @await Component.InvokeAsync(name: "DeleteReport")
             </div>
+        </div>
+    </div>
+</div>
+<div id="updateModal" class="modal fade">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <form id="generateForm">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Generate Deadlines
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <p>This will look at all reports and create a new deadline beginning from today if needed.</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="generateButton" class="btn btn-primary" type="button"><span id="generateIcon" class="fas fa-sync"></span> Generate</button>
+                </div>
+                <div id="generateStatus">
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="exportModal" class="modal fade">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            @await Component.InvokeAsync("Export", "")
         </div>
     </div>
 </div>
