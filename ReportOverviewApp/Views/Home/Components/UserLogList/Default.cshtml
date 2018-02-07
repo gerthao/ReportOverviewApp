@@ -52,30 +52,6 @@
     
 }
 @*<script>
-    $('#ulNext').click(function () {
-        $('#ulIndex').text(parseInt($('#ulIndex').text()) + 1);
-       
-            let request = $.ajax({
-                type: 'GET',
-                dataType: 'json',
-                url: '/Data/UserLogs?page=' + $('#ulIndex').text(),
-                headers: {
-                    RequestVerificationToken: $("[name='__RequestVerificationToken']").val()
-                },
-                contentType: 'application/json; charset=utf-8',
-                data: parseInt($('#ulIndex').text())
-            });
-            request.done(function (data) {
-                if (data) {
-                    $('#ulBody').html('<tr><td colspan="4" class="text-info">Failed: ' + JSON.stringify(data) + '</td></tr>');
-
-                }
-
-            });
-            request.fail(function (jqXHR, status, message) {
-                $('#ulBody').html('<tr><td colspan="4" class="text-info">Failed: ' + message + '</td></tr>');
-            });
-        
-    });
+    
    
 </script>*@

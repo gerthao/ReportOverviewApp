@@ -66,7 +66,7 @@
     @{int? selectedYear = ViewData["year"] as int? == null ? currentDate.Year : ViewData["year"] as int?;}
     @{int? selectedMonth = ViewData["month"] as int? == null ? currentDate.Month : ViewData["month"] as int?; }
 
-    <select id="selectMonth" class="form-control custom-select form-inline col-md-2">
+    <select id="searchMonth" class="form-control custom-select form-inline col-md-2">
         @foreach (var month in months)
         {
             if (selectedMonth == month.Key)
@@ -80,13 +80,31 @@
         }
     </select>
     <div style="padding-left: 0.4rem;"></div>
-    <input id="selectYear" class="form-control form-inline col-md-1" type="number" value="@selectedYear.Value" />
+    <input id="searchYear" class="form-control form-inline col-md-1" type="number" value="@selectedYear.Value" />
     <div style="padding-left: 0.4rem;"></div>
-    <select id="selectPlan" class="form-control custom-select form-inline col-md-4" asp-items="ViewBag.selectPlan">
-        <option value="">[All Plans]</option>
-    </select>
+    @*<select id="searchPlan" class="form-control custom-select form-inline col-md-4" asp-items="ViewBag.selectPlan">
+            <option value="">[All Plans]</option>
+        </select>*@
+    <div class="col-md-4 input-group scrollable-dropdown-menu" style="padding-left: 0rem; padding-right: 0rem;">
+        <input id="searchPlan" class="typeahead form-control form-inline" style="width: 100%" type="text" value="@ViewData["plan"]" placeholder="Search Plan" />
+        <div class="input-group-btn">
+            <div id="searchPlanButtonDropdownMenu" class="dropdown-menu scrollable-dropdown-menu dropdown-menu-right input-group-background-plans">
+                <h6><i class="dropdown-header">All Plans</i></h6><hr />
+            </div>
+            <button class="btn btn-secondary" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fas fa-chevron-down"></span></button>
+        </div>
+    </div>
     <div style="padding-left: 0.4rem;"></div>
-    <input id="selectReport" class="form-control form-inline col-md-4" type="text" value="@ViewData["report"]" placeholder="Search Report" />
+    <div class="col-md-4 input-group scrollable-dropdown-menu" style="padding-left: 0rem; padding-right: 0rem;">
+        <input id="searchReport" class="typeahead form-control form-inline" style="width: 100%" type="text" value="@ViewData["report"]" placeholder="Search Report" />
+        <div class="input-group-btn">
+            <div id="searchReportButtonDropdownMenu" class="dropdown-menu scrollable-dropdown-menu dropdown-menu-right input-group-background-plans">
+                <h6><i class="dropdown-header">All Reports</i></h6><hr />
+            </div>
+            <button class="btn btn-secondary" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fas fa-chevron-down"></span></button>
+        </div>
+    </div>
+
 </div>
 @{
     var today = DateTime.Today;
@@ -189,7 +207,7 @@
         </button>
     </div>
 </div>
-<div id="selectedCard">
+<div id="searchedCard">
 
 </div>
 <div id="cards" class="card-columns">

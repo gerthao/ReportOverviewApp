@@ -15,7 +15,6 @@ using ReportOverviewApp.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using NToastNotify;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Rewrite;
 
@@ -66,12 +65,6 @@ namespace ReportOverviewApp
                        options.ClientId = Configuration["Authentication:Microsoft:ClientId"];
                        options.ClientSecret = Configuration["Authentication:Microsoft:ClientSecret"];
                    });
-
-            services.AddNToastNotify(new ToastOption()
-            {
-                ProgressBar = false,
-                PositionClass = ToastPositions.BottomCenter
-            });
 
             services.AddMvc();
             // Add application services.

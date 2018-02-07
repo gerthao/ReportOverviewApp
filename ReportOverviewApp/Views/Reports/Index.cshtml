@@ -9,7 +9,7 @@
 
 
 <style>
-    input:not([type="checkbox"]), textarea, select{
+    input:not([type="checkbox"]), textarea, select {
         min-width: 100%;
     }
 </style>
@@ -19,7 +19,7 @@
         <button id="create" type="button" class="btn btn-primary" data-toggle="modal" data-target="#createModal" aria-label="Left Align"><span class="fas fa-plus-square"></span>&nbsp;&nbsp;Create New</button>
         <button class="btn btn-primary exportLink" type="button" data-toggle="modal" data-target="#exportModal"><span class="fas fa-file-excel"></span>&nbsp;&nbsp;Export</button>
     </span>
-    
+
     <span id="loading"></span>
 </h4>
 
@@ -44,7 +44,30 @@
     <i class="sort-icon fas fa-filter"></i>
 </div>
 <hr />
-<div class="float-left" style="width: 50%;">
+<div class="row col-md-12" style="padding-bottom: 1.0rem;">
+    <div class="col-md-4 input-group scrollable-dropdown-menu" style="padding-left: 0rem; padding-right: 0rem;">
+        <input id="searchPlan" class="typeahead form-control form-inline" style="width: 100%" type="text" value="@ViewData["plan"]" placeholder="Search Plan" />
+        <div class="input-group-btn">
+            <div id="searchPlanButtonDropdownMenu" class="dropdown-menu scrollable-dropdown-menu dropdown-menu-right input-group-background-plans">
+                <h6><i class="dropdown-header">All Plans</i></h6><hr />
+            </div>
+            <button class="btn btn-secondary" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fas fa-chevron-down"></span></button>
+        </div>
+    </div>
+    <div style="padding-left: 1.0rem;"></div>
+    <div class="col-md-4 input-group scrollable-dropdown-menu" style="padding-left: 0rem; padding-right: 0rem;">
+        <input id="searchBusinessContact" class="typeahead form-control form-inline" style="width: 100%" type="text" value="@ViewData["businessContact"]" placeholder="Search Business Contact" />
+        <div class="input-group-btn">
+            <div id="searchBusinessContactButtonDropdownMenu" class="dropdown-menu scrollable-dropdown-menu dropdown-menu-right input-group-background-plans">
+                <h6><i class="dropdown-header">All Business Contacts</i></h6><hr />
+            </div>
+            <button class="btn btn-secondary" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fas fa-chevron-down"></span></button>
+        </div>
+    </div>
+    <div class="col-md-3"></div>
+</div>
+
+@*<div class="float-left" style="width: 50%;">
     <select id="searchPlan" class="form-control custom-select" asp-items="ViewBag.selectPlans">
         <option value="">[All Plans]</option>
     </select>
@@ -53,7 +76,7 @@
     <select id="searchBusinessContact" class="form-control custom-select" asp-items="ViewBag.selectBusinessContacts">
         <option value="">[All Business Contacts]</option>
     </select>
-</div>
+</div>*@
 <div id="tableTemplate" style="display:none;">
     <table class="table table-sm table-bordered table-striped table-hover">
         <thead>
@@ -175,8 +198,8 @@
     </table>
 </div>
 <div id="modals">
-    @await  Component.InvokeAsync("ReportForm", "Create")
-    @await  Component.InvokeAsync("ReportForm", "Manage")
+    @await Component.InvokeAsync("ReportForm", "Create")
+    @await Component.InvokeAsync("ReportForm", "Manage")
     <div id="exportModal" class="modal fade">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -276,14 +299,14 @@
                                 success: function (data) {
                                     if ($(data).length > 0) {
                                         $(form).find('.reportTitle').text(data.name);
-                                        Object.keys(data).forEach(function(k) {
+                                        Object.keys(data).forEach(function (k) {
                                             if (!k.includes('$')) {
                                                 if (k.includes('Date') && data[k]) {
                                                     $(form).find('.report-' + k).val(convertDate((data[k])));
                                                 } else {
                                                     $(form).find('.report-' + k).val(data[k]);
                                                 }
-                                            } 
+                                            }
                                         });
                                         let businessContactRequest = getBusinessContactRequest(data.businessContactId);
                                         $(form).find('.businessContactInformation').text('Business Contact Information (Loading...)');
@@ -504,6 +527,18 @@
             function parseJsonDate(jsonDateString) {
                 return new Date(jsonDateString);
             }
+            $('.report-selectPlans').on('keyup', function (e) {
+                if (e.keyCode === 13) {
+                    $(this).find(':selected').appendTo($(this).parents('form').find('.report-plans'));
+
+                }
+            });
+            $('.report-plans').on('keyup', function (e) {
+                if (e.keyCode === 13) {
+                    $(this).find(':selected').appendTo($(this).parents('form').find('.report-selectPlans'));
+
+                }
+            });
             $('.assignPlans').on('click', function () {
                 let selection = $(this).parents('form').find('.report-selectPlans').find(':selected');
                 selection.appendTo($(this).parents('form').find('.report-plans'));
@@ -571,14 +606,14 @@
                     success: function (data) {
                         if ($(data).length > 0) {
                             $(form).find('.reportTitle').text(data.name);
-                            Object.keys(data).forEach(function(k) {
+                            Object.keys(data).forEach(function (k) {
                                 if (!k.includes('$')) {
                                     if (k.includes('Date') && data[k]) {
                                         $(form).find('.report-' + k).val(convertDate((data[k])));
                                     } else {
                                         $(form).find('.report-' + k).val(data[k]);
                                     }
-                                } 
+                                }
                             });
                             let businessContactRequest = getBusinessContactRequest(data.businessContactId);
                             $(form).find('.businessContactInformation').text('Business Contact Information (Loading...)');
@@ -600,7 +635,7 @@
                                             $(form).find('.report-plans').html(plans.filter(function (plan) { return mapping.map(function (m) { return m.planId; }).includes(plan.id); }).sort(function (x, y) { return x.name.toLowerCase() > y.name.toLowerCase(); }).map(function (plan) { return '<option value="' + plan.id + '">' + plan.name + '</option>'; }));
                                             $(form).find('.report-selectPlans').html(plans.filter(function (plan) { return !mapping.map(function (m) { return m.planId; }).includes(plan.id); }).sort(function (x, y) { return x.name.toLowerCase() > y.name.toLowerCase(); }).map(function (plan) { return '<option value="' + plan.id + '">' + plan.name + '</option>'; }));
                                             $(form).find('.planInformation').text('Plan Information');
-                                        } 
+                                        }
                                     });
                                     plansRequest.fail(function (a, b, c) {
                                         console.log(JSON.stringify(a) + b + c);
@@ -626,15 +661,14 @@
                 });
             })
             $('#search').on('click', function () {
-                search($('#searchId').val(), $('#searchName').val(), $('#searchFrequency').val(), $('#searchPlan').find(':selected').val(), $('#searchBusinessContact').find(':selected').val(), $('#searchIsTermed').val());
+                search($('#searchId').val(), $('#searchName').val(), $('#searchFrequency').val(), $('#searchPlan').val(), $('#searchBusinessContact').val(), $('#searchIsTermed').val());
             });
             $(document).keypress(function (e) {
-                if (e.which == 13) {
-                    search($('#searchId').val(), $('#searchName').val(), $('#searchFrequency').val(), $('#searchPlan').val(), $('#searchBusinessContact').find(':selected').val(), $('#searchIsTermed').val());
+                if (e.which === 13) {
+                    search($('#searchId').val(), $('#searchName').val(), $('#searchFrequency').val(), $('#searchPlan').val(), $('#searchBusinessContact').val(), $('#searchIsTermed').val());
                 }
 
             });
-
             $('#clear').on('click', function () {
                 $('input').val('');
                 $('select').val('');
@@ -685,8 +719,6 @@
                             if (a === null) return c;
                             if (c === null) return a;
                             return a + '&' + c;
-
-
                         });
                         if (queryString !== '') {
                             queryUrl += '?' + queryString;
@@ -735,18 +767,68 @@
             }
             function init() {
                 let plansRequest = getPlansRequest();
-                plansRequest.done(function (plans) {
+                plansRequest.done(function (data) {
                     let form = $('#modals').find('#createModal').find('form');
-                    if (plans) {
-                        $(form).find('.report-selectPlans').html(plans.sort(function (x, y) { return x.name.toLowerCase() > y.name.toLowerCase(); }).map(function (plan) { return '<option value="' + plan.id + '">' + plan.name + '</option>'; }));
+                    if (data) {
+                        $(form).find('.report-selectPlans').html(data.sort(function (x, y) { return x.name.toLowerCase() > y.name.toLowerCase(); }).map(function (plan) { return '<option value="' + plan.id + '">' + plan.name + '</option>'; }));
+                        $('#searchPlan.typeahead').typeahead(
+                            {
+                                hint: true,
+                                highlight: true,
+                                minLength: 1
+                            },
+                            {
+                                name: 'plans',
+                                source: new Bloodhound({
+                                    datumTokenizer: Bloodhound.tokenizers.whitespace,
+                                    queryTokenizer: Bloodhound.tokenizers.whitespace,
+                                    local: data.map(p => p.name)
+                                }),
+                                limit: 10,
+                                templates: {
+                                    header: '<h6 style="padding: 3px 20px;"><i>Plans</i></h6><hr />'
+                                }
+                            }
+                        );
+                        $('#searchPlanButtonDropdownMenu').append(data.sort((a, b) => a.name > b.name).map(r =>
+                            ['<button class="dropdown-item input-group-background-plans">', r.name, '</button>'].join(''))
+                        );
+                        $('#searchPlanButtonDropdownMenu button').on('click', function () {
+                            $('#searchPlan').val($(this).text());
+                        });
                     }
                 });
                 plansRequest.fail(function (a, b, c) {
                     console.log('plan request failed: ' + c);
                 });
                 let businessContactsRequest = getBusinessContactsRequest();
-                businessContactsRequest.done(function (contacts) {
-                    $('.report-businessContact').html(contacts.sort(function (x, y) { return x.name.toLowerCase() > y.name.toLowerCase(); }).map(function (contact) { return '<option value="' + contact.id + '">' + contact.name + '</option>'; }));
+                businessContactsRequest.done(function (data) {
+                    $('.report-businessContact').html(data.sort(function (x, y) { return x.name.toLowerCase() > y.name.toLowerCase(); }).map(function (contact) { return '<option value="' + contact.id + '">' + contact.name + '</option>'; }));
+                    $('#searchBusinessContact.typeahead').typeahead(
+                        {
+                            hint: true,
+                            highlight: true,
+                            minLength: 1
+                        },
+                        {
+                            name: 'businesscontacts',
+                            source: new Bloodhound({
+                                datumTokenizer: Bloodhound.tokenizers.whitespace,
+                                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                                local: data.map(bc => bc.name)
+                            }),
+                            limit: 10,
+                            templates: {
+                                header: '<h6 style="padding: 3px 20px;"><i>Business Contacts</i></h6><hr />'
+                            }
+                        }
+                    );
+                    $('#searchBusinessContactButtonDropdownMenu').append(data.sort((a, b) => a.name > b.name).map(r =>
+                        ['<button class="dropdown-item input-group-background-plans">', r.name, '</button>'].join(''))
+                    );
+                    $('#searchBusinessContactButtonDropdownMenu button').on('click', function () {
+                        $('#searchBusinessContact').val($(this).text());
+                    });
                 })
                 businessContactsRequest.fail(function (a, b, c) {
                     console.log('businesscontacts request failed: ' + c);

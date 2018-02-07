@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Authorization;
 using ReportOverviewApp.Models.ReportViewModels;
 using ReportOverviewApp.Helpers;
 using System.Text;
-using NToastNotify;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ReportOverviewApp.Controllers
@@ -18,7 +17,6 @@ namespace ReportOverviewApp.Controllers
     public class ReportsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private IToastNotification _toastNotification;
         private ReportListViewModel viewModel;
         private UserLogFactory userLogFactory;
 
@@ -112,10 +110,9 @@ namespace ReportOverviewApp.Controllers
         }
         
 
-        public ReportsController(ApplicationDbContext context, IToastNotification toastNotification)
+        public ReportsController(ApplicationDbContext context)
         {
             _context = context;
-            _toastNotification = toastNotification;
             userLogFactory = new UserLogFactory();
 
         }
@@ -202,7 +199,6 @@ namespace ReportOverviewApp.Controllers
         [HttpPost, ValidateAntiForgeryToken, Authorize]
         public async Task<IActionResult> Create([Bind("Report, Plans")] ReportViewModel reportViewModel)
         {
-            ToastMessage toast = null;
             if (ModelState.IsValid)
             {
                 if (reportViewModel.Report.DateAdded == null)
@@ -217,12 +213,10 @@ namespace ReportOverviewApp.Controllers
                 _context.Update(reportViewModel.Report);
                 await _context.AddAsync(userLogFactory.Build(GetCurrentUserID(), $"\"{reportViewModel.Report.Name}\" has been created."));
                 await _context.SaveChangesAsync();
-                toast = new ToastMessage(message: $"{reportViewModel.Report.Name} has been successfully created.", title: "Success", toasType: ToastEnums.ToastType.Success, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
-                ShowToast(toast);
+               
                 return RedirectToAction("Index");
             }
-            toast = new ToastMessage(message: $"One or more fields in the form are not valid.", title: "Changes Needed", toasType: ToastEnums.ToastType.Warning, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
-            ShowToast(toast);
+           
             return View(reportViewModel);
         }
 
@@ -255,11 +249,8 @@ namespace ReportOverviewApp.Controllers
         [HttpPost, ValidateAntiForgeryToken, Authorize]
         public async Task<IActionResult> Edit(int id, [Bind("Report, Plans")] ReportViewModel reportViewModel /*[Bind("Id,Name,BusinessContact,BusinessOwner,DueDate1,DueDate2,DueDate3,DueDate4,Frequency,DayDue,DeliveryFunction,WorkInstructions,Notes,DaysAfterQuarter,FolderLocation,ReportType,RunWith,DeliveryMethod,DeliveryTo,EffectiveDate,TerminationDate,GroupName,State,ReportPath,OtherDepartment,SourceDepartment,QualityIndicator,ERSReportLocation,ERRStatus,DateAdded,SystemRefreshDate,LegacyReportID,LegacyReportIDR2,ERSReportName,OtherReportLocation,OtherReportName")] Report report*/)
         {
-            ToastMessage toast = null;
             if (id != reportViewModel.Report.Id)
             {
-                toast = new ToastMessage(message: $"IDs do not match", title: "Something Went Wrong...", toasType: ToastEnums.ToastType.Error, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
-                ShowToast(toast);
                 return NotFound();
             }
             if (ModelState.IsValid){
@@ -280,32 +271,21 @@ namespace ReportOverviewApp.Controllers
                     }
                     _context.Update(reportViewModel.Report);
                     await _context.SaveChangesAsync();
-                    toast = new ToastMessage(message: $"{reportViewModel.Report.Name} has been successfully edited.", title: "Success", toasType: ToastEnums.ToastType.Success, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
+                   
                 }
                 catch (DbUpdateConcurrencyException){
                     if (!ReportExists(reportViewModel.Report.Id))
                     {
-                        toast = new ToastMessage(message: $"{reportViewModel.Report.Name} was not found in the database.", title: "Something Went Wrong...", toasType: ToastEnums.ToastType.Error, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
-                        ShowToast(toast);
+
                         return NotFound();
                     }
                     else throw;
                 }
-                ShowToast(toast);
+
                 return RedirectToAction("Index");
             }
-            toast = new ToastMessage(message: $"One or more fields in the form are not valid.", title: "Changes Needed", toasType: ToastEnums.ToastType.Warning, options: new ToastOption() { PositionClass = ToastPositions.BottomRight });
-            ShowToast(toast);
+
             return View(reportViewModel);
-        }
-        
-        /// <summary>
-        ///  Shows toast with given ToastMessage object.
-        /// </summary>
-        /// <param name="toastMessage"></param>
-        private void ShowToast(ToastMessage toastMessage)
-        {
-            _toastNotification.AddToastMessage(toastMessage.Title, toastMessage.Message, toastMessage.ToastType, toastMessage.ToastOptions);
         }
 
         /// <summary>
@@ -413,13 +393,13 @@ namespace ReportOverviewApp.Controllers
         [Authorize, HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            ToastMessage toast = null;
+
             var report = await _context.Reports.Include(r => r.BusinessContact).Include(r => r.ReportPlanMapping).ThenInclude(rpm => rpm.Plan).ThenInclude(p => p.State).SingleOrDefaultAsync(m => m.Id == id);
             _context.Reports.Remove(report);
             await _context.AddAsync(userLogFactory.Build(GetCurrentUserID(), $"\"{report.Name}\" has been deleted."));
-            toast = toast = new ToastMessage(message: $"{report.Name} has been successfully deleted.", title: "Success", toasType: ToastEnums.ToastType.Success, options: new ToastOption() { PositionClass = ToastPositions.BottomRight});
+           
             await _context.SaveChangesAsync();
-            ShowToast(toast);
+
             return RedirectToAction("Index");
         }
         private bool ReportExists(int id) => _context.Reports.Any(e => e.Id == id);

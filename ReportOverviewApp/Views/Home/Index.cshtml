@@ -81,20 +81,34 @@
 @section Scripts{ 
     <script src="~/js/Home/HomeHandler.js" type="text/javascript"></script>
     <script>
+        function groupByDeadline(data) {
+            return data.reduce(function (a, c) { (a[c.deadline] = a[c.deadline] || []).push(c); return a; }, {});
+        }
         let dates = ['x'];
-        let reports = ['Reports_Due'];
-        $.getJSON('/Data/GetDeadlinesCount/', function (data) {
-            for (let kv in data) {
-                dates.push(String(kv));
-                reports.push(data[kv]);
-            }
+        let deadlines = ['Deadlines'];
+        let ran = ['Ran'];
+        let approved = ['Approved'];
+        let sent = ['Sent'];
+        let complete = ['Completed'];
+        ran.push(grouping[k].map(d => d.hasRun ? 1 : 0).reduce((a, c) => a + c, 0));
+        approved.push(grouping[k].map(d => d.hasRun ? 1 : 0).reduce((a, c) => a + c, 0));
+        sent.push(grouping[k].map(d => d.hasRun ? 1 : 0).reduce((a, c) => a + c, 0));
+        complete.push(grouping[k].map(d => d.hasRun ? 1 : 0).reduce((a, c) => a + c, 0));
+        $.getJSON('api/Deadlines', function (data) {
+            console.log(groupByDeadline(data));
+            let grouping = groupByDeadline(data);
+            Object.keys(grouping).forEach(k => {
+                dates.push(new Date(k));
+                deadlines.push(grouping[k].length);
+                
+            });
             let chart = c3.generate({
                 bindto: '#chart',
                 data: {
                     x: 'x',
                     columns: [
                         dates,
-                        reports
+                        deadlines
                     ],
                     
                 },

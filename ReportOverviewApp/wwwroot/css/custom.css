@@ -19,3 +19,7 @@
 .grow:hover {
     transform: scale(1.1);
 }
+.dropdown-menu.scrollable-dropdown-menu {
+    max-height: 35rem;
+    overflow-y: auto;
+}

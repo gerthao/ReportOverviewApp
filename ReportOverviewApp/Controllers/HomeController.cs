@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 using ReportOverviewApp.Data;
 using Microsoft.EntityFrameworkCore;
 using ReportOverviewApp.Models.HomeViewModels;
-using NToastNotify;
 using ReportOverviewApp.ViewComponents;
 
 namespace ReportOverviewApp.Controllers
@@ -16,12 +15,10 @@ namespace ReportOverviewApp.Controllers
     public class HomeController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private IToastNotification _toastNotification;
 
-        public HomeController(ApplicationDbContext context, IToastNotification toastNotification)
+        public HomeController(ApplicationDbContext context)
         {
             _context = context;
-            _toastNotification = toastNotification;
         }
 
         public async Task<IActionResult> Index()

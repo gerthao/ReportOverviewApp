@@ -141,7 +141,62 @@ select.form-control, select.form-control:focus{
     background-color: #404046;
     color: #246fcb;
 }
+.input-group-background-plans {
+    color: #d2d2d2;
+    background-color: #404046;
+}
 ::-webkit-scrollbar-thumb {
     border-radius: 6px;
     background: rgba(255, 255, 255, 0.6);
+}
+
+.dropdown-menu, span.twitter-typeahead .tt-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 1rem;
+    text-align: left;
+    list-style: none;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 0.25rem;
+    background-color: #404046;
+    color: #246fcb;
+}
+
+span.twitter-typeahead .tt-suggestion {
+    display: block;
+    width: 100%;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.5;
+    color: #d2d2d2;
+    text-align: inherit;
+    white-space: nowrap;
+    background: none;
+    border: 0;
+}
+
+    span.twitter-typeahead .tt-suggestion:focus, .dropdown-item:hover, span.twitter-typeahead .tt-suggestion:hover {
+        color: #fff;
+        text-decoration: none;
+        background-color: #0275d8;
+    }
+
+    span.twitter-typeahead .active.tt-suggestion, span.twitter-typeahead .tt-suggestion.tt-cursor, span.twitter-typeahead .active.tt-suggestion:focus, span.twitter-typeahead .tt-suggestion.tt-cursor:focus, span.twitter-typeahead .active.tt-suggestion:hover, span.twitter-typeahead .tt-suggestion.tt-cursor:hover {
+        color: #fff;
+        text-decoration: none;
+        background-color: #0275d8;
+        outline: 0;
+    }
+
+span.twitter-typeahead .disabled.tt-suggestion, span.twitter-typeahead .disabled.tt-suggestion:focus, span.twitter-typeahead .disabled.tt-suggestion:hover {
+    color: #818a91;
 }

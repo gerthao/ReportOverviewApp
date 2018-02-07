@@ -11,6 +11,8 @@
     });
     $('#showAllButton').click(function () { $('.list-collapsable').collapse('show'); });
     $('#hideAllButton').click(function () { $('.list-collapsable').collapse('hide'); });
+    
+
     function groupByDeadline(data) {
         return data.reduce(function (a, c) { (a[c.deadline] = a[c.deadline] || []).push(c); return a; }, {});
     }
@@ -27,7 +29,7 @@
     }
     $('#changeButton').click(function () {
         $('#status').children().fadeOut(200);
-        retrieveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val(), $('#selectPlan').find(':selected').val(), $('#selectReport').val());
+        retrieveReports($('#searchYear').val(), $('#searchMonth').find(':selected').val(), $('#searchPlan').val(), $('#searchReport').val());
     });
     $('#generateButton').on('click', function () {
         $('#generateIcon').addClass('ld ld-spin');
@@ -52,9 +54,26 @@
                 $('#generateStatus').html('<div class="alert alert-danger">Something went wrong: ' + c + '.  Contact your developer.</div>');
                 $('#generateIcon').removeClass('ld ld-spin');
             }
-
         });
     });
+    function getReportsRequest() {
+        let request = $.ajax({
+            type: 'GET',
+            url: '/api/Reports',
+            dataType: 'json',
+            contentType: 'application/json; charset-utf-8',
+        });
+        return request;
+    }
+    function getPlansRequest() {
+        let request = $.ajax({
+            type: 'GET',
+            url: '/api/Plans',
+            dataType: 'json',
+            contentType: 'application/json; charset-utf-8',
+        });
+        return request;
+    }
     function retrieveReports(year, month, plan, report, lastEditedDate) {
         $('#loadingIcon').html('<i class="fas fa-cog ld ld-spin"></i>');
         $('button').prop('disabled', true);
@@ -230,8 +249,71 @@
             $(icon).html('<i class="far fa-circle text-info"></i>');
         }
     }
+    
     function initialize() {
-        retrieveReports($('#selectYear').val(), $('#selectMonth').find(':selected').val(), $('#selectPlan').find(':selected').val(), $('#selectReport').val());
+        retrieveReports($('#searchYear').val(), $('#searchMonth').find(':selected').val(), $('#searchPlan').val(), $('#searchReport').val());
+        let selectReportAutoCompleteRequest = getReportsRequest();
+        selectReportAutoCompleteRequest.done(function (data) {
+            $('#searchReport.typeahead').typeahead(
+                {
+                    hint: true,
+                    highlight: true,
+                    minLength: 1
+                },
+                {
+                    name: 'reports',
+                    source: new Bloodhound({
+                        datumTokenizer: Bloodhound.tokenizers.whitespace,
+                        queryTokenizer: Bloodhound.tokenizers.whitespace,
+                        local: data.map(r => r.name)
+                    }),
+                    limit: 10,
+                    templates: {
+                        header: '<h6 style="padding: 3px 20px;"><i>Reports</i></h6><hr />'
+                    }
+                }
+            );
+            $('#searchReportButtonDropdownMenu').append(data.sort((a, b) => a.name > b.name).map(r =>
+                ['<button class="dropdown-item input-group-background-plans">', r.name, '</button>'].join(''))
+            );
+            $('#searchReportButtonDropdownMenu button').on('click', function () {
+                $('#searchReport').val($(this).text());
+            });
+        });
+        selectReportAutoCompleteRequest.fail(function (a, b, c) {
+            console.log("selectReportAutoCompleteRequest failed\nInput field for reports will no longer be able to auto-suggest.\nError message: " + c);
+        });
+        let selectPlanAutoCompleteRequest = getPlansRequest();
+        selectPlanAutoCompleteRequest.done(function (data) {
+            $('#searchPlan.typeahead').typeahead(
+                {
+                    hint: true,
+                    highlight: true,
+                    minLength: 1
+                },
+                {
+                    name: 'reports',
+                    source: new Bloodhound({
+                        datumTokenizer: Bloodhound.tokenizers.whitespace,
+                        queryTokenizer: Bloodhound.tokenizers.whitespace,
+                        local: data.map(r => r.name)
+                    }),
+                    limit: 10,
+                    templates: {
+                        header: '<h6 style="padding: 3px 20px;"><i>Plans</i></h6><hr />'
+                    }
+                }
+            );
+            $('#searchPlanButtonDropdownMenu').append(data.sort((a, b) => a.name > b.name).map(r =>
+                ['<button class="dropdown-item input-group-background-plans">', r.name, '</button>'].join(''))
+            );
+            $('#searchPlanButtonDropdownMenu button').on('click', function () {
+                $('#searchPlan').val($(this).text());
+            });
+        });
+        selectPlanAutoCompleteRequest.fail(function (a, b, c) {
+            console.log("selectPlanAutoCompleteRequest failed\nInput field for plans will no longer be able to auto-suggest.\nError message: " + c);
+        });
     }
     $('.card-search').on('keyup', function () {
         let value = $(this).val().toLowerCase();
