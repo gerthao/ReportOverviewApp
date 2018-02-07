@@ -50,7 +50,7 @@
     </select>
 </div>
 <div class="float-right" style="width: 50%; padding-bottom: 0.8rem;">
-    <select id="searchPlan" class="form-control custom-select" asp-items="ViewBag.BusinessContacts">
+    <select id="searchBusinessContact" class="form-control custom-select" asp-items="ViewBag.selectBusinessContacts">
         <option value="">[All Business Contacts]</option>
     </select>
 </div>
@@ -217,13 +217,14 @@
             let _name = $('#viewName').val() ? $('#viewName').val() : null;
             let _frequency = $('#viewFrequency').val() ? $('#viewFrequency').val() : null;
             let _plan = $('#viewPlan').val() ? $('#viewPlan').val() : null;
+            let _businessContact = $('#viewBusinessContact').val() ? $('#viewBusinessContact').val() : null;
             let _isTermed = $('#viewIsTermed').val() ? $('#viewIsTermed').val() : null;
             let _sort = $('#viewSort').val() ? $('#viewSort').val() : null;
-            function getWholeSize(id, name, frequency, plan, isTermed) {
+            function getWholeSize(id, name, frequency, plan, businessContact, isTermed) {
                 let request = $.ajax({
                     type: 'GET',
                     url: 'api/Reports/',
-                    data: { id: id, name: name, frequency: frequency, plan: plan, isTermed: isTermed, sort: null, from: null, take: null },
+                    data: { id: id, name: name, frequency: frequency, plan: plan, businessContact: businessContact, isTermed: isTermed, sort: null, from: null, take: null },
                     dataType: 'json',
                     success: function (data) {
                         if ($(data).length > 0) {
@@ -338,7 +339,7 @@
                     }
                 })
                 $(row).find('.manage').attr('href', '#Manage');
-                getWholeSize(_id, _name, _frequency);
+                getWholeSize(_id, _name, _frequency, _plan, _businessContact, _isTermed);
             }
             function appendRow(id) {
                 let modelRequest = getReport(id);
@@ -625,11 +626,11 @@
                 });
             })
             $('#search').on('click', function () {
-                search($('#searchId').val(), $('#searchName').val(), $('#searchFrequency').val(), $('#searchPlan').find(':selected').val(), $('#searchIsTermed').val());
+                search($('#searchId').val(), $('#searchName').val(), $('#searchFrequency').val(), $('#searchPlan').find(':selected').val(), $('#searchBusinessContact').find(':selected').val(), $('#searchIsTermed').val());
             });
             $(document).keypress(function (e) {
                 if (e.which == 13) {
-                    search($('#searchId').val(), $('#searchName').val(), $('#searchFrequency').val(), $('#searchPlan').val(), $('#searchIsTermed').val());
+                    search($('#searchId').val(), $('#searchName').val(), $('#searchFrequency').val(), $('#searchPlan').val(), $('#searchBusinessContact').find(':selected').val(), $('#searchIsTermed').val());
                 }
 
             });
@@ -639,13 +640,13 @@
                 $('select').val('');
                 search();
             });
-            function search(id, name, frequency, plan, isTermed) {
+            function search(id, name, frequency, plan, businessContact, isTermed) {
                 $('.index').text(_page);
                 $('#loading').html($('#icon-template').find('.loading-icon').clone(false));
-                getReports(id, name, frequency, plan, isTermed, _sort, getFrom(), _size);
-                getWholeSize(id, name, frequency, plan, isTermed);
+                getReports(id, name, frequency, plan, businessContact, isTermed, _sort, getFrom(), _size);
+                getWholeSize(id, name, frequency, plan, businessContact, isTermed);
             }
-            function getReports(id, name, frequency, plan, isTermed, sort, start, take) {
+            function getReports(id, name, frequency, plan, businessContact, isTermed, sort, start, take) {
                 $('.next').prop('disabled', true);
                 $('.prev').prop('disabled', true);
                 _id = id;
@@ -653,12 +654,14 @@
                 _sort = sort;
                 _plan = plan;
                 _frequency = frequency;
+                _businessContact = businessContact;
                 _isTermed = isTermed;
                 let query = {
                     id: !_id ? null : _id,
                     name: !_name ? null : _name,
                     sort: !_sort || _sort === undefined ? null : _sort,
                     plan: !_plan ? null : _plan,
+                    businessContact: !_businessContact ? null : _businessContact,
                     frequency: !_frequency ? null : _frequency,
                     isTermed: !_isTermed ? null : _isTermed,
                     page: _page,
@@ -668,7 +671,7 @@
                 let request = $.ajax({
                     type: 'GET',
                     url: 'api/Reports/',
-                    data: { id: _id, name: _name, frequency: _frequency, plan: _plan, isTermed: _isTermed, sort: _sort, from: start, take: take },
+                    data: { id: _id, name: _name, frequency: _frequency, plan: _plan, businessContact: _businessContact, isTermed: _isTermed, sort: _sort, from: start, take: take },
                     dataType: 'json',
                     success: function (data) {
                         let queryString = '';
@@ -762,7 +765,7 @@
                 });
                 $(this).append($('#icon-template').find('.sort-icon').clone(false).addClass('ldt ldt-flip-v'));
                 $('#loading').html($('#icon-template').find('.loading-icon').clone(false));
-                getReports(_id, _name, _frequency, _isTermed, _sort, getFrom(), _size);
+                getReports(_id, _name, _frequency, _plan, _businessContact, _isTermed, _sort, getFrom(), _size);
             });
             $('.pageSizeOption').on('click', function () {
                 if (_size === parseInt($(this).text())) {
@@ -772,15 +775,15 @@
                 _page = 1;
                 $('.index').text(_page);
                 $('#loading').html($('#icon-template').find('.loading-icon').clone(false));
-                getReports(_id, _name, _frequency, _plan, _isTermed, _sort, getFrom(), _size);
-                getWholeSize(_id, _name, _frequency, _plan, _isTermed);
+                getReports(_id, _name, _frequency, _plan, _businessContact, _isTermed, _sort, getFrom(), _size);
+                getWholeSize(_id, _name, _frequency, _plan, _businessContact, _isTermed);
             });
             $('.next').on('click', function () {
                 if (_page !== parseInt($('.total').text())) {
                     _page = parseInt(_page) + 1;
                     $('.index').text(_page);
                     $('#loading').html($('#icon-template').find('.loading-icon').clone(false));
-                    getReports(_id, _name, _frequency, _plan, _isTermed, _sort, getFrom(), _size);
+                    getReports(_id, _name, _frequency, _plan, _businessContact, _isTermed, _sort, getFrom(), _size);
                 }
             })
             $('.prev').on('click', function () {
@@ -788,7 +791,7 @@
                     _page = parseInt(_page) - 1;
                     $('.index').text(_page);
                     $('#loading').html($('#icon-template').find('.loading-icon').clone(false));
-                    getReports(_id, _name, _frequency, _plan, _isTermed, _sort, getFrom(), _size);
+                    getReports(_id, _name, _frequency, _plan, _businessContact, _isTermed, _sort, getFrom(), _size);
                 }
             })
             function getFrom() {

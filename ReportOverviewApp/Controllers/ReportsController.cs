@@ -132,7 +132,7 @@ namespace ReportOverviewApp.Controllers
             //await UpdateDeadlinesAsync();
             return View(await GetReportViewModelAsync(search, column, entriesPerPage, pageIndex, state, plan, begin, end, frequency, businessContact, businessOwner, sourceDepartment));
         }
-        public async Task<IActionResult> Index(string id, string name, string frequency, string plan, bool isTermed, string sort, int? page = 1, int? take = 100)
+        public async Task<IActionResult> Index(string id, string name, string frequency, string plan, string businessContact, bool isTermed, string sort, int? page = 1, int? take = 100)
         {
 
             ViewData["id"] = id;
@@ -142,8 +142,9 @@ namespace ReportOverviewApp.Controllers
             ViewData["isTermed"] = isTermed;
             ViewData["page"] = page;
             ViewData["take"] = take;
-            //ViewData["plan"] = plan;
-            ViewData["BusinessContacts"] = new SelectList(await _context.BusinessContacts.ToListAsync(), "Id", "Name");
+            ViewData["plan"] = plan;
+            ViewData["businessContact"] = businessContact;
+            ViewData["selectBusinessContacts"] = new SelectList(await _context.BusinessContacts.ToListAsync(), "Name", "Name", businessContact);
             ViewData["selectPlans"] = new SelectList(await _context.Plans.OrderBy(p => p.Name).ToListAsync(), "Name", "Name", plan);
             return View(await _context.Reports.ToListAsync());
         }

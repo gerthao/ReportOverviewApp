@@ -26,7 +26,7 @@ namespace ReportOverviewApp.Controllers
             _context = context;
         }
 
-        private List<Report> FilterReports(List<Report> reports, string id, string name, string frequency, string plan, bool? isTermed, string sort, int? from, int? take)
+        private List<Report> FilterReports(List<Report> reports, string id, string name, string frequency, string plan, string businessContact, bool? isTermed, string sort, int? from, int? take)
         {
             if (!String.IsNullOrEmpty(id))
             {
@@ -70,11 +70,15 @@ namespace ReportOverviewApp.Controllers
             if (!String.IsNullOrEmpty(frequency))
             {
                 frequency = frequency.ToLower().Trim();
-                reports = reports.Where(report => report.Frequency.Contains(frequency)).ToList();
+                reports = reports.Where(report => report.Frequency.ToLower().Contains(frequency)).ToList();
             }
             if (!String.IsNullOrEmpty(plan))
             {
-                reports = reports.Where(r => r.ReportPlanMapping.Select(rpm => rpm.Plan.Name.ToLower()).Contains(plan.ToLower())).ToList();
+                reports = reports.Where(r => r.ReportPlanMapping != null && r.ReportPlanMapping.Select(rpm => rpm.Plan.Name.ToLower()).Contains(plan.ToLower())).ToList();
+            }
+            if (!String.IsNullOrEmpty(businessContact))
+            {
+                reports = reports.Where(r => r.BusinessContact != null && r.BusinessContact.Name.ToLower().Contains(businessContact.ToLower())).ToList();
             }
             if(isTermed != null && isTermed.HasValue)
             {
@@ -100,10 +104,10 @@ namespace ReportOverviewApp.Controllers
 
         // GET: api/ReportsApi
         [HttpGet]
-        public async Task<JsonResult> GetReports(string id, string name, string frequency, string plan, bool? isTermed, string sort, int? from, int? take)
+        public async Task<JsonResult> GetReports(string id, string name, string frequency, string plan, string businessContact, bool? isTermed, string sort, int? from, int? take)
         {
             var reports = await _context.Reports.Include(r => r.BusinessContact).Include(r => r.ReportPlanMapping).ThenInclude(rpm => rpm.Plan).ThenInclude(p => p.State).ToListAsync();
-            return Json(FilterReports(reports, id, name, frequency, plan, isTermed, sort, from, take).Select(r => new
+            return Json(FilterReports(reports, id, name, frequency, plan, businessContact, isTermed, sort, from, take).Select(r => new
             {
                 r.Id, r.Name, r.WorkInstructions, r.Notes, r.Frequency, r.IsTermed,
                 BusinessContact = new
