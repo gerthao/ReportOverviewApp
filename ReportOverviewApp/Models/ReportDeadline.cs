@@ -33,7 +33,6 @@ namespace ReportOverviewApp.Models
         public bool IsLate { get => RunDate > Deadline || ApprovalDate > Deadline || SentDate > Deadline; }
         public bool IsPastDue { get => !IsComplete && Deadline < DateTime.Today; }
 
-        //[JsonIgnore, IgnoreDataMember]
         public Report Report { get; set; }
 
         public int ReportId { get; set; }

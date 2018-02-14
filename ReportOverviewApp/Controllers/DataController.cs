@@ -238,14 +238,6 @@ namespace ReportOverviewApp.Controllers
             fileName = StripInvalidFileNameCharacters(fileName);
             switch (fileAs)
             {
-                //case FileExtension.Json:
-                //    return await ExportAsJson(begin, end);
-                //case FileExtension.Csv:
-                //    return await ExportAsSeparatedValues(fileName, ',', begin, end);
-                //case FileExtension.Tsv:
-                //    return await ExportAsSeparatedValues(fileName, '\t', begin, end);
-                //case FileExtension.Xml:
-                //    return await ExportAsXml(fileName, begin, end);
                 case FileExtension.Excel:
                     return await ExportAsExcel(fileName, await GetExportedPlanData());
             }
@@ -362,89 +354,5 @@ namespace ReportOverviewApp.Controllers
             return reports;
         }
         private string GetCurrentUserID() => _context.Users.Where(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault().Id;
-        //[Authorize]
-        //public async Task<JsonResult> GetGraphData()
-        //{
-        //    List<DateTime> dates = new List<DateTime>();
-        //    var i = await _context.Reports.Select()
-        //}
-
-        /// <summary>
-        /// Returns JSON data of report names and deadlines.
-        /// </summary>
-        /// <param name="days">
-        /// Default is null which returns all ReportFragments.  Else returns the ReportFragments that have a deadline on days added onto the current date.
-        /// </param>
-        /// <returns>Returns JSON data of report names and deadlines.</returns>
-        [Authorize]
-        public async Task<JsonResult> GetDeadlines(double? days)
-        {
-            if (days == null)
-            {
-                return Json(await _context.Reports.OrderBy(r => r.Name).Select(r => new ReportFragment(r)).ToListAsync());
-            }
-            return Json(await _context.Reports.OrderBy(r => r.Name).Select(r => new ReportFragment(r)).Where(r => r.ReportDeadline == DateTime.Today.AddDays(days.Value)).ToListAsync());
-        }
-
-        [Authorize]
-        public async Task<JsonResult> GetDeadlinesCount(double? days)
-        {
-            if (days == null)
-            {
-                return Json(await _context.ReportDeadlines.Include(rd => rd.Report).OrderBy(rd => rd.Deadline).ThenBy(rd => rd.Report.Name).GroupBy(rd => rd.Deadline).ToDictionaryAsync(k => k.Key.ToString("yyyy-MM-dd"), v => v.Count()));
-            }
-            return Json(await _context.Reports.OrderBy(r => r.Name).Select(r => new ReportFragment(r)).Where(r => r.ReportDeadline == DateTime.Today.AddDays(days.Value)).ToListAsync());
-        }
-        
-        /// <summary>
-        /// Returs JSON-formatted data of UserLogs.
-        /// </summary>
-        /// <returns>
-        /// Returs JSON-formatted data of UserLogs.
-        /// </returns>
-        [Authorize]
-        public async Task<JsonResult> GetUserLogs()
-        {
-            return Json(await _context.UserLogs.OrderByDescending(ul => ul.TimeStamp).ToListAsync());
-        }
-        [Authorize, HttpGet]
-        public async Task<JsonResult> UserLogs(int? page)
-        {
-            if(page == null)
-            {
-                page = 1;
-            }
-            return Json(await _context.UserLogs.OrderByDescending(ul => ul.TimeStamp).Take(10).ToListAsync());
-        }
-        public class ReportFragment
-        {
-            public string ReportName { get; private set; }
-            public DateTime? ReportDeadline { get; private set; }
-            public ReportFragment(Report report)
-            {
-                ReportName = report.Name;
-                ReportDeadline = report.CurrentDeadline();
-            }
-        }
-
-        public async Task<JsonResult> UserExists(string email)
-        {
-            bool userExists = false;
-            await _context.Users.Select(usr => usr.Email).ForEachAsync(e =>
-            {
-                if (e.ToLowerInvariant() == email.ToLowerInvariant())
-                {
-                    userExists = true;
-                }
-            });
-            return Json(new { UserExists = userExists });
-        }
-        //[Authorize]
-        //public async Task<JsonResult> GetCurrentDateTime()
-        //{
-        //    DateTime dateTime = DateTime.Now;
-        //    return Json(await Task.FromResult(dateTime.ToShortTimeString()));
-        //}
-        
     }
 }

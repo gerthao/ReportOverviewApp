@@ -8,7 +8,6 @@ using ReportOverviewApp.Data;
 using ReportOverviewApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using ReportOverviewApp.Models.ReportViewModels;
-using ReportOverviewApp.Helpers;
 using System.Text;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -18,7 +17,6 @@ namespace ReportOverviewApp.Controllers
     {
         private readonly ApplicationDbContext _context;
         private ReportListViewModel viewModel;
-        private UserLogFactory userLogFactory;
 
         /// <summary>
         ///  Creates a ReportListViewModel to displays records from the Report class.
@@ -113,7 +111,6 @@ namespace ReportOverviewApp.Controllers
         public ReportsController(ApplicationDbContext context)
         {
             _context = context;
-            userLogFactory = new UserLogFactory();
 
         }
 
@@ -126,7 +123,6 @@ namespace ReportOverviewApp.Controllers
         [Route("Reports/Index/Old")]
         public async Task<IActionResult> IndexOld(string search, string column, int entriesPerPage, int pageIndex, string state, string plan, string frequency, string businessContact, string businessOwner, string sourceDepartment, string begin = null, string end = null)
         {
-            //await UpdateDeadlinesAsync();
             return View(await GetReportViewModelAsync(search, column, entriesPerPage, pageIndex, state, plan, begin, end, frequency, businessContact, businessOwner, sourceDepartment));
         }
         public async Task<IActionResult> Index(string id, string name, string frequency, string plan, string businessContact, bool isTermed, string sort, int? page = 1, int? take = 100)
@@ -179,23 +175,10 @@ namespace ReportOverviewApp.Controllers
             ViewData["month"] = month as int?;
             ViewData["year"] = year as int?;
             ViewData["report"] = checkBadString(report) ? null : report;
-            ViewData["selectPlan"] = new SelectList(await _context.Plans.OrderBy(s => s.Name).ToListAsync(), "Name", "Name", plan);
+            ViewData["plan"] = checkBadString(plan) ? null : plan;
             return View();
         }
 
-
-        //[Authorize, HttpGet, Route("Reports/Deadlines/Edit/{id}")]
-        //public async Task<IActionResult> EditDeadline(int? id)
-        //{
-        //    if (id == null) return NotFound();
-        //    var deadline = await _context.ReportDeadlines.Include(rd => rd.Report).SingleOrDefaultAsync(d => d.Id == id);
-        //    if (deadline == null) return NotFound();
-        //    return View(deadline);
-        //}
-
-        // POST: Reports/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost, ValidateAntiForgeryToken, Authorize]
         public async Task<IActionResult> Create([Bind("Report, Plans")] ReportViewModel reportViewModel)
         {
@@ -211,7 +194,7 @@ namespace ReportOverviewApp.Controllers
                 List<ReportPlanMap> list = reportViewModel.Plans is null || reportViewModel.Plans.Count() == 0 ? new List<ReportPlanMap>() : reportViewModel.Plans.Select(i => new ReportPlanMap() { PlanId = i, ReportId = reportViewModel.Report.Id }).ToList();
                 reportViewModel.Report.ReportPlanMapping = list;
                 _context.Update(reportViewModel.Report);
-                await _context.AddAsync(userLogFactory.Build(GetCurrentUserID(), $"\"{reportViewModel.Report.Name}\" has been created."));
+                await _context.AddAsync(new UserLog(GetCurrentUserID(), $"\"{reportViewModel.Report.Name}\" has been created.", DateTime.Now));
                 await _context.SaveChangesAsync();
                
                 return RedirectToAction("Index");
@@ -240,14 +223,10 @@ namespace ReportOverviewApp.Controllers
             }));
         }
 
-        // POST: Reports/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-
         private string GetCurrentUserID() => _context.Users.Where(u => u.UserName.Equals(User.Identity.Name)).SingleOrDefault().Id;
 
         [HttpPost, ValidateAntiForgeryToken, Authorize]
-        public async Task<IActionResult> Edit(int id, [Bind("Report, Plans")] ReportViewModel reportViewModel /*[Bind("Id,Name,BusinessContact,BusinessOwner,DueDate1,DueDate2,DueDate3,DueDate4,Frequency,DayDue,DeliveryFunction,WorkInstructions,Notes,DaysAfterQuarter,FolderLocation,ReportType,RunWith,DeliveryMethod,DeliveryTo,EffectiveDate,TerminationDate,GroupName,State,ReportPath,OtherDepartment,SourceDepartment,QualityIndicator,ERSReportLocation,ERRStatus,DateAdded,SystemRefreshDate,LegacyReportID,LegacyReportIDR2,ERSReportName,OtherReportLocation,OtherReportName")] Report report*/)
+        public async Task<IActionResult> Edit(int id, [Bind("Report, Plans")] ReportViewModel reportViewModel)
         {
             if (id != reportViewModel.Report.Id)
             {
@@ -256,7 +235,7 @@ namespace ReportOverviewApp.Controllers
             if (ModelState.IsValid){
                 try{
                     var unmodifiedReport = _context.Reports.AsNoTracking().SingleOrDefault(r => r.Id == reportViewModel.Report.Id);                   
-                    _context.Add(userLogFactory.Build(GetCurrentUserID(), $"\"{reportViewModel.Report.Name}\" has been edited.", CompareChanges(unmodifiedReport, reportViewModel.Report)));
+                    _context.Add(new UserLog(GetCurrentUserID(), $"\"{reportViewModel.Report.Name}\" has been edited.", DateTime.Now, CompareChanges(unmodifiedReport, reportViewModel.Report)));
                     reportViewModel.Report.BusinessContact = null;
                     List<ReportPlanMap> list = reportViewModel.Plans is null || reportViewModel.Plans.Count() == 0 ? new List<ReportPlanMap>() : reportViewModel.Plans.Select(i => new ReportPlanMap() { PlanId = i, ReportId = reportViewModel.Report.Id }).ToList();              
                     reportViewModel.Report.ReportPlanMapping = list;                    
@@ -396,7 +375,7 @@ namespace ReportOverviewApp.Controllers
 
             var report = await _context.Reports.Include(r => r.BusinessContact).Include(r => r.ReportPlanMapping).ThenInclude(rpm => rpm.Plan).ThenInclude(p => p.State).SingleOrDefaultAsync(m => m.Id == id);
             _context.Reports.Remove(report);
-            await _context.AddAsync(userLogFactory.Build(GetCurrentUserID(), $"\"{report.Name}\" has been deleted."));
+            await _context.AddAsync(new UserLog(GetCurrentUserID(), $"\"{report.Name}\" has been deleted.", DateTime.Now));
            
             await _context.SaveChangesAsync();
 

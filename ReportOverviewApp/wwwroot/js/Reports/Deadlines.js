@@ -42,7 +42,7 @@
             dataType: 'json',
             success: function (data) {
                 if (data && data.success && data.updates > 0) {
-                    $('#generateStatus').html('<div class="alert alert-success"><span>' + data.updates + ' deadlines have been created.</span><ul>' + data.updatedReports.map(r => '<li>' + r + '</li>').toString() + '</ul></div>');
+                    $('#generateStatus').html('<div class="alert alert-success"><span>' + data.updates + ' deadlines have been created.</span><ul>' + data.updatedReports.map(function (r) { return '<li>' + r + '</li>'; }).toString() + '</ul></div>');
                 } else if (data && data.success && data.updates === 0) {
                     $('#generateStatus').html('<div class="alert alert-info">No reports were needed to have a new deadline at this time.</ul></div>');
                 } else {
@@ -61,7 +61,7 @@
             type: 'GET',
             url: '/api/Reports',
             dataType: 'json',
-            contentType: 'application/json; charset-utf-8',
+            contentType: 'application/json; charset-utf-8'
         });
         return request;
     }
@@ -70,7 +70,7 @@
             type: 'GET',
             url: '/api/Plans',
             dataType: 'json',
-            contentType: 'application/json; charset-utf-8',
+            contentType: 'application/json; charset-utf-8'
         });
         return request;
     }
@@ -265,7 +265,7 @@
                     source: new Bloodhound({
                         datumTokenizer: Bloodhound.tokenizers.whitespace,
                         queryTokenizer: Bloodhound.tokenizers.whitespace,
-                        local: data.map(r => r.name)
+                        local: data.map(function (r) { return r.name; })
                     }),
                     limit: 10,
                     templates: {
@@ -273,9 +273,9 @@
                     }
                 }
             );
-            $('#searchReportButtonDropdownMenu').append(data.sort((a, b) => a.name > b.name).map(r =>
-                ['<button class="dropdown-item input-group-background-plans">', r.name, '</button>'].join(''))
-            );
+            $('#searchReportButtonDropdownMenu').append(data.sort(function (a, b) { return a.name > b.name; }).map(function (r) {
+                return ['<button class="dropdown-item input-group-background-plans">', r.name, '</button>'].join('');
+            }));
             $('#searchReportButtonDropdownMenu button').on('click', function () {
                 $('#searchReport').val($(this).text());
             });
@@ -296,7 +296,7 @@
                     source: new Bloodhound({
                         datumTokenizer: Bloodhound.tokenizers.whitespace,
                         queryTokenizer: Bloodhound.tokenizers.whitespace,
-                        local: data.map(r => r.name)
+                        local: data.map(function (r) { return r.name; })
                     }),
                     limit: 10,
                     templates: {
@@ -304,9 +304,9 @@
                     }
                 }
             );
-            $('#searchPlanButtonDropdownMenu').append(data.sort((a, b) => a.name > b.name).map(r =>
-                ['<button class="dropdown-item input-group-background-plans">', r.name, '</button>'].join(''))
-            );
+            $('#searchPlanButtonDropdownMenu').append(data.sort(function (a, b) { return a.name > b.name; }).map(function (r) {
+                return ['<button class="dropdown-item input-group-background-plans">', r.name, '</button>'].join('');
+            }));
             $('#searchPlanButtonDropdownMenu button').on('click', function () {
                 $('#searchPlan').val($(this).text());
             });

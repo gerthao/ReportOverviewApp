@@ -18,33 +18,10 @@ namespace ReportOverviewApp.Models
         public string Name { get; set; }
 
         public virtual ICollection<ReportDeadline> Deadlines { get; set; }
-
-        //[Display(Name = "Is Finished")]
-        //public bool IsFinished { get; set; }
-        //[Display(Name = "Is Client Notified")]
-        //public bool IsClientNotified { get; set; }
-        //[Display(Name = "Is Sent")]
-        //public bool IsSent { get; set; }
-
-        //[DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:g}", ApplyFormatInEditMode = true), Display(Name = "Finished On")]
-        //public DateTime? RunDate { get; set; }
-        //[DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:g}", ApplyFormatInEditMode = true), Display(Name = "Notified On")]
-        //public DateTime? ClientNotifiedDate { get; set; }
-        //[DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:g}", ApplyFormatInEditMode = true), Display(Name = "Sent On")]
-        //public DateTime? SentDate { get; set; }
-
-        //public string UserDone {get; set;}
-        //public string UserClientNotified { get; set; }
-        //public string UserSent { get; set; }
         public int? BusinessContactId { get; set; }
         public BusinessContact BusinessContact { get; set; }
 
         public virtual ICollection<ReportPlanMap> ReportPlanMapping { get; set; }
-
-        //[StringLength(255), Display(Name = "Business Contact")]
-        //public string BusinessContact { get; set; }
-        //[StringLength(255), Display(Name = "Business Owner")]
-        //public string BusinessOwner { get; set; }
         [Display(Name = "First Due Date (If Applicable)")]
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? DueDate1 { get; set; }
@@ -82,12 +59,6 @@ namespace ReportOverviewApp.Models
         public DateTime? EffectiveDate { get; set; }
         [DataType(DataType.Date), Display(Name = "Termination Date")]
         public DateTime? TerminationDate { get; set; }
-        //[StringLength(255), Display(Name = "Plan")]
-        //public string GroupName { get; set; }
-        //[StringLength(10)]
-        //public string State { get; set; }
-        
-        
         [StringLength(2000), Display(Name = "Report Path")]
         public string ReportPath { get; set; }
         [Display(Name = "Other Department")]

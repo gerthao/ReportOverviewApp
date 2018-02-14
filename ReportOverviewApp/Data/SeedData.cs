@@ -12,16 +12,6 @@ using System.Threading.Tasks;
 
 namespace ReportOverviewApp.Data{
     public static class SeedData{
-        private static async void RemoveData(ApplicationDbContext context)
-        {
-            context.BusinessContacts.RemoveRange(context.BusinessContacts);
-            context.ReportDeadlines.RemoveRange(context.ReportDeadlines);
-            context.States.RemoveRange(context.States);
-            context.Plans.RemoveRange(context.Plans);
-            context.Reports.RemoveRange(context.Reports);
-            context.ReportPlanMapping.RemoveRange(context.ReportPlanMapping);
-            await context.SaveChangesAsync();
-        }
         public static void Initialize(IServiceProvider serviceProvider){
             using (var context = new ApplicationDbContext(
                 serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>())){

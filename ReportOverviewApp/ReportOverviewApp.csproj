@@ -50,6 +50,7 @@
     <None Include="wwwroot\lib\loading-io\loading-bar\loading-bar.min.js" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Helpers\" />
     <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">

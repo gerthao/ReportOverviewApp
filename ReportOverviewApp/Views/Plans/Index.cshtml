@@ -157,16 +157,8 @@
                     <input id="searchWindwardId" class="form-control" placeholder="WWID" type="text" style="max-width:7.5rem;max-height:2.5rem;" value="@ViewData["windwardId"]">
                 </th>
                 <th>
-                    @*<div class="form-group form-inline">
-                        <input id="searchActiveTrue" class="custom-checkbox form-control" type="checkbox" value="checkActiveReportsTrue" checked><label class="form-check-label">&nbsp;True&nbsp;</label>
-                        <input id="searchActiveFalse" class="custom-checkbox form-control" type="checkbox" value="checkActiveReportsFalse" checked><label class="form-check-label">&nbsp;False&nbsp;</label>
-                    </div>*@
                 </th>
                 <th>
-                    @*<div class="form-group form-inline">
-                        <input id="searchTermedTrue" class="custom-checkbox form-control" type="checkbox" value="checkActiveReportsTrue" checked><label class="form-check-label">&nbsp;True&nbsp;</label>
-                        <input id="searchTermedFalse" class="custom-checkbox form-control" type="checkbox" value="checkActiveReportsFalse" checked><label class="form-check-label">&nbsp;False&nbsp;</label>
-                    </div>*@
                 </th>
                 <th>
                     <div class="btn-group btn-group-sm" role="group" aria-label="search button group">
@@ -511,7 +503,6 @@
                 );
                 let state = $(form).find('.planState');
                 let model = {
-                    //__RequestVerificationToken: $("[name='__RequestVerificationToken']").val(),
                     id: parseInt(formJSON.id),
                     stateId: parseInt(state.val()),
                     name: formJSON.name,

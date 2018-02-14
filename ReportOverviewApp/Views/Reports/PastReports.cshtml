@@ -19,10 +19,6 @@
     @for (int i = 0; i < Model.Select(rd => rd.Deadline).Distinct().Count(); i++)
     {
         DateTime d = Model.Select(rd => rd.Deadline).Distinct().ElementAt(i);
-        //var total = @Model.Where(rd => rd.Deadline == d).Count();
-        //var runs = @Model.Where(rd => rd.Deadline == d && rd.HasRun).Count();
-        //var approvals = @Model.Where(rd => rd.Deadline == d && rd.IsApproved).Count();
-        //var sends = @Model.Where(rd => rd.Deadline == d && rd.IsSent).Count();
         <div class="card">
             <div class="card-header">
                 <h6 style="display: inline-block;">
@@ -44,25 +40,9 @@
             </div>
             <div class="collapse list-collapsable" id="list-@i">
                 <ul class="list-group list-group-flush">
-                    @*<li class="list-group-item">
-                            <div class="row col-12">
-                                <div class="progress col-4">
-                                    <div class="progress-bar bg-secondary" role="progressbar" style="width:@runs.ToString()+'%'" aria-valuenow="@runs.ToString()" aria-valuemin="0" aria-valuemax="@total"></div>
-                                </div>
-                                <div class="progress col-4">
-                                    <div class="progress-bar bg-info" role="progressbar" style="width:@approvals+'%'" aria-valuenow="@approvals" aria-valuemin="0" aria-valuemax="@total"></div>
-                                </div>
-                                <div class="progress col-4">
-                                    <div class="progress-bar bg-success" role="progressbar" style="width:@sends+'%'" aria-valuenow="@sends" aria-valuemin="0" aria-valuemax="@total"></div>
-                                </div>
-                            </div>
-                        </li>*@
                     @foreach (ReportDeadline rd in Model.Select(rd => rd).Where(rd => rd.Deadline == d))
                     {
                         <li class="list-group-item report-item">
-                            @*<div class="report-item-options" style="display:inline-block;position:absolute; vertical-align:middle; right: 0.5rem;">
-                                    <span class="report-item-options-toggle"><i class="fas fa-chevron-down"></i></span>
-                                </div>*@
                             <ul class="list-inline">
                                 <li class="list-inline-item">
                                     @rd.Report.Name
@@ -76,26 +56,6 @@
                                     </span>
                                 </li>
                             </ul>
-                            @*<ul class="list-inline report-item-status">
-                                <li class="list-inline-item">
-                                    <p>Ran <span>@if (rd.HasRun)
-                                    {<i class="far fa-check-circle text-success"></i> }
-                                    else
-                                    {<i class="far fa-times-circle text-danger"></i>}</span></p>
-                                </li>
-                                <li class="list-inline-item">
-                                    <p>Approved <span>@if (rd.IsApproved)
-                                    {<i class="far fa-check-circle text-success"></i> }
-                                    else
-                                    {<i class="far fa-times-circle text-danger"></i>}</span></p>
-                                </li>
-                                <li class="list-inline-item">
-                                    <p>Sent <span>@if (rd.IsSent)
-                                    {<i class="far fa-check-circle text-success"></i> }
-                                    else
-                                    {<i class="far fa-times-circle text-danger"></i>}</span></p>
-                                </li>
-                            </ul>*@
                         </li>
                     }
                 </ul>
@@ -142,14 +102,5 @@
         $('.list-collapsable').on('shown.bs.collapse', function () {
             $(this).prev('.card-header').children('.options').children('.toggleIcon').children('i').removeClass('fa-chevron-up').addClass('fa-chevron-down');
         });
-            //$(".report-item-options-toggle").click(
-            //    function () {
-            //        $(this).prev('report.children('.report-item-status').slideDown(200);
-            //        //$(this).children('.report-item-status').collapse('show');
-            //    },
-            //    function () {
-            //        $(this).children('.report-item-status').slideUp(200);
-            //    }
-            //);
     </script>
 }

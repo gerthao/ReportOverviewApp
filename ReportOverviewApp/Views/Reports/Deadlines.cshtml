@@ -7,17 +7,7 @@
     #cards > .card{
         transition: all 0.3s ease-in-out;
     }
-    /*.card.bg-danger:hover{
-        box-shadow: 0rem 0rem 0.45rem #e81c00
-    }
-    .card.bg-success:hover{
-        box-shadow: 0rem 0rem 0.45rem #0ec80b
-    }
-    .card.bg-warning:hover{
-        box-shadow: 0rem 0rem 0.45rem #dfc506
-    }*/
     #cards > .card:hover{
-        /*transform: scale(1.05);*/
         box-shadow: 0rem 0rem 0.3rem #0073dc
     }
     li.list-group-item {
@@ -25,7 +15,7 @@
     }
 </style>
     <h4>
-        Status of Reports
+        Report Deadlines
         <i id="loadingIcon"></i>
         <span class="float-right">
 
@@ -82,9 +72,6 @@
     <div style="padding-left: 0.4rem;"></div>
     <input id="searchYear" class="form-control form-inline col-md-1" type="number" value="@selectedYear.Value" />
     <div style="padding-left: 0.4rem;"></div>
-    @*<select id="searchPlan" class="form-control custom-select form-inline col-md-4" asp-items="ViewBag.selectPlan">
-            <option value="">[All Plans]</option>
-        </select>*@
     <div class="col-md-4 input-group scrollable-dropdown-menu" style="padding-left: 0rem; padding-right: 0rem;">
         <input id="searchPlan" class="typeahead form-control form-inline" style="width: 100%" type="text" value="@ViewData["plan"]" placeholder="Search Plan" />
         <div class="input-group-btn">
@@ -110,10 +97,6 @@
     var today = DateTime.Today;
     var tomorrow = DateTime.Today.AddDays(1);
 }
-@*@if (Model == null || Model.Count() == 0)
-{
-    <h6 class="alert alert-warning">No Upcoming Reports Found</h6>
-}*@
 <div id="status"></div>
 <div id="cardTemplate" style="display:none;">
     <div class="card">
@@ -125,7 +108,6 @@
             <div class="card-search-container">
                 <input class="card-search form-control align-self-center bg-dark text-light" type="text" style="display: inline-block; padding-top:0.25rem; padding-bottom:0.25rem; opacity: 0.85; border-radius: 1rem;" placeholder="Search Report" />
             </div>
-            
         </div>
         <div class="panel-collapse collapse">
             <ul class="card-contents list-group list-group-flush">
@@ -137,7 +119,6 @@
             <h6><strong class="completionRate"></strong></h6>
             <div class="progress progress-background-custom" style="height: 5px;">
                 <div class="progress-bar" role="progressbar">
-
                 </div>
             </div>
         </div>
@@ -159,9 +140,9 @@
             <li class="list-inline-item">
                 <span>
                     <a class="editReportDeadlineLink" asp-action="EditReportDeadline" data-toggle="modal" data-target="#editReportDeadlineModal"><span class="fas fa-calendar-alt text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title=""></span></a>
-                    <a class="editReportLink" asp-action="EditReport" data-toggle="modal" data-target="#editReportModal"><span class="fas fa-edit text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title=""></span></a>
+                    @*<a class="editReportLink" asp-action="EditReport" data-toggle="modal" data-target="#editReportModal"><span class="fas fa-edit text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title=""></span></a>*@
                     <a class="viewReportLink" asp-action="Details"><span class="fas fa-book text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title=""></span></a>
-                    <a class="deleteReportLink" asp-action="DeleteReport" data-toggle="modal" data-target="#deleteReportModal"><span class="fas fa-eraser text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title=""></span></a>
+                    @*<a class="deleteReportLink" asp-action="DeleteReport" data-toggle="modal" data-target="#deleteReportModal"><span class="fas fa-eraser text-primary" tabindex="0" data-toggle="tooltip" data-placement="top" title=""></span></a>*@
                 </span>
 
             </li>

@@ -1,4 +1,4 @@
-@using ReportOverviewApp.Models.ReportViewModels
+
 @using ReportOverviewApp.Models
 @model IEnumerable<Report>
 
@@ -22,8 +22,6 @@
 
     <span id="loading"></span>
 </h4>
-
-@*<input id="searchPlan" class="form-control" placeholder="Frequency" type="text" style="max-width:100%;max-height:2.5rem;" value="@ViewData["plan"]">*@
 <div id="inputs" style="display:none;">
     <input id="viewId" value="@ViewData["id"]" hidden />
     <input id="viewName" value="@ViewData["name"]" />
@@ -66,17 +64,6 @@
     </div>
     <div class="col-md-3"></div>
 </div>
-
-@*<div class="float-left" style="width: 50%;">
-    <select id="searchPlan" class="form-control custom-select" asp-items="ViewBag.selectPlans">
-        <option value="">[All Plans]</option>
-    </select>
-</div>
-<div class="float-right" style="width: 50%; padding-bottom: 0.8rem;">
-    <select id="searchBusinessContact" class="form-control custom-select" asp-items="ViewBag.selectBusinessContacts">
-        <option value="">[All Business Contacts]</option>
-    </select>
-</div>*@
 <div id="tableTemplate" style="display:none;">
     <table class="table table-sm table-bordered table-striped table-hover">
         <thead>
@@ -108,8 +95,6 @@
                     <a class="manage" data-toggle="modal" data-target="#editModal"><i class="fas fa-edit"></i></a>
                     <a class="details"><i class="fas fa-book"></i></a>
                     <a class="deadlines"><i class="fas fa-calendar"></i></a>
-                    @*<a class="transfer"><i class="fas fa-exchange-alt"></i></a>*@
-                    @*<a class="reports"><i class="fas fa-arrow-right"></i></a>*@
                 </td>
             </tr>
         </tbody>
@@ -221,19 +206,6 @@
     <script src="~/js/Reports/ReportsHandler.js" type="text/javascript"></script>
     <script>
         $(document).ready(function () {
-            class ReportFilter {
-                constructor(page, size, id, name, frequency, plan, isTermed, sort, take) {
-                    this.page = page;
-                    this.size = size;
-                    this.id = id;
-                    this.name = name;
-                    this.frequency = frequency;
-                    this.plan = plan;
-                    this.isTermed = isTermed;
-                    this.sort = sort;
-                    this.take = take;
-                }
-            }
             let _page = $('#viewPage').val() ? $('#viewPage').val() : 1;
             let _size = $('#viewTake').val() ? $('#viewTake').val() : 100;
             let _id = $('#viewId').val() ? $('#viewId').val() : null;
@@ -782,7 +754,7 @@
                                 source: new Bloodhound({
                                     datumTokenizer: Bloodhound.tokenizers.whitespace,
                                     queryTokenizer: Bloodhound.tokenizers.whitespace,
-                                    local: data.map(p => p.name)
+                                    local: data.map(function (p) { return p.name; })
                                 }),
                                 limit: 10,
                                 templates: {
@@ -790,9 +762,9 @@
                                 }
                             }
                         );
-                        $('#searchPlanButtonDropdownMenu').append(data.sort((a, b) => a.name > b.name).map(r =>
-                            ['<button class="dropdown-item input-group-background-plans">', r.name, '</button>'].join(''))
-                        );
+                        $('#searchPlanButtonDropdownMenu').append(data.sort(function (a, b) { return a.name > b.name; }).map(function(r) { return
+                            ['<button class="dropdown-item input-group-background-plans">', r.name, '</button>'].join('');
+                        }));
                         $('#searchPlanButtonDropdownMenu button').on('click', function () {
                             $('#searchPlan').val($(this).text());
                         });
@@ -815,7 +787,7 @@
                             source: new Bloodhound({
                                 datumTokenizer: Bloodhound.tokenizers.whitespace,
                                 queryTokenizer: Bloodhound.tokenizers.whitespace,
-                                local: data.map(bc => bc.name)
+                                local: data.map(function (bc) { return bc.name; })
                             }),
                             limit: 10,
                             templates: {
@@ -823,9 +795,9 @@
                             }
                         }
                     );
-                    $('#searchBusinessContactButtonDropdownMenu').append(data.sort((a, b) => a.name > b.name).map(r =>
-                        ['<button class="dropdown-item input-group-background-plans">', r.name, '</button>'].join(''))
-                    );
+                    $('#searchBusinessContactButtonDropdownMenu').append(data.sort(function (a, b) { return a.name > b.name; }).map(function (r) {
+                        return ['<button class="dropdown-item input-group-background-plans">', r.name, '</button>'].join('');
+                    }));
                     $('#searchBusinessContactButtonDropdownMenu button').on('click', function () {
                         $('#searchBusinessContact').val($(this).text());
                     });

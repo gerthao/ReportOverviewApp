@@ -18,18 +18,7 @@
     </div>
     <h6 class="card-header" style="display:inline-block">
         User Logs
-        @{int? index = 1; int? total = Model.Count() % 10 != 0 ? Model.Count() / 10 + 1 : Model.Count() / 10;}
-        <span class="float-right">
-            <i id="ulPrev" class="fas fa-chevron-left"></i>
-            <span id="ulIndicator" style="padding-left:1.0rem; padding-right:1.0rem;">
-                <span id="ulIndex">@index</span>
-                /
-                <span id="ulTotal">@total</span>
-            </span>
-            <i id="ulNext" class="fas fa-chevron-right"></i>
-        </span>
     </h6>
-
     <div>
         <table class="card-body table table-bordered table-sm">
             <thead>
@@ -41,17 +30,30 @@
                 </tr>
             </thead>
             <tbody id="ulBody">
+                
+                @if(Model == null || !Model.Any())
+                {
                 <tr>
                     <td colspan="4" class="text-info">No logs present</td>
                 </tr>
+
+                }
+                else
+                {
+                    @foreach(UserLog ul in Model.OrderByDescending(m => m.TimeStamp).Take(5))
+                    {
+                    <tr style="font-size: 0.85rem;">
+                        <td class="ulMessage">@ul.Message</td>
+                        <td class="ulTimeStamp">@ul.TimeStamp.Value.ToString("MM/dd/yyyy")</td>
+                        <td class="ulUser">@ul.User.UserName</td>
+                        <td class="ulNotes">@ul.Notes</td>
+                    </tr>
+
+                    }
+
+                }
+
             </tbody>
         </table>
     </div>
 </div>
-@section scripts{
-    
-}
-@*<script>
-    
-   
-</script>*@
