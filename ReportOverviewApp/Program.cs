@@ -15,27 +15,20 @@ namespace ReportOverviewApp
     {
         public static void Main(string[] args)
         {
-            //var host = new WebHostBuilder()
-            //    .UseKestrel()
-            //    .UseContentRoot(Directory.GetCurrentDirectory())
-            //    .UseIISIntegration()
-            //    .UseStartup<Startup>()
-            //    .UseApplicationInsights()
-            //    .Build();
 
             var host = BuildWebHost(args);
-            using(var scope = host.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                try
-                {
-                    SeedData.Initialize(services);
-                }
-                catch (Exception e)
-                {
-                    services.GetRequiredService<ILogger<Program>>().LogError(e, "An error occurred initializing the database.");
-                }
-            }
+            //using(var scope = host.Services.CreateScope())
+            //{
+            //    var services = scope.ServiceProvider;
+            //    try
+            //    {
+            //        SeedData.Initialize(services);
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        services.GetRequiredService<ILogger<Program>>().LogError(e, "An error occurred initializing the database.");
+            //    }
+            //}
             host.Run();
         }
 

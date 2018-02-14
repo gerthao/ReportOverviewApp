@@ -3,7 +3,6 @@ using Xunit;
 using ReportOverviewApp.Models;
 using Moq;
 using ReportOverviewApp.Data;
-using ReportOverviewApp.Helpers;
 using ReportOverviewApp.Services;
 using ReportOverviewApp.Controllers;
 

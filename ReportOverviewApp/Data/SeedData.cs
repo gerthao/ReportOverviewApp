@@ -58,15 +58,6 @@ namespace ReportOverviewApp.Data{
                     context.Plans.AddRange(plansToDb);
                     context.SaveChanges();
                     List<BusinessContact> businessContacts = reports.Select(report => report.BusinessContact).GroupBy(bc => bc.Name).Select(g => g.First()).OrderBy(bc => bc.Name).ToList();
-                    //List<BusinessContact> businessContactsToDb = new List<BusinessContact>();
-                    //foreach (BusinessContact bc in businessContacts)
-                    //{
-                    //    if (!context.BusinessContacts.Where(c => c.Name == bc.Name).Any())
-                    //    {
-                    //        businessContactsToDb.Add(bc);
-                                
-                    //    }
-                    //}
                     context.BusinessContacts.AddRange(businessContacts);
                     context.SaveChanges();
 

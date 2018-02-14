@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace ReportOverviewApp.Migrations
 {
-    public partial class UpdatedReportDeadline : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,10 +13,10 @@ namespace ReportOverviewApp.Migrations
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true)
+                    Id = table.Column<string>(nullable: false),
+                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(maxLength: 256, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -27,22 +27,22 @@ namespace ReportOverviewApp.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Theme = table.Column<int>(type: "int", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true)
+                    Id = table.Column<string>(nullable: false),
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    Email = table.Column<string>(maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(nullable: false),
+                    LockoutEnabled = table.Column<bool>(nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
+                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
+                    PasswordHash = table.Column<string>(nullable: true),
+                    PhoneNumber = table.Column<string>(nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
+                    SecurityStamp = table.Column<string>(nullable: true),
+                    Theme = table.Column<int>(nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(nullable: false),
+                    UserName = table.Column<string>(maxLength: 256, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -53,10 +53,10 @@ namespace ReportOverviewApp.Migrations
                 name: "BusinessContacts",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    BusinessOwner = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true),
-                    Name = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true)
+                    BusinessOwner = table.Column<string>(maxLength: 64, nullable: true),
+                    Name = table.Column<string>(maxLength: 64, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -67,11 +67,11 @@ namespace ReportOverviewApp.Migrations
                 name: "States",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true),
-                    PostalAbbreviation = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: true),
-                    Type = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true)
+                    Name = table.Column<string>(maxLength: 64, nullable: true),
+                    PostalAbbreviation = table.Column<string>(maxLength: 32, nullable: true),
+                    Type = table.Column<string>(maxLength: 64, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -82,11 +82,11 @@ namespace ReportOverviewApp.Migrations
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    ClaimType = table.Column<string>(nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true),
+                    RoleId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -103,11 +103,11 @@ namespace ReportOverviewApp.Migrations
                 name: "AspNetUserClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    ClaimType = table.Column<string>(nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -124,10 +124,10 @@ namespace ReportOverviewApp.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    LoginProvider = table.Column<string>(nullable: false),
+                    ProviderKey = table.Column<string>(nullable: false),
+                    ProviderDisplayName = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -144,8 +144,8 @@ namespace ReportOverviewApp.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    UserId = table.Column<string>(nullable: false),
+                    RoleId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -168,10 +168,10 @@ namespace ReportOverviewApp.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    UserId = table.Column<string>(nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    Value = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -188,12 +188,12 @@ namespace ReportOverviewApp.Migrations
                 name: "UserLogs",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Message = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Notes = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TimeStamp = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    Message = table.Column<string>(nullable: true),
+                    Notes = table.Column<string>(nullable: true),
+                    TimeStamp = table.Column<DateTime>(nullable: true),
+                    UserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -210,39 +210,39 @@ namespace ReportOverviewApp.Migrations
                 name: "Reports",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    BusinessContactId = table.Column<int>(type: "int", nullable: true),
-                    DateAdded = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DayDue = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
-                    DaysAfterQuarter = table.Column<int>(type: "int", nullable: true),
-                    DeliverTo = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DeliveryFunction = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    DeliveryMethod = table.Column<string>(type: "nvarchar(260)", maxLength: 260, nullable: true),
-                    DueDate1 = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DueDate2 = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DueDate3 = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DueDate4 = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ERRStatus = table.Column<int>(type: "int", nullable: true),
-                    ERSReportLocation = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: true),
-                    ERSReportName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    EffectiveDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    FolderLocation = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
-                    Frequency = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    IsQualityIndicator = table.Column<bool>(type: "bit", nullable: false),
-                    LegacyReportID = table.Column<int>(type: "int", nullable: true),
-                    LegacyReportIDR2 = table.Column<int>(type: "int", nullable: true),
-                    Name = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    Notes = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    OtherReportLocation = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: true),
-                    OtherReportName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    ReportPath = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
-                    ReportType = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    RunWith = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    SourceDepartment = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    SystemRefreshDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    TerminationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    WorkInstructions = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    BusinessContactId = table.Column<int>(nullable: true),
+                    DateAdded = table.Column<DateTime>(nullable: true),
+                    DayDue = table.Column<string>(maxLength: 10, nullable: true),
+                    DaysAfterQuarter = table.Column<int>(nullable: true),
+                    DeliverTo = table.Column<string>(nullable: true),
+                    DeliveryFunction = table.Column<string>(maxLength: 1000, nullable: true),
+                    DeliveryMethod = table.Column<string>(maxLength: 260, nullable: true),
+                    DueDate1 = table.Column<DateTime>(nullable: true),
+                    DueDate2 = table.Column<DateTime>(nullable: true),
+                    DueDate3 = table.Column<DateTime>(nullable: true),
+                    DueDate4 = table.Column<DateTime>(nullable: true),
+                    ERRStatus = table.Column<int>(nullable: true),
+                    ERSReportLocation = table.Column<string>(maxLength: 4000, nullable: true),
+                    ERSReportName = table.Column<string>(maxLength: 1000, nullable: true),
+                    EffectiveDate = table.Column<DateTime>(nullable: true),
+                    FolderLocation = table.Column<string>(maxLength: 2000, nullable: true),
+                    Frequency = table.Column<string>(maxLength: 50, nullable: true),
+                    IsQualityIndicator = table.Column<bool>(nullable: false),
+                    LegacyReportID = table.Column<int>(nullable: true),
+                    LegacyReportIDR2 = table.Column<int>(nullable: true),
+                    Name = table.Column<string>(maxLength: 1000, nullable: true),
+                    Notes = table.Column<string>(nullable: true),
+                    OtherReportLocation = table.Column<string>(maxLength: 4000, nullable: true),
+                    OtherReportName = table.Column<string>(maxLength: 1000, nullable: true),
+                    ReportPath = table.Column<string>(maxLength: 2000, nullable: true),
+                    ReportType = table.Column<string>(maxLength: 50, nullable: true),
+                    RunWith = table.Column<string>(maxLength: 100, nullable: true),
+                    SourceDepartment = table.Column<string>(maxLength: 100, nullable: true),
+                    SystemRefreshDate = table.Column<DateTime>(nullable: true),
+                    TerminationDate = table.Column<DateTime>(nullable: true),
+                    WorkInstructions = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -259,11 +259,11 @@ namespace ReportOverviewApp.Migrations
                 name: "Plans",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    StateId = table.Column<int>(type: "int", nullable: false),
-                    WindwardId = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true)
+                    Name = table.Column<string>(maxLength: 255, nullable: true),
+                    StateId = table.Column<int>(nullable: false),
+                    WindwardId = table.Column<string>(maxLength: 64, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -280,13 +280,13 @@ namespace ReportOverviewApp.Migrations
                 name: "ReportDeadlines",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ApprovalDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Deadline = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ReportId = table.Column<int>(type: "int", nullable: false),
-                    RunDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    SentDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    ApprovalDate = table.Column<DateTime>(nullable: true),
+                    Deadline = table.Column<DateTime>(nullable: false),
+                    ReportId = table.Column<int>(nullable: false),
+                    RunDate = table.Column<DateTime>(nullable: true),
+                    SentDate = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -303,10 +303,10 @@ namespace ReportOverviewApp.Migrations
                 name: "ReportPlanMapping",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    PlanId = table.Column<int>(type: "int", nullable: false),
-                    ReportId = table.Column<int>(type: "int", nullable: false)
+                    PlanId = table.Column<int>(nullable: false),
+                    ReportId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
