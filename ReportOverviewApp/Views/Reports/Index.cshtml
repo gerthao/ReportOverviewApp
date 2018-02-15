@@ -13,175 +13,178 @@
         min-width: 100%;
     }
 </style>
-<h4>
-    Reporting Catalogue
-    <span class="float-right">
-        <button id="create" type="button" class="btn btn-primary" data-toggle="modal" data-target="#createModal" aria-label="Left Align"><span class="fas fa-plus-square"></span>&nbsp;&nbsp;Create New</button>
-        <button class="btn btn-primary exportLink" type="button" data-toggle="modal" data-target="#exportModal"><span class="fas fa-file-excel"></span>&nbsp;&nbsp;Export</button>
-    </span>
+<div class="container">
+    <h4>
+        Reporting Catalogue
+        <span class="float-right">
+            <button id="create" type="button" class="btn btn-primary" data-toggle="modal" data-target="#createModal" aria-label="Left Align"><span class="fas fa-plus-square"></span>&nbsp;&nbsp;Create New</button>
+            <button class="btn btn-primary exportLink" type="button" data-toggle="modal" data-target="#exportModal"><span class="fas fa-file-excel"></span>&nbsp;&nbsp;Export</button>
+        </span>
 
-    <span id="loading"></span>
-</h4>
-<div id="inputs" style="display:none;">
-    <input id="viewId" value="@ViewData["id"]" hidden />
-    <input id="viewName" value="@ViewData["name"]" />
-    <input id="viewSort" value="@ViewData["sort"]" hidden />
-    <input id="viewPlan" value="@ViewData["plan"]" hidden" />
-    <input id="viewFrequency" value="@ViewData["frequency"]" hidden />
-    <input id="viewFrequency" value="@ViewData["isTermed"]" hidden />
-    <input id="viewPage" value="@ViewData["page"]" hidden />
-    <input id="viewTake" value="@ViewData["take"]" hidden />
-</div>
-<div id="alert-template" style="display:none;">
-    <div class="alert alert-danger"></div>
-    <div class="alert alert-warning"></div>
-    <div class="alert alert-success"></div>
-</div>
-<div id="icon-template" style="display:none;">
-    <i class="loading-icon fas fa-cog ld ld-spin"></i>
-    <i class="sort-icon fas fa-filter"></i>
-</div>
-<hr />
-<div class="row col-md-12" style="padding-bottom: 1.0rem;">
-    <div class="col-md-4 input-group scrollable-dropdown-menu" style="padding-left: 0rem; padding-right: 0rem;">
-        <input id="searchPlan" class="typeahead form-control form-inline" style="width: 100%" type="text" value="@ViewData["plan"]" placeholder="Search Plan" />
-        <div class="input-group-btn">
-            <div id="searchPlanButtonDropdownMenu" class="dropdown-menu scrollable-dropdown-menu dropdown-menu-right input-group-background-plans">
-                <h6><i class="dropdown-header">All Plans</i></h6><hr />
-            </div>
-            <button class="btn btn-secondary" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fas fa-chevron-down"></span></button>
-        </div>
+        <span id="loading"></span>
+    </h4>
+    <div id="inputs" style="display:none;">
+        <input id="viewId" value="@ViewData["id"]" hidden />
+        <input id="viewName" value="@ViewData["name"]" />
+        <input id="viewSort" value="@ViewData["sort"]" hidden />
+        <input id="viewPlan" value="@ViewData["plan"]" hidden" />
+        <input id="viewFrequency" value="@ViewData["frequency"]" hidden />
+        <input id="viewFrequency" value="@ViewData["isTermed"]" hidden />
+        <input id="viewPage" value="@ViewData["page"]" hidden />
+        <input id="viewTake" value="@ViewData["take"]" hidden />
     </div>
-    <div style="padding-left: 1.0rem;"></div>
-    <div class="col-md-4 input-group scrollable-dropdown-menu" style="padding-left: 0rem; padding-right: 0rem;">
-        <input id="searchBusinessContact" class="typeahead form-control form-inline" style="width: 100%" type="text" value="@ViewData["businessContact"]" placeholder="Search Business Contact" />
-        <div class="input-group-btn">
-            <div id="searchBusinessContactButtonDropdownMenu" class="dropdown-menu scrollable-dropdown-menu dropdown-menu-right input-group-background-plans">
-                <h6><i class="dropdown-header">All Business Contacts</i></h6><hr />
-            </div>
-            <button class="btn btn-secondary" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fas fa-chevron-down"></span></button>
-        </div>
+    <div id="alert-template" style="display:none;">
+        <div class="alert alert-danger"></div>
+        <div class="alert alert-warning"></div>
+        <div class="alert alert-success"></div>
     </div>
-    <div class="col-md-3"></div>
-</div>
-<div id="tableTemplate" style="display:none;">
-    <table class="table table-sm table-bordered table-striped table-hover">
+    <div id="icon-template" style="display:none;">
+        <i class="loading-icon fas fa-cog ld ld-spin"></i>
+        <i class="sort-icon fas fa-filter"></i>
+    </div>
+    <hr />
+    <div class="row col-md-12" style="padding-bottom: 1.0rem;">
+        <div class="col-md-4 input-group scrollable-dropdown-menu" style="padding-left: 0rem; padding-right: 0rem;">
+            <input id="searchPlan" class="typeahead form-control form-inline" style="width: 100%" type="text" value="@ViewData["plan"]" placeholder="Search Plan" />
+            <div class="input-group-btn">
+                <div id="searchPlanButtonDropdownMenu" class="dropdown-menu scrollable-dropdown-menu dropdown-menu-right input-group-background-plans">
+                    <h6><i class="dropdown-header">All Plans</i></h6><hr />
+                </div>
+                <button class="btn btn-secondary" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fas fa-chevron-down"></span></button>
+            </div>
+        </div>
+        <div style="padding-left: 1.0rem;"></div>
+        <div class="col-md-4 input-group scrollable-dropdown-menu" style="padding-left: 0rem; padding-right: 0rem;">
+            <input id="searchBusinessContact" class="typeahead form-control form-inline" style="width: 100%" type="text" value="@ViewData["businessContact"]" placeholder="Search Business Contact" />
+            <div class="input-group-btn">
+                <div id="searchBusinessContactButtonDropdownMenu" class="dropdown-menu scrollable-dropdown-menu dropdown-menu-right input-group-background-plans">
+                    <h6><i class="dropdown-header">All Business Contacts</i></h6><hr />
+                </div>
+                <button class="btn btn-secondary" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fas fa-chevron-down"></span></button>
+            </div>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+    <div id="tableTemplate" style="display:none;">
+        <table class="table table-sm table-bordered table-striped table-hover">
+            <thead>
+                <tr>
+                    <th class="sortOption">
+                        <a>Id</a>
+                    </th>
+                    <th class="sortOption">
+                        <a>Name</a>
+                    </th>
+                    <th class="sortOption">
+                        <a>Frequency</a>
+                    </th>
+                    <th>Options</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div id="tableContentTemplate" style="display:none;">
+        <table>
+            <tbody>
+                <tr>
+                    <td class="reportId"></td>
+                    <td class="reportName"></td>
+                    <td class="reportFrequency"></td>
+                    <td class="reportIsTermed text-center"></td>
+                    <td class="text-center">
+                        <a class="manage" data-toggle="modal" data-target="#editModal"><i class="fas fa-edit"></i></a>
+                        <a class="details"><i class="fas fa-book"></i></a>
+                        <a class="deadlines"><i class="fas fa-calendar"></i></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <table class="table table-sm table-bordered" id="navigation" style="padding-bottom: 0rem;">
         <thead>
             <tr>
-                <th class="sortOption">
-                    <a>Id</a>
-                </th>
-                <th class="sortOption">
-                    <a>Name</a>
-                </th>
-                <th class="sortOption">
-                    <a>Frequency</a>
-                </th>
-                <th>Options</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-</div>
-<div id="tableContentTemplate" style="display:none;">
-    <table>
-        <tbody>
-            <tr>
-                <td class="reportId"></td>
-                <td class="reportName"></td>
-                <td class="reportFrequency"></td>
-                <td class="reportIsTermed text-center"></td>
-                <td class="text-center">
-                    <a class="manage" data-toggle="modal" data-target="#editModal"><i class="fas fa-edit"></i></a>
-                    <a class="details"><i class="fas fa-book"></i></a>
-                    <a class="deadlines"><i class="fas fa-calendar"></i></a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-<table class="table table-sm table-bordered" id="navigation" style="padding-bottom: 0rem;">
-    <thead>
-        <tr>
-            <th colspan="1">
-                Reports
-                <span class="float-right">
-                    <span class="input-group input-group-sm input-group-background-custom">
-                        <button class="prev btn btn-outline-primary btn-sm input-group-addon input-group-background-custom"><i class="fas fa-chevron-left "></i></button>
-                        <span class="input-group-addon input-group-background-custom ">
-                            <span class="indicator" style="padding-left:1.5rem; padding-right:1.5rem;">
-                                <span class="index" style="padding-right:1.5rem;"> </span>
-                                /
-                                <span class="total" style="padding-left:1.5rem;padding-right:1.5rem;"> </span>
+                <th colspan="1">
+                    Reports
+                    <span class="float-right">
+                        <span class="input-group input-group-sm input-group-background-custom">
+                            <button class="prev btn btn-outline-primary btn-sm input-group-addon input-group-background-custom"><i class="fas fa-chevron-left "></i></button>
+                            <span class="input-group-addon input-group-background-custom ">
+                                <span class="indicator" style="padding-left:1.5rem; padding-right:1.5rem;">
+                                    <span class="index" style="padding-right:1.5rem;"> </span>
+                                    /
+                                    <span class="total" style="padding-left:1.5rem;padding-right:1.5rem;"> </span>
+                                </span>
+                            </span>
+                            <button class="next btn btn-outline-primary btn-sm input-group-addon input-group-background-custom"><i class="fas fa-chevron-right"></i></button>
+                            <i class="take btn btn-outline-primary input-group-addon dropdown-toggle input-group-background-custom" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="sr-only">Toggle Dropdown</span></i>
+                            <span class="dropdown-menu input-group-background-custom">
+                                <span class="dropdown-header input-group-background-custom">Display # of Results</span>
+                                <button class="pageSizeOption dropdown-item input-group-background-custom">20</button>
+                                <button class="pageSizeOption dropdown-item input-group-background-custom">50</button>
+                                <button class="pageSizeOption dropdown-item input-group-background-custom">75</button>
+                                <button class="pageSizeOption dropdown-item input-group-background-custom">100</button>
+                                <button class="pageSizeOption dropdown-item input-group-background-custom">200</button>
+                                <button class="pageSizeOption dropdown-item input-group-background-custom">500</button>
+                                <button class="pageSizeOption dropdown-item input-group-background-custom">1000</button>
+                                <button class="pageSizeOption dropdown-item input-group-background-custom">2000</button>
                             </span>
                         </span>
-                        <button class="next btn btn-outline-primary btn-sm input-group-addon input-group-background-custom"><i class="fas fa-chevron-right"></i></button>
-                        <i class="take btn btn-outline-primary input-group-addon dropdown-toggle input-group-background-custom" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="sr-only">Toggle Dropdown</span></i>
-                        <span class="dropdown-menu input-group-background-custom">
-                            <span class="dropdown-header input-group-background-custom">Display # of Results</span>
-                            <button class="pageSizeOption dropdown-item input-group-background-custom">20</button>
-                            <button class="pageSizeOption dropdown-item input-group-background-custom">50</button>
-                            <button class="pageSizeOption dropdown-item input-group-background-custom">75</button>
-                            <button class="pageSizeOption dropdown-item input-group-background-custom">100</button>
-                            <button class="pageSizeOption dropdown-item input-group-background-custom">200</button>
-                            <button class="pageSizeOption dropdown-item input-group-background-custom">500</button>
-                            <button class="pageSizeOption dropdown-item input-group-background-custom">1000</button>
-                            <button class="pageSizeOption dropdown-item input-group-background-custom">2000</button>
-                        </span>
                     </span>
-                </span>
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr></tr>
-    </tbody>
-</table>
-<div id="status">
-
-</div>
-<div class="reportsTable">
-    <table class="table table-sm table-bordered table-striped table-hover" style="table-layout:fixed;">
-        <thead>
-            <tr>
-                <th style="width: 10%">
-                    <a class="sortOption">Id</a>
-                </th>
-                <th style="width: 50%">
-                    <a class="sortOption">Name</a>
-                </th>
-                <th style="width: 15%">
-                    <a class="sortOption">Frequency</a>
-                </th>
-                <th style="width: 10%">
-                    <a class="sortOption">IsTermed</a>
-                </th>
-                <th style="width: 10%">Options</th>
-            </tr>
-            <tr>
-                <th style="width: 10%">
-                    <input id="searchId" class="form-control" placeholder="Id" type="text" style="max-width:100%;max-height:2.5rem;" value="@ViewData["id"]">
-                </th>
-                <th style="width: 50%">
-                    <input id="searchName" class="form-control" placeholder="Name" type="text" style="max-width:100%;max-height:2.5rem;" value="@ViewData["name"]">
-                </th>
-                <th style="width: 15%">
-                    <input id="searchFrequency" class="form-control" placeholder="Frequency" type="text" style="max-width:100%;max-height:2.5rem;" value="@ViewData["frequency"]">
-                </th>
-                <th style="width: 10%">
-                    <input id="searchIsTermed" class="form-control" placeholder="IsTermed" type="text" style="max-width:100%;max-height:2.5rem;" value="@ViewData["isTermed"]">
-                </th>
-                <th class="text-center" style="width: 10%">
-                    <div class="btn-group" role="group" aria-label="search button group">
-                        <button id="search" type="button" class="btn btn-outline-primary"><i class="fas fa-search"></i></button>
-                        <button id="clear" type="button" class="btn btn-outline-primary"><i class="fas fa-times"></i></button>
-                    </div>
                 </th>
             </tr>
         </thead>
-        <tbody></tbody>
+        <tbody>
+            <tr></tr>
+        </tbody>
     </table>
+    <div id="status">
+
+    </div>
+    <div class="reportsTable">
+        <table class="table table-sm table-bordered table-striped table-hover" style="table-layout:fixed;">
+            <thead>
+                <tr>
+                    <th style="width: 10%">
+                        <a class="sortOption">Id</a>
+                    </th>
+                    <th style="width: 50%">
+                        <a class="sortOption">Name</a>
+                    </th>
+                    <th style="width: 15%">
+                        <a class="sortOption">Frequency</a>
+                    </th>
+                    <th style="width: 10%">
+                        <a class="sortOption">IsTermed</a>
+                    </th>
+                    <th style="width: 10%">Options</th>
+                </tr>
+                <tr>
+                    <th style="width: 10%">
+                        <input id="searchId" class="form-control" placeholder="Id" type="text" style="max-width:100%;max-height:2.5rem;" value="@ViewData["id"]">
+                    </th>
+                    <th style="width: 50%">
+                        <input id="searchName" class="form-control" placeholder="Name" type="text" style="max-width:100%;max-height:2.5rem;" value="@ViewData["name"]">
+                    </th>
+                    <th style="width: 15%">
+                        <input id="searchFrequency" class="form-control" placeholder="Frequency" type="text" style="max-width:100%;max-height:2.5rem;" value="@ViewData["frequency"]">
+                    </th>
+                    <th style="width: 10%">
+                        <input id="searchIsTermed" class="form-control" placeholder="IsTermed" type="text" style="max-width:100%;max-height:2.5rem;" value="@ViewData["isTermed"]">
+                    </th>
+                    <th class="text-center" style="width: 10%">
+                        <div class="btn-group" role="group" aria-label="search button group">
+                            <button id="search" type="button" class="btn btn-outline-primary"><i class="fas fa-search"></i></button>
+                            <button id="clear" type="button" class="btn btn-outline-primary"><i class="fas fa-times"></i></button>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 </div>
+
 <div id="modals">
     @await Component.InvokeAsync("ReportForm", "Create")
     @await Component.InvokeAsync("ReportForm", "Manage")

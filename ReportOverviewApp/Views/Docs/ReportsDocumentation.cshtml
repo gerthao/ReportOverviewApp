@@ -1,0 +1,235 @@
+﻿<h4>
+    Navigation
+</h4>
+<div class="container">
+
+    <h5>Locations</h5>
+    <div>
+        <p><i>Url</i></p>
+        <ul style="list-style:none;">
+            <li><a asp-controller="Reports" asp-action="Index">Reporting Catalogue</a></li>
+            <li><a asp-controller="Reports" asp-action="SelectPlan">Find Reports Through Plan</a></li>
+            <li><a asp-controller="Reports" asp-action="Deadlines">View Deadlines</a></li>
+        </ul>
+        <p><i>Navbar Location</i></p>
+        <ul style="list-style:none;">
+            <li><p>Located on the top of the page, the navbar has a dropdown for <strong>Reports</strong>.&nbsp;&nbsp;By clicking on it, the dropdown will be exposed for the user to choose the corresponding options.</p></li>
+        </ul>
+    </div>
+    <h5>Reporting Catalogue</h5>
+    <div>
+        <p><i>Structure</i></p>
+        <ul>
+            <li>Title, Create New, Export</li>
+            <li>Dropdown-Search(Search Plan), Dropdown-Search(Search Business Contact)</li>
+            <li>
+                Pagination
+                <ul>
+                    <li>
+                        Description:  Allows the user to decrement/increment page indices of the reporting catalogue as well as choosing the number of reports to show.
+                    </li>
+                    <li>
+                        Options
+                        <ul class="list-unstyled">
+                            <li>
+                                <i class="fas fa-chevron-left"></i> - Decrement index (Show the previous set of records)
+                            </li>
+                            <li>
+                                <i class="fas fa-chevron-right"></i> - Increment index (Show the next set of records)
+                            </li>
+                            <li>
+                                <i class="fas fa-caret-down"></i> - Dropdown (Choose number of records to be displayed)
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                Table
+                <ul>
+                    <li>
+                        Id
+                        <ul>
+                            <li>
+                                Description:&nbsp;&nbsp;ID of a report
+                            </li>
+                            <li>
+                                Data Type:&nbsp;&nbsp;int
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        Name
+                        <ul>
+                            <li>
+                                Description:&nbsp;&nbsp;Name of a report
+                            </li>
+                            <li>
+                                Data Type:&nbsp;&nbsp;string
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        Frequency
+                        <ul>
+                            <li>
+                                Description:&nbsp;&nbsp;Characteristic of a report which determines how frequent a report will be due
+                            </li>
+                            <li>
+                                Data Type:&nbsp;&nbsp;string
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        IsTermed
+                        <ul>
+                            <li>
+                                Description:&nbsp;&nbsp;A report is considered termed when the termination date has passed.
+                            </li>
+                            <li>
+                                Data Type:&nbsp;&nbsp;function() => bool
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        Options
+                        <ul>
+                            <li>
+                                Description:&nbsp;&nbsp;Options for the user to click on for the following actions.
+                            </li>
+                            <li>
+                                Table Header
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <i class="fas fa-search"></i> - Search
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-times"></i> - Clear search
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                Table Body (Report rows)
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <i class="fas fa-edit"></i> - Managing (Edit/Delete) a report
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-book"></i> - View more details of a report
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-calendar"></i> - View the deadlines of a report
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+<h4>
+    Operations
+</h4>
+<div class="container">
+    <h5>Searching Reports</h5>
+    <div>
+        <p><i>When searching for a report</i><p />
+        <p>
+            <ul>
+                <li>Enter text into the input fields</li>
+                <li>
+                    Click <i class="fas fa-search"></i> or press <kbd>Enter</kbd> to search for reports that meet the criteria of the input fields.
+                </li>
+                <li>
+                    Click <i class="fas fa-times"></i> to clear all fields for searching.
+                </li>
+            </ul>
+        </p>
+    </div>
+    <hr />
+    <h5>Creating Reports</h5>
+    <div>
+        <p><i>When creating a report</i><p />
+        <p>
+            <ul>
+                <li>
+                    Click <strong><i class="fas fa-plus-square"></i> Create New</strong> to open the New Report dialog.
+                </li>
+                <li>
+                    Enter in fields for the form.
+                </li>
+                <li>
+                    Clicking on <strong><i class="fas fa-save"></i> Save</strong> will send a request to the server to create the report and save it to the database.
+                </li>
+                <li style="list-style:none;">
+                    A success alert will be shown confirming the save request was sucessful made and processed.
+                    <div class="alert alert-success"><strong>Example Report</strong> has been successfully created.</div>
+                </li>
+                <li style="list-style:none;">
+                    A danger alert will be shown if the save request could not be handled.
+                    <div class="alert alert-danger">Something went wrong:  <strong>Error Message</strong></div>
+                </li>
+
+                <li>
+                    Clicking on <strong><i class="fas fa-eraser"></i> Clear</strong> will clear all the fields in the form.
+                </li>
+            </ul>
+        </p>
+    </div>
+    <hr />
+    <h5>Updating Reports</h5>
+    <div>
+        <p><i>When updating a report</i><p />
+        <p>
+            <ul>
+                <li>
+                    From the reporting catalogue table, click on the <i class="fas fa-edit"></i> icon on a row in the <strong>Options</strong> column to open the Manage Report dialog.
+                </li>
+                <li>
+                    Enter in fields for the form to be changed.
+                </li>
+                <li>
+                    Clicking on <strong><i class="fas fa-save"></i> Save</strong> will send a request to the server to create the report and save it to the database.
+                </li>
+                <li style="list-style:none;">
+                    A success alert will be shown confirming the save request was sucessfully completed.
+                    <div class="alert alert-success"><strong>Example Report</strong> has been successfully updated.</div>
+                </li>
+                <li style="list-style:none;">
+                    A danger alert will be shown if the save request could not be handled.
+                    <div class="alert alert-danger">Something went wrong:  <strong>Error Message</strong></div>
+                </li>
+
+            </ul>
+        </p>
+    </div>
+    <hr />
+    <h5>Deleting Reports</h5>
+    <div>
+        <p><i>When deleting a report</i><p />
+        <p>
+            <ul>
+                <li>
+                    From the reporting catalogue table, click on the <i class="fas fa-edit"></i> icon on a row in the <strong>Options</strong> column to open the Manage Report dialog.
+                </li>
+                <li>
+                    Clicking on <strong><i class="fas fa-times"></i> Delete</strong> will ask for a confirmation before deleting.
+                    <ul>
+                        <li>Clicking <strong>No</strong> will cancel the confirmation.</li>
+                        <li>Clicking <strong>Yes</strong> will submit a delete request for the report.</li>
+                        <li style="list-style:none;">
+                            A success alert will be shown confirming the delete request was sucessfully completed.
+                            <div class="alert alert-success"><strong>Example Report</strong> has been successfully deleted.</div>
+                        </li>
+                        <li style="list-style:none;">
+                            A danger alert will be shown if the delete request could not be handled.
+                            <div class="alert alert-danger">Something went wrong:  <strong>Error Message</strong></div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </p>
+    </div>
+</div>

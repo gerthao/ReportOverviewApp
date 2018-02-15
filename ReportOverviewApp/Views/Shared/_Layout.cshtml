@@ -75,6 +75,9 @@
                             </ul>
 
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Docs" asp-action="Index">Documentation</a>
+                        </li>
                     </ul>
                     @await Html.PartialAsync("_LoginPartial")
                 </div>
@@ -83,7 +86,7 @@
     </nav>
     <br />
     <br />
-    <div class="container body-content">@RenderBody()</div>
+    <div class="body-content">@RenderBody()</div>
     <script src="~/lib/core.js/client/shim.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/site.min.js" asp-append-version="true"></script>

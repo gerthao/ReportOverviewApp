@@ -2,29 +2,32 @@
     ViewData["Title"] = "Overview";
 }
 @model ReportOverviewApp.Models.HomeViewModels.HomeViewModel
-<h3>Overview (Home Page)</h3>
-<hr/>
+<div class="container">
+    <h3>Overview (Home Page)</h3>
+    <hr />
 
-<div class="row">
-    <div class="card-group col-md-12" style="padding-top: 1.5rem;">
-        @await Component.InvokeAsync(name: "ReportDeadlineList", arguments: new { date = DateTime.Today.AddDays(-1) })
-        
-        @await Component.InvokeAsync(name: "ReportDeadlineList", arguments: new { date = DateTime.Today })
-        
-        @await Component.InvokeAsync(name: "ReportDeadlineList", arguments: new { date = DateTime.Today.AddDays(1) })
-    </div>
-    <div class="col-sm-12" id="userLogListContainer" style="padding-top: 2.5rem;">
-        @await Component.InvokeAsync(name: "UserLogList")
-    </div>
-    <div class="col-sm-12" style="padding-top: 2.5rem; padding-bottom: 5.0rem;">
-        <div class="card">
-            <h6 class="card-header">Graph Data</h6>
-            <div class="card-block">
-                <div id="chart"></div>
+    <div class="row">
+        <div class="card-group col-md-12" style="padding-top: 1.5rem;">
+            @await Component.InvokeAsync(name: "ReportDeadlineList", arguments: new { date = DateTime.Today.AddDays(-1) })
+
+            @await Component.InvokeAsync(name: "ReportDeadlineList", arguments: new { date = DateTime.Today })
+
+            @await Component.InvokeAsync(name: "ReportDeadlineList", arguments: new { date = DateTime.Today.AddDays(1) })
+        </div>
+        <div class="col-sm-12" id="userLogListContainer" style="padding-top: 2.5rem;">
+            @await Component.InvokeAsync(name: "UserLogList")
+        </div>
+        <div class="col-sm-12" style="padding-top: 2.5rem; padding-bottom: 5.0rem;">
+            <div class="card">
+                <h6 class="card-header">Graph Data</h6>
+                <div class="card-block">
+                    <div id="chart"></div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
 
 @section Scripts{ 
     <script src="~/js/Home/HomeHandler.js" type="text/javascript"></script>
