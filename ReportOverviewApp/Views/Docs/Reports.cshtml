@@ -1,16 +1,10 @@
 ﻿@{
     ViewData["Title"] = "Docs (Reports)";
 }
-<div class="row">
+<div class="row full-width">
 
     <div class="col-md-3">
-        <ul style="list-style:none; font-size: 1.2rem;">
-            <li>Categories</li>
-            <li><a class="active" asp-controller="Docs" asp-action="Reports">Reports</a></li>
-            <li><a asp-controller="Docs" asp-action="Deadlines">Deadlines</a></li>
-            <li><a asp-controller="Docs" asp-action="Plans">Plans</a></li>
-            <li><a asp-controller="Docs" asp-action="BusinessContacts">Business Contacts</a></li>
-        </ul>
+        @await Html.PartialAsync("Categories")
     </div>
     <div class="col-md-6">
         <h3>Reports</h3>

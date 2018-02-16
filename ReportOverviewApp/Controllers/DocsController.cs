@@ -21,6 +21,10 @@ namespace ReportOverviewApp.Controllers
         {
             return View();
         }
+        public IActionResult Deadlines()
+        {
+            return View();
+        }
         public IActionResult BusinessContacts()
         {
             return View();

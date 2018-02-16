@@ -1,0 +1,93 @@
+﻿<h4>
+    Navigation
+</h4>
+<div class="container">
+
+    <h5>Locations</h5>
+    <div>
+        <p><i>Url</i></p>
+        <ul style="list-style:none;">
+            <li><a asp-controller="Reports" asp-action="Deadlines">View Deadlines</a></li>
+        </ul>
+        <p><i>Navbar Location</i></p>
+        <ul style="list-style:none;">
+            <li><p>Located on the top of the page, the navbar has a dropdown for <strong>Deadlines</strong>.&nbsp;&nbsp;By clicking on it, the dropdown will be exposed for the user to choose the corresponding options.</p></li>
+        </ul>
+    </div>
+</div>
+<h4>
+    Operations
+</h4>
+<div class="container">
+    <h5>Searching Reports</h5>
+    <div>
+        <p><i>When searching for deadlines</i><p />
+        <p>
+            <ul>
+                <li>Enter text into the input fields</li>
+                <li>
+                    Click <strong><i class="fas fa-search"></i> Search</strong> to search for reports that meet the criteria of the input fields.
+                </li>
+            </ul>
+        </p>
+    </div>
+    <hr />
+    <h5>Creating Deadlines</h5>
+    <div>
+        <p><i>Users themselves cannot create a deadline at this point.  However, there is a button <strong>Generate Deadlines <i class="fas fa-sync"></i></strong> which looks at all the reports to see if their nearest deadline is today or after and creates them.</i><p/>
+    </div>
+    <hr />
+    <h5>Updating Reports</h5>
+    <div>
+        <p><i>When updating a report</i><p />
+        <p>
+            <ul>
+                <li>
+                    From the Deadlines, click on the <i class="fas fa-calendar-alt"></i> icon on a row to open the Manage Report Deadline dialog.
+                </li>
+                <li>
+                    Enter in fields for the form to be changed.
+                </li>
+                <li>
+                    Clicking on <strong><i class="fas fa-save"></i> Save</strong> will send a request to the server to create the report and save it to the database.
+                </li>
+                <li style="list-style:none;">
+                    A success alert will be shown confirming the save request was sucessfully completed.
+                    <div class="alert alert-success"><strong>Example Report</strong> has been successfully updated.</div>
+                </li>
+                <li style="list-style:none;">
+                    A danger alert will be shown if the save request could not be handled.
+                    <div class="alert alert-danger">Something went wrong:  <strong>Error Message</strong></div>
+                </li>
+
+            </ul>
+        </p>
+    </div>
+    <hr />
+    <h5>Deleting Report Deadlines</h5>
+    <div>
+        <p><i>When deleting a report</i><p />
+        <p>
+            <ul>
+                <li>
+                    From the Deadlines  click on the <i class="fas fa-calendar-alt"></i> icon on a row to open the Manage Report Deadline dialog.
+                </li>
+                <li>
+                    Clicking on <strong><i class="fas fa-times"></i> Delete</strong> will ask for a confirmation before deleting.
+                    <ul>
+                        <li>Clicking <strong>No</strong> will cancel the confirmation.</li>
+                        <li>Clicking <strong>Yes</strong> will submit a delete request for the report.</li>
+                        <li style="list-style:none;">
+                            A success alert will be shown confirming the delete request was sucessfully completed.
+                            <div class="alert alert-success"><strong>Example Report</strong> has been successfully deleted.</div>
+                        </li>
+                        <li style="list-style:none;">
+                            A danger alert will be shown if the delete request could not be handled.
+                            <div class="alert alert-danger">Something went wrong:  <strong>Error Message</strong></div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </p>
+    </div>
+</div>

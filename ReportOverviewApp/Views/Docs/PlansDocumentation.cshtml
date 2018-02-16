@@ -7,26 +7,23 @@
     <div>
         <p><i>Url</i></p>
         <ul style="list-style:none;">
-            <li><a asp-controller="Reports" asp-action="Index">Reporting Catalogue</a></li>
-            <li><a asp-controller="Reports" asp-action="SelectPlan">Find Reports Through Plan</a></li>
-            <li><a asp-controller="Reports" asp-action="Deadlines">View Deadlines</a></li>
+            <li><a asp-controller="Plans" asp-action="Index">Plans</a></li>
         </ul>
         <p><i>Navbar Location</i></p>
         <ul style="list-style:none;">
-            <li><p>Located on the top of the page, the navbar has a dropdown for <strong>Reports</strong>.&nbsp;&nbsp;By clicking on it, the dropdown will be exposed for the user to choose the corresponding options.</p></li>
+            <li><p>Located on the top of the page, the navbar has a link for <strong>Plans</strong>.&nbsp;&nbsp;By clicking on it, the user will be redirected to the Plans page.</p></li>
         </ul>
     </div>
-    <h5>Reporting Catalogue</h5>
+    <h5>Plans</h5>
     <div>
         <p><i>Structure</i></p>
         <ul>
             <li>Title, Create New, Export</li>
-            <li>Dropdown-Search(Search Plan), Dropdown-Search(Search Business Contact)</li>
             <li>
                 Pagination
                 <ul>
                     <li>
-                        Description:  Allows the user to decrement/increment page indices of the reporting catalogue as well as choosing the number of reports to show.
+                        Description:  Allows the user to decrement/increment page indices of the plans as well as choosing the number of plans to show.
                     </li>
                     <li>
                         Options
@@ -51,7 +48,7 @@
                         Id
                         <ul>
                             <li>
-                                Description:&nbsp;&nbsp;ID of a report
+                                Description:&nbsp;&nbsp;ID of a plan
                             </li>
                         </ul>
                     </li>
@@ -59,26 +56,39 @@
                         Name
                         <ul>
                             <li>
-                                Description:&nbsp;&nbsp;Name of a report
+                                Description:&nbsp;&nbsp;Name of a plan
                             </li>
                         </ul>
                     </li>
                     <li>
-                        Frequency
+                        State
                         <ul>
                             <li>
-                                Description:&nbsp;&nbsp;Characteristic of a report which determines how frequent a report will be due
-                            </li>
-                            <li>
-                                Types:&nbsp;&nbsp;Weekly, Biweekly, Monthly, Quarterly, Semiannual, Annual
+                                Description:&nbsp;&nbsp;State of which a plan belongs to.
                             </li>
                         </ul>
                     </li>
                     <li>
-                        IsTermed
+                        WindwardId
                         <ul>
                             <li>
-                                Description:&nbsp;&nbsp;A report is considered termed when the termination date has passed.
+                                Description:&nbsp;&nbsp;Windward ID of a plan.
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        HasActiveReports
+                        <ul>
+                            <li>
+                                Description:&nbsp;&nbsp;Characteristic of which a plan has reports that are active.
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        HasActiveReports
+                        <ul>
+                            <li>
+                                Description:&nbsp;&nbsp;Characteristic of which a plan has reports that are termed.
                             </li>
                         </ul>
                     </li>
@@ -100,16 +110,16 @@
                                 </ul>
                             </li>
                             <li>
-                                Table Body (Report rows)
+                                Table Body (plan rows)
                                 <ul class="list-unstyled">
                                     <li>
-                                        <i class="fas fa-edit"></i> - Managing (Edit/Delete) a report
+                                        <i class="fas fa-edit"></i> - Managing (Edit/Delete) a plan
                                     </li>
                                     <li>
-                                        <i class="fas fa-book"></i> - View more details of a report
+                                        <i class="fas fa-book"></i> - View more details of a plan
                                     </li>
                                     <li>
-                                        <i class="fas fa-calendar"></i> - View the deadlines of a report
+                                        <i class="fas fa-calendar"></i> - View the deadlines of a plan
                                     </li>
                                 </ul>
                             </li>
@@ -124,14 +134,14 @@
     Operations
 </h4>
 <div class="container">
-    <h5>Searching Reports</h5>
+    <h5>Searching plans</h5>
     <div>
-        <p><i>When searching for a report</i><p />
+        <p><i>When searching for a plan</i><p />
         <p>
             <ul>
                 <li>Enter text into the input fields</li>
                 <li>
-                    Click <i class="fas fa-search"></i> or press <kbd>Enter</kbd> to search for reports that meet the criteria of the input fields.
+                    Click <i class="fas fa-search"></i> or press <kbd>Enter</kbd> to search for plans that meet the criteria of the input fields.
                 </li>
                 <li>
                     Click <i class="fas fa-times"></i> to clear all fields for searching.
@@ -140,23 +150,23 @@
         </p>
     </div>
     <hr />
-    <h5>Creating Reports</h5>
+    <h5>Creating plans</h5>
     <div>
-        <p><i>When creating a report</i><p />
+        <p><i>When creating a plan</i><p />
         <p>
             <ul>
                 <li>
-                    Click <strong><i class="fas fa-plus-square"></i> Create New</strong> to open the New Report dialog.
+                    Click <strong><i class="fas fa-plus-square"></i> Create New</strong> to open the New plan dialog.
                 </li>
                 <li>
                     Enter in fields for the form.
                 </li>
                 <li>
-                    Clicking on <strong><i class="fas fa-save"></i> Save</strong> will send a request to the server to create the report and save it to the database.
+                    Clicking on <strong><i class="fas fa-save"></i> Save</strong> will send a request to the server to create the plan and save it to the database.
                 </li>
                 <li style="list-style:none;">
                     A success alert will be shown confirming the save request was sucessful made and processed.
-                    <div class="alert alert-success"><strong>Example Report</strong> has been successfully created.</div>
+                    <div class="alert alert-success"><strong>Example plan</strong> has been successfully created.</div>
                 </li>
                 <li style="list-style:none;">
                     A danger alert will be shown if the save request could not be handled.
@@ -170,23 +180,23 @@
         </p>
     </div>
     <hr />
-    <h5>Updating Reports</h5>
+    <h5>Updating plans</h5>
     <div>
-        <p><i>When updating a report</i><p />
+        <p><i>When updating a plan</i><p />
         <p>
             <ul>
                 <li>
-                    From the reporting catalogue table, click on the <i class="fas fa-edit"></i> icon on a row in the <strong>Options</strong> column to open the Manage Report dialog.
+                    From the plans table, click on the <i class="fas fa-edit"></i> icon on a row in the <strong>Options</strong> column to open the Manage plan dialog.
                 </li>
                 <li>
                     Enter in fields for the form to be changed.
                 </li>
                 <li>
-                    Clicking on <strong><i class="fas fa-save"></i> Save</strong> will send a request to the server to create the report and save it to the database.
+                    Clicking on <strong><i class="fas fa-save"></i> Save</strong> will send a request to the server to create the plan and save it to the database.
                 </li>
                 <li style="list-style:none;">
                     A success alert will be shown confirming the save request was sucessfully completed.
-                    <div class="alert alert-success"><strong>Example Report</strong> has been successfully updated.</div>
+                    <div class="alert alert-success"><strong>Example plan</strong> has been successfully updated.</div>
                 </li>
                 <li style="list-style:none;">
                     A danger alert will be shown if the save request could not be handled.
@@ -197,22 +207,22 @@
         </p>
     </div>
     <hr />
-    <h5>Deleting Reports</h5>
+    <h5>Deleting plans</h5>
     <div>
-        <p><i>When deleting a report</i><p />
+        <p><i>When deleting a plan</i><p/>
         <p>
             <ul>
                 <li>
-                    From the reporting catalogue table, click on the <i class="fas fa-edit"></i> icon on a row in the <strong>Options</strong> column to open the Manage Report dialog.
+                    From the plans table, click on the <i class="fas fa-edit"></i> icon on a row in the <strong>Options</strong> column to open the Manage plan dialog.
                 </li>
                 <li>
                     Clicking on <strong><i class="fas fa-times"></i> Delete</strong> will ask for a confirmation before deleting.
                     <ul>
                         <li>Clicking <strong>No</strong> will cancel the confirmation.</li>
-                        <li>Clicking <strong>Yes</strong> will submit a delete request for the report.</li>
+                        <li>Clicking <strong>Yes</strong> will submit a delete request for the plan.</li>
                         <li style="list-style:none;">
                             A success alert will be shown confirming the delete request was sucessfully completed.
-                            <div class="alert alert-success"><strong>Example Report</strong> has been successfully deleted.</div>
+                            <div class="alert alert-success"><strong>Example plan</strong> has been successfully deleted.</div>
                         </li>
                         <li style="list-style:none;">
                             A danger alert will be shown if the delete request could not be handled.

@@ -7,26 +7,24 @@
     <div>
         <p><i>Url</i></p>
         <ul style="list-style:none;">
-            <li><a asp-controller="Reports" asp-action="Index">Reporting Catalogue</a></li>
-            <li><a asp-controller="Reports" asp-action="SelectPlan">Find Reports Through Plan</a></li>
-            <li><a asp-controller="Reports" asp-action="Deadlines">View Deadlines</a></li>
+            <li><a asp-controller="BusinessContacts" asp-action="Index">Business Contacts</a></li>
+            <li><a asp-controller="BusinessContacts" asp-action="TransferReports">Transfer Reports</a></li>
         </ul>
         <p><i>Navbar Location</i></p>
         <ul style="list-style:none;">
-            <li><p>Located on the top of the page, the navbar has a dropdown for <strong>Reports</strong>.&nbsp;&nbsp;By clicking on it, the dropdown will be exposed for the user to choose the corresponding options.</p></li>
+            <li><p>Located on the top of the page, the navbar has a dropdown for <strong>Business Contacts</strong>.&nbsp;&nbsp;By clicking on it, the dropdown will be exposed for the user to choose the corresponding options.</p></li>
         </ul>
     </div>
-    <h5>Reporting Catalogue</h5>
+    <h5>Business Contacts</h5>
     <div>
         <p><i>Structure</i></p>
         <ul>
-            <li>Title, Create New, Export</li>
-            <li>Dropdown-Search(Search Plan), Dropdown-Search(Search Business Contact)</li>
+            <li>Title, Create New</li>
             <li>
                 Pagination
                 <ul>
                     <li>
-                        Description:  Allows the user to decrement/increment page indices of the reporting catalogue as well as choosing the number of reports to show.
+                        Description:  Allows the user to decrement/increment page indices of the business contacts as well as choosing the number of business contacts to show.
                     </li>
                     <li>
                         Options
@@ -51,7 +49,7 @@
                         Id
                         <ul>
                             <li>
-                                Description:&nbsp;&nbsp;ID of a report
+                                Description:&nbsp;&nbsp;ID of a business contact
                             </li>
                         </ul>
                     </li>
@@ -59,26 +57,15 @@
                         Name
                         <ul>
                             <li>
-                                Description:&nbsp;&nbsp;Name of a report
+                                Description:&nbsp;&nbsp;Name of a business contact
                             </li>
                         </ul>
                     </li>
                     <li>
-                        Frequency
+                        BusinessOwner
                         <ul>
                             <li>
-                                Description:&nbsp;&nbsp;Characteristic of a report which determines how frequent a report will be due
-                            </li>
-                            <li>
-                                Types:&nbsp;&nbsp;Weekly, Biweekly, Monthly, Quarterly, Semiannual, Annual
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        IsTermed
-                        <ul>
-                            <li>
-                                Description:&nbsp;&nbsp;A report is considered termed when the termination date has passed.
+                                Description:&nbsp;&nbsp;Department of a business contact
                             </li>
                         </ul>
                     </li>
@@ -100,16 +87,19 @@
                                 </ul>
                             </li>
                             <li>
-                                Table Body (Report rows)
+                                Table Body (business contact rows)
                                 <ul class="list-unstyled">
                                     <li>
-                                        <i class="fas fa-edit"></i> - Managing (Edit/Delete) a report
+                                        <i class="fas fa-edit"></i> - Managing (Edit/Delete) a business contact
                                     </li>
                                     <li>
-                                        <i class="fas fa-book"></i> - View more details of a report
+                                        <i class="fas fa-book"></i> - View more details of a business contact
                                     </li>
                                     <li>
-                                        <i class="fas fa-calendar"></i> - View the deadlines of a report
+                                        <i class="fas fa-exchange-alt"></i> - Transfer/Add/Remove reports of a business contact
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-arrow-right"></i> - View the reports of a business contact
                                     </li>
                                 </ul>
                             </li>
@@ -124,14 +114,14 @@
     Operations
 </h4>
 <div class="container">
-    <h5>Searching Reports</h5>
+    <h5>Searching business contacts</h5>
     <div>
-        <p><i>When searching for a report</i><p />
+        <p><i>When searching for a business contact</i><p />
         <p>
             <ul>
                 <li>Enter text into the input fields</li>
                 <li>
-                    Click <i class="fas fa-search"></i> or press <kbd>Enter</kbd> to search for reports that meet the criteria of the input fields.
+                    Click <i class="fas fa-search"></i> or press <kbd>Enter</kbd> to search for business contacts that meet the criteria of the input fields.
                 </li>
                 <li>
                     Click <i class="fas fa-times"></i> to clear all fields for searching.
@@ -140,23 +130,23 @@
         </p>
     </div>
     <hr />
-    <h5>Creating Reports</h5>
+    <h5>Creating business contacts</h5>
     <div>
-        <p><i>When creating a report</i><p />
+        <p><i>When creating a business contact</i><p />
         <p>
             <ul>
                 <li>
-                    Click <strong><i class="fas fa-plus-square"></i> Create New</strong> to open the New Report dialog.
+                    Click <strong><i class="fas fa-plus-square"></i> Create New</strong> to open the New business contact dialog.
                 </li>
                 <li>
                     Enter in fields for the form.
                 </li>
                 <li>
-                    Clicking on <strong><i class="fas fa-save"></i> Save</strong> will send a request to the server to create the report and save it to the database.
+                    Clicking on <strong><i class="fas fa-save"></i> Save</strong> will send a request to the server to create the business contact and save it to the database.
                 </li>
                 <li style="list-style:none;">
                     A success alert will be shown confirming the save request was sucessful made and processed.
-                    <div class="alert alert-success"><strong>Example Report</strong> has been successfully created.</div>
+                    <div class="alert alert-success"><strong>Example business contact</strong> has been successfully created.</div>
                 </li>
                 <li style="list-style:none;">
                     A danger alert will be shown if the save request could not be handled.
@@ -170,23 +160,23 @@
         </p>
     </div>
     <hr />
-    <h5>Updating Reports</h5>
+    <h5>Updating business contacts</h5>
     <div>
-        <p><i>When updating a report</i><p />
+        <p><i>When updating a business contact</i><p />
         <p>
             <ul>
                 <li>
-                    From the reporting catalogue table, click on the <i class="fas fa-edit"></i> icon on a row in the <strong>Options</strong> column to open the Manage Report dialog.
+                    From the business contacts table, click on the <i class="fas fa-edit"></i> icon on a row in the <strong>Options</strong> column to open the Manage business contact dialog.
                 </li>
                 <li>
                     Enter in fields for the form to be changed.
                 </li>
                 <li>
-                    Clicking on <strong><i class="fas fa-save"></i> Save</strong> will send a request to the server to create the report and save it to the database.
+                    Clicking on <strong><i class="fas fa-save"></i> Save</strong> will send a request to the server to create the business contact and save it to the database.
                 </li>
                 <li style="list-style:none;">
                     A success alert will be shown confirming the save request was sucessfully completed.
-                    <div class="alert alert-success"><strong>Example Report</strong> has been successfully updated.</div>
+                    <div class="alert alert-success"><strong>Example business contact</strong> has been successfully updated.</div>
                 </li>
                 <li style="list-style:none;">
                     A danger alert will be shown if the save request could not be handled.
@@ -197,22 +187,22 @@
         </p>
     </div>
     <hr />
-    <h5>Deleting Reports</h5>
+    <h5>Deleting business contacts</h5>
     <div>
-        <p><i>When deleting a report</i><p />
+        <p><i>When deleting a business contact</i><p />
         <p>
             <ul>
                 <li>
-                    From the reporting catalogue table, click on the <i class="fas fa-edit"></i> icon on a row in the <strong>Options</strong> column to open the Manage Report dialog.
+                    From the business contacts table, click on the <i class="fas fa-edit"></i> icon on a row in the <strong>Options</strong> column to open the Manage business contact dialog.
                 </li>
                 <li>
                     Clicking on <strong><i class="fas fa-times"></i> Delete</strong> will ask for a confirmation before deleting.
                     <ul>
                         <li>Clicking <strong>No</strong> will cancel the confirmation.</li>
-                        <li>Clicking <strong>Yes</strong> will submit a delete request for the report.</li>
+                        <li>Clicking <strong>Yes</strong> will submit a delete request for the business contact.</li>
                         <li style="list-style:none;">
                             A success alert will be shown confirming the delete request was sucessfully completed.
-                            <div class="alert alert-success"><strong>Example Report</strong> has been successfully deleted.</div>
+                            <div class="alert alert-success"><strong>Example business contact</strong> has been successfully deleted.</div>
                         </li>
                         <li style="list-style:none;">
                             A danger alert will be shown if the delete request could not be handled.
